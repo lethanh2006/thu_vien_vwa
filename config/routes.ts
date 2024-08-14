@@ -31,19 +31,69 @@
 		hideInMenu: true,
 	},
 
-	// DANH MUC HE THONG
+	//QUẢN LÝ THƯ VIỆN
 	{
-		name: 'DanhMuc',
-		path: '/danh-muc',
-		icon: 'copy',
+		name: 'QuanLyThuVien',
+		path: 'quan-ly-thu-vien',
+		icon: 'container',
 		routes: [
 			{
-				name: 'ChucVu',
-				path: 'chuc-vu',
-				component: './DanhMuc/ChucVu',
+				name: 'BaoCaoThuVien',
+				path: 'bao-cao-thu-vien',
+				routes: [
+					{
+						name: 'ThuVien',
+						path: 'thu-vien',
+						component: './QuanLyThuVien/BaoCao/ThongKeThuVien.tsx',
+					},
+					{
+						name: 'LuanAnLuanVanKhoaLuan',
+						path: 'luan-an-luan-van-khoa-luan',
+						component: './QuanLyThuVien/BaoCao/LuanAnLuanVan.tsx',
+					},
+				],
+			},
+			{
+				name: 'VaoRaThuVien',
+				path: 'vao-ra-thu-vien',
+				component: './QuanLyThuVien/VaoRaThuVien',
+			},
+			{
+				name: 'QuanLyDot',
+				path: 'quan-ly-dot',
+				component: 'QuanLyThuVien/QuanLyDot',
+			},
+			{
+				name: 'QuanLyLuanAn',
+				path: 'quan-ly-luan-an',
+				component: 'QuanLyThuVien/QuanLyLuanAn',
+			},
+			{
+				name: 'QuanLyLuanVan',
+				path: 'quan-ly-luan-van',
+				component: 'QuanLyThuVien/QuanLyLuanVan',
+			},
+			{
+				name: 'QuanLyKhoaLuan',
+				path: 'quan-ly-khoa-luan',
+				component: 'QuanLyThuVien/QuanLyKhoaLuan',
 			},
 		],
 	},
+
+	// DANH MUC HE THONG
+	// {
+	// 	name: 'DanhMuc',
+	// 	path: '/danh-muc',
+	// 	icon: 'copy',
+	// 	routes: [
+	// 		{
+	// 			name: 'ChucVu',
+	// 			path: 'chuc-vu',
+	// 			component: './DanhMuc/ChucVu',
+	// 		},
+	// 	],
+	// },
 
 	{
 		path: '/notification',
