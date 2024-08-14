@@ -10,7 +10,6 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { OIDCBounder } from './components/OIDCBounder';
 import { unCheckPermissionPaths } from './components/OIDCBounder/constant';
 import OneSignalBounder from './components/OneSignalBounder';
-import HeaderContentPage from './components/RightContent/Header';
 import TechnicalSupportBounder from './components/TechnicalSupportBounder';
 import NotAccessible from './pages/exception/403';
 import NotFoundContent from './pages/exception/404';
@@ -78,7 +77,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 		),
 		noFound: <NotFoundContent />,
 		rightContentRender: () => <RightContent />,
-		headerContentRender: () => <HeaderContentPage />,
 		disableContentMargin: false,
 
 		footerRender: () => <Footer />,

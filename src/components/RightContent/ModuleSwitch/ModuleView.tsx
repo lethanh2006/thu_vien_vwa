@@ -27,7 +27,7 @@ const ModuleView = () => {
 							<a href={value?.url} target='_blank' rel='noreferrer'>
 								<div className='module-item'>
 									{value?.icon ? (
-										<img src={`${AppModules[EModuleKey.CORE].url}modules/${value.icon}`} />
+										<img src={`${AppModules[EModuleKey.QLDT].url}modules/${value.icon}`} />
 									) : (
 										<UserSwitchOutlined />
 									)}
