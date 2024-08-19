@@ -9,7 +9,7 @@ const ip3 = ipRoot + 'qldt'; // ip dev
 const ipNotif = ipRoot + 'notification'; // ip dev
 const ipSlink = ipRoot + 'slink'; // ip dev
 
-const currentRole = EModuleKey.TCNS;
+const currentRole = EModuleKey.THU_VIEN;
 const oneSignalRole = EModuleKey.CONG_CAN_BO;
 
 // DO NOT TOUCH
