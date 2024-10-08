@@ -126,6 +126,11 @@
 		layout: false,
 	},
 	{
+		path: '/hold-on',
+		component: './exception/DangCapNhat',
+		layout: false,
+	},
+	{
 		component: './exception/404',
 	},
 ];

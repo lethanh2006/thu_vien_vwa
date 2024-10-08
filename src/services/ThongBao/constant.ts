@@ -19,15 +19,39 @@ export const LoaiDoiTuongThongBao: Partial<Record<EReceiverType, string>> = {
 	[EReceiverType.LopHocPhan]: 'Lớp học phần',
 };
 
-export enum ESourceTypeNotification {
-	SLINK = 'Slink',
-	TAI_CHINH = 'Tài chính',
-	QLDT = 'QLDT',
-	VPS = 'Văn phòng số',
-	CTSV = 'Công tác sinh viên',
-	TCNS = 'TCNS',
-	KHAO_THI = 'Khảo thí',
+export enum NotificationType {
+	ONESIGNAL = 'OneSignalService',
+	EMAIL = 'Email',
+	ALL = 'All',
 }
+
+export enum ESourceTypeNotification {
+	SLINK = 'SLINK',
+	TAI_CHINH = 'TAI_CHINH',
+	QLDT = 'QLDT',
+	VAN_PHONG_SO = 'VAN_PHONG_SO',
+	CONG_TAC_SINH_VIEN = 'CONG_TAC_SINH_VIEN',
+	CONG_CAN_BO = 'CONG_CAN_BO',
+	TCNS = 'TCNS',
+	KHAO_THI = 'KHAO_THI',
+	NOTIFICATION = 'NOTIFICATION',
+	PORTAL = 'PORTAL',
+	CSVC = 'CSVC',
+}
+
+export const mapModuleKey: Partial<Record<ESourceTypeNotification, string>> = {
+	[ESourceTypeNotification.SLINK]: 'cong-hoc-vien',
+	[ESourceTypeNotification.TAI_CHINH]: 'tai-chinh',
+	[ESourceTypeNotification.QLDT]: 'quan-ly-dao-tao',
+	[ESourceTypeNotification.VAN_PHONG_SO]: 'van-phong-so',
+	[ESourceTypeNotification.CONG_TAC_SINH_VIEN]: 'cong-tac-sinh-vien',
+	[ESourceTypeNotification.CONG_CAN_BO]: 'cong-can-bo',
+	[ESourceTypeNotification.TCNS]: 'to-chuc-nhan-su',
+	[ESourceTypeNotification.KHAO_THI]: 'khao-thi',
+	[ESourceTypeNotification.NOTIFICATION]: '',
+	[ESourceTypeNotification.PORTAL]: '',
+	[ESourceTypeNotification.CSVC]: 'co-so-vat-chat',
+};
 
 /** Danh mục tất cả các loại thông báo */
 export enum ENotificationSource {
