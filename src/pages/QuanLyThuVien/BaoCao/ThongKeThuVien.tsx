@@ -9,7 +9,7 @@ import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import { exportThongKe } from '@/services/QuanLyThuVien';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
-import { getFilenameHeader } from '@/utils/utils';
+import { getFilenameHeader, inputFormat } from '@/utils/utils';
 import { ExportOutlined } from '@ant-design/icons';
 import { Card, Col, DatePicker, Divider, Row, Select, Space } from 'antd';
 import fileDownload from 'js-file-download';
@@ -256,7 +256,7 @@ const ThongKeThuVien = () => {
 						</div>
 						<ColumnChart
 							height={250}
-							formatY={(val) => val + ''}
+							formatY={(val) => inputFormat(val ?? 0)}
 							yLabel={['Số lượt']}
 							xAxis={dataThongKeCheckInNganh.map((i) => i?.nganh ?? 'Không có thông tin')}
 							yAxis={[dataThongKeCheckInNganh.map((i) => i?.tongSoLuotCheckIn ?? 0)]}

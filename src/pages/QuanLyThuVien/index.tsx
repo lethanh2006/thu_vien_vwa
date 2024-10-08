@@ -22,7 +22,7 @@ import {
 	MenuOutlined,
 	PrinterOutlined,
 } from '@ant-design/icons';
-import { Button, Card, InputNumber, Popconfirm, Popover, Space, Tag } from 'antd';
+import { Button, Card, InputNumber, Popconfirm, Popover, Space, Tabs, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
@@ -32,8 +32,7 @@ import ChiTietThuVien from './components/ChiTiet';
 import FormQuanLyThuVien from './components/Form';
 import SelectDotThuVien from './QuanLyDot/components/Select';
 
-const QuanLyThuVienPage = (props: { loai: ELoaiDotQuanLyThuvien }) => {
-	const { loai } = props;
+const QuanLyThuVienPage = () => {
 	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('quanlythuvien.quanlydot');
 	const {
 		getModel,
@@ -50,6 +49,7 @@ const QuanLyThuVienPage = (props: { loai: ELoaiDotQuanLyThuvien }) => {
 		changeTrangThaiLuanAnModel,
 		loadingTrangThai,
 	} = useModel('quanlythuvien.danhsachdot');
+	const [loai, setLoai] = useState<ELoaiDotQuanLyThuvien>(ELoaiDotQuanLyThuvien.LUAN_AN);
 	const [datePicker, setDatePicker] = useState<any>();
 	const luanAnValue = useRef(settingThuVien?.luanAn);
 
@@ -342,15 +342,30 @@ const QuanLyThuVienPage = (props: { loai: ELoaiDotQuanLyThuvien }) => {
 	];
 
 	return (
-		<Card
-			title={
-				loai === ELoaiDotQuanLyThuvien.LUAN_AN
-					? 'Quản lý luận án'
-					: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-					? 'Quản lý luận văn'
-					: 'Quản lý khóa luận/đồ án'
-			}
-			extra={
+		<Card title='Luận án, Luận văn, Khóa luận sinh viên'>
+			<Tabs activeKey={loai} onChange={(tab) => setLoai(tab as ELoaiDotQuanLyThuvien)}>
+				{Object.values(ELoaiDotQuanLyThuvien).map((tab) => (
+					<Tabs.TabPane key={tab} tab={tab} />
+				))}
+			</Tabs>
+			<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+				<Space>
+					{loai !== ELoaiDotQuanLyThuvien.LUAN_AN && (
+						<SelectDotThuVien
+							isSetRecord
+							value={recDot?._id}
+							style={{ width: 250 }}
+							onChange={(val) => setRecDot(danhSachDot?.find((item) => item?._id === val))}
+						/>
+					)}
+
+					<MyDateRangePicker
+						value={datePicker}
+						onChange={(val) => setDatePicker(val)}
+						allowClear
+						style={{ width: 300 }}
+					/>
+				</Space>
 				<Space>
 					Số lưu chiểu hiện tại:{' '}
 					<InputNumber
@@ -375,25 +390,7 @@ const QuanLyThuVienPage = (props: { loai: ELoaiDotQuanLyThuvien }) => {
 						Lưu
 					</Button>
 				</Space>
-			}
-		>
-			<Space style={{ marginBottom: 12 }}>
-				{loai !== ELoaiDotQuanLyThuvien.LUAN_AN && (
-					<SelectDotThuVien
-						isSetRecord
-						value={recDot?._id}
-						style={{ width: 250 }}
-						onChange={(val) => setRecDot(danhSachDot?.find((item) => item?._id === val))}
-					/>
-				)}
-
-				<MyDateRangePicker
-					value={datePicker}
-					onChange={(val) => setDatePicker(val)}
-					allowClear
-					style={{ width: 300 }}
-				/>
-			</Space>
+			</div>
 
 			<TableBase
 				getData={getData}
@@ -412,11 +409,13 @@ const QuanLyThuVienPage = (props: { loai: ELoaiDotQuanLyThuvien }) => {
 				widthDrawer={1000}
 				hideCard
 				buttons={{ create: loai === ELoaiDotQuanLyThuvien.LUAN_AN ? true : false }}
-				// otherButtons={[
-				// 	<ButtonExtend key='1' icon={<DownloadOutlined />}>
-				// 		Tải tài liệu tác giải
-				// 	</ButtonExtend>,
-				// ]}
+				// otherButtons={
+				// 	[
+				// 		<ButtonExtend key='1' icon={<DownloadOutlined />}>
+				// 			Tải tài liệu tác giải
+				// 		</ButtonExtend>,
+				// 	]
+				// }
 			/>
 		</Card>
 	);

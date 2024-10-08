@@ -339,7 +339,7 @@ const VaoRaThuVienPage = () => {
 						key='2'
 						icon={<QrcodeOutlined />}
 						onClick={() => {
-							window.open(`${APP_CONFIG_URL_VPS}/qr-thu-vien.jpg`, '_blank');
+							window.open(`${APP_CONFIG_URL_THU_VIEN}qr-thu-vien.jpg`, '_blank');
 						}}
 					>
 						Mã QR

@@ -95,7 +95,7 @@ const QuanLyDotPage = () => {
 	];
 
 	return (
-		<Card title='Quản lý đợt'>
+		<Card title='Quản lý đợt luận án, luận văn, khóa luận'>
 			<Space style={{ marginBottom: 12 }}>
 				<MyDateRangePicker
 					value={datePicker}
