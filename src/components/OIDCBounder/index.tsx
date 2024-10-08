@@ -28,10 +28,13 @@ const OIDCBounder_: FC = ({ children }) => {
 				const [getPermissionsResponse, getUserInfoResponse] = await Promise.all([getPermission(), getUserInfo()]);
 				const userInfo: Login.IUser = getUserInfoResponse?.data;
 				const permissions: Login.IPermission[] = getPermissionsResponse.data;
+				const isUncheckPath = unCheckPermissionPaths.some((path) => window.location.pathname.includes(path));
 
 				if (
-					unCheckPermissionPaths.includes(window.location.pathname) ||
-					(currentRole && permissions.length && !permissions.find((item) => item.rsname === currentRole))
+					!isUncheckPath &&
+					currentRole &&
+					permissions.length &&
+					!permissions.find((item) => item.rsname === currentRole)
 				) {
 					history.replace('/403');
 				} else {
@@ -56,6 +59,10 @@ const OIDCBounder_: FC = ({ children }) => {
 	};
 
 	useEffect(() => {
+		// Nếu đang cập nhật thì bật cái này lên
+		// history.replace('/hold-on');
+		// return;
+
 		if (unAuthPaths.includes(window.location.pathname) || auth.isLoading) return;
 
 		// Chưa login + chưa có auth params ==> Cần redirect keycloak để lấy auth params + cookie
