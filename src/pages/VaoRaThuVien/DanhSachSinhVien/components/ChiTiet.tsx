@@ -21,7 +21,7 @@ const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) =
 			}}
 		>
 			<Descriptions bordered column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }} labelStyle={{ fontWeight: '600' }}>
-				<Descriptions.Item label='Mã sinh viên'>{record?.maSv ?? '--'}</Descriptions.Item>
+				<Descriptions.Item label='Mã SV'>{record?.maSv ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Họ và tên'>{record?.hoTen ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Ngày sinh'>
 					{record?.ngaySinh ? moment(record?.ngaySinh).format('DD/MM/YYYY') : '--'}

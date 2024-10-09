@@ -56,8 +56,14 @@ const SoLuongVaoRaThuVienTheoThang = () => {
 				yLabel={['Số lượng vào', 'Số lượng ra']}
 				colors={['#0982c9', '#18b903']}
 				title='Thống kê'
-				height={300}
+				height={350}
 				formatY={(val) => `${val}`}
+				otherOptions={{
+					legend: {
+						position: 'bottom',
+						horizontalAlign: 'center',
+					},
+				}}
 			/>
 		</Card>
 	);

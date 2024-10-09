@@ -5,6 +5,7 @@ import { getFilenameHeader, inputFormat } from '@/utils/utils';
 import { ExportOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 import fileDownload from 'js-file-download';
+import _ from 'lodash';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
@@ -24,6 +25,15 @@ const SoLuongVaoRaThuVienTheoNganh = (props: { filters?: any }) => {
 		});
 	};
 
+	const sortedData = _.sortBy(
+		dataThongKeCheckInNganh,
+		(i) => {
+			const nganh = i?.nganh ?? 'Không có thông tin';
+			return nganh === 'Không có thông tin' || nganh === 'Chưa cập nhật' ? 'zzz' : nganh;
+		},
+		['nganh'],
+	);
+
 	return (
 		<Spin spinning={loadingNganh}>
 			<div style={{ marginBottom: 12 }}>
@@ -32,11 +42,11 @@ const SoLuongVaoRaThuVienTheoNganh = (props: { filters?: any }) => {
 				</ButtonExtend>
 			</div>
 			<ColumnChart
-				height={250}
+				height={350}
 				formatY={(val) => inputFormat(val ?? 0)}
 				yLabel={['Số lượt']}
-				xAxis={dataThongKeCheckInNganh.map((i) => i?.nganh ?? 'Không có thông tin')}
-				yAxis={[dataThongKeCheckInNganh.map((i) => i?.tongSoLuotCheckIn ?? 0)]}
+				xAxis={sortedData.map((i) => i?.nganh ?? 'Không có thông tin')}
+				yAxis={[sortedData.map((i) => i?.tongSoLuotCheckIn ?? 0)]}
 				otherOptions={{
 					plotOptions: { bar: { columnWidth: '20%' } },
 					responsive: [

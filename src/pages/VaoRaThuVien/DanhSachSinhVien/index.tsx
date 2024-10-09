@@ -176,7 +176,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 
 	const columns: IColumn<QuanLyThuVien.IVaoRaThuVien>[] = [
 		{
-			title: 'Mã sinh viên',
+			title: 'Mã SV',
 			align: 'center',
 			dataIndex: 'maSv',
 			width: 120,
@@ -253,7 +253,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 			title: 'Thao tác',
 			align: 'center',
 			fixed: 'right',
-			width: 100,
+			width: 60,
 			render: (val, rec) => (
 				<ButtonExtend
 					tooltip='Chi tiết'

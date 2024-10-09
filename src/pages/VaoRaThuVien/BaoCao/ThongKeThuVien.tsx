@@ -1,8 +1,11 @@
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import { EOperatorType } from '@/components/Table/constant';
-import { Card, Col, DatePicker, Row, Segmented, Select, Space } from 'antd';
+import { Card, DatePicker, Segmented, Select, Space } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import SplitPane from 'react-split-pane';
+import Pane from 'react-split-pane/lib/Pane';
 import SoLuongVaoRaThuVienTheoKhoa from './SoLuongTheoKhoa';
 import SoLuongVaoRaThuVienTheoNganh from './SoLuongTheoNganh';
 import SoLuongTopVaoRaThuVien from './SoLuongTopThuVien';
@@ -11,6 +14,12 @@ const ThongKeThuVien = () => {
 	const [filters, setFilters] = useState<any[]>([]);
 	const [typeSoft, setTypeSoft] = useState<string>();
 	const [activeKey, setActiveKey] = useState<string>('nganh');
+	const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
+	const [paneSize, setPaneSize] = useState('65%');
+
+	const handlePaneSizeChange = (size: any) => {
+		setPaneSize(size[0]);
+	};
 
 	const handleChange = (value: string) => {
 		setTypeSoft(value);
@@ -167,8 +176,8 @@ const ThongKeThuVien = () => {
 				)}
 			</Space>
 
-			<Row gutter={[16, 16]}>
-				<Col xs={24}>
+			<SplitPane split={isMobile ? 'horizontal' : 'vertical'} onChange={handlePaneSizeChange}>
+				<Pane initialSize={paneSize} minSize='40%'>
 					<Card title='Số lượng vào ra thư viện' bordered={false} bodyStyle={{ padding: 0 }}>
 						<div style={{ marginTop: 12, marginBottom: 12 }}>
 							<Segmented
@@ -176,7 +185,7 @@ const ThongKeThuVien = () => {
 								onChange={(value) => setActiveKey(value.toString())}
 								options={[
 									{ value: 'nganh', label: 'Theo ngành' },
-									{ value: 'khoa', label: 'Theo hóa' },
+									{ value: 'khoa', label: 'Theo khóa' },
 								]}
 							/>
 						</div>
@@ -187,11 +196,11 @@ const ThongKeThuVien = () => {
 							<SoLuongVaoRaThuVienTheoKhoa filters={filters} />
 						)}
 					</Card>
-				</Col>
-				<Col xs={24} lg={10}>
+				</Pane>
+				<Pane minSize='20%'>
 					<SoLuongTopVaoRaThuVien filters={filters} />
-				</Col>
-			</Row>
+				</Pane>
+			</SplitPane>
 		</Card>
 	);
 };

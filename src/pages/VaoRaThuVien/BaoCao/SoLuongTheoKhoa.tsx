@@ -1,10 +1,11 @@
-import DonutChart from '@/components/Chart/DonutChart';
+import ColumnChart from '@/components/Chart/ColumnChart';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { exportThongKe } from '@/services/QuanLyThuVien';
-import { getFilenameHeader } from '@/utils/utils';
+import { getFilenameHeader, inputFormat } from '@/utils/utils';
 import { ExportOutlined } from '@ant-design/icons';
 import { Spin } from 'antd';
 import fileDownload from 'js-file-download';
+import _ from 'lodash';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
@@ -24,6 +25,15 @@ const SoLuongVaoRaThuVienTheoKhoa = (props: { filters?: any }) => {
 		});
 	};
 
+	const sortedData = _.sortBy(
+		dataThongKeCheckInKhoa,
+		(i) => {
+			const khoa = i?.khoa ?? 'Không có thông tin';
+			return khoa === 'Không có thông tin' || khoa === 'Chưa cập nhật' ? 'zzz' : khoa;
+		},
+		['khoa'],
+	);
+
 	return (
 		<Spin spinning={loadingKhoa}>
 			<div style={{ marginBottom: 12 }}>
@@ -31,18 +41,27 @@ const SoLuongVaoRaThuVienTheoKhoa = (props: { filters?: any }) => {
 					Xuất dữ liệu
 				</ButtonExtend>
 			</div>
-			<DonutChart
-				yAxis={[dataThongKeCheckInKhoa?.map((item) => item?.tongSoLuotCheckIn ?? 0)]}
-				xAxis={dataThongKeCheckInKhoa?.map((item) => item?.khoa ?? 'Không có thông tin')}
+
+			<ColumnChart
+				height={350}
+				formatY={(val) => inputFormat(val ?? 0)}
 				yLabel={['Số lượt']}
-				height={320}
-				formatY={(val) => `${val} lượt`}
-				showTotal
+				xAxis={sortedData.map((i) => i?.khoa ?? 'Không có thông tin')}
+				yAxis={[sortedData.map((i) => i?.tongSoLuotCheckIn ?? 0)]}
 				otherOptions={{
-					legend: {
-						position: 'bottom',
-						horizontalAlign: 'center',
-					},
+					plotOptions: { bar: { columnWidth: '20%' } },
+					responsive: [
+						{
+							breakpoint: 1600,
+							options: {
+								plotOptions: {
+									bar: {
+										columnWidth: '40%',
+									},
+								},
+							},
+						},
+					],
 				}}
 			/>
 		</Spin>

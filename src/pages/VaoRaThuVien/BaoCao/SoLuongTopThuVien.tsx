@@ -31,7 +31,7 @@ const SoLuongTopVaoRaThuVien = (props: { filters?: any }) => {
 
 	const columns: IColumn<QuanLyThuVien.IThongKeCheckInTop>[] = [
 		{
-			title: 'Mã sinh viên',
+			title: 'Mã SV',
 			dataIndex: 'maSv',
 			width: 90,
 			filterType: 'string',
@@ -86,7 +86,7 @@ const SoLuongTopVaoRaThuVien = (props: { filters?: any }) => {
 			</div>
 
 			<Modal
-				title='Danh sách vào ra thu viện'
+				title='Danh sách vào ra thư viện'
 				visible={visibleChiTiet}
 				onCancel={() => setVisibleChiTiet(false)}
 				footer={
