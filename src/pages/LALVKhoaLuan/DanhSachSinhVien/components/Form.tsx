@@ -1,8 +1,6 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import UploadFile from '@/components/Upload/UploadFile';
-
 import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
-
 import SelectNganhCoSo from '@/pages/DaoTao/Nganh/Select';
 import { ELoaiDotQuanLyThuvien, ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
@@ -12,7 +10,7 @@ import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import SelectDotThuVien from '../QuanLyDot/components/Select';
+import SelectDotThuVien from '../../QuanLyDot/components/Select';
 
 const FormQuanLyThuVien = (props: any) => {
 	const { title, loai, getData } = props;

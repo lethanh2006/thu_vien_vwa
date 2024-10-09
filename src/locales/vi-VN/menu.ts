@@ -9,12 +9,11 @@ export default {
 	'menu.DanhMuc': 'Danh mục',
 	'menu.DanhMuc.ChucVu': 'Chức vụ',
 
-	//Quản lý thư viện
-	'menu.QuanLyThuVien': 'Thư viện',
-	'menu.QuanLyThuVien.BaoCaoThuVien': 'Báo cáo',
-	'menu.QuanLyThuVien.BaoCaoThuVien.ThuVien': 'Thư viện',
-	'menu.QuanLyThuVien.BaoCaoThuVien.LuanAnLuanVanKhoaLuan': 'Luận án/Luận văn/Khóa luận/Đồ án',
-	'menu.QuanLyThuVien.VaoRaThuVien': 'Vào ra thư viện',
-	'menu.QuanLyThuVien.QuanLyDot': 'Quản lý đợt LA, LV, KL',
-	'menu.QuanLyThuVien.LALVKLSinhVien': 'LA, LV, KL sinh viên',
+	'menu.VaoRaThuVien': 'Vào ra thư viện',
+	'menu.VaoRaThuVien.DanhSachSinhVien': 'Danh sách sinh viên',
+	'menu.VaoRaThuVien.TongHop': 'Tổng hợp',
+
+	'menu.LALVKhoaLuan': 'LA, LV, KL sinh viên',
+	'menu.LALVKhoaLuan.QuanLyDot': 'Quản lý đợt',
+	'menu.LALVKhoaLuan.DanhSachSinhVien': 'Danh sách sinh viên',
 };

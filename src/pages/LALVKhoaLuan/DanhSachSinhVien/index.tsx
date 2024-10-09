@@ -27,10 +27,10 @@ import fileDownload from 'js-file-download';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { useModel } from 'umi';
-import SelectNganhCoSo from '../DaoTao/Nganh/Select';
 import ChiTietThuVien from './components/ChiTiet';
 import FormQuanLyThuVien from './components/Form';
-import SelectDotThuVien from './QuanLyDot/components/Select';
+import SelectNganhCoSo from '@/pages/DaoTao/Nganh/Select';
+import SelectDotThuVien from '../QuanLyDot/components/Select';
 
 const QuanLyThuVienPage = () => {
 	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('quanlythuvien.quanlydot');
@@ -342,7 +342,7 @@ const QuanLyThuVienPage = () => {
 	];
 
 	return (
-		<Card title='Luận án, Luận văn, Khóa luận sinh viên'>
+		<Card title='Danh sách sinh viên'>
 			<Tabs activeKey={loai} onChange={(tab) => setLoai(tab as ELoaiDotQuanLyThuvien)}>
 				{Object.values(ELoaiDotQuanLyThuvien).map((tab) => (
 					<Tabs.TabPane key={tab} tab={tab} />

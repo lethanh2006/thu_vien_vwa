@@ -3,33 +3,48 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
+import SelectKhoaSinhVien from '@/pages/DaoTao/KhoaSinhVien/Select';
+import SelectNganhCoSo from '@/pages/DaoTao/Nganh/Select';
+import { exportDanhSachRaVaoThuVien } from '@/services/QuanLyThuVien';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import { ExportOutlined, EyeOutlined, QrcodeOutlined, SettingOutlined } from '@ant-design/icons';
 import { Card, DatePicker, Select, Space, Tag } from 'antd';
+import fileDownload from 'js-file-download';
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
+import CauHinhVaoRaThuVien from './CauHinh';
 import ChiTietSinhVien from './components/ChiTiet';
 import Form from './components/Form';
-import { exportDanhSachRaVaoThuVien } from '@/services/QuanLyThuVien';
-import fileDownload from 'js-file-download';
-import CauHinhVaoRaThuVien from './CauHinh';
-import SelectKhoaSinhVien from '@/pages/DaoTao/KhoaSinhVien/Select';
-import SelectNganhCoSo from '@/pages/DaoTao/Nganh/Select';
 
-const VaoRaThuVienPage = () => {
-	const { page, limit, setPage, filters, setFilters, setRecord } = useModel('quanlythuvien.vaorathuvien');
+const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
+	const { maSinhVien } = props;
+	const { getModel, page, limit, setPage, filters, setFilters, setRecord } = useModel('quanlythuvien.vaorathuvien');
 	const [typeSoft, setTypeSoft] = useState<string>();
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
 	const [visibleSetting, setVisibleSetting] = useState<boolean>(false);
 	const [loadingExport, setLoadingExport] = useState<boolean>(false);
 
+	const getData = () => {
+		if (maSinhVien)
+			getModel(undefined, [
+				{
+					active: true,
+					field: 'maSv',
+					values: [maSinhVien],
+					operator: EOperatorType.INCLUDE,
+				},
+			]);
+	};
+
 	const onCell = (rec: QuanLyThuVien.IVaoRaThuVien) => ({
 		onClick: () => {
-			setRecord(rec);
-			setVisibleChiTiet(true);
+			if (!maSinhVien) {
+				setRecord(rec);
+				setVisibleChiTiet(true);
+			}
 		},
-		style: { cursor: 'pointer' },
+		style: { cursor: !maSinhVien ? 'pointer' : undefined },
 	});
 
 	const handleChange = (value: string) => {
@@ -162,9 +177,11 @@ const VaoRaThuVienPage = () => {
 	const columns: IColumn<QuanLyThuVien.IVaoRaThuVien>[] = [
 		{
 			title: 'Mã sinh viên',
+			align: 'center',
 			dataIndex: 'maSv',
-			width: 150,
+			width: 120,
 			filterType: 'string',
+			hide: !!maSinhVien,
 			onCell,
 		},
 		{
@@ -172,43 +189,7 @@ const VaoRaThuVienPage = () => {
 			dataIndex: 'hoTen',
 			width: 150,
 			filterType: 'string',
-			onCell,
-		},
-		{
-			title: 'Ngày sinh',
-			dataIndex: 'ngaySinh',
-			width: 120,
-			filterType: 'date',
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
-			sortable: true,
-			onCell,
-		},
-		{
-			title: 'Khóa sinh viên',
-			dataIndex: 'maKhoaSinhVien',
-			align: 'center',
-			width: 150,
-			render: (val, rec) => rec?.tenKhoaSinhVien,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectKhoaSinhVien multiple selectMa />,
-			onCell,
-		},
-		{
-			title: 'Ngành đào tạo',
-			dataIndex: 'maNganh',
-			align: 'center',
-			width: 150,
-			render: (val, rec) => rec?.tenNganh,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectNganhCoSo multiple selectMa />,
-			onCell,
-		},
-		{
-			title: 'Số điện thoại',
-			dataIndex: 'soDienThoai',
-			align: 'center',
-			width: 150,
-			filterType: 'string',
+			hide: !!maSinhVien,
 			onCell,
 		},
 		{
@@ -216,7 +197,14 @@ const VaoRaThuVienPage = () => {
 			dataIndex: 'thoiGianCheckIn',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			render: (val, rec) =>
+				val ? (
+					<>
+						Buổi {rec?.buoi ?? '--'}, {moment(val).format('HH:mm DD/MM/YYYY')}
+					</>
+				) : (
+					<Tag color='red'>Chưa vào</Tag>
+				),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -226,31 +214,41 @@ const VaoRaThuVienPage = () => {
 			dataIndex: 'thoiGianCheckOut',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			render: (val, rec) => (val ? moment(val).format('HH:mm DD/MM/YYYY') : <Tag color='red'>Chưa ra</Tag>),
 			filterType: 'date',
 			sortable: true,
 			onCell,
 		},
 		{
-			title: 'Trạng thái vào',
-			dataIndex: 'trangThaiCheckIn',
-			align: 'center',
+			title: 'Khóa sinh viên',
+			dataIndex: 'maKhoaSinhVien',
+			width: 120,
+			render: (val, rec) => rec?.tenKhoaSinhVien,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectKhoaSinhVien multiple selectMa />,
+			hide: !!maSinhVien,
 			onCell,
-			width: 150,
-			render: (val, rec) => {
-				return val ? <Tag color={'green'}>Đã vào</Tag> : <Tag color={'red'}>Chưa vào</Tag>;
-			},
 		},
 		{
-			title: 'Trạng thái ra',
-			dataIndex: 'trangThaiCheckOut',
-			align: 'center',
+			title: 'Ngành đào tạo',
+			dataIndex: 'maNganh',
+			width: 180,
+			render: (val, rec) => rec?.tenNganh,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectNganhCoSo multiple selectMa />,
+			hide: !!maSinhVien,
 			onCell,
-			width: 150,
-			render: (val, rec) => {
-				return val ? <Tag color={'green'}>Đã ra</Tag> : <Tag color={'red'}>Chưa ra</Tag>;
-			},
 		},
+		{
+			title: 'Số điện thoại',
+			dataIndex: 'soDienThoai',
+			align: 'center',
+			width: 120,
+			filterType: 'string',
+			hide: !!maSinhVien,
+			onCell,
+		},
+
 		{
 			title: 'Thao tác',
 			align: 'center',
@@ -267,12 +265,25 @@ const VaoRaThuVienPage = () => {
 					}}
 				/>
 			),
+			hide: !!maSinhVien,
 		},
 	];
 
+	if (maSinhVien)
+		return (
+			<TableBase
+				getData={getData}
+				columns={columns}
+				dependencies={[page, limit, maSinhVien]}
+				modelName='quanlythuvien.vaorathuvien'
+				hideCard
+				buttons={{ create: false }}
+			/>
+		);
+
 	return (
 		<Card
-			title='Ra vào thư viện'
+			title='Danh sách sinh viên vào ra thư viện'
 			extra={<ButtonExtend icon={<SettingOutlined />} onClick={() => setVisibleSetting(true)} />}
 		>
 			<Space style={{ marginBottom: 12 }}>

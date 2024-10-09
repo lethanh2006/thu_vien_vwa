@@ -1,16 +1,21 @@
-import { Descriptions, Modal, Tag } from 'antd';
+import { Button, Descriptions, Modal, Tag } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
 
 const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) => void }) => {
 	const { visible, setVisible } = props;
 	const { record } = useModel('quanlythuvien.vaorathuvien');
+
 	return (
 		<Modal
 			title='Xem chi tiết'
 			visible={visible}
 			width={800}
-			footer={null}
+			footer={
+				<div className='form-footer'>
+					<Button onClick={() => setVisible(false)}>Hủy</Button>
+				</div>
+			}
 			onCancel={() => {
 				setVisible(false);
 			}}
@@ -24,18 +29,22 @@ const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) =
 				<Descriptions.Item label='Khóa sinh viên'>{record?.tenKhoaSinhVien ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Số điện thoại'>{record?.soDienThoai ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Ngành đào tạo'>{record?.tenNganh ?? '--'}</Descriptions.Item>
-				<Descriptions.Item label='Thời gian buổi'>Buổi {record?.buoi ?? '--'}</Descriptions.Item>
+
 				<Descriptions.Item label='Thời gian vào'>
-					{record?.thoiGianCheckIn ? moment(record?.thoiGianCheckIn).format('HH:mm DD/MM/YYYY') : '--'}
+					{record?.thoiGianCheckIn ? (
+						<>
+							Buổi {record?.buoi ?? '--'}, {moment(record?.thoiGianCheckIn).format('HH:mm DD/MM/YYYY')}
+						</>
+					) : (
+						<Tag color='red'>Chưa vào</Tag>
+					)}
 				</Descriptions.Item>
 				<Descriptions.Item label='Thời gian ra'>
-					{record?.thoiGianCheckOut ? moment(record?.thoiGianCheckOut).format('HH:mm DD/MM/YYYY') : '--'}
-				</Descriptions.Item>
-				<Descriptions.Item label='Trạng thái vào'>
-					{record?.trangThaiCheckIn ? <Tag color='green'>Đã vào</Tag> : <Tag color='red'>Chưa vào</Tag>}
-				</Descriptions.Item>
-				<Descriptions.Item label='Trạng thái ra'>
-					{record?.trangThaiCheckOut ? <Tag color='green'>Đã ra</Tag> : <Tag color='red'>Chưa ra</Tag>}
+					{record?.thoiGianCheckOut ? (
+						moment(record?.thoiGianCheckOut).format('HH:mm DD/MM/YYYY')
+					) : (
+						<Tag color='red'>Chưa ra</Tag>
+					)}
 				</Descriptions.Item>
 			</Descriptions>
 		</Modal>

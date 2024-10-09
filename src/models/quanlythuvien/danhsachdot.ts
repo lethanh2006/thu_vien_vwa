@@ -1,6 +1,6 @@
 import useInitModel from '@/hooks/useInitModel';
 import { changeTrangThaiLuanAn, getSettingThuVien, postSettingThuVien } from '@/services/QuanLyThuVien';
-import type { ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constant';
+import type { ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import { message } from 'antd';
 import { useState } from 'react';
