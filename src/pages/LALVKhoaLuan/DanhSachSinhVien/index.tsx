@@ -5,6 +5,7 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 
+import SelectNganhCoSo from '@/pages/DaoTao/Nganh/Select';
 import { exportThuVien } from '@/services/QuanLyThuVien';
 import {
 	colorTrangThaiNopThuVien,
@@ -22,18 +23,15 @@ import {
 	MenuOutlined,
 	PrinterOutlined,
 } from '@ant-design/icons';
-import { Button, Card, InputNumber, Popconfirm, Popover, Space, Tabs, Tag } from 'antd';
+import { Button, Card, InputNumber, Popconfirm, Popover, Tabs, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { useModel } from 'umi';
 import ChiTietThuVien from './components/ChiTiet';
 import FormQuanLyThuVien from './components/Form';
-import SelectNganhCoSo from '@/pages/DaoTao/Nganh/Select';
-import SelectDotThuVien from '../QuanLyDot/components/Select';
 
 const QuanLyThuVienPage = () => {
-	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('quanlythuvien.quanlydot');
 	const {
 		getModel,
 		page,
@@ -48,8 +46,10 @@ const QuanLyThuVienPage = () => {
 		isView,
 		changeTrangThaiLuanAnModel,
 		loadingTrangThai,
+		loai,
+		setLoai,
 	} = useModel('quanlythuvien.danhsachdot');
-	const [loai, setLoai] = useState<ELoaiDotQuanLyThuvien>(ELoaiDotQuanLyThuvien.LUAN_AN);
+
 	const [datePicker, setDatePicker] = useState<any>();
 	const luanAnValue = useRef(settingThuVien?.luanAn);
 
@@ -67,10 +67,7 @@ const QuanLyThuVienPage = () => {
 			},
 		];
 
-		getModel(
-			loai === ELoaiDotQuanLyThuvien.LUAN_AN ? { loai } : { idDot: recDot?._id, loai },
-			datePicker ? filter : (undefined as any),
-		);
+		getModel({ loai }, datePicker ? filter : (undefined as any));
 	};
 
 	const handleSave = () => {
@@ -343,59 +340,45 @@ const QuanLyThuVienPage = () => {
 
 	return (
 		<Card title='Danh sách sinh viên'>
+			<div style={{ marginBottom: 12 }}>
+				<MyDateRangePicker
+					value={datePicker}
+					onChange={(val) => setDatePicker(val)}
+					allowClear
+					style={{ width: 300 }}
+				/>
+			</div>
+
 			<Tabs activeKey={loai} onChange={(tab) => setLoai(tab as ELoaiDotQuanLyThuvien)}>
 				{Object.values(ELoaiDotQuanLyThuvien).map((tab) => (
 					<Tabs.TabPane key={tab} tab={tab} />
 				))}
 			</Tabs>
-			<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-				<Space>
-					{loai !== ELoaiDotQuanLyThuvien.LUAN_AN && (
-						<SelectDotThuVien
-							isSetRecord
-							value={recDot?._id}
-							style={{ width: 250 }}
-							onChange={(val) => setRecDot(danhSachDot?.find((item) => item?._id === val))}
-						/>
-					)}
-
-					<MyDateRangePicker
-						value={datePicker}
-						onChange={(val) => setDatePicker(val)}
-						allowClear
-						style={{ width: 300 }}
-					/>
-				</Space>
-				<Space>
-					Số lưu chiểu hiện tại:{' '}
-					<InputNumber
-						style={{ width: 110 }}
-						addonBefore={
-							loai === ELoaiDotQuanLyThuvien.LUAN_AN
-								? 'LA-'
-								: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-								? 'LV-'
-								: 'KL-DA-'
-						}
-						value={
-							loai === ELoaiDotQuanLyThuvien.LUAN_AN
-								? settingThuVien?.luanAn
-								: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-								? settingThuVien?.luanVan
-								: settingThuVien?.khoaLuan
-						}
-						onChange={(val) => handleChange(Number(val))}
-					/>
-					<Button loading={formSubmiting} type='primary' onClick={handleSave}>
-						Lưu
-					</Button>
-				</Space>
+			<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginBottom: 12 }}>
+				Số lưu chiểu hiện tại:{' '}
+				<InputNumber
+					style={{ width: 110 }}
+					addonBefore={
+						loai === ELoaiDotQuanLyThuvien.LUAN_AN ? 'LA-' : loai === ELoaiDotQuanLyThuvien.LUAN_VAN ? 'LV-' : 'KL-DA-'
+					}
+					value={
+						loai === ELoaiDotQuanLyThuvien.LUAN_AN
+							? settingThuVien?.luanAn
+							: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
+							? settingThuVien?.luanVan
+							: settingThuVien?.khoaLuan
+					}
+					onChange={(val) => handleChange(Number(val))}
+				/>
+				<Button loading={formSubmiting} type='primary' onClick={handleSave}>
+					Lưu
+				</Button>
 			</div>
 
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, datePicker, recDot?._id]}
+				dependencies={[page, limit, datePicker, loai]}
 				modelName='quanlythuvien.danhsachdot'
 				Form={isView ? ChiTietThuVien : FormQuanLyThuVien}
 				formProps={{ getData, loai }}

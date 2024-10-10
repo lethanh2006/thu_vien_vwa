@@ -5,7 +5,7 @@ import { ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
+import { Button, Card, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -53,6 +53,7 @@ const FormDanhSachNop = (props: any) => {
 					...values,
 					idDot: recDot?._id,
 					loai: recDot?.loai,
+					trangThai: ETrangThaiNopThuVien.CHO_XY_LY,
 				},
 				getData,
 			)
@@ -117,19 +118,6 @@ const FormDanhSachNop = (props: any) => {
 					<Col span={8}>
 						<Form.Item label='Chuyên ngành' name='maNganh'>
 							<SelectNganhCoSo selectMa disabled />
-						</Form.Item>
-					</Col>
-					<Col span={8}>
-						<Form.Item label='Trạng thái' name='trangThai' rules={[...rules.required]}>
-							<Select
-								placeholder='Chọn đồ án'
-								options={Object.values([ETrangThaiNopThuVien.CHO_XY_LY, ETrangThaiNopThuVien.DA_DUYET])?.map(
-									(item) => ({
-										value: item,
-										label: item,
-									}),
-								)}
-							/>
 						</Form.Item>
 					</Col>
 				</Row>

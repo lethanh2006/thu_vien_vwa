@@ -26,8 +26,8 @@ export const mapNameThuTrongTuan: Record<EThuTrongTuan, string> = {
 
 export enum ELoaiDotQuanLyThuvien {
 	LUAN_AN = 'Luận án',
-	KHOA_LUAN = 'Khoá luận/Đồ án',
 	LUAN_VAN = 'Luận văn',
+	KHOA_LUAN = 'Khoá luận/Đồ án',
 }
 
 export enum ETrangThaiNopThuVien {

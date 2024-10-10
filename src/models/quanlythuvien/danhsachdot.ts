@@ -1,6 +1,6 @@
 import useInitModel from '@/hooks/useInitModel';
 import { changeTrangThaiLuanAn, getSettingThuVien, postSettingThuVien } from '@/services/QuanLyThuVien';
-import type { ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
+import { ELoaiDotQuanLyThuvien, type ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -10,6 +10,7 @@ export default () => {
 	const { setLoading, setFormSubmiting, formSubmiting } = objInit;
 	const [settingThuVien, setSettingThuVien] = useState<QuanLyThuVien.settingThuVien>();
 	const [loadingTrangThai, setLoadingTrangThai] = useState<boolean>(false);
+	const [loai, setLoai] = useState<ELoaiDotQuanLyThuvien>(ELoaiDotQuanLyThuvien.LUAN_AN);
 
 	const getSettingThuVienModel = async (): Promise<QuanLyThuVien.settingThuVien> => {
 		setLoading(true);
@@ -66,6 +67,8 @@ export default () => {
 
 	return {
 		...objInit,
+		loai,
+		setLoai,
 		loadingTrangThai,
 		settingThuVien,
 		getSettingThuVienModel,

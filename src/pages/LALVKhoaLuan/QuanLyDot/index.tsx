@@ -6,15 +6,16 @@ import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 import { ELoaiDotQuanLyThuvien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Card, Popconfirm, Space } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { history, useModel } from 'umi';
 import ModalFormQuanLyDot from './components/ModalForm';
 
 const QuanLyDotPage = () => {
 	const { getModel, page, limit, handleEdit, deleteModel } = useModel('quanlythuvien.quanlydot');
+	const { setLoai } = useModel('quanlythuvien.danhsachdot');
 	const [datePicker, setDatePicker] = useState<any>();
 
 	const getData = () => {
@@ -81,6 +82,15 @@ const QuanLyDotPage = () => {
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
+					<ButtonExtend
+						tooltip='Chi tiết'
+						onClick={() => {
+							setLoai(rec?.loai);
+							history.push('/la-lv-kl-sinh-vien/danh-sach-sinh-vien');
+						}}
+						type='link'
+						icon={<EyeOutlined />}
+					/>
 					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}

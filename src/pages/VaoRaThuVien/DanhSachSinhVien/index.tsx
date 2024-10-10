@@ -8,7 +8,7 @@ import SelectNganhCoSo from '@/pages/DaoTao/Nganh/Select';
 import { exportDanhSachRaVaoThuVien } from '@/services/QuanLyThuVien';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import { ExportOutlined, EyeOutlined, QrcodeOutlined, SettingOutlined } from '@ant-design/icons';
-import { Card, DatePicker, Select, Space, Tag } from 'antd';
+import { Card, Space, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import moment from 'moment';
 import { useState } from 'react';
@@ -19,22 +19,31 @@ import Form from './components/Form';
 
 const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 	const { maSinhVien } = props;
-	const { getModel, page, limit, setPage, filters, setFilters, setRecord } = useModel('quanlythuvien.vaorathuvien');
-	const [typeSoft, setTypeSoft] = useState<string>();
+	const { getModel, page, limit, filters, setRecord } = useModel('quanlythuvien.vaorathuvien');
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
 	const [visibleSetting, setVisibleSetting] = useState<boolean>(false);
 	const [loadingExport, setLoadingExport] = useState<boolean>(false);
+	const [dateRange, setDateRange] = useState<string[]>([
+		moment().startOf('M').toISOString(),
+		moment().endOf('M').toISOString(),
+	]);
 
 	const getData = () => {
-		if (maSinhVien)
-			getModel(undefined, [
-				{
-					active: true,
-					field: 'maSv',
-					values: [maSinhVien],
-					operator: EOperatorType.INCLUDE,
-				},
-			]);
+		getModel(undefined, [
+			maSinhVien
+				? {
+						active: true,
+						field: 'maSv',
+						values: [maSinhVien],
+						operator: EOperatorType.INCLUDE,
+				  }
+				: {
+						active: true,
+						field: 'thoiGianCheckIn',
+						values: [dateRange[0], dateRange[1]],
+						operator: EOperatorType.BETWEEN,
+				  },
+		]);
 	};
 
 	const onCell = (rec: QuanLyThuVien.IVaoRaThuVien) => ({
@@ -46,120 +55,6 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 		},
 		style: { cursor: !maSinhVien ? 'pointer' : undefined },
 	});
-
-	const handleChange = (value: string) => {
-		setPage(1);
-		setTypeSoft(value);
-		if (value) {
-			switch (value) {
-				case 'week':
-					setFilters([
-						{
-							active: true,
-							field: 'thoiGianCheckIn',
-							values: [moment().subtract(7, 'days').startOf('day').toISOString(), moment().endOf('day').toISOString()],
-							operator: EOperatorType.BETWEEN,
-						},
-						...filters,
-					]);
-					break;
-				case 'month':
-					setFilters([
-						{
-							active: true,
-							field: 'thoiGianCheckIn',
-							values: [
-								moment()
-									.set('month', moment().month() - 1)
-									.startOf('month')
-									.toISOString(),
-								moment().endOf('day').toISOString(),
-							],
-							operator: EOperatorType.BETWEEN,
-						},
-						...filters,
-					]);
-					break;
-				case 'precious':
-					setFilters([
-						{
-							active: true,
-							field: 'thoiGianCheckIn',
-							values: [
-								moment()
-									.set('month', moment().month() - 6)
-									.startOf('month')
-									.toISOString(),
-								moment().endOf('day').toISOString(),
-							],
-							operator: EOperatorType.BETWEEN,
-						},
-						...filters,
-					]);
-					break;
-				case 'year':
-					setFilters([
-						{
-							active: true,
-							field: 'thoiGianCheckIn',
-							values: [
-								moment()
-									.set('year', moment().year() - 1)
-									.startOf('year')
-									.toISOString(),
-								moment().endOf('day').toISOString(),
-							],
-							operator: EOperatorType.BETWEEN,
-						},
-						...filters,
-					]);
-					break;
-				case 'detail':
-					break;
-				case 'about':
-					break;
-			}
-		} else {
-			const temp = [...(filters ?? [])].filter((item) => item.field !== 'thoiGianCheckIn');
-			setFilters(temp);
-		}
-	};
-
-	const handleChangeTime = (value: any) => {
-		setPage(1);
-		if (value) {
-			setFilters([
-				{
-					active: true,
-					field: 'thoiGianCheckIn',
-					values: [moment(value[0]).startOf('day').toISOString(), moment(value[1]).endOf('day').toISOString()],
-					operator: EOperatorType.BETWEEN,
-				},
-				...filters,
-			]);
-		} else {
-			const temp = [...(filters ?? [])].filter((item) => item.field !== 'thoiGianCheckIn');
-			setFilters(temp);
-		}
-	};
-
-	const handleChangeTimeDate = (value: any) => {
-		setPage(1);
-		if (value) {
-			setFilters([
-				{
-					active: true,
-					field: 'thoiGianCheckIn',
-					values: [moment(value).startOf('day').toISOString(), moment(value).endOf('day').toISOString()],
-					operator: EOperatorType.BETWEEN,
-				},
-				...filters,
-			]);
-		} else {
-			const temp = [...(filters ?? [])].filter((item) => item.field !== 'thoiGianCheckIn');
-			setFilters(temp);
-		}
-	};
 
 	const handlExport = () => {
 		setLoadingExport(true);
@@ -185,7 +80,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 			onCell,
 		},
 		{
-			title: 'Họ và tên',
+			title: 'Họ tên',
 			dataIndex: 'hoTen',
 			width: 150,
 			filterType: 'string',
@@ -196,7 +91,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 			title: 'Thời gian vào',
 			dataIndex: 'thoiGianCheckIn',
 			align: 'center',
-			width: 120,
+			width: 150,
 			render: (val, rec) =>
 				val ? (
 					<>
@@ -287,60 +182,24 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 			extra={<ButtonExtend icon={<SettingOutlined />} onClick={() => setVisibleSetting(true)} />}
 		>
 			<Space style={{ marginBottom: 12 }}>
-				<Select
-					onChange={handleChange}
-					style={{ width: 250 }}
-					value={typeSoft}
-					placeholder='Chọn khoảng thời gian'
-					options={[
-						{
-							value: 'week',
-							label: 'Tuần trước',
-						},
-						{
-							value: 'month',
-							label: 'Tháng trước',
-						},
-						{
-							value: 'precious',
-							label: '6 tháng trước',
-						},
-						{
-							value: 'year',
-							label: '1 Năm trước',
-						},
-						{
-							value: 'detail',
-							label: 'Thời gian cụ thể',
-						},
-						{
-							value: 'about',
-							label: 'Khoảng thời gian cụ thể',
-						},
-					]}
-					allowClear
+				<MyDateRangePicker
+					value={[moment(dateRange[0]), moment(dateRange[1])]}
+					onChange={(val: any) => setDateRange(val)}
+					ranges={{
+						'Hôm nay': [moment(), moment()],
+						'Tuần này': [moment().startOf('week'), moment().endOf('week')],
+						'Tháng này': [moment().startOf('M'), moment().endOf('M')],
+					}}
 				/>
-				{typeSoft === 'detail' && (
-					<DatePicker
-						style={{ marginRight: '16px' }}
-						onChange={handleChangeTimeDate}
-						disabledDate={(cur) => moment(cur).isAfter(moment())}
-					/>
-				)}
-				{typeSoft === 'about' && (
-					<MyDateRangePicker
-						style={{ marginRight: '16px' }}
-						onChange={handleChangeTime}
-						disabledDate={(cur) => moment(cur).isAfter(moment())}
-					/>
-				)}
 			</Space>
 			<TableBase
+				getData={getData}
 				columns={columns}
-				dependencies={[page, limit]}
+				dependencies={[page, limit, dateRange]}
 				modelName='quanlythuvien.vaorathuvien'
 				hideCard
 				Form={Form}
+				formProps={{ getData }}
 				title='Ra vào thư viện'
 				otherButtons={[
 					<ButtonExtend loading={loadingExport} key='1' icon={<ExportOutlined />} onClick={() => handlExport()}>

@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
 const FormVaoRaThuVien = (props: any) => {
-	const { title } = props;
+	const { title, getData } = props;
 	const [form] = Form.useForm();
 	const { formSubmiting, record, setVisibleForm, edit, visibleForm, postRaVaoThuVienModel } =
 		useModel('quanlythuvien.vaorathuvien');
@@ -32,7 +32,7 @@ const FormVaoRaThuVien = (props: any) => {
 	};
 
 	const onFinish = async (values: any) => {
-		postRaVaoThuVienModel(values)
+		postRaVaoThuVienModel(values, getData)
 			.then(() => setVisibleForm(false))
 			.catch((er) => console.log(er));
 	};

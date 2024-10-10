@@ -4,15 +4,16 @@ import type { IColumn } from '@/components/Table/typing';
 import { exportThongKe } from '@/services/QuanLyThuVien';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import { getFilenameHeader } from '@/utils/utils';
-import { ExportOutlined } from '@ant-design/icons';
-import { Button, Card, Modal } from 'antd';
+import { ExportOutlined, EyeOutlined } from '@ant-design/icons';
+import { Button, Card, Modal, Progress } from 'antd';
 import fileDownload from 'js-file-download';
+import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { history, useModel } from 'umi';
 import VaoRaThuVienPage from '../DanhSachSinhVien';
 
-const SoLuongTopVaoRaThuVien = (props: { filters?: any }) => {
-	const { filters } = props;
+const SoLuongTopVaoRaThuVien = (props: { filters?: any; isDashBoard?: boolean }) => {
+	const { filters, isDashBoard } = props;
 	const { loadingTop, dataThongKeCheckInTop, getSoLuotCheckInTopModel } = useModel('quanlythuvien.vaorathuvien');
 	const [record, setRecord] = useState<QuanLyThuVien.IThongKeCheckInTop>();
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
@@ -47,8 +48,12 @@ const SoLuongTopVaoRaThuVien = (props: { filters?: any }) => {
 		{
 			title: 'Tổng',
 			dataIndex: 'total',
-			align: 'center',
-			width: 80,
+			width: 150,
+			render: (val, rec) => {
+				const total = _.sumBy(dataThongKeCheckInTop, 'total');
+				const percent = ((val / total) * 100).toFixed(2);
+				return <Progress percent={Number(percent)} style={{ width: '80%' }} />;
+			},
 			filterType: 'number',
 			sortable: true,
 			onCell,
@@ -67,10 +72,19 @@ const SoLuongTopVaoRaThuVien = (props: { filters?: any }) => {
 		<Card
 			loading={loadingTop}
 			title='Bạn đọc có số lượt vào thư viện nhiều nhất'
-			bordered={false}
-			bodyStyle={{ padding: 0 }}
+			bordered={isDashBoard ? true : false}
+			bodyStyle={isDashBoard ? undefined : { padding: 0 }}
+			extra={
+				isDashBoard ? (
+					<ButtonExtend
+						title='Chi tiết'
+						icon={<EyeOutlined />}
+						onClick={() => history.push('/vao-ra-thu-vien/tong-hop')}
+					/>
+				) : null
+			}
 		>
-			<div style={{ marginTop: 12 }}>
+			<div style={isDashBoard ? undefined : { marginTop: 12 }}>
 				<TableStaticData
 					columns={columns}
 					data={dataThongKeCheckInTop ?? []}
@@ -79,7 +93,7 @@ const SoLuongTopVaoRaThuVien = (props: { filters?: any }) => {
 					hasTotal
 					addStt
 				>
-					<ButtonExtend size='small' icon={<ExportOutlined />} onClick={() => handleExport()}>
+					<ButtonExtend icon={<ExportOutlined />} onClick={() => handleExport()}>
 						Xuất dữ liệu
 					</ButtonExtend>
 				</TableStaticData>

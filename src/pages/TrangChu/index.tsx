@@ -20,10 +20,10 @@ const TrangChu = () => {
 		<>
 			<SplitPane split={isMobile ? 'horizontal' : 'vertical'} onChange={handlePaneSizeChange}>
 				<Pane initialSize={paneSize} minSize='40%'>
-					<SoLuongVaoRaThuVienTheoThang />
+					<SoLuongVaoRaThuVienTheoThang isDashBoard />
 				</Pane>
 				<Pane minSize='20%'>
-					<SoLuongTopVaoRaThuVien />
+					<SoLuongTopVaoRaThuVien isDashBoard />
 				</Pane>
 			</SplitPane>
 		</>

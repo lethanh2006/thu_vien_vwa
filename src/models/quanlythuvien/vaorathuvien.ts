@@ -13,7 +13,9 @@ import { message } from 'antd';
 import { useState } from 'react';
 
 export default () => {
-	const objInit = useInitModel<QuanLyThuVien.IVaoRaThuVien>('ql-thu-vien', undefined, undefined, ipSlink);
+	const objInit = useInitModel<QuanLyThuVien.IVaoRaThuVien>('ql-thu-vien', undefined, undefined, ipSlink, {
+		thoiGianCheckIn: -1,
+	});
 	const { formSubmiting, setFormSubmiting, getModel } = objInit;
 	const [loadingNganh, setLoadingNganh] = useState<boolean>(false);
 	const [loadingTop, setLoadingTop] = useState<boolean>(false);

@@ -14,6 +14,6 @@ export default {
 	'menu.VaoRaThuVien.TongHop': 'Tổng hợp',
 
 	'menu.LALVKhoaLuan': 'LA, LV, KL sinh viên',
-	'menu.LALVKhoaLuan.QuanLyDot': 'Quản lý đợt',
+	'menu.LALVKhoaLuan.QuanLyDot': 'Đợt nộp LA, LV, KL',
 	'menu.LALVKhoaLuan.DanhSachSinhVien': 'Danh sách sinh viên',
 };
