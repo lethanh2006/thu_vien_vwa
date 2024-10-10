@@ -4,23 +4,41 @@ import type { IColumn } from '@/components/Table/typing';
 import { exportThongKe } from '@/services/QuanLyThuVien';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import { getFilenameHeader } from '@/utils/utils';
-import { ExportOutlined, EyeOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, ExportOutlined } from '@ant-design/icons';
 import { Button, Card, Modal, Progress } from 'antd';
 import fileDownload from 'js-file-download';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { history, useModel } from 'umi';
+import { Link, useModel } from 'umi';
 import VaoRaThuVienPage from '../DanhSachSinhVien';
+import { EOperatorType } from '@/components/Table/constant';
 
-const SoLuongTopVaoRaThuVien = (props: { filters?: any; isDashBoard?: boolean }) => {
-	const { filters, isDashBoard } = props;
+const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean }) => {
+	const { dateRange, isDashBoard } = props;
 	const { loadingTop, dataThongKeCheckInTop, getSoLuotCheckInTopModel } = useModel('quanlythuvien.vaorathuvien');
 	const [record, setRecord] = useState<QuanLyThuVien.IThongKeCheckInTop>();
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
 
+	const filters = [
+		{
+			active: true,
+			field: 'thoiGianCheckIn',
+			values: [dateRange?.[0], dateRange?.[1]],
+			operator: EOperatorType.BETWEEN,
+		},
+	];
+
 	useEffect(() => {
-		getSoLuotCheckInTopModel(undefined, filters ? filters : undefined);
-	}, [filters]);
+		getSoLuotCheckInTopModel(undefined, dateRange ? filters : undefined);
+	}, [dateRange]);
+
+	const handleExport = async () => {
+		await exportThongKe('top', undefined, filters ? filters : undefined).then((response) => {
+			if (response?.data) {
+				fileDownload(response?.data, getFilenameHeader(response));
+			}
+		});
+	};
 
 	const onCell = (rec: QuanLyThuVien.IThongKeCheckInTop) => ({
 		onClick: () => {
@@ -46,13 +64,13 @@ const SoLuongTopVaoRaThuVien = (props: { filters?: any; isDashBoard?: boolean })
 			onCell,
 		},
 		{
-			title: 'Tổng',
+			title: 'Tổng lượt',
 			dataIndex: 'total',
 			width: 150,
-			render: (val, rec) => {
-				const total = _.sumBy(dataThongKeCheckInTop, 'total');
-				const percent = ((val / total) * 100).toFixed(2);
-				return <Progress percent={Number(percent)} style={{ width: '80%' }} />;
+			render: (val, rec, index) => {
+				const firstTotal = dataThongKeCheckInTop[0]?.total || 1;
+				const percent = index === 0 ? 100 : ((val / firstTotal) * 100).toFixed(2);
+				return <Progress percent={Number(percent)} format={() => `${val}`} style={{ width: '100%' }} />;
 			},
 			filterType: 'number',
 			sortable: true,
@@ -60,27 +78,17 @@ const SoLuongTopVaoRaThuVien = (props: { filters?: any; isDashBoard?: boolean })
 		},
 	];
 
-	const handleExport = async () => {
-		await exportThongKe('top', undefined, filters ? filters : undefined).then((response) => {
-			if (response?.data) {
-				fileDownload(response?.data, getFilenameHeader(response));
-			}
-		});
-	};
-
 	return (
 		<Card
 			loading={loadingTop}
 			title='Bạn đọc có số lượt vào thư viện nhiều nhất'
 			bordered={isDashBoard ? true : false}
-			bodyStyle={isDashBoard ? undefined : { padding: 0 }}
+			style={isDashBoard ? undefined : { marginLeft: -18 }}
 			extra={
 				isDashBoard ? (
-					<ButtonExtend
-						title='Chi tiết'
-						icon={<EyeOutlined />}
-						onClick={() => history.push('/vao-ra-thu-vien/tong-hop')}
-					/>
+					<Link to='/vao-ra-thu-vien/tong-hop'>
+						Xem thêm <ArrowRightOutlined />
+					</Link>
 				) : null
 			}
 		>
@@ -88,7 +96,6 @@ const SoLuongTopVaoRaThuVien = (props: { filters?: any; isDashBoard?: boolean })
 				<TableStaticData
 					columns={columns}
 					data={dataThongKeCheckInTop ?? []}
-					size='small'
 					otherProps={{ pagination: false }}
 					hasTotal
 					addStt

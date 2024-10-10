@@ -3,12 +3,12 @@ import MyDatePicker from '@/components/MyDatePicker';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { exportThongKe } from '@/services/QuanLyThuVien';
 import { getFilenameHeader } from '@/utils/utils';
-import { ExportOutlined, EyeOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, ExportOutlined } from '@ant-design/icons';
 import { Card, Space } from 'antd';
 import fileDownload from 'js-file-download';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { history, useModel } from 'umi';
+import { Link, useModel } from 'umi';
 
 const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 	const { isDashBoard } = props;
@@ -37,19 +37,15 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 		<Card
 			loading={loadingThang}
 			title='Số lượt vào/ra thư viện theo tháng'
-			bordered={isDashBoard ? true : false}
-			bodyStyle={isDashBoard ? undefined : { padding: 0 }}
 			extra={
 				isDashBoard ? (
-					<ButtonExtend
-						title='Chi tiết'
-						icon={<EyeOutlined />}
-						onClick={() => history.push('/vao-ra-thu-vien/tong-hop')}
-					/>
+					<Link to='/vao-ra-thu-vien/tong-hop'>
+						Xem thêm <ArrowRightOutlined />
+					</Link>
 				) : null
 			}
 		>
-			<Space style={{ marginBottom: 12, marginTop: isDashBoard ? 0 : 12 }}>
+			<Space style={{ marginBottom: 12 }}>
 				<MyDatePicker
 					value={currentMonth}
 					pickerStyle={'month'}

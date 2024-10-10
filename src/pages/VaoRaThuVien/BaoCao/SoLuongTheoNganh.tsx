@@ -1,5 +1,6 @@
 import ColumnChart from '@/components/Chart/ColumnChart';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { EOperatorType } from '@/components/Table/constant';
 import { exportThongKe } from '@/services/QuanLyThuVien';
 import { getFilenameHeader, inputFormat } from '@/utils/utils';
 import { ExportOutlined } from '@ant-design/icons';
@@ -9,16 +10,25 @@ import _ from 'lodash';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
-const SoLuongVaoRaThuVienTheoNganh = (props: { filters?: any }) => {
-	const { filters } = props;
+const SoLuongVaoRaThuVienTheoNganh = (props: { dateRange?: any }) => {
+	const { dateRange } = props;
 	const { getSoLuotCheckInNganhModel, loadingNganh, dataThongKeCheckInNganh } = useModel('quanlythuvien.vaorathuvien');
 
+	const filters = [
+		{
+			active: true,
+			field: 'thoiGianCheckIn',
+			values: [dateRange?.[0], dateRange?.[1]],
+			operator: EOperatorType.BETWEEN,
+		},
+	];
+
 	useEffect(() => {
-		getSoLuotCheckInNganhModel(undefined, filters ? filters : undefined);
-	}, [filters]);
+		getSoLuotCheckInNganhModel(undefined, dateRange ? filters : undefined);
+	}, [dateRange]);
 
 	const handleExport = async () => {
-		await exportThongKe('thong-ke-nganh', undefined, filters ? filters : undefined).then((response) => {
+		await exportThongKe('thong-ke-nganh', undefined, dateRange ? filters : undefined).then((response) => {
 			if (response?.data) {
 				fileDownload(response?.data, getFilenameHeader(response));
 			}
@@ -37,7 +47,7 @@ const SoLuongVaoRaThuVienTheoNganh = (props: { filters?: any }) => {
 	return (
 		<Spin spinning={loadingNganh}>
 			<div style={{ marginBottom: 12 }}>
-				<ButtonExtend size='small' icon={<ExportOutlined />} onClick={() => handleExport()}>
+				<ButtonExtend icon={<ExportOutlined />} onClick={() => handleExport()}>
 					Xuất dữ liệu
 				</ButtonExtend>
 			</div>
