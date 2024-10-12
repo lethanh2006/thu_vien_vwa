@@ -48,7 +48,7 @@ const FormQuanLyDot = (props: { afterAddNew?: (rec: QuanLyThuVien.IQuanLyDot) =>
 					<Form.Item name='loai' label='Loại' rules={[...rules.required]}>
 						<Select
 							placeholder='Chọn loại'
-							options={Object.values(ELoaiDotQuanLyThuvien).map((item) => ({
+							options={Object.values([ELoaiDotQuanLyThuvien.LUAN_VAN, ELoaiDotQuanLyThuvien.KHOA_LUAN]).map((item) => ({
 								value: item,
 								label: item,
 							}))}

@@ -16,7 +16,7 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 	const [currentMonth, setCurrentMonth] = useState<moment.Moment>(moment());
 
 	useEffect(() => {
-		getSoLuotCheckInThangModel(moment(currentMonth).get('month') + 1, moment(currentMonth).get('year'));
+		getSoLuotCheckInThangModel(moment(currentMonth).get('month'), moment(currentMonth).get('year'));
 	}, [currentMonth]);
 
 	const handleExport = async () => {
