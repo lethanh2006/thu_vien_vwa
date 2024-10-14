@@ -59,7 +59,7 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 				</ButtonExtend>
 			</Space>
 			<LineChart
-				xAxis={dataThongKeCheckInThang.map((item) => `${item.ngay}/${item.thang}`)}
+				xAxis={dataThongKeCheckInThang.map((item) => `${item.ngay}/${item.thang + 1}`)}
 				yAxis={[
 					dataThongKeCheckInThang.map((item) => item.tongSoLuotCheckIn),
 					dataThongKeCheckInThang.map((item) => item.tongSoLuotCheckOut),

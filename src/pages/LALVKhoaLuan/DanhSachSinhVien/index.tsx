@@ -23,7 +23,7 @@ import {
 	MenuOutlined,
 	PrinterOutlined,
 } from '@ant-design/icons';
-import { Button, Card, InputNumber, Popconfirm, Popover, Tabs, Tag } from 'antd';
+import { Button, Card, InputNumber, Popconfirm, Popover, Space, Tabs, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
@@ -355,24 +355,30 @@ const QuanLyThuVienPage = () => {
 				))}
 			</Tabs>
 			<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginBottom: 12 }}>
-				Số lưu chiểu hiện tại:{' '}
-				<InputNumber
-					style={{ width: 110 }}
-					addonBefore={
-						loai === ELoaiDotQuanLyThuvien.LUAN_AN ? 'LA-' : loai === ELoaiDotQuanLyThuvien.LUAN_VAN ? 'LV-' : 'KL-DA-'
-					}
-					value={
-						loai === ELoaiDotQuanLyThuvien.LUAN_AN
-							? settingThuVien?.luanAn
-							: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-							? settingThuVien?.luanVan
-							: settingThuVien?.khoaLuan
-					}
-					onChange={(val) => handleChange(Number(val))}
-				/>
-				<Button loading={formSubmiting} type='primary' onClick={handleSave}>
-					Lưu
-				</Button>
+				<Space>
+					<span>Số lưu chiểu hiện tại:</span>
+					<InputNumber
+						style={{ width: 110 }}
+						addonBefore={
+							loai === ELoaiDotQuanLyThuvien.LUAN_AN
+								? 'LA-'
+								: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
+								? 'LV-'
+								: 'KL-DA-'
+						}
+						value={
+							loai === ELoaiDotQuanLyThuvien.LUAN_AN
+								? settingThuVien?.luanAn
+								: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
+								? settingThuVien?.luanVan
+								: settingThuVien?.khoaLuan
+						}
+						onChange={(val) => handleChange(Number(val))}
+					/>
+					<Button loading={formSubmiting} type='primary' onClick={handleSave}>
+						Lưu
+					</Button>
+				</Space>
 			</div>
 
 			<TableBase

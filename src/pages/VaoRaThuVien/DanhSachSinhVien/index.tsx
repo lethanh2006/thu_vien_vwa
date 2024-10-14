@@ -3,8 +3,6 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
-import SelectKhoaSinhVien from '@/pages/DaoTao/KhoaSinhVien/Select';
-import SelectNganhCoSo from '@/pages/DaoTao/Nganh/Select';
 import { exportDanhSachRaVaoThuVien } from '@/services/QuanLyThuVien';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import { ExportOutlined, EyeOutlined, QrcodeOutlined, SettingOutlined } from '@ant-design/icons';
@@ -88,6 +86,17 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 			onCell,
 		},
 		{
+			title: 'Ngày sinh',
+			dataIndex: 'ngaySinh',
+			align: 'center',
+			width: 120,
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			filterType: 'date',
+			sortable: true,
+			hide: !!maSinhVien,
+			onCell,
+		},
+		{
 			title: 'Thời gian vào',
 			dataIndex: 'thoiGianCheckIn',
 			align: 'center',
@@ -116,21 +125,18 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 		},
 		{
 			title: 'Khóa sinh viên',
-			dataIndex: 'maKhoaSinhVien',
+			dataIndex: 'tenKhoaSinhVien',
 			width: 120,
-			render: (val, rec) => rec?.tenKhoaSinhVien,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectKhoaSinhVien multiple selectMa />,
+			filterType: 'string',
 			hide: !!maSinhVien,
 			onCell,
 		},
 		{
 			title: 'Ngành đào tạo',
-			dataIndex: 'maNganh',
+			dataIndex: 'tenNganh',
 			width: 180,
-			render: (val, rec) => rec?.tenNganh,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectNganhCoSo multiple selectMa />,
+			render: (val, rec) => `${val} - ${rec?.maNganh}`,
+			filterType: 'string',
 			hide: !!maSinhVien,
 			onCell,
 		},
