@@ -17,33 +17,52 @@ export async function exportDanhSachRaVaoThuVien(params?: {
 	});
 }
 
-export async function getSoLuotCheckInNganh(condition?: any, filters?: any[]) {
+export async function getSoLuotCheckInNganh(params?: {
+	thoiGianBatDau?: string;
+	thoiGianKetThuc?: string;
+	condition?: any;
+	filters?: any[];
+}) {
 	return axios.get(`${ipSlink}/ql-thu-vien/nganh/so-luot-checkin`, {
-		params: { condition, filters },
+		params,
 	});
 }
 
-export async function getSoLuotCheckInTop(condition?: any, filters?: any[]) {
+export async function getSoLuotCheckInTop(params?: {
+	thoiGianBatDau?: string;
+	thoiGianKetThuc?: string;
+	condition?: any;
+	filters?: any[];
+}) {
 	return axios.get(`${ipSlink}/ql-thu-vien/top/so-luot-checkin`, {
-		params: { condition, filters },
+		params,
 	});
 }
 
-export async function getSoLuotCheckInKhoa(condition?: any, filters?: any[]) {
+export async function getSoLuotCheckInKhoa(params?: {
+	thoiGianBatDau?: string;
+	thoiGianKetThuc?: string;
+	condition?: any;
+	filters?: any[];
+}) {
 	return axios.get(`${ipSlink}/ql-thu-vien/khoa/so-luot-checkin`, {
-		params: { condition, filters },
+		params,
 	});
 }
 
 export async function exportThongKe(
 	type: 'thong-ke-khoa' | 'thong-ke-nganh' | 'thong-ke-thang' | 'top',
-	condition?: any,
-	filters?: any[],
-	thang?: number,
-	nam?: number,
+	params?: {
+		thoiGianBatDau?: string;
+		thoiGianKetThuc?: string;
+		condition?: any;
+		filters?: any[];
+		thang?: number;
+		nam?: number;
+	},
 ) {
 	return axios.get(`${ipSlink}/ql-thu-vien/export/${type}`, {
-		params: { condition, filters, thang, nam },
+		params,
 		responseType: 'arraybuffer',
 	});
 }

@@ -7,11 +7,9 @@ import { getFilenameHeader } from '@/utils/utils';
 import { ArrowRightOutlined, ExportOutlined } from '@ant-design/icons';
 import { Button, Card, Modal, Progress } from 'antd';
 import fileDownload from 'js-file-download';
-import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link, useModel } from 'umi';
 import VaoRaThuVienPage from '../DanhSachSinhVien';
-import { EOperatorType } from '@/components/Table/constant';
 
 const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean }) => {
 	const { dateRange, isDashBoard } = props;
@@ -19,21 +17,15 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 	const [record, setRecord] = useState<QuanLyThuVien.IThongKeCheckInTop>();
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
 
-	const filters = [
-		{
-			active: true,
-			field: 'thoiGianCheckIn',
-			values: [dateRange?.[0], dateRange?.[1]],
-			operator: EOperatorType.BETWEEN,
-		},
-	];
-
 	useEffect(() => {
-		getSoLuotCheckInTopModel(undefined, dateRange ? filters : undefined);
+		getSoLuotCheckInTopModel(dateRange?.[0], dateRange?.[1]);
 	}, [dateRange]);
 
 	const handleExport = async () => {
-		await exportThongKe('top', undefined, filters ? filters : undefined).then((response) => {
+		await exportThongKe('top', {
+			thoiGianBatDau: dateRange?.[0],
+			thoiGianKetThuc: dateRange?.[1],
+		}).then((response) => {
 			if (response?.data) {
 				fileDownload(response?.data, getFilenameHeader(response));
 			}

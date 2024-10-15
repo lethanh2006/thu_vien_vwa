@@ -54,10 +54,15 @@ export default () => {
 		}
 	};
 
-	const getSoLuotCheckInNganhModel = async (condition?: any, filters?: any[]): Promise<any> => {
+	const getSoLuotCheckInNganhModel = async (
+		thoiGianBatDau?: string,
+		thoiGianKetThuc?: string,
+		condition?: any,
+		filters?: any[],
+	): Promise<any> => {
 		setLoadingNganh(true);
 		try {
-			const res = await getSoLuotCheckInNganh(condition, filters);
+			const res = await getSoLuotCheckInNganh({ thoiGianBatDau, thoiGianKetThuc, condition, filters });
 			setDataThongKeCheckInNganh(res.data?.data);
 			return res.data?.data;
 		} catch (err) {
@@ -67,10 +72,15 @@ export default () => {
 		}
 	};
 
-	const getSoLuotCheckInTopModel = async (condition?: any, filters?: any[]): Promise<any> => {
+	const getSoLuotCheckInTopModel = async (
+		thoiGianBatDau?: string,
+		thoiGianKetThuc?: string,
+		condition?: any,
+		filters?: any[],
+	): Promise<any> => {
 		setLoadingTop(true);
 		try {
-			const res = await getSoLuotCheckInTop(condition, filters);
+			const res = await getSoLuotCheckInTop({ thoiGianBatDau, thoiGianKetThuc, condition, filters });
 			setDataThongKeCheckInTop(res.data?.data);
 			return res.data?.data;
 		} catch (err) {
@@ -80,10 +90,15 @@ export default () => {
 		}
 	};
 
-	const getSoLuotCheckInKhoaModel = async (condition?: any, filters?: any[]): Promise<any> => {
+	const getSoLuotCheckInKhoaModel = async (
+		thoiGianBatDau?: string,
+		thoiGianKetThuc?: string,
+		condition?: any,
+		filters?: any[],
+	): Promise<any> => {
 		setLoadingKhoa(true);
 		try {
-			const res = await getSoLuotCheckInKhoa(condition, filters);
+			const res = await getSoLuotCheckInKhoa({ thoiGianBatDau, thoiGianKetThuc, condition, filters });
 			setDataThongKeCheckInKhoa(res.data?.data);
 			return res.data?.data;
 		} catch (err) {
