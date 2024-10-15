@@ -57,6 +57,8 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 	const handlExport = () => {
 		setLoadingExport(true);
 		exportDanhSachRaVaoThuVien({
+			thoiGianBatDau: dateRange[0],
+			thoiGianKetThuc: dateRange[1],
 			filters: filters ?? undefined,
 		})
 			.then((res) => {
@@ -82,17 +84,6 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 			dataIndex: 'hoTen',
 			width: 150,
 			filterType: 'string',
-			hide: !!maSinhVien,
-			onCell,
-		},
-		{
-			title: 'Ngày sinh',
-			dataIndex: 'ngaySinh',
-			align: 'center',
-			width: 120,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
 			hide: !!maSinhVien,
 			onCell,
 		},
@@ -124,6 +115,26 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 			onCell,
 		},
 		{
+			title: 'SĐT',
+			dataIndex: 'soDienThoai',
+			align: 'center',
+			width: 120,
+			filterType: 'string',
+			hide: !!maSinhVien,
+			onCell,
+		},
+		{
+			title: 'Ngày sinh',
+			dataIndex: 'ngaySinh',
+			align: 'center',
+			width: 120,
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			filterType: 'date',
+			sortable: true,
+			hide: !!maSinhVien,
+			onCell,
+		},
+		{
 			title: 'Khóa sinh viên',
 			dataIndex: 'tenKhoaSinhVien',
 			width: 120,
@@ -140,16 +151,6 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 			hide: !!maSinhVien,
 			onCell,
 		},
-		{
-			title: 'Số điện thoại',
-			dataIndex: 'soDienThoai',
-			align: 'center',
-			width: 120,
-			filterType: 'string',
-			hide: !!maSinhVien,
-			onCell,
-		},
-
 		{
 			title: 'Thao tác',
 			align: 'center',

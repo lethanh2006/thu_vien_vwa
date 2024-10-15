@@ -80,7 +80,6 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 
 	return (
 		<Card
-			loading={loadingTop}
 			title='Bạn đọc có số lượt vào thư viện nhiều nhất'
 			bordered={isDashBoard ? true : false}
 			style={isDashBoard ? undefined : { marginLeft: -18 }}
@@ -94,6 +93,7 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 		>
 			<div style={isDashBoard ? undefined : { marginTop: 12 }}>
 				<TableStaticData
+					loading={loadingTop}
 					columns={columns}
 					data={dataThongKeCheckInTop ?? []}
 					otherProps={{ pagination: false }}

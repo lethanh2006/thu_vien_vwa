@@ -6,8 +6,8 @@ export async function postRaVaoThuVien(payload: any) {
 }
 
 export async function exportDanhSachRaVaoThuVien(params?: {
-	thoiGianBatDau?: Date;
-	thoiGianKetThuc?: Date;
+	thoiGianBatDau?: string;
+	thoiGianKetThuc?: string;
 	condition?: any;
 	filters?: any[];
 }) {
