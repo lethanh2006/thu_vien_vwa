@@ -24,7 +24,7 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 			'thong-ke-thang',
 			undefined,
 			undefined,
-			moment(currentMonth).get('month') + 1,
+			moment(currentMonth).get('month'),
 			moment(currentMonth).get('year'),
 		).then((response) => {
 			if (response?.data) {
