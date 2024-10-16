@@ -14,7 +14,10 @@ const ThongKeThuVien = () => {
 	const [activeKey, setActiveKey] = useState<string>('nganh');
 	const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 	const [paneSize, setPaneSize] = useState('65%');
-	const [dateRange, setDateRange] = useState<any>([moment().startOf('M'), moment().endOf('M')]);
+	const [dateRange, setDateRange] = useState<any>([
+		moment().startOf('M').toISOString(),
+		moment().endOf('M').toISOString(),
+	]);
 
 	const handlePaneSizeChange = (size: any) => {
 		setPaneSize(size[0]);

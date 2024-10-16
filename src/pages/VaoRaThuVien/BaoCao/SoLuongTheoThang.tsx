@@ -20,13 +20,10 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 	}, [currentMonth]);
 
 	const handleExport = async () => {
-		await exportThongKe(
-			'thong-ke-thang',
-			undefined,
-			undefined,
-			moment(currentMonth).get('month'),
-			moment(currentMonth).get('year'),
-		).then((response) => {
+		await exportThongKe('thong-ke-thang', {
+			thang: moment(currentMonth).get('month'),
+			nam: moment(currentMonth).get('year'),
+		}).then((response) => {
 			if (response?.data) {
 				fileDownload(response?.data, getFilenameHeader(response));
 			}
