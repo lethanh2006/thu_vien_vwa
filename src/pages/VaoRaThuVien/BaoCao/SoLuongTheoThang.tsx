@@ -64,7 +64,7 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 					yLabel={['Số lượng vào', 'Số lượng ra']}
 					colors={['#0982c9', '#18b903']}
 					title='Thống kê'
-					height={350}
+					height={450}
 					formatY={(val) => `${val}`}
 					otherOptions={{
 						legend: {

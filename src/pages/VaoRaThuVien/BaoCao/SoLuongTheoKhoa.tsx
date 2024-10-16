@@ -46,7 +46,7 @@ const SoLuongVaoRaThuVienTheoKhoa = (props: { dateRange?: any }) => {
 			</div>
 
 			<ColumnChart
-				height={350}
+				height={450}
 				formatY={(val) => inputFormat(val ?? 0)}
 				yLabel={['Số lượt']}
 				xAxis={sortedData.map((i) => i?.khoa ?? 'Không có thông tin')}

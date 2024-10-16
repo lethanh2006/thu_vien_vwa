@@ -45,7 +45,7 @@ const SoLuongVaoRaThuVienTheoNganh = (props: { dateRange?: any }) => {
 				</ButtonExtend>
 			</div>
 			<ColumnChart
-				height={350}
+				height={450}
 				formatY={(val) => inputFormat(val ?? 0)}
 				yLabel={['Số lượt']}
 				xAxis={sortedData.map((i) => i?.nganh ?? 'Không có thông tin')}
