@@ -83,20 +83,18 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 				) : null
 			}
 		>
-			<div style={isDashBoard ? undefined : { marginTop: 12 }}>
-				<TableStaticData
-					loading={loadingTop}
-					columns={columns}
-					data={dataThongKeCheckInTop ?? []}
-					otherProps={{ pagination: false }}
-					hasTotal
-					addStt
-				>
-					<ButtonExtend icon={<ExportOutlined />} onClick={() => handleExport()}>
-						Xuất dữ liệu
-					</ButtonExtend>
-				</TableStaticData>
-			</div>
+			<TableStaticData
+				loading={loadingTop}
+				columns={columns}
+				data={dataThongKeCheckInTop ?? []}
+				otherProps={{ pagination: false }}
+				hasTotal
+				addStt
+			>
+				<ButtonExtend icon={<ExportOutlined />} onClick={() => handleExport()}>
+					Xuất dữ liệu
+				</ButtonExtend>
+			</TableStaticData>
 
 			<Modal
 				title='Danh sách vào ra thư viện'
