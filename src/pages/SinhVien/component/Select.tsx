@@ -1,56 +1,78 @@
 import { EOperatorType } from '@/components/Table/constant';
-import { type SinhVien } from '@/services/SinhVien/typings';
-import { Select, Spin, Empty } from 'antd';
-import { type BaseOptionType } from 'antd/lib/select';
+import type { ETrangThaiHocSv } from '@/services/SinhVien/constant';
+import type { SinhVien } from '@/services/SinhVien/typings';
+import { Empty, Select, Spin } from 'antd';
 import _ from 'lodash';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
 const SelectSinhVienDebounce = (props: {
 	value?: string | string[];
-	onChange?: (val: string | string[] | null, option?: BaseOptionType) => void;
+	onChange?: (val: string | string[] | null) => void;
 	multiple?: boolean;
 	disabled?: boolean;
-	keyValue?: keyof SinhVien.IRecord;
-	hideMaSinhVien?: boolean;
-	ignoreOptions?: string[];
-	isView?: boolean;
 	style?: React.CSSProperties;
-}): any => {
-	const { value, onChange, multiple, disabled, keyValue = 'ssoId', hideMaSinhVien, ignoreOptions, style } = props;
-	const { danhSach, getModel, setFilters, filters, loading } = useModel('sinhvien.sinhvien');
+	selectMa?: boolean;
+	trangThaiHoc?: ETrangThaiHocSv[];
+	isView?: boolean;
+	allowClear?: boolean;
+	condition?: Partial<SinhVien.IRecord>;
+}) => {
+	const { value, onChange, multiple, disabled, style, selectMa, trangThaiHoc, allowClear, condition } = props;
+	const { danhSach, getModel, loading, searchSinhVienModel } = useModel('sinhvien.sinhvien');
+	const [keyword, setKeyword] = useState<string>();
 
 	useEffect(() => {
-		getModel(
-			undefined,
-			(!filters || !filters.length) && value
-				? [
-						{
-							active: true,
-							field: 'ssoId',
-							values: Array.isArray(value) ? value : [value],
-							operator: EOperatorType.INCLUDE,
-						},
-				  ]
-				: undefined,
-			undefined,
-			1,
-			20,
+		// Nếu trong danh sách đã có 1 giá trị trong `value` rồi thì ko get lại data nữa
+		// Nhưng `có thể` bug khi lần đầu render
+		const gotData = danhSach.some((item) =>
+			Array.isArray(value)
+				? value.includes(selectMa ? item.ma : item.ssoId)
+				: value === (selectMa ? item.ma : item.ssoId),
 		);
-	}, [filters, value]);
+
+		if (keyword) searchSinhVienModel(keyword, trangThaiHoc, undefined, condition);
+		else if (!gotData)
+			getModel(
+				condition,
+				value?.length
+					? [
+							{
+								field: selectMa ? 'ma' : 'ssoId',
+								values: Array.isArray(value) ? value : [value],
+								operator: EOperatorType.INCLUDE,
+							},
+					  ]
+					: !!trangThaiHoc
+					? [
+							{
+								field: 'trangThaiHoc',
+								operator: EOperatorType.INCLUDE,
+								values: trangThaiHoc,
+							},
+					  ]
+					: undefined,
+				undefined,
+				1,
+				20,
+			);
+	}, [keyword, JSON.stringify(value)]);
 
 	const searchDebounceSinhVien = _.debounce((val) => {
-		setFilters([{ active: true, field: 'ten', values: [val], operator: EOperatorType.CONTAIN }]);
+		setKeyword(val);
 	}, 800);
 
 	const dataView = danhSach.find((item) => item.ssoId === value);
 
 	return props.isView ? (
-		`${dataView?.ten ?? ''} - ${dataView?.ma ?? ''}`
+		<>
+			{dataView?.ten ?? ''} - {dataView?.ma ?? ''}
+		</>
 	) : (
 		<Select
 			mode={multiple ? 'multiple' : undefined}
 			value={value}
+			allowClear={allowClear}
 			onChange={onChange}
 			disabled={disabled}
 			onSearch={(val) => searchDebounceSinhVien(val)}
@@ -62,15 +84,13 @@ const SelectSinhVienDebounce = (props: {
 				)
 			}
 			options={danhSach.map((item) => ({
-				key: item?.[keyValue],
-				value: item?.[keyValue],
-				label: hideMaSinhVien ? item.ten : `${item.ten} - ${item.ma}`,
-				rawData: item,
-				disabled: !!ignoreOptions?.find((optionValue) => optionValue === item?.[keyValue]),
+				key: item?.ssoId,
+				value: selectMa ? item.ma : item?.ssoId,
+				label: `${item.ten} - ${item.ma}`,
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn sinh viên (tìm kiếm theo họ tên sinh viên)'
+			placeholder='Chọn sinh viên (tìm theo họ tên hoặc mã sinh viên)'
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>
