@@ -44,7 +44,7 @@ const FormVaoRaThuVien = (props: any) => {
 					<Col xs={24} md={24}>
 						<Form.Item name='maSinhVien' label='Sinh viên' rules={[...rules.required]}>
 							<SelectSinhVienDebounce
-								keyValue='ma'
+								selectMa
 								onChange={(val) => {
 									const ns = danhSachSinhVien?.find((item) => item?.ma === val);
 									form.setFieldsValue({ hoTen: ns?.ten });
