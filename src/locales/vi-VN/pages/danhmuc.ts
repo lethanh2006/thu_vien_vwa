@@ -1,0 +1,7 @@
+export default {
+	'danhmuc.dangtailieu.title': 'Dạng tài liệu',
+	'danhmuc.kieubanghi.title': 'Kiểu bản ghi',
+	'danhmuc.capthumuc.title': 'Cấp thư mục',
+	'danhmuc.vatmangtin.title': 'Vật mang tin',
+	'danhmuc.maubienmuc.title': 'Mẫu biên mục',
+};

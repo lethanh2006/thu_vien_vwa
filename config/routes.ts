@@ -68,18 +68,43 @@
 	},
 
 	// DANH MUC HE THONG
-	// {
-	// 	name: 'DanhMuc',
-	// 	path: '/danh-muc',
-	// 	icon: 'copy',
-	// 	routes: [
-	// 		{
-	// 			name: 'ChucVu',
-	// 			path: 'chuc-vu',
-	// 			component: './DanhMuc/ChucVu',
-	// 		},
-	// 	],
-	// },
+	{
+		name: 'DanhMuc',
+		path: '/danh-muc',
+		icon: 'copy',
+		routes: [
+			// {
+			// 	name: 'ChucVu',
+			// 	path: 'chuc-vu',
+			// 	component: './DanhMuc/ChucVu',
+			// },
+			{
+				name: 'MauBienMuc',
+				path: 'mau-bien-muc',
+				component: './DanhMuc/MauBienMuc',
+			},
+			{
+				name: 'DangTaiLieu',
+				path: 'dang-tai-lieu',
+				component: './DanhMuc/DangTaiLieu',
+			},
+			{
+				name: 'KieuBanGhi',
+				path: 'kieu-ban-ghi',
+				component: './DanhMuc/KieuBanGhi',
+			},
+			{
+				name: 'CapThuMuc',
+				path: 'cap-thu-muc',
+				component: './DanhMuc/CapThuMuc',
+			},
+			{
+				name: 'VatMangTin',
+				path: 'vat-mang-tin',
+				component: './DanhMuc/VatMangTin',
+			},
+		],
+	},
 
 	{
 		path: '/notification',

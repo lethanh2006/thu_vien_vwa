@@ -4,11 +4,12 @@ import useInitModel from '@/hooks/useInitModel';
 import { getThongTinSinhVienBySsoId } from '@/services/SinhVien';
 import type { ETrangThaiHocSv } from '@/services/SinhVien/constant';
 import { type SinhVien } from '@/services/SinhVien/typings';
+import { ipDaoTao } from '@/utils/ip';
 import type { AxiosResponse } from 'axios';
 import _ from 'lodash';
 
 export default () => {
-	const objInit = useInitModel<SinhVien.IRecord>('sinh-vien');
+	const objInit = useInitModel<SinhVien.IRecord>('sinh-vien', undefined, undefined, ipDaoTao);
 
 	const { setRecord, setLoading, getService, setDanhSach } = objInit;
 

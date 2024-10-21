@@ -3,13 +3,14 @@ import { AppModules, EModuleKey } from '@/services/base/constant';
 const ipRoot = APP_CONFIG_IP_ROOT; // ip dev
 
 // Ip Chính => Mặc định dùng trong các useInitModel
-const ip3 = ipRoot + 'qldt'; // ip dev
+const ip3 = ipRoot + 'thu-vien'; // ip dev
 
 // Ip khác
 const ipNotif = ipRoot + 'notification'; // ip dev
 const ipSlink = ipRoot + 'slink'; // ip dev
+const ipDaoTao = ipRoot + 'qldt'; // ip dev
 
-const currentRole = EModuleKey.THU_VIEN;
+const currentRole = EModuleKey.CONG_CAN_BO;
 const oneSignalRole = EModuleKey.CONG_CAN_BO;
 
 // DO NOT TOUCH
@@ -26,6 +27,7 @@ export {
 	ip3,
 	ipNotif,
 	ipSlink,
+	ipDaoTao,
 	currentRole,
 	oneSignalRole,
 	keycloakClientID,
