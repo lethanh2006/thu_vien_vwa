@@ -81,7 +81,7 @@ const FormDanhSachNop = (props: any) => {
 					</Col>
 					<Col span={24} md={8}>
 						<Form.Item label='Học viên' name='maSinhVien' rules={[...rules.required]}>
-							<SelectSinhVienDebounce keyValue='ma' onChange={(val) => onChangeSinhVien(val as string)} />
+							<SelectSinhVienDebounce selectMa onChange={(val) => onChangeSinhVien(val as string)} />
 						</Form.Item>
 					</Col>
 					<Col span={8}>
