@@ -37,7 +37,7 @@ const FormDangTaiLieu = (props: any) => {
 					</Col>
 					<Col xs={24}>
 						<Form.Item name='ten' label='Tên dạng tài liệu' rules={[...rules.required, ...rules.text]}>
-							<Input disabled={isView} placeholder='Nhập tên dạng tài liệu' />
+							<Input placeholder='Nhập tên dạng tài liệu' />
 						</Form.Item>
 					</Col>
 				</Row>

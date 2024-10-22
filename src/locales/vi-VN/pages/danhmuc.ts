@@ -1,4 +1,5 @@
 export default {
+	'danhmuc.thuvien.title': 'Thư viện',
 	'danhmuc.dangtailieu.title': 'Dạng tài liệu',
 	'danhmuc.kieubanghi.title': 'Kiểu bản ghi',
 	'danhmuc.capthumuc.title': 'Cấp thư mục',

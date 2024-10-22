@@ -14,9 +14,13 @@ export default {
 	'menu.LALVKhoaLuan.QuanLyDot': 'Đợt nộp LA, LV, KL',
 	'menu.LALVKhoaLuan.DanhSachSinhVien': 'Danh sách sinh viên',
 
+	'menu.SachTaiLieu': 'Sách, Tài liệu',
+	'menu.SachTaiLieu.BienMuc': 'Biên mục',
+
 	'menu.DanhMuc': 'Danh mục',
 	'menu.DanhMuc.ChucVu': 'Chức vụ',
 	'menu.DanhMuc.MauBienMuc': 'Mẫu biên mục',
+	'menu.DanhMuc.ThuVien': 'Danh sách thư viện',
 	'menu.DanhMuc.DangTaiLieu': 'Dạng tài liệu',
 	'menu.DanhMuc.KieuBanGhi': 'Kiểu bản ghi',
 	'menu.DanhMuc.CapThuMuc': 'Cấp thư mục',

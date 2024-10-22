@@ -4,11 +4,11 @@ import { Button, Card, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
-const FormCapThuMuc = (props: any) => {
+const FormThuVien = (props: any) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm, isView } =
-		useModel('danhmuc.capthumuc');
+		useModel('danhmuc.thuvien');
 	const { title } = props;
 
 	useEffect(() => {
@@ -16,7 +16,7 @@ const FormCapThuMuc = (props: any) => {
 		else if (record?._id) form.setFieldsValue(record);
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: CapThuMuc.IRecord) => {
+	const onFinish = async (values: ThuVien.IRecord) => {
 		if (edit) {
 			putModel(record?._id ?? '', values)
 				.then()
@@ -31,13 +31,18 @@ const FormCapThuMuc = (props: any) => {
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col xs={24}>
-						<Form.Item name='ma' label='Mã cấp thư mục' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập mã cấp thư mục' disabled={edit || isView} />
+						<Form.Item name='ten' label='Tên' rules={[...rules.required, ...rules.text]}>
+							<Input placeholder='Nhập tên thư viện' disabled={edit || isView} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='ten' label='Tên cấp thư mục' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên cấp thư mục' />
+						<Form.Item name='tenVietTat' label='Tên viết tắt' rules={[...rules.required, ...rules.text]}>
+							<Input placeholder='Nhập tên viết tắt thư viện' />
+						</Form.Item>
+					</Col>
+					<Col xs={24}>
+						<Form.Item name='diaChi' label='Địa chỉ' rules={[...rules.required, ...rules.text]}>
+							<Input.TextArea rows={3} placeholder='Nhập địa chỉ' />
 						</Form.Item>
 					</Col>
 				</Row>
@@ -61,4 +66,4 @@ const FormCapThuMuc = (props: any) => {
 	);
 };
 
-export default FormCapThuMuc;
+export default FormThuVien;

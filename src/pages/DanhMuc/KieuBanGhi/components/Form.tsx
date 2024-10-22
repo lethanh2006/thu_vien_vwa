@@ -37,7 +37,7 @@ const FormCapThuMuc = (props: any) => {
 					</Col>
 					<Col xs={24}>
 						<Form.Item name='ten' label='Tên kiểu bản ghi' rules={[...rules.required, ...rules.text]}>
-							<Input disabled={isView} placeholder='Nhập tên kiểu bản ghi' />
+							<Input placeholder='Nhập tên kiểu bản ghi' />
 						</Form.Item>
 					</Col>
 				</Row>

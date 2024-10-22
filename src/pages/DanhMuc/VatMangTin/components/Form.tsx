@@ -37,7 +37,7 @@ const FormVatMangTin = (props: any) => {
 					</Col>
 					<Col xs={24}>
 						<Form.Item name='ten' label='Tên vật mang tin' rules={[...rules.required, ...rules.text]}>
-							<Input disabled={isView} placeholder='Nhập tên vật mang tin' />
+							<Input placeholder='Nhập tên vật mang tin' />
 						</Form.Item>
 					</Col>
 				</Row>

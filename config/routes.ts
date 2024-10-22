@@ -67,6 +67,20 @@
 		],
 	},
 
+	//SACH TAI LIEU
+	{
+		name: 'SachTaiLieu',
+		path: 'sach-tai-lieu',
+		icon: 'BookOutlined',
+		routes: [
+			{
+				name: 'BienMuc',
+				path: 'bien-muc',
+				component: './SachTaiLieu/BienMuc',
+			},
+		],
+	},
+
 	// DANH MUC HE THONG
 	{
 		name: 'DanhMuc',
@@ -82,6 +96,11 @@
 				name: 'MauBienMuc',
 				path: 'mau-bien-muc',
 				component: './DanhMuc/MauBienMuc',
+			},
+			{
+				name: 'ThuVien',
+				path: 'thu-vien',
+				component: './DanhMuc/ThuVien',
 			},
 			{
 				name: 'DangTaiLieu',

@@ -1,4 +1,3 @@
-import type { MauBienMuc } from '@/services/DanhMuc/MauBienMuc/typing';
 import { Select } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
@@ -6,19 +5,19 @@ import { useModel } from 'umi';
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
  */
-const SelectMauBienMuc = (props: {
+const SelectKieuBanGhi = (props: {
 	value?: string;
 	onChange?: (val?: string) => void;
 	multiple?: boolean;
 	allowClear?: boolean;
 	style?: React.CSSProperties;
 	isSetRecord?: boolean;
-	condition?: Partial<MauBienMuc.IRecord>;
+	condition?: Partial<KieuBanGhi.IRecord>;
 	selectMa?: boolean;
 	disabled?: boolean;
 }) => {
 	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, selectMa, disabled } = props;
-	const { danhSach, getAllModel } = useModel('danhmuc.maubienmuc');
+	const { danhSach, getAllModel } = useModel('danhmuc.kieubanghi');
 
 	useEffect(() => {
 		getAllModel(!!isSetRecord, undefined, condition);
@@ -38,11 +37,11 @@ const SelectMauBienMuc = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn tình trạng sử dụng'
+			placeholder='Chọn kiểu bản ghi'
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>
 	);
 };
 
-export default SelectMauBienMuc;
+export default SelectKieuBanGhi;
