@@ -101,11 +101,7 @@ const FormQuanLyThuVien = (props: any) => {
 					</Col>
 					<Col span={12}>
 						<Form.Item label='Mã học viên' name='maSinhVien' rules={[...rules.required]}>
-							<SelectSinhVienDebounce
-								keyValue='ma'
-								onChange={(val) => onChangeSinhVien(val as string)}
-								disabled={edit}
-							/>
+							<SelectSinhVienDebounce selectMa onChange={(val) => onChangeSinhVien(val as string)} disabled={edit} />
 						</Form.Item>
 					</Col>
 					<Col span={12}>
