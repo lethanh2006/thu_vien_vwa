@@ -9,8 +9,7 @@ import _ from 'lodash';
 
 export default () => {
 	const objInit = useInitModel<SinhVien.IRecord>('sinh-vien');
-
-	const { setRecord, setLoading, getService, setDanhSach } = objInit;
+	const { setRecord, setLoading, getService, setDanhSach, putModel } = objInit;
 
 	const getThongTinSinhVienBySsoIdModel = async (ssoId: string): Promise<SinhVien.IRecord | undefined> => {
 		if (!ssoId) return;
@@ -76,9 +75,13 @@ export default () => {
 		}
 	};
 
+	const updateFaceRegModel = (data: { faceRegImgUrl: string }, getData?: () => void) =>
+		putModel('me/face-reg', data, getData);
+
 	return {
 		...objInit,
 		getThongTinSinhVienBySsoIdModel,
 		searchSinhVienModel,
+		updateFaceRegModel,
 	};
 };

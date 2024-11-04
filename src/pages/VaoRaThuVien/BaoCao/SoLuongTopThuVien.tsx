@@ -44,28 +44,28 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 		{
 			title: 'Mã SV',
 			dataIndex: 'maSv',
-			width: 90,
-			filterType: 'string',
+			width: 120,
+			// filterType: 'string',
 			onCell,
 		},
 		{
 			title: 'Họ tên',
 			dataIndex: 'hoTen',
-			width: 120,
-			filterType: 'string',
+			width: 160,
+			// filterType: 'string',
 			onCell,
 		},
 		{
 			title: 'Tổng lượt',
 			dataIndex: 'total',
-			width: 150,
+			width: 140,
 			render: (val, rec, index) => {
 				const firstTotal = dataThongKeCheckInTop[0]?.total || 1;
 				const percent = index === 0 ? 100 : ((val / firstTotal) * 100).toFixed(2);
 				return <Progress percent={Number(percent)} format={() => `${val}`} style={{ width: '100%' }} />;
 			},
-			filterType: 'number',
-			sortable: true,
+			// filterType: 'number',
+			// sortable: true,
 			onCell,
 		},
 	];
@@ -74,7 +74,8 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 		<Card
 			title='Bạn đọc có số lượt vào thư viện nhiều nhất'
 			bordered={isDashBoard ? true : false}
-			style={isDashBoard ? undefined : { marginLeft: -18 }}
+			headStyle={isDashBoard ? undefined : { padding: 0 }}
+			bodyStyle={isDashBoard ? undefined : { padding: '12px 0 0' }}
 			extra={
 				isDashBoard ? (
 					<Link to='/vao-ra-thu-vien/tong-hop'>
@@ -97,17 +98,17 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 			</TableStaticData>
 
 			<Modal
-				title='Danh sách vào ra thư viện'
+				title={`Danh sách vào ra thư viện ${record?.maSv ?? ''} - ${record?.hoTen ?? ''}`}
 				visible={visibleChiTiet}
 				onCancel={() => setVisibleChiTiet(false)}
-				footer={
-					<div className='form-footer'>
-						<Button onClick={() => setVisibleChiTiet(false)}>Hủy</Button>
-					</div>
-				}
+				footer={null}
 				width={800}
 			>
 				<VaoRaThuVienPage maSinhVien={record?.maSv} />
+
+				<div className='form-footer'>
+					<Button onClick={() => setVisibleChiTiet(false)}>Đóng</Button>
+				</div>
 			</Modal>
 		</Card>
 	);

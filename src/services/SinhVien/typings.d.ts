@@ -146,6 +146,11 @@ declare module SinhVien {
 		kqhtTichLuyList?: KetQuaHocKy.IKetQuaTichLuy[];
 		kqhtTichLuyNganh1?: KetQuaHocKy.IKetQuaTichLuy;
 		kqhtTichLuyNganh2?: KetQuaHocKy.IKetQuaTichLuy;
+
+		/** Đường dẫn ảnh nhận diện khuôn mặt */
+		faceRegImgUrl?: string;
+		/** Có cần cập nhật lại ảnh nhận diện khuôn mặt không */
+		needUpdateFaceReg?: boolean;
 	}
 
 	export interface IHocBongSinhVien {

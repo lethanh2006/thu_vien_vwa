@@ -54,6 +54,7 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 					Xuất dữ liệu
 				</ButtonExtend>
 			</Space>
+
 			<Spin spinning={loadingThang}>
 				<LineChart
 					xAxis={dataThongKeCheckInThang.map((item) => `${item.ngay}/${item.thang + 1}`)}
@@ -63,7 +64,7 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 					]}
 					yLabel={['Số lượng vào', 'Số lượng ra']}
 					colors={['#0982c9', '#18b903']}
-					title='Thống kê'
+					title='Số lượt'
 					height={450}
 					formatY={(val) => `${val}`}
 					otherOptions={{
