@@ -32,7 +32,7 @@ const ThongKeThuVien = () => {
 						value={dateRange}
 						onChange={(val: any) => setDateRange(val)}
 						ranges={{
-							'Hôm nay': [moment(), moment()],
+							'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
 							'Tuần này': [moment().startOf('week'), moment().endOf('week')],
 							'Tháng này': [moment().startOf('M'), moment().endOf('M')],
 						}}

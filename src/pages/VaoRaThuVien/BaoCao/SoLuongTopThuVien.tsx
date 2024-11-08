@@ -104,7 +104,7 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 				footer={null}
 				width={800}
 			>
-				<VaoRaThuVienPage maSinhVien={record?.maSv} />
+				<VaoRaThuVienPage maSinhVien={record?.maSv} dateRange={dateRange} />
 
 				<div className='form-footer'>
 					<Button onClick={() => setVisibleChiTiet(false)}>Đóng</Button>

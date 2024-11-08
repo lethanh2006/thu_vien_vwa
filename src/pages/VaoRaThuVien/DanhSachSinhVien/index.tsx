@@ -3,6 +3,7 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
+import ModalCapNhatAnhNhanDien from '@/pages/SinhVien/CapNhatKhuonMat/Modal';
 import { exportDanhSachRaVaoThuVien } from '@/services/QuanLyThuVien';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import { ExportOutlined, EyeOutlined, QrcodeOutlined, SettingOutlined, SmileOutlined } from '@ant-design/icons';
@@ -14,10 +15,9 @@ import { useModel } from 'umi';
 import CauHinhVaoRaThuVien from './CauHinh';
 import ChiTietSinhVien from './components/ChiTiet';
 import Form from './components/Form';
-import ModalCapNhatAnhNhanDien from '@/pages/SinhVien/CapNhatKhuonMat/Modal';
 
-const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
-	const { maSinhVien } = props;
+const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
+	const { maSinhVien, dateRange: dateRangeProps } = props;
 	const { getModel, page, limit, filters, setRecord } = useModel('quanlythuvien.vaorathuvien');
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
 	const [visibleSetting, setVisibleSetting] = useState<boolean>(false);
@@ -29,19 +29,29 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 	]);
 
 	const getData = () => {
-		getModel(undefined, [
+		getModel(
+			undefined,
 			maSinhVien
-				? {
-						field: 'maSv',
-						values: [maSinhVien],
-						operator: EOperatorType.INCLUDE,
-				  }
-				: {
-						field: 'thoiGianCheckIn',
-						values: [dateRange[0], dateRange[1]],
-						operator: EOperatorType.BETWEEN,
-				  },
-		]);
+				? [
+						{
+							field: 'maSv',
+							values: [maSinhVien],
+							operator: EOperatorType.INCLUDE,
+						},
+						{
+							field: 'thoiGianCheckIn',
+							values: [dateRange[0], dateRange[1]],
+							operator: EOperatorType.BETWEEN,
+						},
+				  ]
+				: [
+						{
+							field: 'thoiGianCheckIn',
+							values: [dateRange[0], dateRange[1]],
+							operator: EOperatorType.BETWEEN,
+						},
+				  ],
+		);
 	};
 
 	const onCell = (rec: QuanLyThuVien.IVaoRaThuVien) => ({
@@ -193,7 +203,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 					value={[moment(dateRange[0]), moment(dateRange[1])]}
 					onChange={(val: any) => setDateRange(val)}
 					ranges={{
-						'Hôm nay': [moment(), moment()],
+						'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
 						'Tuần này': [moment().startOf('week'), moment().endOf('week')],
 						'Tháng này': [moment().startOf('M'), moment().endOf('M')],
 					}}
@@ -220,7 +230,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, dateRange]}
+				dependencies={[page, limit, dateRange, dateRangeProps]}
 				modelName='quanlythuvien.vaorathuvien'
 				hideCard
 				Form={Form}
