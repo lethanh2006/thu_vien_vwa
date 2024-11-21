@@ -46,78 +46,51 @@ const FormQuanLyThuVien = (props: any) => {
 	};
 
 	const onFinish = async (values: QuanLyThuVien.IQuanLyDanhSachNop) => {
-		const urlTaiLieu = values.urlTaiLieu?.fileList?.[0];
-		if (urlTaiLieu?.originFileObj) {
-			try {
-				setFormSubmiting(true);
-				const res = await uploadFile({
-					file: urlTaiLieu.originFileObj,
-					scope: EFileScope.PUBLIC,
-				});
-				values.urlTaiLieu = res?.data?.data?.url;
-				values.idTaiLieu = res?.data?.data?.file?._id;
-			} catch (error) {
-				return Promise.reject(error);
-			} finally {
-				setFormSubmiting(false);
-			}
-		} else {
-			values.urlTaiLieu = urlTaiLieu?.url;
-		}
+		const filesToUpload: {
+			field: keyof QuanLyThuVien.IQuanLyDanhSachNop;
+			idField: keyof QuanLyThuVien.IQuanLyDanhSachNop;
+		}[] = [
+			{ field: 'urlTaiLieu', idField: 'idTaiLieu' },
+			{ field: 'urlTomTat', idField: 'idTomTat' },
+			{ field: 'urlTaiLieuMinhChung', idField: 'idTaiLieuMinhChung' },
+		];
 
-		const urlTomTat = values.urlTomTat?.fileList?.[0];
-		if (urlTomTat?.originFileObj) {
-			try {
-				setFormSubmiting(true);
-				const res = await uploadFile({
-					file: urlTomTat.originFileObj,
-					scope: EFileScope.PUBLIC,
-				});
-				values.urlTomTat = res?.data?.data?.url;
-				values.idTomTat = res?.data?.data?.file?._id;
-			} catch (error) {
-				return Promise.reject(error);
-			} finally {
-				setFormSubmiting(false);
-			}
-		} else {
-			values.urlTomTat = urlTomTat?.url;
-		}
+		try {
+			setFormSubmiting(true);
 
-		const urlTaiLieuMinhChung = values.urlTaiLieuMinhChung?.fileList?.[0];
-		if (urlTaiLieuMinhChung?.originFileObj) {
-			try {
-				setFormSubmiting(true);
-				const res = await uploadFile({
-					file: urlTaiLieuMinhChung.originFileObj,
-					scope: EFileScope.PUBLIC,
-				});
-				values.urlTaiLieuMinhChung = res?.data?.data?.url;
-				values.idTaiLieuMinhChung = res?.data?.data?.file?._id;
-			} catch (error) {
-				return Promise.reject(error);
-			} finally {
-				setFormSubmiting(false);
-			}
-		} else {
-			values.urlTaiLieuMinhChung = urlTaiLieuMinhChung?.url;
-		}
+			// Tạo danh sách các promise tải file
+			const uploadPromises = filesToUpload.map(async ({ field, idField }) => {
+				const fileData = values[field]?.fileList?.[0];
+				if (fileData?.originFileObj) {
+					const res = await uploadFile({
+						file: fileData.originFileObj,
+						scope: EFileScope.PUBLIC,
+					});
+					values[field] = res?.data?.data?.url;
+					values[idField] = res?.data?.data?.file?._id;
+				} else {
+					values[field] = fileData?.url;
+				}
+			});
 
-		const data = {
-			...values,
-			loai,
-			urlTaiLieu,
-			urlTomTat,
-			urlTaiLieuMinhChung,
-		};
-		if (edit) {
-			putModel(record?._id ?? '', data as any, getData)
-				.then()
-				.catch((er) => console.log(er));
-		} else
-			postModel(data as any, getData)
-				.then()
-				.catch((er) => console.log(er));
+			await Promise.allSettled(uploadPromises);
+
+			const data = {
+				...values,
+				loai,
+			};
+
+			if (edit) {
+				await putModel(record?._id ?? '', data as any, getData);
+			} else {
+				await postModel(data as any, getData);
+			}
+		} catch (error) {
+			console.log(error);
+			return Promise.reject(error);
+		} finally {
+			setFormSubmiting(false);
+		}
 	};
 
 	return (
