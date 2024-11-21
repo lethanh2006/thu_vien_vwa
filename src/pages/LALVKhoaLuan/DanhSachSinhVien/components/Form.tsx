@@ -1,10 +1,10 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import UploadFile from '@/components/Upload/UploadFile';
-import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
 import SelectNganhCoSo from '@/pages/DaoTao/Nganh/Select';
+import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
 import { ELoaiDotQuanLyThuvien, ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
-import { buildUpLoadFile } from '@/services/uploadFile';
+import { EFileScope, uploadFile } from '@/services/uploadFile';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
@@ -46,11 +46,62 @@ const FormQuanLyThuVien = (props: any) => {
 	};
 
 	const onFinish = async (values: QuanLyThuVien.IQuanLyDanhSachNop) => {
-		setFormSubmiting(true);
-		const urlTaiLieu = await buildUpLoadFile(values, 'urlTaiLieu');
-		const urlTomTat = await buildUpLoadFile(values, 'urlTomTat');
-		const urlTaiLieuMinhChung = await buildUpLoadFile(values, 'urlTaiLieuMinhChung');
-		setFormSubmiting(false);
+		const urlTaiLieu = values.urlTaiLieu?.fileList?.[0];
+		if (urlTaiLieu?.originFileObj) {
+			try {
+				setFormSubmiting(true);
+				const res = await uploadFile({
+					file: urlTaiLieu.originFileObj,
+					scope: EFileScope.PUBLIC,
+				});
+				values.urlTaiLieu = res?.data?.data?.url;
+				values.idTaiLieu = res?.data?.data?.file?._id;
+			} catch (error) {
+				return Promise.reject(error);
+			} finally {
+				setFormSubmiting(false);
+			}
+		} else {
+			values.urlTaiLieu = urlTaiLieu?.url;
+		}
+
+		const urlTomTat = values.urlTomTat?.fileList?.[0];
+		if (urlTomTat?.originFileObj) {
+			try {
+				setFormSubmiting(true);
+				const res = await uploadFile({
+					file: urlTomTat.originFileObj,
+					scope: EFileScope.PUBLIC,
+				});
+				values.urlTomTat = res?.data?.data?.url;
+				values.idTomTat = res?.data?.data?.file?._id;
+			} catch (error) {
+				return Promise.reject(error);
+			} finally {
+				setFormSubmiting(false);
+			}
+		} else {
+			values.urlTomTat = urlTomTat?.url;
+		}
+
+		const urlTaiLieuMinhChung = values.urlTaiLieuMinhChung?.fileList?.[0];
+		if (urlTaiLieuMinhChung?.originFileObj) {
+			try {
+				setFormSubmiting(true);
+				const res = await uploadFile({
+					file: urlTaiLieuMinhChung.originFileObj,
+					scope: EFileScope.PUBLIC,
+				});
+				values.urlTaiLieuMinhChung = res?.data?.data?.url;
+				values.idTaiLieuMinhChung = res?.data?.data?.file?._id;
+			} catch (error) {
+				return Promise.reject(error);
+			} finally {
+				setFormSubmiting(false);
+			}
+		} else {
+			values.urlTaiLieuMinhChung = urlTaiLieuMinhChung?.url;
+		}
 
 		const data = {
 			...values,
