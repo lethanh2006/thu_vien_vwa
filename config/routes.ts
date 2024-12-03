@@ -73,10 +73,20 @@
 		path: 'sach-tai-lieu',
 		icon: 'BookOutlined',
 		routes: [
+			// {
+			// 	name: 'BienMuc',
+			// 	path: 'bien-muc',
+			// 	component: './SachTaiLieu/BienMuc',
+			// },
 			{
-				name: 'BienMuc',
-				path: 'bien-muc',
-				component: './SachTaiLieu/BienMuc',
+				name: 'AnPham',
+				path: 'an-pham',
+				component: './SachTaiLieu/AnPham',
+			},
+			{
+				name: 'MuonTraSach',
+				path: 'muon-tra-sach',
+				component: './SachTaiLieu/MuonTraSach',
 			},
 		],
 	},
@@ -121,6 +131,11 @@
 				name: 'VatMangTin',
 				path: 'vat-mang-tin',
 				component: './DanhMuc/VatMangTin',
+			},
+			{
+				name: 'TruongBienMuc',
+				path: 'truong-bien-muc',
+				component: './DanhMuc/TruongBienMuc',
 			},
 		],
 	},

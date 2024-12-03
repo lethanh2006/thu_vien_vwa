@@ -16,6 +16,8 @@ export default {
 
 	'menu.SachTaiLieu': 'Sách, Tài liệu',
 	'menu.SachTaiLieu.BienMuc': 'Biên mục',
+	'menu.SachTaiLieu.AnPham': 'Ấn phẩm',
+	'menu.SachTaiLieu.MuonTraSach': 'Mượn trả sách',
 
 	'menu.DanhMuc': 'Danh mục',
 	'menu.DanhMuc.ChucVu': 'Chức vụ',
@@ -25,4 +27,5 @@ export default {
 	'menu.DanhMuc.KieuBanGhi': 'Kiểu bản ghi',
 	'menu.DanhMuc.CapThuMuc': 'Cấp thư mục',
 	'menu.DanhMuc.VatMangTin': 'Vật mang tin',
+	'menu.DanhMuc.TruongBienMuc': 'Trường biên mục',
 };

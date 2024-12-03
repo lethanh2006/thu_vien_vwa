@@ -5,4 +5,6 @@ export default {
 	'danhmuc.capthumuc.title': 'Cấp thư mục',
 	'danhmuc.vatmangtin.title': 'Vật mang tin',
 	'danhmuc.maubienmuc.title': 'Mẫu biên mục',
+	'danhmuc.truongbienmuc.title': 'Trường biên mục',
+	'danhmuc.truongcon.title': 'Trường con',
 };

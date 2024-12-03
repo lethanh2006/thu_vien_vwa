@@ -1,0 +1,19 @@
+export enum ETrangThaiMuonSach {
+	CHO_XU_LY = 'Chờ xử lý',
+	DANG_THUE_MUON = 'Đang thuê mượn',
+	DA_TRA = 'Đã trả',
+	KHONG_CHO_THUE_MUON = 'Không cho thuê mượn',
+}
+
+export const colorTrangThaiMuonSach: Record<ETrangThaiMuonSach, string> = {
+	[ETrangThaiMuonSach.DANG_THUE_MUON]: 'blue',
+	[ETrangThaiMuonSach.CHO_XU_LY]: 'orange',
+	[ETrangThaiMuonSach.DA_TRA]: 'green',
+	[ETrangThaiMuonSach.KHONG_CHO_THUE_MUON]: 'red',
+};
+
+export enum ETrangThaiDuyeMuonSach {
+	CHO_DUYET = 'Chờ duyệt',
+	DA_DUEYT = 'Đã duyệt',
+	KHONG_DUYET = 'Không duyệt',
+}

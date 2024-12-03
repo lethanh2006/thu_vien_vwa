@@ -4,33 +4,27 @@ import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
-import Form from './components/Form';
-import ExpandText from '@/components/ExpandText';
+import CardFormAnPham from './components/CardForm';
+import ChiTietAnPham from './components/ChiTiet';
+// import Form from './components/Form';
 
-const ThuVienPage = () => {
+const AnPhamPage = () => {
 	const intl = useIntl();
-	const { page, limit, deleteModel, handleEdit } = useModel('danhmuc.thuvien');
+	const { page, limit, deleteModel, handleEdit, handleView, isView } = useModel('sachtailieu.anpham.anpham');
 
-	const columns: IColumn<ThuVien.IRecord>[] = [
+	const onCell = (rec: AnPham.IRecord) => ({
+		onClick: () => handleView(rec),
+		style: { cursor: 'pointer' },
+	});
+
+	const columns: IColumn<AnPham.IRecord>[] = [
 		{
 			title: 'Tên',
 			dataIndex: 'ten',
-			width: 150,
-			filterType: 'string',
-			sortable: true,
-		},
-		{
-			title: 'Tên viết tắt',
-			dataIndex: 'tenVietTat',
-			width: 120,
-			filterType: 'string',
-			sortable: true,
-		},
-		{
-			title: 'Địa chỉ',
-			dataIndex: 'diaChi',
 			width: 180,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			filterType: 'string',
+			sortable: true,
+			onCell,
 		},
 		{
 			title: 'Thao tác',
@@ -56,12 +50,12 @@ const ThuVienPage = () => {
 		<TableBase
 			columns={columns}
 			dependencies={[page, limit]}
-			modelName='danhmuc.thuvien'
-			title={intl.formatMessage({ id: 'danhmuc.thuvien.title' })}
-			Form={Form}
-			buttons={{ import: true, export: true }}
+			modelName='sachtailieu.anpham.anpham'
+			title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
+			Form={isView ? ChiTietAnPham : CardFormAnPham}
+			widthDrawer={1000}
 		/>
 	);
 };
 
-export default ThuVienPage;
+export default AnPhamPage;

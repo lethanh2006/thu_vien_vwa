@@ -1,3 +1,4 @@
+import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
@@ -5,32 +6,32 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
-import ExpandText from '@/components/ExpandText';
 
-const ThuVienPage = () => {
+const TruongBienMucPage = () => {
 	const intl = useIntl();
-	const { page, limit, deleteModel, handleEdit } = useModel('danhmuc.thuvien');
+	const { page, limit, deleteModel, handleEdit } = useModel('danhmuc.truongbienmuc');
 
-	const columns: IColumn<ThuVien.IRecord>[] = [
+	const columns: IColumn<TruongBienMuc.IRecord>[] = [
 		{
-			title: 'Tên',
-			dataIndex: 'ten',
-			width: 150,
+			title: 'Mã',
+			dataIndex: 'ma',
+			width: 100,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên viết tắt',
-			dataIndex: 'tenVietTat',
-			width: 120,
-			filterType: 'string',
-			sortable: true,
-		},
-		{
-			title: 'Địa chỉ',
-			dataIndex: 'diaChi',
+			title: 'Nội dung',
+			dataIndex: 'noiDung',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			filterType: 'string',
+			sortable: true,
+		},
+		{
+			title: 'Ghi chú',
+			dataIndex: 'ghiChu',
+			width: 220,
+			filterType: 'string',
 		},
 		{
 			title: 'Thao tác',
@@ -56,12 +57,13 @@ const ThuVienPage = () => {
 		<TableBase
 			columns={columns}
 			dependencies={[page, limit]}
-			modelName='danhmuc.thuvien'
-			title={intl.formatMessage({ id: 'danhmuc.thuvien.title' })}
+			modelName='danhmuc.truongbienmuc'
+			title={intl.formatMessage({ id: 'danhmuc.truongbienmuc.title' })}
 			Form={Form}
 			buttons={{ import: true, export: true }}
+			widthDrawer={900}
 		/>
 	);
 };
 
-export default ThuVienPage;
+export default TruongBienMucPage;
