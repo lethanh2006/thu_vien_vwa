@@ -1,12 +1,12 @@
 import { Card, Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import ThongTinAnPham from '../ThongTinAnPham';
-import FormAnPham from './Form';
+import ThuocTinhAnPham from '../ThuocTinhAnPham';
+import FormThongTinAnPham from './Form';
 
-const CardFormAnPham = (props: any) => {
-	const { title } = props;
-	const { record, edit } = useModel('sachtailieu.anpham.anpham');
+const CardFormThongTinAnPham = (props: any) => {
+	const { title, getData } = props;
+	const { record, edit } = useModel('sachtailieu.anpham.thongtinanpham');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 
 	useEffect(() => {
@@ -26,16 +26,16 @@ const CardFormAnPham = (props: any) => {
 				onChange={record?._id ? onChangeStep : undefined}
 			>
 				<Steps.Step title='Thông tin chung' />
-				<Steps.Step title='Thông tin ấn phẩm' disabled={!record?._id} />
+				<Steps.Step title='Thuộc tính ấn phẩm' disabled={!record?._id} />
 			</Steps>
 
 			{currentStep === 0 ? (
-				<FormAnPham afterAddNew={() => setCurrentStep(1)} />
-			) : currentStep === 1 ? (
-				<ThongTinAnPham />
-			) : null}
+				<FormThongTinAnPham afterAddNew={() => setCurrentStep(1)} getData={getData} />
+			) : (
+				<ThuocTinhAnPham />
+			)}
 		</Card>
 	);
 };
 
-export default CardFormAnPham;
+export default CardFormThongTinAnPham;

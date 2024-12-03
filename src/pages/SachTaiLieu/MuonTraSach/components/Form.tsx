@@ -62,12 +62,12 @@ const FormMuonTraSach = (props: any) => {
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
-							<MyDatePicker disabledDate={(cur) => moment(cur).isBefore(Date.now())} />
+							<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='thoiGianTra' label='Thời gian trả' rules={[...rules.required]}>
-							<MyDatePicker disabled />
+							<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} disabled />
 						</Form.Item>
 						<div style={{ marginTop: -10 }}>
 							<small style={{ color: '#333' }}>

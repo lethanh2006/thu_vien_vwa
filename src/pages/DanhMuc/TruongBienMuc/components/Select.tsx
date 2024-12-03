@@ -5,7 +5,7 @@ import { useModel } from 'umi';
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
  */
-const SelectVatMangTin = (props: {
+const SelectTruongBienMuc = (props: {
 	value?: string;
 	onChange?: (val?: string) => void;
 	multiple?: boolean;
@@ -33,7 +33,7 @@ const SelectVatMangTin = (props: {
 			options={danhSach.map((item) => ({
 				key: item._id,
 				value: selectMa ? item.ma : item._id,
-				label: `${item?.ma} - ${item.noiDung}`,
+				label: `${item?.ma ?? ''} - ${item.noiDung ?? ''}`,
 			}))}
 			showSearch
 			optionFilterProp='label'
@@ -44,4 +44,4 @@ const SelectVatMangTin = (props: {
 	);
 };
 
-export default SelectVatMangTin;
+export default SelectTruongBienMuc;

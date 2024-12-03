@@ -4,36 +4,46 @@ import { Button, Card, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
-const FormAnPham = (props: any) => {
-	const { title, getData } = props;
-	const [form] = Form.useForm();
+const FormTruongCon = (props: any) => {
+	const { title } = props;
 	const intl = useIntl();
-	const { edit, record, formSubmiting, visibleForm, setVisibleForm, putModel, postModel } =
-		useModel('sachtailieu.anpham.anpham');
+	const [form] = Form.useForm();
+	const { record: recTag } = useModel('danhmuc.truongbienmuc');
+	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } =
+		useModel('danhmuc.truongcon');
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
 		else if (record?._id) form.setFieldsValue(record);
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: AnPham.IRecord) => {
+	const onFinish = async (values: TruongCon.IRecord) => {
 		if (edit) {
-			putModel(record?._id ?? '', values, getData)
+			putModel(record?._id ?? '', values)
 				.then()
 				.catch((er) => console.log(er));
 		} else
-			postModel(values, getData)
+			postModel({ ...values, tag: recTag?._id })
 				.then()
 				.catch((er) => console.log(er));
 	};
-
 	return (
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col xs={24}>
-						<Form.Item name='ten' label='Tên ấn phẩm' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên ấn phẩm' />
+						<Form.Item name='tagCode' label='Tag Code' rules={[...rules.required]}>
+							<Input placeholder='Nhập tag code' disabled={edit} />
+						</Form.Item>
+					</Col>
+					<Col xs={24}>
+						<Form.Item name='code' label='Code' rules={[...rules.required]}>
+							<Input placeholder='Nhập code' />
+						</Form.Item>
+					</Col>
+					<Col xs={24}>
+						<Form.Item name='tieuDe' label='Tiêu đề' rules={[...rules.required]}>
+							<Input placeholder='Nhập tiêu đề' />
 						</Form.Item>
 					</Col>
 				</Row>
@@ -51,4 +61,4 @@ const FormAnPham = (props: any) => {
 	);
 };
 
-export default FormAnPham;
+export default FormTruongCon;

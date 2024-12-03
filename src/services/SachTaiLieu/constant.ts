@@ -14,6 +14,12 @@ export const colorTrangThaiMuonSach: Record<ETrangThaiMuonSach, string> = {
 
 export enum ETrangThaiDuyeMuonSach {
 	CHO_DUYET = 'Chờ duyệt',
-	DA_DUEYT = 'Đã duyệt',
+	DA_DUYET = 'Đã duyệt',
 	KHONG_DUYET = 'Không duyệt',
 }
+
+export const colorTrangThaiDuyeMuonSach: Record<ETrangThaiDuyeMuonSach, string> = {
+	[ETrangThaiDuyeMuonSach.CHO_DUYET]: 'blue',
+	[ETrangThaiDuyeMuonSach.DA_DUYET]: 'orange',
+	[ETrangThaiDuyeMuonSach.KHONG_DUYET]: 'green',
+};

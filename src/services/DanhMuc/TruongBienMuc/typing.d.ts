@@ -4,17 +4,8 @@ declare module TruongBienMuc {
 		ma: string;
 		noiDung: string;
 		ghiChu: string;
-		thuocTinh: TDanhSachTruongCon[];
+		thuocTinh: TruongCon.IRecord[];
 		createdAt?: Date;
 		updatedAt?: Date;
 	}
-
-	export type TDanhSachTruongCon = {
-		tagCode: string;
-		code: string;
-		tieuDe: string;
-		kieuDuLieu: string;
-
-		index: number;
-	};
 }

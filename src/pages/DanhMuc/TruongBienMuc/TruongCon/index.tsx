@@ -1,36 +1,36 @@
-import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
-import CardFormTruongBienMuc from './components/CardForm';
+import Form from './components/Form';
 
-const TruongBienMucPage = () => {
+const DanhSachTruongCon = () => {
 	const intl = useIntl();
-	const { page, limit, deleteModel, handleEdit } = useModel('danhmuc.truongbienmuc');
+	const { record: recTag } = useModel('danhmuc.truongbienmuc');
+	const { getModel, page, limit, deleteModel, handleEdit } = useModel('danhmuc.truongcon');
 
-	const columns: IColumn<TruongBienMuc.IRecord>[] = [
+	const getData = () => {
+		getModel({ tag: recTag?._id });
+	};
+
+	const columns: IColumn<TruongCon.IRecord>[] = [
 		{
-			title: 'Mã',
-			dataIndex: 'ma',
-			align: 'center',
+			title: 'Tag Code',
+			dataIndex: 'tagCode',
 			width: 100,
 			filterType: 'string',
-			sortable: true,
 		},
 		{
-			title: 'Nội dung',
-			dataIndex: 'noiDung',
+			title: 'Code',
+			dataIndex: 'code',
 			width: 180,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
-			sortable: true,
 		},
 		{
-			title: 'Ghi chú',
-			dataIndex: 'ghiChu',
+			title: 'Tiêu đề',
+			dataIndex: 'tieuDe',
 			width: 220,
 			filterType: 'string',
 		},
@@ -56,15 +56,17 @@ const TruongBienMucPage = () => {
 
 	return (
 		<TableBase
+			getData={getData}
+			params={{ tag: recTag?._id }}
 			columns={columns}
 			dependencies={[page, limit]}
-			modelName='danhmuc.truongbienmuc'
-			title={intl.formatMessage({ id: 'danhmuc.truongbienmuc.title' })}
-			Form={CardFormTruongBienMuc}
+			modelName='danhmuc.truongcon'
+			title={intl.formatMessage({ id: 'danhmuc.truongcon.title' })}
+			Form={Form}
 			buttons={{ import: true, export: true }}
-			widthDrawer={800}
+			hideCard
 		/>
 	);
 };
 
-export default TruongBienMucPage;
+export default DanhSachTruongCon;

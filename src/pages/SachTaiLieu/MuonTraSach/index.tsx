@@ -1,3 +1,4 @@
+import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
@@ -5,13 +6,15 @@ import { ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import { DeleteOutlined, EditOutlined, SettingOutlined } from '@ant-design/icons';
 import { Card, Popconfirm, Tabs } from 'antd';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import CauHinhThoiHanMuonTra from './components/CauHinh';
+import ChiTietMuonTraSach from './components/ChiTiet';
 import Form from './components/Form';
 
 const MuonTraSachPage = () => {
-	const { getModel, page, limit, handleView, handleEdit, deleteModel, getSettingModel } =
+	const { getModel, page, limit, handleView, handleEdit, deleteModel, getSettingModel, isView } =
 		useModel('sachtailieu.muontra.muontra');
 	const [trangThai, setTrangThai] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.CHO_XU_LY);
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
@@ -61,22 +64,26 @@ const MuonTraSachPage = () => {
 		{
 			title: 'Ngày mượn',
 			dataIndex: 'thoiGianMuon',
-			width: 180,
-			filterType: 'string',
+			width: 150,
+			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			filterType: 'date',
+			sortable: true,
 			onCell,
 		},
 		{
 			title: 'Hạn trả',
 			dataIndex: 'thoiGianTra',
-			width: 180,
-			filterType: 'string',
+			width: 150,
+			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			filterType: 'date',
+			sortable: true,
 			onCell,
 		},
 		{
-			title: 'Trạng thái',
-			dataIndex: 'trangThai',
-			width: 180,
-			filterType: 'string',
+			title: 'Ghi chú',
+			dataIndex: 'ghiChu',
+			width: 220,
+			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			onCell,
 		},
 		{
@@ -86,7 +93,13 @@ const MuonTraSachPage = () => {
 			fixed: 'right',
 			render: (val, record) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						disabled={record?.trangThai !== ETrangThaiMuonSach.CHO_XU_LY}
+						tooltip='Chỉnh sửa'
+						onClick={() => handleEdit(record)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(record._id, getData)}
 						title='Bạn có chắc chắn muốn xóa thông tin này?'
@@ -124,7 +137,7 @@ const MuonTraSachPage = () => {
 				modelName='sachtailieu.muontra.muontra'
 				widthDrawer={800}
 				formProps={{ getData }}
-				Form={Form}
+				Form={isView ? ChiTietMuonTraSach : Form}
 				hideCard
 			/>
 
