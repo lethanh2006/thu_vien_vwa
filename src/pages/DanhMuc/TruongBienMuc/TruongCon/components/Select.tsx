@@ -1,0 +1,47 @@
+import { Select } from 'antd';
+import { useEffect } from 'react';
+import { useModel } from 'umi';
+
+/**
+ * Secect Căn cứ pháp lý để cho vào FormItem
+ */
+const SelectTruongCon = (props: {
+	value?: string;
+	onChange?: (val?: string) => void;
+	multiple?: boolean;
+	allowClear?: boolean;
+	style?: React.CSSProperties;
+	isSetRecord?: boolean;
+	condition?: Partial<TruongBienMuc.IRecord>;
+	selectMa?: boolean;
+	disabled?: boolean;
+}) => {
+	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, selectMa, disabled } = props;
+	const { danhSach, getAllModel } = useModel('danhmuc.truongcon');
+
+	useEffect(() => {
+		getAllModel(!!isSetRecord, undefined, condition);
+	}, [JSON.stringify(condition)]);
+
+	return (
+		<Select
+			disabled={disabled}
+			mode={multiple ? 'multiple' : undefined}
+			allowClear={allowClear}
+			value={value}
+			onChange={onChange}
+			options={danhSach.map((item) => ({
+				key: item._id,
+				value: selectMa ? item.code : item._id,
+				label: `${item?.tagCode ?? ''} - ${item.tieuDe ?? ''}`,
+			}))}
+			showSearch
+			optionFilterProp='label'
+			placeholder='Chọn trường con'
+			style={{ width: '100%', ...style }}
+			showArrow
+		/>
+	);
+};
+
+export default SelectTruongCon;

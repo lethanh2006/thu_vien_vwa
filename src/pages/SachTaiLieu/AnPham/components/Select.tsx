@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
-const SelectThongTinAnPhamDebounce = (props: {
+const SelectAnPhamDebounce = (props: {
 	value?: string | string[];
 	onChange?: (val: string | string[] | null) => void;
 	multiple?: boolean;
@@ -14,7 +14,7 @@ const SelectThongTinAnPhamDebounce = (props: {
 	condition?: Partial<AnPham.IThongTinAnPham>;
 }) => {
 	const { value, onChange, multiple, disabled, style, allowClear, condition } = props;
-	const { danhSach, getModel, loading, searchThongTinAnPhamModel } = useModel('sachtailieu.anpham.thongtinanpham');
+	const { danhSach, getModel, loading, searchAnPhamModel } = useModel('sachtailieu.anpham.anpham');
 	const [keyword, setKeyword] = useState<string>();
 
 	useEffect(() => {
@@ -22,11 +22,11 @@ const SelectThongTinAnPhamDebounce = (props: {
 		// Nhưng `có thể` bug khi lần đầu render
 		const gotData = danhSach.some((item) => (Array.isArray(value) ? value.includes(item._id) : value === item._id));
 
-		if (keyword) searchThongTinAnPhamModel(keyword, undefined, condition);
+		if (keyword) searchAnPhamModel(keyword, undefined, condition);
 		else if (!gotData) getModel(condition, undefined, undefined, 1, 20);
 	}, [keyword, JSON.stringify(value)]);
 
-	const searchDebounceThongTinAnPham = _.debounce((val) => {
+	const searchDebounceAnPham = _.debounce((val) => {
 		setKeyword(val);
 	}, 800);
 
@@ -38,7 +38,7 @@ const SelectThongTinAnPhamDebounce = (props: {
 			allowClear={allowClear}
 			onChange={onChange}
 			disabled={disabled}
-			onSearch={(val) => searchDebounceThongTinAnPham(val)}
+			onSearch={(val) => searchDebounceAnPham(val)}
 			notFoundContent={
 				loading ? (
 					<Spin spinning={true} tip='Đang tìm kiếm...' style={{ width: '100%', margin: 10 }} />
@@ -48,15 +48,15 @@ const SelectThongTinAnPhamDebounce = (props: {
 			}
 			options={danhSach.map((item) => ({
 				value: item?._id,
-				label: `${item?.tagCode ?? ''} - ${item?.value ?? ''}`,
+				label: item?.ten ?? 'Không có thông tin',
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn thông tin ấn phẩm'
+			placeholder='Chọn ấn phẩm'
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>
 	);
 };
 
-export default SelectThongTinAnPhamDebounce;
+export default SelectAnPhamDebounce;

@@ -51,7 +51,7 @@ const FormThongTinAnPham = (props: { afterAddNew?: (rec: AnPham.IThongTinAnPham)
 					</Form.Item>
 				</Col>
 				<Col xs={24}>
-					<Form.Item name='value' label='Value' rules={[...rules.required]}>
+					<Form.Item name='value' label='Value'>
 						<Input placeholder='Nhập value' />
 					</Form.Item>
 				</Col>

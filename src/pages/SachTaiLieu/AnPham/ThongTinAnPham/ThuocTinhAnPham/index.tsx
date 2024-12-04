@@ -4,6 +4,7 @@ import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
+import Form from './components/Form';
 
 const ThuocTinhAnPham = () => {
 	const intl = useIntl();
@@ -27,9 +28,7 @@ const ThuocTinhAnPham = () => {
 			title: 'Value',
 			dataIndex: 'value',
 			width: 150,
-			render: (val, rec) => val ?? 'Không có thông tin',
 			filterType: 'string',
-			sortable: true,
 		},
 		{
 			title: 'Thao tác',
@@ -58,7 +57,7 @@ const ThuocTinhAnPham = () => {
 			dependencies={[page, limit, recThongTinAnPham?._id]}
 			modelName='sachtailieu.anpham.thuoctinhanpham'
 			title={intl.formatMessage({ id: 'sachtailieu.anpham.thuoctinhanpham.title' })}
-			// Form={CardFormThongTinAnPham}
+			Form={Form}
 			formProps={{ getData }}
 			hideCard
 		/>

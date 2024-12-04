@@ -17,6 +17,8 @@ declare module AnPham {
 		ind2: string;
 		value: string;
 
+		danhSachThuocTinhAnPham: IThuocTinhAnPham[];
+
 		createdAt?: Date;
 		updatedAt?: Date;
 	}

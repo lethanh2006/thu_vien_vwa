@@ -3,6 +3,8 @@ import rules from '@/utils/rules';
 import { Button, Col, Form, Input, Modal, Row } from 'antd';
 import { useIntl, useModel } from 'umi';
 import SelectThongTinAnPhamDebounce from '../../AnPham/ThongTinAnPham/components/Select';
+import { useEffect } from 'react';
+import { resetFieldsForm } from '@/utils/utils';
 
 const XuLyDonMuonTra = (props: {
 	trangThai?: ETrangThaiDuyeMuonSach;
@@ -14,7 +16,13 @@ const XuLyDonMuonTra = (props: {
 	const { trangThai, visible, setVisible, getData } = props;
 	const [form] = Form.useForm();
 
-	const { record, xuLyMuonTraSachModel, formSubmiting } = useModel('sachtailieu.muontra.muontra');
+	const { record, xuLyThueMuonAnPhamModel, formSubmiting } = useModel('sachtailieu.muontra.muontra');
+
+	useEffect(() => {
+		if (!visible) {
+			resetFieldsForm(form);
+		}
+	}, [visible]);
 
 	const onFinish = async (values: any) => {
 		const data = {
@@ -22,7 +30,7 @@ const XuLyDonMuonTra = (props: {
 			trangThaiDuyet: trangThai,
 			ghiChu: values.ghiChu,
 		};
-		xuLyMuonTraSachModel(record?._id ?? '', data as any, getData)
+		xuLyThueMuonAnPhamModel(record?._id ?? '', data as any, getData)
 			.then(() => {
 				setVisible(false);
 			})
@@ -30,16 +38,13 @@ const XuLyDonMuonTra = (props: {
 	};
 
 	return (
-		<Modal title='Xử lý mượn trả sách' visible={visible} onCancel={() => setVisible(false)} footer={null}>
+		<Modal title='Xử lý mượn ấn phẩm' visible={visible} onCancel={() => setVisible(false)} footer={null}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					{trangThai === ETrangThaiDuyeMuonSach.DA_DUYET ? (
 						<Col xs={24}>
 							<Form.Item name='danhSachThongTinAnPhamId' label='Thông tin ấn phẩm cho mượn' rules={[...rules.required]}>
-								<SelectThongTinAnPhamDebounce
-									// condition={{ tagCode: record?.soDangKyCaBiet }}
-									multiple
-								/>
+								<SelectThongTinAnPhamDebounce condition={{ anPhamId: record?.anPhamId }} multiple />
 							</Form.Item>
 						</Col>
 					) : null}

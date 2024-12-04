@@ -26,7 +26,7 @@ const CauHinhThoiHanMuonTra = (props: { visible: boolean; setVisible: (val: bool
 				<Form form={form} layout='vertical' onFinish={onFinish}>
 					<Row gutter={[12, 0]}>
 						<Col span={24}>
-							<Form.Item name='thoiHanMuonTraSach' label='Thời hạn mượn trả sách' rules={[...rules.required]}>
+							<Form.Item name='thoiHanMuonTraSach' label='Thời hạn mượn trả sách mặc định' rules={[...rules.required]}>
 								<InputNumber style={{ width: '100%' }} placeholder='Nhập hạn mượn trả sách' addonAfter='Ngày' />
 							</Form.Item>
 						</Col>

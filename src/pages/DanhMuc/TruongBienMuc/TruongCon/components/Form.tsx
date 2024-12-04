@@ -11,11 +11,19 @@ const FormTruongCon = (props: any) => {
 	const { record: recTag } = useModel('danhmuc.truongbienmuc');
 	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } =
 		useModel('danhmuc.truongcon');
+	const code: string = Form.useWatch('code', form);
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
 		else if (record?._id) form.setFieldsValue(record);
 	}, [record?._id, visibleForm]);
+
+	useEffect(() => {
+		if (code)
+			form.setFieldsValue({
+				tagCode: recTag?.ma + code,
+			});
+	}, [code]);
 
 	const onFinish = async (values: TruongCon.IRecord) => {
 		if (edit) {
@@ -32,17 +40,17 @@ const FormTruongCon = (props: any) => {
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col xs={24}>
-						<Form.Item name='tagCode' label='Tag Code' rules={[...rules.required]}>
-							<Input placeholder='Nhập tag code' disabled={edit} />
-						</Form.Item>
-					</Col>
-					<Col xs={24}>
 						<Form.Item name='code' label='Code' rules={[...rules.required]}>
 							<Input placeholder='Nhập code' />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='tieuDe' label='Tiêu đề' rules={[...rules.required]}>
+						<Form.Item name='tagCode' label='Tag Code' rules={[...rules.required]}>
+							<Input placeholder='Nhập tag code' disabled />
+						</Form.Item>
+					</Col>
+					<Col xs={24}>
+						<Form.Item name='tieuDe' label='Tiêu đề'>
 							<Input placeholder='Nhập tiêu đề' />
 						</Form.Item>
 					</Col>

@@ -54,13 +54,6 @@ const MuonTraSachPage = () => {
 			filterType: 'string',
 			onCell,
 		},
-		// {
-		// 	title: 'Tên sách',
-		// 	dataIndex: 'tenSach',
-		// 	width: 180,
-		// 	filterType: 'string',
-		// 	onCell,
-		// },
 		{
 			title: 'Ngày mượn',
 			dataIndex: 'thoiGianMuon',
@@ -87,6 +80,14 @@ const MuonTraSachPage = () => {
 			onCell,
 		},
 		{
+			title: 'Ghi chú trả',
+			dataIndex: 'ghiChu',
+			width: 220,
+			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			onCell,
+			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
+		},
+		{
 			title: 'Thao tác',
 			align: 'center',
 			width: 90,
@@ -94,7 +95,10 @@ const MuonTraSachPage = () => {
 			render: (val, record) => (
 				<>
 					<ButtonExtend
-						disabled={record?.trangThai !== ETrangThaiMuonSach.CHO_XU_LY}
+						disabled={
+							record?.trangThai === ETrangThaiMuonSach.DA_TRA ||
+							record?.trangThai === ETrangThaiMuonSach.KHONG_CHO_THUE_MUON
+						}
 						tooltip='Chỉnh sửa'
 						onClick={() => handleEdit(record)}
 						type='link'
@@ -136,7 +140,7 @@ const MuonTraSachPage = () => {
 				dependencies={[page, limit, trangThai]}
 				modelName='sachtailieu.muontra.muontra'
 				widthDrawer={800}
-				formProps={{ getData }}
+				formProps={{ getData, setTrangThai }}
 				Form={isView ? ChiTietMuonTraSach : Form}
 				hideCard
 			/>

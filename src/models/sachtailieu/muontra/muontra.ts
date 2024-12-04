@@ -1,6 +1,6 @@
 import useInitModel from '@/hooks/useInitModel';
 import type { ETrangThaiDuyeMuonSach } from '@/services/SachTaiLieu/constant';
-import { getSetting, updateSetting, xuLyThueMuonSach } from '@/services/SachTaiLieu/MuonSach';
+import { getSetting, ghiTraThueMuonAnPham, updateSetting, xuLyThueMuonAnPham } from '@/services/SachTaiLieu/MuonSach';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -40,7 +40,7 @@ export default () => {
 		}
 	};
 
-	const xuLyMuonTraSachModel = async (
+	const xuLyThueMuonAnPhamModel = async (
 		idThueMuon: string,
 		payLoad: {
 			danhSachThongTinAnPhamId: string[];
@@ -53,7 +53,33 @@ export default () => {
 		setFormSubmiting(true);
 
 		try {
-			const res = await xuLyThueMuonSach(idThueMuon, payLoad);
+			const res = await xuLyThueMuonAnPham(idThueMuon, payLoad);
+			message.success('Lưu thành công');
+
+			if (getData) getData();
+
+			getSettingModel();
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
+	const ghiTraThueMuonAnPhamModel = async (
+		idThueMuon: string,
+		payLoad: {
+			ghiChuTra: string;
+			thongTinAnPhamId: string;
+		},
+		getData?: () => void,
+	): Promise<MuonSach.IRecord> => {
+		if (formSubmiting) return Promise.reject('form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await ghiTraThueMuonAnPham(idThueMuon, payLoad);
 			message.success('Lưu thành công');
 
 			if (getData) getData();
@@ -72,6 +98,7 @@ export default () => {
 		settingMuonTra,
 		getSettingModel,
 		updateSettingModel,
-		xuLyMuonTraSachModel,
+		xuLyThueMuonAnPhamModel,
+		ghiTraThueMuonAnPhamModel,
 	};
 };

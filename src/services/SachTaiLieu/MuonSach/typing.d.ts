@@ -17,9 +17,15 @@ declare module MuonSach {
 		ssoIdNguoiDuyetChoMuon: string;
 		maDinhDanhNguoiDuyetChoMuon: string;
 		hotenNguoiDuyetChoMuon: string;
+
+		anPhamId: string;
+		anPham: AnPham.IRecord;
+		thongTinAnPhamId: string;
+		thongTinAnPham: AnPham.IThongTinAnPham;
+		ghiChuTra: string;
+
 		createdAt: Date;
 		updatedAt: Date;
-		danhSachAnPhamDangKy: string[];
 	}
 
 	export type TSetting = {

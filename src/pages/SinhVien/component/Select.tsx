@@ -70,6 +70,7 @@ const SelectSinhVienDebounce = (props: {
 		</>
 	) : (
 		<Select
+			loading={loading}
 			mode={multiple ? 'multiple' : undefined}
 			value={value}
 			allowClear={allowClear}

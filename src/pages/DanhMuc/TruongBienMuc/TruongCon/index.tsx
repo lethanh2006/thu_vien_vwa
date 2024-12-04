@@ -17,15 +17,15 @@ const DanhSachTruongCon = () => {
 
 	const columns: IColumn<TruongCon.IRecord>[] = [
 		{
-			title: 'Tag Code',
-			dataIndex: 'tagCode',
-			width: 100,
-			filterType: 'string',
-		},
-		{
 			title: 'Code',
 			dataIndex: 'code',
 			width: 180,
+			filterType: 'string',
+		},
+		{
+			title: 'Tag Code',
+			dataIndex: 'tagCode',
+			width: 100,
 			filterType: 'string',
 		},
 		{
