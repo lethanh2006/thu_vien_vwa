@@ -71,7 +71,6 @@ export default () => {
 		idThueMuon: string,
 		payLoad: {
 			ghiChuTra: string;
-			thongTinAnPhamId: string;
 		},
 		getData?: () => void,
 	): Promise<MuonSach.IRecord> => {

@@ -32,21 +32,23 @@ const ThongTinAnPham = () => {
 			dataIndex: 'ind1',
 			width: 120,
 			filterType: 'string',
-			sortable: true,
 		},
 		{
 			title: 'Chỉ thị 2',
 			dataIndex: 'ind2',
 			width: 120,
 			filterType: 'string',
-			sortable: true,
 		},
 		{
 			title: 'Value',
 			dataIndex: 'value',
 			width: 150,
-			filterType: 'string',
-			sortable: true,
+			render: (val, rec) =>
+				`${rec?.tagCode}${
+					rec?.value
+						? rec?.value
+						: rec?.danhSachThuocTinhAnPham?.map((item) => `${item?.code} - ${item?.value}`).join(', ')
+				}`,
 		},
 		{
 			title: 'Thao tác',

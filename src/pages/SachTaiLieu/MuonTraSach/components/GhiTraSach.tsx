@@ -18,14 +18,7 @@ const GhiTraAnPham = (props: { visible: boolean; setVisible: (val: boolean) => v
 	}, [visible]);
 
 	const onFinish = async (values: any) => {
-		ghiTraThueMuonAnPhamModel(
-			record?._id ?? '',
-			{
-				...values,
-				thongTinAnPhamId: record?.thongTinAnPhamId ?? '',
-			},
-			getData,
-		)
+		ghiTraThueMuonAnPhamModel(record?._id ?? '', values, getData)
 			.then(() => {
 				setVisible(false);
 			})

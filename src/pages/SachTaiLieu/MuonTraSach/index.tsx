@@ -50,12 +50,33 @@ const MuonTraSachPage = () => {
 		{
 			title: 'ĐKCB',
 			dataIndex: 'soDangKyCaBiet',
-			width: 180,
+			width: 90,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Ngày mượn',
+			title: 'Ấn phẩm',
+			dataIndex: 'anPhamId',
+			width: 150,
+			render: (val, rec) => rec?.anPham?.ten ?? 'Không có thông tin',
+			onCell,
+		},
+		{
+			title: 'Thông tin ấn phẩm',
+			dataIndex: 'thongTinAnPhamId',
+			width: 180,
+			render: (val, rec) =>
+				`${rec?.thongTinAnPham?.tagCode ?? ''}${
+					rec?.thongTinAnPham?.value
+						? rec?.thongTinAnPham?.value
+						: rec?.thongTinAnPham?.danhSachThuocTinhAnPham
+								?.map((item) => `${item?.code ?? ''} - ${item?.value ?? ''}`)
+								.join(', ')
+				}`,
+			onCell,
+		},
+		{
+			title: 'Thời gian mượn',
 			dataIndex: 'thoiGianMuon',
 			width: 150,
 			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
@@ -65,11 +86,21 @@ const MuonTraSachPage = () => {
 		},
 		{
 			title: 'Hạn trả',
+			dataIndex: 'expired',
+			width: 150,
+			render: (val, rec) => (val ? `${val} ngày` : ''),
+			filterType: 'number',
+			sortable: true,
+			onCell,
+		},
+		{
+			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
 			width: 150,
 			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
+			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
 			onCell,
 		},
 		{

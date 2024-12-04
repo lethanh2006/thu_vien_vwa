@@ -106,7 +106,7 @@ const ChiTietMuonTraSach = (props: any) => {
 					</ButtonExtend>
 				) : null}
 
-				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 			</div>
 
 			<XuLyDonMuonTra trangThai={trangThai} visible={visibleXuLy} setVisible={setVisibleXuLy} getData={getData} />

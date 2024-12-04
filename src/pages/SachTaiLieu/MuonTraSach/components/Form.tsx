@@ -90,7 +90,7 @@ const FormMuonTraSach = (props: any) => {
 			render: (val, rec) => rec?.anPham?.ten ?? 'Không có thông tin',
 		},
 		{
-			title: 'Tag code',
+			title: 'Trường biên mục',
 			dataIndex: 'tagCode',
 			width: 120,
 			render: (val, rec) => `${[rec?.tag?.ma ?? val, rec?.tag?.noiDung].filter(Boolean).join(' - ')}`,
