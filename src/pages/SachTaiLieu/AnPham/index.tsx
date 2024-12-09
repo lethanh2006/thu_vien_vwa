@@ -1,54 +1,71 @@
-import { Card, Empty } from 'antd';
-import { useState } from 'react';
-import { useMediaQuery } from 'react-responsive';
-import SplitPane from 'react-split-pane';
-import Pane from 'react-split-pane/lib/Pane';
-import { useModel } from 'umi';
-import CardAnPham from './CardAnPham';
-import ThongTinAnPham from './ThongTinAnPham';
+import ExpandText from '@/components/ExpandText';
+import TableBase from '@/components/Table';
+import ButtonExtend from '@/components/Table/ButtonExtend';
+import { type IColumn } from '@/components/Table/typing';
+import { EyeOutlined } from '@ant-design/icons';
+import { useIntl, useModel } from 'umi';
+import ChiTietAnPham from './components/ChiTiet';
+import Form from './components/Form';
 
-const AnPhamPage = () => {
-	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
-	const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
-	const [paneSize, setPaneSize] = useState('40%');
+const CardAnPham = () => {
+	const intl = useIntl();
+	const { page, limit, handleView, isView } = useModel('sachtailieu.anpham.anpham');
 
-	const handlePaneSizeChange = (size: any) => {
-		setPaneSize(size[0]);
-	};
+	const onCell = (rec: AnPham.IRecord) => ({
+		onClick: () => handleView(rec),
+		style: {
+			cursor: 'pointer',
+		},
+	});
+
+	const columns: IColumn<AnPham.IRecord>[] = [
+		{
+			title: 'Tên',
+			dataIndex: 'ten',
+			width: 120,
+			render: (val, rec) => val ?? 'Không có thông tin',
+			filterType: 'string',
+			onCell,
+		},
+		{
+			title: 'Nhan đề',
+			dataIndex: 'nhanDe',
+			width: 180,
+			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			filterType: 'string',
+			onCell,
+		},
+		{
+			title: 'Tác giả',
+			dataIndex: 'tacGia',
+			width: 150,
+			filterType: 'string',
+			onCell,
+		},
+		{
+			title: 'Thao tác',
+			align: 'center',
+			width: 60,
+			fixed: 'right',
+			render: (val, rec) => (
+				<>
+					<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
+				</>
+			),
+		},
+	];
 
 	return (
-		<Card title='Thông tin ấn phẩm'>
-			<SplitPane split={isMobile ? 'horizontal' : 'vertical'} onChange={handlePaneSizeChange}>
-				<Pane initialSize={paneSize} minSize='20%'>
-					<Card
-						title='Danh sách ấn phẩm'
-						bodyStyle={{ padding: '8px 0 0' }}
-						headStyle={{ padding: 0 }}
-						bordered={false}
-					>
-						<CardAnPham />
-					</Card>
-				</Pane>
-				<Pane minSize='40%'>
-					{recAnPham?._id ? (
-						<Card
-							title='Thông tin ấn phẩm'
-							bodyStyle={{ padding: '8px 0 0' }}
-							headStyle={{ padding: 0 }}
-							bordered={false}
-						>
-							<ThongTinAnPham />
-						</Card>
-					) : (
-						<Empty
-							style={{ marginTop: 32, marginBottom: 32 }}
-							description={'Vui lòng chọn chương trình đào tạo trước!'}
-						/>
-					)}
-				</Pane>
-			</SplitPane>
-		</Card>
+		<TableBase
+			columns={columns}
+			dependencies={[page, limit]}
+			modelName='sachtailieu.anpham.anpham'
+			title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
+			Form={isView ? ChiTietAnPham : Form}
+			hideCard
+			widthDrawer={1100}
+		/>
 	);
 };
 
-export default AnPhamPage;
+export default CardAnPham;

@@ -1,3 +1,4 @@
+import ExpandText from '@/components/ExpandText';
 import MyDatePicker from '@/components/MyDatePicker';
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
@@ -6,12 +7,10 @@ import { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLi
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, InputNumber, message, Row } from 'antd';
+import { Button, Card, Col, Descriptions, Form, Input, InputNumber, message, Row } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import SelectAnPhamDebounce from '../../AnPham/components/Select';
-import SelectThongTinAnPhamDebounce from '../../AnPham/ThongTinAnPham/components/Select';
 
 const FormMuonTraSach = (props: any) => {
 	const { getData, setTrangThai } = props;
@@ -20,9 +19,10 @@ const FormMuonTraSach = (props: any) => {
 	const { visibleForm, setVisibleForm, formSubmiting, edit, putModel, postModel, settingMuonTra, record } =
 		useModel('sachtailieu.muontra.muontra');
 	const { danhSach: danhSachSinhVien } = useModel('sinhvien.sinhvien');
-	const { getModel, loading, page, limit, setDanhSach, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
+	const { getModel, loading, page, limit, setDanhSach, danhSach, selectedIds, setSelectedIds } = useModel(
+		'sachtailieu.anpham.thongtinanpham',
+	);
 	const thoiGianMuon: Date = Form.useWatch('thoiGianMuon', form);
-	const anPhamId: string = Form.useWatch('anPhamId', form);
 	const nhanDe: string = Form.useWatch('nhanDe', form);
 	const tacGia: string = Form.useWatch('tacGia', form);
 	const dangKyCaBiet: string = Form.useWatch('dangKyCaBiet', form);
@@ -31,10 +31,12 @@ const FormMuonTraSach = (props: any) => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 			setDanhSach([]);
+			setSelectedIds([]);
 		} else if (record?._id) form.setFieldsValue(record);
 		else {
 			form.setFieldsValue({
 				expired: settingMuonTra?.thoiHanMuonTraSach,
+				thoiGianMuon: moment(),
 			});
 		}
 	}, [record?._id, visibleForm]);
@@ -44,6 +46,11 @@ const FormMuonTraSach = (props: any) => {
 	}, [thoiGianMuon]);
 
 	const onFinish = async (values: MuonSach.IRecord) => {
+		if (!selectedIds?.length && !edit) {
+			message.error('Vui lòng chọn thông tin ấn phẩm cho mượn!');
+			return;
+		}
+
 		values.trangThai = values.trangThai ?? ETrangThaiMuonSach.DANG_THUE_MUON;
 		values.trangThaiDuyet = values.trangThaiDuyet ?? ETrangThaiDuyeMuonSach.DA_DUYET;
 
@@ -51,6 +58,12 @@ const FormMuonTraSach = (props: any) => {
 		values.maDinhDanhNguoiMuon = sinhVien?.ma ?? '';
 		values.hotenNguoiMuon = sinhVien?.ten ?? '';
 		values.thoiGianDangKy = moment().toDate();
+
+		const thongTinAnPham = danhSach?.find((item) => item?._id === selectedIds?.[0]);
+
+		values.anPhamId = thongTinAnPham?.anPhamId ?? '';
+		values.thongTinAnPhamId = thongTinAnPham?._id ?? '';
+		values.soDangKyCaBiet = `${thongTinAnPham?.tagCode}$j`;
 
 		if (edit) {
 			putModel(record?._id ?? '', values, getData)
@@ -90,73 +103,122 @@ const FormMuonTraSach = (props: any) => {
 			render: (val, rec) => rec?.anPham?.ten ?? 'Không có thông tin',
 		},
 		{
-			title: 'Trường biên mục',
-			dataIndex: 'tagCode',
-			width: 120,
-			render: (val, rec) => `${[rec?.tag?.ma ?? val, rec?.tag?.noiDung].filter(Boolean).join(' - ')}`,
-		},
-		{
-			title: 'Chỉ thị 1',
-			dataIndex: 'ind1',
-			width: 90,
-		},
-		{
-			title: 'Chỉ thị 2',
-			dataIndex: 'ind2',
-			width: 90,
-		},
-		{
-			title: 'Value',
-			dataIndex: 'value',
+			title: 'Nhan đề',
 			width: 180,
-			render: (val, rec) =>
-				`${rec?.tagCode}${
-					rec?.value
-						? rec?.value
-						: rec?.danhSachThuocTinhAnPham?.map((item) => `${item?.code} - ${item?.value}`).join(', ')
-				}`,
+			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
+		},
+		{
+			title: 'Tác giả',
+			width: 150,
+			render: (val, rec) => rec?.anPham?.tacGia,
+		},
+		{
+			title: 'ĐKCB',
+			width: 80,
+			render: (val, rec) => `${rec?.tagCode}$j`,
 		},
 	];
 
 	return (
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} sinh viên mượn sách`}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
-				<Row gutter={[12, 0]}>
-					<Col span={24}>
-						<div className='fw500'>Tìm kiếm thông tin ấn phẩm ấn phẩm</div>
-					</Col>
-					<Col span={24} md={8}>
-						<Form.Item name='nhanDe' label='Nhan đề'>
-							<Input placeholder='Nhập đăng ký cá biệt' />
-						</Form.Item>
-					</Col>
-					<Col span={24} md={8}>
-						<Form.Item name='tacGia' label='Tác giả'>
-							<Input placeholder='Nhập đăng ký cá biệt' />
-						</Form.Item>
-					</Col>
-					<Col span={24} md={8}>
-						<Form.Item name='dangKyCaBiet' label='Đăng ký cá biệt'>
-							<Input placeholder='Nhập đăng ký cá biệt' />
-						</Form.Item>
-					</Col>
-				</Row>
-				<div className='form-footer'>
-					<Button loading={loading} onClick={handleTimKiem}>
-						Tìm kiếm
-					</Button>
-				</div>
+				{!edit ? (
+					<>
+						<Row gutter={[12, 0]}>
+							<Col span={24}>
+								<div className='fw500'>Tìm kiếm thông tin ấn phẩm ấn phẩm</div>
+							</Col>
+							<Col span={24} md={8}>
+								<Form.Item name='nhanDe' label='Nhan đề'>
+									<Input placeholder='Nhập đăng ký cá biệt' />
+								</Form.Item>
+							</Col>
+							<Col span={24} md={8}>
+								<Form.Item name='tacGia' label='Tác giả'>
+									<Input placeholder='Nhập đăng ký cá biệt' />
+								</Form.Item>
+							</Col>
+							<Col span={24} md={8}>
+								<Form.Item name='dangKyCaBiet' label='Đăng ký cá biệt'>
+									<Input placeholder='Nhập đăng ký cá biệt' />
+								</Form.Item>
+							</Col>
+						</Row>
 
-				{danhSach?.length ? (
-					<TableBase
-						getData={getDataExternal}
-						columns={columns}
-						dependencies={[page, limit]}
-						modelName='sachtailieu.anpham.thongtinanpham'
-						buttons={{ create: false }}
-						hideCard
-					/>
-				) : null}
+						<div className='form-footer'>
+							<Button loading={loading} onClick={handleTimKiem}>
+								Tìm kiếm
+							</Button>
+						</div>
+
+						{danhSach?.length ? (
+							<TableBase
+								getData={getDataExternal}
+								columns={columns}
+								dependencies={[page, limit]}
+								modelName='sachtailieu.anpham.thongtinanpham'
+								buttons={{ create: false }}
+								hideCard
+								otherProps={{
+									rowKey: (rec: AnPham.IThongTinAnPham) => rec._id,
+									rowSelection: {
+										type: 'checkbox',
+										selectedRowKeys: selectedIds,
+										preserveSelectedRowKeys: true,
+										onChange: (selectedRowKeys: string[]) => {
+											setSelectedIds(selectedRowKeys.slice(-1));
+										},
+										columnWidth: 40,
+										hideSelectAll: true,
+									},
+									// expandable: {
+									// 	expandRowByClick: true,
+									// 	indentSize: 0,
+									// 	expandedRowRender: (rec: AnPham.IThongTinAnPham) => {
+									// 		if (rec.danhSachThuocTinhAnPham?.length) {
+									// 			return (
+									// 				<TableStaticData
+									// 					columns={[
+									// 						{
+									// 							title: 'Đăng ký cá biệt',
+									// 							dataIndex: 'code',
+									// 							align: 'center',
+									// 							width: 80,
+									// 							render: (val, recs) => `${rec?.tagCode}${val}`,
+									// 						},
+									// 						{
+									// 							title: 'Thông tin',
+									// 							dataIndex: 'value',
+									// 							width: 180,
+									// 							filterType: 'string',
+									// 						},
+									// 					]}
+									// 					data={rec.danhSachThuocTinhAnPham}
+									// 					size='small'
+									// 					addStt
+									// 					otherProps={{
+									// 						pagination: false,
+									// 						scroll: { y: 300 },
+									// 					}}
+									// 				/>
+									// 			);
+									// 		}
+									// 		return null;
+									// 	},
+									// 	rowExpandable: (rec: AnPham.IThongTinAnPham) => rec.danhSachThuocTinhAnPham?.length > 0,
+									// 	columnWidth: 40,
+									// },
+								}}
+							/>
+						) : null}
+					</>
+				) : (
+					<Descriptions column={1}>
+						<Descriptions.Item label='Ấn phẩm'>{record?.anPham?.ten ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
+					</Descriptions>
+				)}
 
 				<Row gutter={[12, 0]}>
 					<Col xs={24}>
@@ -164,11 +226,7 @@ const FormMuonTraSach = (props: any) => {
 							<SelectSinhVienDebounce />
 						</Form.Item>
 					</Col>
-					<Col xs={24}>
-						<Form.Item name='soDangKyCaBiet' label='Đăng ký cá biệt' rules={[...rules.required]}>
-							<Input placeholder='Nhập đăng ký cá biệt' />
-						</Form.Item>
-					</Col>
+
 					<Col xs={24} md={12}>
 						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
 							<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
@@ -184,20 +242,6 @@ const FormMuonTraSach = (props: any) => {
 							<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
 						</Form.Item>
 					</Col>
-
-					<Col xs={24} md={12}>
-						<Form.Item name='anPhamId' label='Ấn phẩm' rules={[...rules.required]}>
-							<SelectAnPhamDebounce />
-						</Form.Item>
-					</Col>
-
-					{anPhamId ? (
-						<Col xs={24} md={12}>
-							<Form.Item name='thongTinAnPhamId' label='Thông tin ấn phẩm' rules={[...rules.required]}>
-								<SelectThongTinAnPhamDebounce condition={{ anPhamId: anPhamId }} />
-							</Form.Item>
-						</Col>
-					) : null}
 				</Row>
 
 				<div className='form-footer'>

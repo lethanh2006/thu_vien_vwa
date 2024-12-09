@@ -2,6 +2,8 @@ declare module AnPham {
 	export interface IRecord {
 		_id: string;
 		ten: string;
+		nhanDe: string;
+		tacGia: string;
 
 		createdAt?: Date;
 		updatedAt?: Date;
