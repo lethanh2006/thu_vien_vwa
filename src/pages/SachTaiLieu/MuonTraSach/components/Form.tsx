@@ -30,7 +30,6 @@ const FormMuonTraSach = (props: any) => {
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
-			setDanhSach([]);
 			setSelectedIds([]);
 		} else if (record?._id) form.setFieldsValue(record);
 		else {
@@ -39,6 +38,8 @@ const FormMuonTraSach = (props: any) => {
 				thoiGianMuon: moment(),
 			});
 		}
+
+		setDanhSach([]);
 	}, [record?._id, visibleForm]);
 
 	useEffect(() => {
@@ -113,9 +114,9 @@ const FormMuonTraSach = (props: any) => {
 			render: (val, rec) => rec?.anPham?.tacGia,
 		},
 		{
-			title: 'ĐKCB',
+			title: 'Nhãn',
 			width: 80,
-			render: (val, rec) => `${rec?.tagCode}$j`,
+			render: (val, rec) => rec?.tagCode,
 		},
 	];
 
@@ -171,43 +172,6 @@ const FormMuonTraSach = (props: any) => {
 										columnWidth: 40,
 										hideSelectAll: true,
 									},
-									// expandable: {
-									// 	expandRowByClick: true,
-									// 	indentSize: 0,
-									// 	expandedRowRender: (rec: AnPham.IThongTinAnPham) => {
-									// 		if (rec.danhSachThuocTinhAnPham?.length) {
-									// 			return (
-									// 				<TableStaticData
-									// 					columns={[
-									// 						{
-									// 							title: 'Đăng ký cá biệt',
-									// 							dataIndex: 'code',
-									// 							align: 'center',
-									// 							width: 80,
-									// 							render: (val, recs) => `${rec?.tagCode}${val}`,
-									// 						},
-									// 						{
-									// 							title: 'Thông tin',
-									// 							dataIndex: 'value',
-									// 							width: 180,
-									// 							filterType: 'string',
-									// 						},
-									// 					]}
-									// 					data={rec.danhSachThuocTinhAnPham}
-									// 					size='small'
-									// 					addStt
-									// 					otherProps={{
-									// 						pagination: false,
-									// 						scroll: { y: 300 },
-									// 					}}
-									// 				/>
-									// 			);
-									// 		}
-									// 		return null;
-									// 	},
-									// 	rowExpandable: (rec: AnPham.IThongTinAnPham) => rec.danhSachThuocTinhAnPham?.length > 0,
-									// 	columnWidth: 40,
-									// },
 								}}
 							/>
 						) : null}

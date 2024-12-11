@@ -62,8 +62,8 @@ const CardAnPham = () => {
 			modelName='sachtailieu.anpham.anpham'
 			title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
 			Form={isView ? ChiTietAnPham : Form}
-			hideCard
-			widthDrawer={1100}
+			widthDrawer={800}
+			buttons={{ create: false }}
 		/>
 	);
 };

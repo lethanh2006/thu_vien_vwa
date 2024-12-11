@@ -5,6 +5,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
+import { EOperatorType } from '@/components/Table/constant';
 
 const DanhSachTruongCon = () => {
 	const intl = useIntl();
@@ -12,7 +13,15 @@ const DanhSachTruongCon = () => {
 	const { getModel, page, limit, deleteModel, handleEdit } = useModel('danhmuc.truongcon');
 
 	const getData = () => {
-		getModel({ tag: recTag?._id });
+		if (recTag?._id)
+			getModel(undefined, [
+				{
+					active: true,
+					field: 'tag',
+					values: [recTag?.ma],
+					operator: EOperatorType.INCLUDE,
+				},
+			]);
 	};
 
 	const columns: IColumn<TruongCon.IRecord>[] = [
@@ -57,9 +66,8 @@ const DanhSachTruongCon = () => {
 	return (
 		<TableBase
 			getData={getData}
-			params={{ tag: recTag?._id }}
 			columns={columns}
-			dependencies={[page, limit]}
+			dependencies={[page, limit, recTag?._id]}
 			modelName='danhmuc.truongcon'
 			title={intl.formatMessage({ id: 'danhmuc.truongcon.title' })}
 			Form={Form}

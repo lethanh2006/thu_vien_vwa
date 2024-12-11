@@ -29,9 +29,9 @@ const ChiTietMuonTraSach = (props: any) => {
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
-			setDanhSach([]);
 			setSelectedIds([]);
 		}
+		setDanhSach([]);
 	}, [record?._id, visibleForm]);
 
 	const getData = () => {
@@ -56,9 +56,9 @@ const ChiTietMuonTraSach = (props: any) => {
 			render: (val, rec) => rec?.anPham?.tacGia,
 		},
 		{
-			title: 'ĐKCB',
+			title: 'Nhãn',
 			width: 80,
-			render: (val, rec) => `${rec?.tagCode}$j`,
+			render: (val, rec) => rec?.tagCode,
 		},
 	];
 

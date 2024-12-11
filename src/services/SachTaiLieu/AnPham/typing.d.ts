@@ -21,6 +21,8 @@ declare module AnPham {
 
 		danhSachThuocTinhAnPham: IThuocTinhAnPham[];
 
+		total?: number;
+
 		createdAt?: Date;
 		updatedAt?: Date;
 	}
