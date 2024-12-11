@@ -25,6 +25,7 @@ const ModalCapNhatAnhNhanDien = (props: { visible: boolean; setVisible: (val: bo
 	};
 
 	const onFinish = async (values: any) => {
+		if (!values.sinhVienSsoId) return;
 		if (!!values.faceRegImgUrl && typeof values.faceRegImgUrl !== 'string') {
 			setFormSubmiting(true);
 			await buildUpLoadFile(values, 'faceRegImgUrl')
@@ -33,7 +34,7 @@ const ModalCapNhatAnhNhanDien = (props: { visible: boolean; setVisible: (val: bo
 				.finally(() => setFormSubmiting(false));
 		}
 		if (!!values.faceRegImgUrl && typeof values.faceRegImgUrl === 'string')
-			updateFaceRegModel(values, () => {})
+			updateFaceRegModel(values.sinhVienSsoId, values, () => {})
 				.then(() => setVisible(false))
 				.catch(console.log);
 	};
