@@ -16,3 +16,11 @@ export async function xuLyThueMuonAnPham(idThueMuon: string, payload: any) {
 export async function ghiTraThueMuonAnPham(idThueMuon: string, payload: any) {
 	return axios.put(`${ip3}/thue-muon-an-pham/${idThueMuon}/tra`, payload);
 }
+
+export async function giaHanThueMuonAnPham(idThueMuon: string, payload: any) {
+	return axios.put(`${ip3}/thue-muon-an-pham/${idThueMuon}/gia-han`, payload);
+}
+
+export async function thongKeMuonTraSach() {
+	return axios.get(`${ip3}/thue-muon-an-pham/thong-ke`);
+}

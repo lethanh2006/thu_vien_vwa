@@ -38,4 +38,11 @@ declare module AnPham {
 		createdAt?: Date;
 		updatedAt?: Date;
 	}
+
+	export interface IThongKeAnPham {
+		_id: string;
+		tongAnPham: number;
+		tongAnPhamDangThueMuon: number;
+		tongSoAnPham: number;
+	}
 }

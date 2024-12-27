@@ -146,6 +146,9 @@ declare module SinhVien {
 		kqhtTichLuyList?: KetQuaHocKy.IKetQuaTichLuy[];
 		kqhtTichLuyNganh1?: KetQuaHocKy.IKetQuaTichLuy;
 		kqhtTichLuyNganh2?: KetQuaHocKy.IKetQuaTichLuy;
+
+		//Thư viện
+		thongKe: { choXuLy: string; dangThueMuon: string; quaHan: string; daTra: string };
 	}
 
 	export interface IHocBongSinhVien {

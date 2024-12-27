@@ -5,8 +5,8 @@ declare module MuonSach {
 		_id: string;
 		soDangKyCaBiet: string;
 		thoiGianMuon: Date;
-		thoiGianDangKy: Date;
-		expired: number;
+		thoiGianDangKy: any;
+		expired: Date;
 		thoiGianTra: Date;
 		trangThaiDuyet: ETrangThaiDuyeMuonSach;
 		trangThai: ETrangThaiMuonSach;
@@ -23,13 +23,30 @@ declare module MuonSach {
 		thongTinAnPhamId: string;
 		thongTinAnPham: AnPham.IThongTinAnPham;
 		ghiChuTra: string;
+		ghiChuDangKy: string;
+		daLaySach: boolean;
+		giaHan: boolean;
+		thoiGianGiaHan: Date;
 
 		createdAt: Date;
 		updatedAt: Date;
+
+		//fake
+		nhanDe?: string;
+		tacGia?: string;
+		dangKyCaBiet?: string;
 	}
 
 	export type TSetting = {
 		_id?: string;
 		thoiHanMuonTraSach: number;
 	};
+
+	export interface IThongKe {
+		_id: string;
+		choXuLy: number;
+		daTra: number;
+		dangThueMuon: number;
+		quaHan: number;
+	}
 }

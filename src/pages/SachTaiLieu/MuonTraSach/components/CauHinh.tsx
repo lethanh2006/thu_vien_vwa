@@ -30,6 +30,11 @@ const CauHinhThoiHanMuonTra = (props: { visible: boolean; setVisible: (val: bool
 								<InputNumber style={{ width: '100%' }} placeholder='Nhập hạn mượn trả sách' addonAfter='Ngày' />
 							</Form.Item>
 						</Col>
+						<Col span={24}>
+							<Form.Item name='hanNgachMuon' label='Hạn ngạch mượn' rules={[...rules.required]}>
+								<InputNumber style={{ width: '100%' }} placeholder='Nhập số hạn ngạch mượn' />
+							</Form.Item>
+						</Col>
 					</Row>
 
 					<div className='form-footer'>

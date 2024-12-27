@@ -1,7 +1,8 @@
+import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
 import { UserOutlined } from '@ant-design/icons';
-import { Button, Card, Spin } from 'antd';
+import { Button, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -10,12 +11,12 @@ const ChiTietAnPham = () => {
 	const {
 		record: recAnPham,
 		setVisibleForm,
-		getAllModel,
-		loading,
+		getChiTietAnPhamModal,
+		loadingChiTiet,
 		visibleForm,
+		danhSachTag,
 	} = useModel('sachtailieu.anpham.anpham');
 	const { getModel, page, limit, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
-	const [danhSachTag, setDanhSachTag] = useState<AnPham.IThongTinAnPham[]>([]);
 	const [tagCode, setTagCode] = useState<string>();
 
 	useEffect(() => {
@@ -23,9 +24,7 @@ const ChiTietAnPham = () => {
 	}, [visibleForm]);
 
 	useEffect(() => {
-		getAllModel(undefined, undefined, undefined, undefined, `${recAnPham?._id}/tag`, false).then((res) =>
-			setDanhSachTag(res as any),
-		);
+		if (recAnPham?._id) getChiTietAnPhamModal(recAnPham?._id);
 	}, [recAnPham?._id]);
 
 	const getData = () => {
@@ -47,24 +46,26 @@ const ChiTietAnPham = () => {
 		{
 			title: 'Nội dung trường',
 			width: 220,
-			render: (val, rec) => rec?.danhSachThuocTinhAnPham?.map((i) => `${i.code}${i.value}`).join(', '),
+			render: (val, rec) => (
+				<ExpandText>{rec?.danhSachThuocTinhAnPham?.map((i) => `${i.code}${i.value}`).join(', ')}</ExpandText>
+			),
 		},
 	];
 
 	return (
-		<Card title='Chi tiết ấn phẩm'>
+		<>
 			<div>
 				<h2>
 					{recAnPham?.ten} {recAnPham?.nhanDe}
 				</h2>
 				<UserOutlined /> {recAnPham?.tacGia}
 			</div>
-			<Spin spinning={loading}>
+			<Spin spinning={loadingChiTiet}>
 				<div style={{ marginTop: 12 }}>
 					{danhSachTag?.map((item) => (
 						<div key={item?._id}>
 							<b>
-								<span style={{ fontSize: 24 }}>{item?.tag?.ma ?? ''}</span>
+								<span style={{ fontSize: 18 }}>{item?.tag?.ma ?? ''}</span>
 								{item?.tag?.noiDung ?? ''} ({item?.total})
 							</b>
 
@@ -97,7 +98,7 @@ const ChiTietAnPham = () => {
 			<div className='form-footer'>
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 			</div>
-		</Card>
+		</>
 	);
 };
 

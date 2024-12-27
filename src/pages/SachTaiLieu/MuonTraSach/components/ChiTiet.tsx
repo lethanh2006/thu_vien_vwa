@@ -1,66 +1,29 @@
-import ExpandText from '@/components/ExpandText';
-import TableBase from '@/components/Table';
-import ButtonExtend from '@/components/Table/ButtonExtend';
-import type { IColumn } from '@/components/Table/typing';
 import {
 	colorTrangThaiDuyeMuonSach,
 	colorTrangThaiMuonSach,
 	ETrangThaiDuyeMuonSach,
 	ETrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
-import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Descriptions, Form, Input, message, Popconfirm, Row, Tag } from 'antd';
+import { Button, Card, Col, Descriptions, Form, message, Popconfirm, Row, Tag } from 'antd';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import GhiTraAnPham from './GhiTraSach';
+import FormDuyet from './FormDuyet';
 
 const ChiTietMuonTraSach = (props: any) => {
-	const { getData: getDataExternal } = props;
+	const { getData: getDataExternal, trangThai, setVisibleGhiTra } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record, setVisibleForm, visibleForm, xuLyThueMuonAnPhamModel } = useModel('sachtailieu.muontra.muontra');
-	const { getModel, page, limit, setDanhSach, selectedIds, setSelectedIds } = useModel(
-		'sachtailieu.anpham.thongtinanpham',
-	);
-	const [visibleGhiTra, setVisibleGhiTra] = useState<boolean>(false);
+	const { selectedIds, setSelectedIds, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
 
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 			setSelectedIds([]);
 		}
-		setDanhSach([]);
-	}, [record?._id, visibleForm]);
-
-	const getData = () => {
-		if (record?.anPhamId) getModel({ anPhamId: record?.anPhamId });
-	};
-
-	const columns: IColumn<AnPham.IThongTinAnPham>[] = [
-		{
-			title: 'Ấn phẩm',
-			dataIndex: 'anPhamId',
-			width: 120,
-			render: (val, rec) => rec?.anPham?.ten ?? 'Không có thông tin',
-		},
-		{
-			title: 'Nhan đề',
-			width: 180,
-			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
-		},
-		{
-			title: 'Tác giả',
-			width: 150,
-			render: (val, rec) => rec?.anPham?.tacGia,
-		},
-		{
-			title: 'Nhãn',
-			width: 80,
-			render: (val, rec) => rec?.tagCode,
-		},
-	];
+	}, [visibleForm]);
 
 	const onFinish = async (values: any) => {
 		if (!selectedIds?.length) {
@@ -68,9 +31,13 @@ const ChiTietMuonTraSach = (props: any) => {
 			return;
 		}
 		const data = {
-			danhSachThongTinAnPhamId: selectedIds,
+			...values,
+			thongTinAnPhamId: selectedIds[0],
 			trangThaiDuyet: ETrangThaiDuyeMuonSach.DA_DUYET,
-			ghiChu: values.ghiChu,
+			thoiGianMuon: moment().toISOString(),
+			soDangKyCaBiet: danhSach
+				?.find((item) => item?._id === selectedIds[0])
+				?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
 		};
 		xuLyThueMuonAnPhamModel(record?._id ?? '', data as any, getDataExternal)
 			.then(() => {
@@ -86,51 +53,59 @@ const ChiTietMuonTraSach = (props: any) => {
 					<Descriptions column={1}>
 						<Descriptions.Item label='Mã sinh viên'>{record?.maDinhDanhNguoiMuon ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Họ tên'>{record?.hotenNguoiMuon ?? '--'}</Descriptions.Item>
-						{record?.anPhamId ? (
-							<>
-								<Descriptions.Item label='Ấn phẩm'>{record?.anPham?.ten ?? '--'}</Descriptions.Item>
-								<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
-								<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
-							</>
-						) : null}
-						{record?.thongTinAnPhamId ? (
-							<Descriptions.Item label='Thông tin ấn phẩm'>
-								{record?.thongTinAnPham?.tagCode}
-								{record?.thongTinAnPham?.value
-									? record?.thongTinAnPham?.value
-									: record?.thongTinAnPham?.danhSachThuocTinhAnPham
-											?.map((item) => `${item?.code} - ${item?.value}`)
-											.join(', ')}
-							</Descriptions.Item>
-						) : null}
-						{record?.trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ||
-						record?.trangThai === ETrangThaiMuonSach.DA_TRA ? (
+
+						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
+
+						{trangThai !== ETrangThaiMuonSach.CHO_XU_LY && (
 							<>
 								<Descriptions.Item label='Đăng ký cá biệt'>{record?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
 								<Descriptions.Item label='Thời gian mượn'>
 									{record?.thoiGianMuon ? moment(record?.thoiGianMuon).format('HH:mm DD/MM/YYYY') : '--'}
 								</Descriptions.Item>
 								<Descriptions.Item label='Hạn trả'>
-									{record?.expired ? `${record?.expired} ngày` : '--'}
+									{record?.expired ? moment(record?.expired).format('HH:mm DD/MM/YYYY') : '--'}
 								</Descriptions.Item>
-								{record?.trangThai === ETrangThaiMuonSach.DA_TRA ? (
-									<Descriptions.Item label='Thời gian trả'>
-										{record?.thoiGianTra ? moment(record?.thoiGianTra).format('HH:mm DD/MM/YYYY') : '--'}
-									</Descriptions.Item>
-								) : null}
 
 								<Descriptions.Item label='Trạng thái'>
-									<Tag color={colorTrangThaiMuonSach[record?.trangThai as ETrangThaiMuonSach]}>{record?.trangThai}</Tag>
+									{record?.daLaySach ? <Tag color='green'>Đã lấy</Tag> : <Tag color='red'>Chưa lấy</Tag>}
+								</Descriptions.Item>
+
+								<Descriptions.Item label='Gia hạn'>
+									{record?.giaHan ? <Tag color='green'>Có gian hạn</Tag> : <Tag color='red'>Không gia hạn</Tag>}
+								</Descriptions.Item>
+
+								<Descriptions.Item label='Thời gian gia hạn'>
+									{record?.thoiGianGiaHan ? moment(record?.thoiGianGiaHan).format('HH:mm DD/MM/YYYY') : '--'}
+								</Descriptions.Item>
+
+								<Descriptions.Item label='Thời gian trả'>
+									{record?.thoiGianTra ? moment(record?.thoiGianTra).format('HH:mm DD/MM/YYYY') : '--'}
 								</Descriptions.Item>
 							</>
-						) : null}
+						)}
+
+						<Descriptions.Item label='Thời gian đăng ký'>
+							{record?.thoiGianDangKy ? moment(record?.thoiGianDangKy).format('HH:mm DD/MM/YYYY') : '--'}
+						</Descriptions.Item>
+
+						<Descriptions.Item label='Ghi chú đăng ký'>{record?.ghiChuDangKy ?? '--'}</Descriptions.Item>
+
+						{trangThai !== ETrangThaiMuonSach.CHO_XU_LY && (
+							<>
+								<Descriptions.Item label='Ghi chú'>{record?.ghiChu ?? '--'}</Descriptions.Item>
+								<Descriptions.Item label='Ghi chú trả'>{record?.ghiChuTra ?? '--'}</Descriptions.Item>
+							</>
+						)}
+
+						<Descriptions.Item label='Trạng thái'>
+							<Tag color={colorTrangThaiMuonSach[record?.trangThai as ETrangThaiMuonSach]}>{record?.trangThai}</Tag>
+						</Descriptions.Item>
+
 						<Descriptions.Item label='Trạng thái duyệt'>
 							<Tag color={colorTrangThaiDuyeMuonSach[record?.trangThaiDuyet as ETrangThaiDuyeMuonSach]}>
 								{record?.trangThaiDuyet}
 							</Tag>
-						</Descriptions.Item>
-						<Descriptions.Item label='Thời gian đăng ký'>
-							{record?.thoiGianDangKy ? moment(record?.thoiGianDangKy).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 					</Descriptions>
 				</Col>
@@ -138,34 +113,7 @@ const ChiTietMuonTraSach = (props: any) => {
 				record?.trangThaiDuyet === ETrangThaiDuyeMuonSach.CHO_DUYET ? (
 					<Col xs={24}>
 						<Form onFinish={onFinish} form={form} layout='vertical'>
-							<Col xs={24}>
-								<TableBase
-									getData={getData}
-									columns={columns}
-									dependencies={[page, limit, record?._id]}
-									modelName='sachtailieu.anpham.thongtinanpham'
-									buttons={{ create: false }}
-									hideCard
-									otherProps={{
-										rowKey: (rec: AnPham.IThongTinAnPham) => rec._id,
-										rowSelection: {
-											type: 'checkbox',
-											selectedRowKeys: selectedIds,
-											preserveSelectedRowKeys: true,
-											onChange: (selectedRowKeys: string[]) => {
-												setSelectedIds(selectedRowKeys.slice(-1));
-											},
-											columnWidth: 40,
-											hideSelectAll: true,
-										},
-									}}
-								/>
-							</Col>
-							<Col xs={24}>
-								<Form.Item name='ghiChu' label='Ghi chú' rules={[...rules.text]}>
-									<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
-								</Form.Item>
-							</Col>
+							<FormDuyet form={form} />
 						</Form>
 					</Col>
 				) : null}
@@ -179,28 +127,24 @@ const ChiTietMuonTraSach = (props: any) => {
 						title='Bạn có chắc chắn muốn xác nhận cho mượn thông tin ấn phẩm này?'
 						placement='topRight'
 					>
-						<ButtonExtend className='text-success' onClick={() => {}}>
-							Duyệt
-						</ButtonExtend>
+						<Button type='primary'>Duyệt</Button>
 					</Popconfirm>
 				) : null}
 
 				{record?.trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
-					<ButtonExtend
-						className='text-success'
+					<Button
+						type='primary'
 						onClick={() => {
 							setVisibleForm(false);
 							setVisibleGhiTra(true);
 						}}
 					>
 						Ghi trả
-					</ButtonExtend>
+					</Button>
 				) : null}
 
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 			</div>
-
-			<GhiTraAnPham visible={visibleGhiTra} setVisible={setVisibleGhiTra} getData={getDataExternal} />
 		</Card>
 	);
 };

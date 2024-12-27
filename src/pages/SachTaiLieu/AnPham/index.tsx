@@ -3,9 +3,11 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import { EyeOutlined } from '@ant-design/icons';
+import { Card } from 'antd';
 import { useIntl, useModel } from 'umi';
-import ChiTietAnPham from './components/ChiTiet';
 import Form from './components/Form';
+import ModalAnPham from './components/Modal';
+import StatAnPham from './components/Stat';
 
 const CardAnPham = () => {
 	const intl = useIntl();
@@ -20,7 +22,7 @@ const CardAnPham = () => {
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
-			title: 'Tên',
+			title: 'Mã ấn phẩm',
 			dataIndex: 'ten',
 			width: 120,
 			render: (val, rec) => val ?? 'Không có thông tin',
@@ -56,15 +58,20 @@ const CardAnPham = () => {
 	];
 
 	return (
-		<TableBase
-			columns={columns}
-			dependencies={[page, limit]}
-			modelName='sachtailieu.anpham.anpham'
-			title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
-			Form={isView ? ChiTietAnPham : Form}
-			widthDrawer={800}
-			buttons={{ create: false }}
-		/>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}>
+			<StatAnPham />
+
+			<TableBase
+				columns={columns}
+				dependencies={[page, limit]}
+				modelName='sachtailieu.anpham.anpham'
+				title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
+				Form={isView ? ModalAnPham : Form}
+				widthDrawer={1100}
+				buttons={{ create: false }}
+				hideCard
+			/>
+		</Card>
 	);
 };
 

@@ -1,6 +1,13 @@
 import useInitModel from '@/hooks/useInitModel';
 import type { ETrangThaiDuyeMuonSach } from '@/services/SachTaiLieu/constant';
-import { getSetting, ghiTraThueMuonAnPham, updateSetting, xuLyThueMuonAnPham } from '@/services/SachTaiLieu/MuonSach';
+import {
+	getSetting,
+	ghiTraThueMuonAnPham,
+	giaHanThueMuonAnPham,
+	thongKeMuonTraSach,
+	updateSetting,
+	xuLyThueMuonAnPham,
+} from '@/services/SachTaiLieu/MuonSach';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import { message } from 'antd';
 import { useState } from 'react';
@@ -9,6 +16,8 @@ export default () => {
 	const objInit = useInitModel<MuonSach.IRecord>('thue-muon-an-pham');
 	const { setLoading, setFormSubmiting, formSubmiting } = objInit;
 	const [settingMuonTra, setSettingMuonTra] = useState<MuonSach.TSetting>();
+	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
+	const [dataThongKe, setDataThongKe] = useState<MuonSach.IThongKe>();
 
 	const getSettingModel = async (): Promise<MuonSach.TSetting> => {
 		setLoading(true);
@@ -43,9 +52,12 @@ export default () => {
 	const xuLyThueMuonAnPhamModel = async (
 		idThueMuon: string,
 		payLoad: {
-			danhSachThongTinAnPhamId: string[];
+			thongTinAnPhamId: string;
 			trangThaiDuyet: ETrangThaiDuyeMuonSach;
 			ghiChu: string;
+			expired: Date;
+			thoiGianMuon: Date;
+			soDangKyCaBiet: string;
 		},
 		getData?: () => void,
 	): Promise<MuonSach.IRecord> => {
@@ -92,12 +104,54 @@ export default () => {
 		}
 	};
 
+	const giaHanThueMuonAnPhamModel = async (
+		idThueMuon: string,
+		payLoad: {
+			thoiGianGiaHan: string;
+		},
+		getData?: () => void,
+	): Promise<MuonSach.IRecord> => {
+		if (formSubmiting) return Promise.reject('form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await giaHanThueMuonAnPham(idThueMuon, payLoad);
+			message.success('Lưu thành công');
+
+			if (getData) getData();
+
+			getSettingModel();
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
+	const thongKeMuonTraSachModel = async (): Promise<MuonSach.IThongKe> => {
+		setLoadingThongKe(true);
+		try {
+			const res = await thongKeMuonTraSach();
+			setDataThongKe(res.data?.data);
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setLoadingThongKe(false);
+		}
+	};
+
 	return {
 		...objInit,
+		dataThongKe,
+		loadingThongKe,
 		settingMuonTra,
 		getSettingModel,
 		updateSettingModel,
 		xuLyThueMuonAnPhamModel,
 		ghiTraThueMuonAnPhamModel,
+		giaHanThueMuonAnPhamModel,
+		thongKeMuonTraSachModel,
 	};
 };

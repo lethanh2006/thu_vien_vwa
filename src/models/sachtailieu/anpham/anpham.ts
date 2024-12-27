@@ -1,10 +1,15 @@
 import { EOperatorType } from '@/components/Table/constant';
 import useInitModel from '@/hooks/useInitModel';
+import { getChiTietAnPham, getThongKeAnPham } from '@/services/SachTaiLieu/AnPham';
 import type { AxiosResponse } from 'axios';
 import _ from 'lodash';
+import { useState } from 'react';
 
 export default () => {
 	const objInit = useInitModel<AnPham.IRecord>('an-pham');
+	const [loadingChiTiet, setLoadingChiTiet] = useState<boolean>(false);
+	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
+	const [danhSachTag, setDanhSachTag] = useState<AnPham.IThongTinAnPham[]>([]);
 
 	const { setLoading, getService, setDanhSach } = objInit;
 
@@ -39,8 +44,38 @@ export default () => {
 		}
 	};
 
+	const getChiTietAnPhamModal = async (idAnPham: string): Promise<AnPham.IRecord> => {
+		setLoadingChiTiet(true);
+		try {
+			const res = await getChiTietAnPham(idAnPham);
+			setDanhSachTag(res.data?.data);
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setLoadingChiTiet(false);
+		}
+	};
+
+	const getThongKeAnPhamModel = async (condition?: any, filters?: any[]): Promise<any> => {
+		setLoadingThongKe(true);
+		try {
+			const res = await getThongKeAnPham({ condition, filters });
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setLoadingThongKe(false);
+		}
+	};
+
 	return {
 		...objInit,
+		loadingChiTiet,
+		danhSachTag,
+		loadingThongKe,
 		searchAnPhamModel,
+		getChiTietAnPhamModal,
+		getThongKeAnPhamModel,
 	};
 };

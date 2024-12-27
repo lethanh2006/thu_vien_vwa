@@ -88,6 +88,11 @@
 				path: 'muon-tra-sach',
 				component: './SachTaiLieu/MuonTraSach',
 			},
+			{
+				name: 'ThongKeBanDoc',
+				path: 'thong-ke-ban-doc',
+				component: './SachTaiLieu/ThongKeBanDoc',
+			},
 		],
 	},
 

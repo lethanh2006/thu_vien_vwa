@@ -1,31 +1,31 @@
-import ExpandText from '@/components/ExpandText';
 import MyDatePicker from '@/components/MyDatePicker';
-import TableBase from '@/components/Table';
-import type { IColumn } from '@/components/Table/typing';
 import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
 import { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Descriptions, Form, Input, InputNumber, message, Row } from 'antd';
+import { Button, Card, Col, Descriptions, Form, Input, message, Row } from 'antd';
 import moment from 'moment';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import ModalTimKiem from './ModalTimKiem';
 
 const FormMuonTraSach = (props: any) => {
 	const { getData, setTrangThai } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { visibleForm, setVisibleForm, formSubmiting, edit, putModel, postModel, settingMuonTra, record } =
+	const { visibleForm, setVisibleForm, formSubmiting, edit, putModel, postModel, record, settingMuonTra } =
 		useModel('sachtailieu.muontra.muontra');
 	const { danhSach: danhSachSinhVien } = useModel('sinhvien.sinhvien');
-	const { getModel, loading, page, limit, setDanhSach, danhSach, selectedIds, setSelectedIds } = useModel(
+	const { getModel, loading, setDanhSach, danhSach, selectedIds, setSelectedIds } = useModel(
 		'sachtailieu.anpham.thongtinanpham',
 	);
-	const thoiGianMuon: Date = Form.useWatch('thoiGianMuon', form);
+	const [visibleTimKiem, setVisibleTimKiem] = useState<boolean>(false);
 	const nhanDe: string = Form.useWatch('nhanDe', form);
 	const tacGia: string = Form.useWatch('tacGia', form);
 	const dangKyCaBiet: string = Form.useWatch('dangKyCaBiet', form);
+
+	const anPham = danhSach?.find((item) => item?._id === selectedIds?.[0]);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -34,19 +34,21 @@ const FormMuonTraSach = (props: any) => {
 		} else if (record?._id) form.setFieldsValue(record);
 		else {
 			form.setFieldsValue({
-				expired: settingMuonTra?.thoiHanMuonTraSach,
-				thoiGianMuon: moment(),
+				thoiGianMuon: moment().toISOString(),
+				expired: moment()
+					.add(settingMuonTra?.thoiHanMuonTraSach || 150, 'days')
+					.toISOString(),
 			});
 		}
 
 		setDanhSach([]);
 	}, [record?._id, visibleForm]);
 
-	useEffect(() => {
-		form.setFieldsValue({ thoiGianTra: moment(thoiGianMuon).add(settingMuonTra?.thoiHanMuonTraSach, 'day') });
-	}, [thoiGianMuon]);
-
 	const onFinish = async (values: MuonSach.IRecord) => {
+		delete values.nhanDe;
+		delete values.tacGia;
+		delete values.dangKyCaBiet;
+
 		if (!selectedIds?.length && !edit) {
 			message.error('Vui lòng chọn thông tin ấn phẩm cho mượn!');
 			return;
@@ -58,13 +60,14 @@ const FormMuonTraSach = (props: any) => {
 		const sinhVien = danhSachSinhVien?.find((item) => item?.ssoId === values?.ssoIdNguoiMuon);
 		values.maDinhDanhNguoiMuon = sinhVien?.ma ?? '';
 		values.hotenNguoiMuon = sinhVien?.ten ?? '';
-		values.thoiGianDangKy = moment().toDate();
+		values.thoiGianDangKy = moment().toISOString();
 
 		const thongTinAnPham = danhSach?.find((item) => item?._id === selectedIds?.[0]);
 
 		values.anPhamId = thongTinAnPham?.anPhamId ?? '';
 		values.thongTinAnPhamId = thongTinAnPham?._id ?? '';
-		values.soDangKyCaBiet = `${thongTinAnPham?.tagCode}$j`;
+		values.soDangKyCaBiet = thongTinAnPham?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value ?? '';
+		values.daLaySach = values.daLaySach ?? true;
 
 		if (edit) {
 			putModel(record?._id ?? '', values, getData)
@@ -77,11 +80,6 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	const getDataExternal = () => {
-		if (!nhanDe && !tacGia && !dangKyCaBiet) {
-			message.error('Vui lòng điền ít nhất 1 thông tin!');
-			return;
-		}
-
 		const searchParams: Record<string, any> = {};
 		if (nhanDe) searchParams.nhanDe = nhanDe;
 		if (tacGia) searchParams.tacGia = tacGia;
@@ -93,32 +91,13 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	const handleTimKiem = () => {
+		if (!nhanDe && !tacGia && !dangKyCaBiet) {
+			message.error('Vui lòng điền ít nhất 1 thông tin!');
+			return;
+		}
+		setVisibleTimKiem(true);
 		getDataExternal();
 	};
-
-	const columns: IColumn<AnPham.IThongTinAnPham>[] = [
-		{
-			title: 'Ấn phẩm',
-			dataIndex: 'anPhamId',
-			width: 120,
-			render: (val, rec) => rec?.anPham?.ten ?? 'Không có thông tin',
-		},
-		{
-			title: 'Nhan đề',
-			width: 180,
-			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
-		},
-		{
-			title: 'Tác giả',
-			width: 150,
-			render: (val, rec) => rec?.anPham?.tacGia,
-		},
-		{
-			title: 'Nhãn',
-			width: 80,
-			render: (val, rec) => rec?.tagCode,
-		},
-	];
 
 	return (
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} sinh viên mượn sách`}>
@@ -151,46 +130,32 @@ const FormMuonTraSach = (props: any) => {
 								Tìm kiếm
 							</Button>
 						</div>
-
-						{danhSach?.length ? (
-							<TableBase
-								getData={getDataExternal}
-								columns={columns}
-								dependencies={[page, limit]}
-								modelName='sachtailieu.anpham.thongtinanpham'
-								buttons={{ create: false }}
-								hideCard
-								otherProps={{
-									rowKey: (rec: AnPham.IThongTinAnPham) => rec._id,
-									rowSelection: {
-										type: 'checkbox',
-										selectedRowKeys: selectedIds,
-										preserveSelectedRowKeys: true,
-										onChange: (selectedRowKeys: string[]) => {
-											setSelectedIds(selectedRowKeys.slice(-1));
-										},
-										columnWidth: 40,
-										hideSelectAll: true,
-									},
-								}}
-							/>
-						) : null}
 					</>
 				) : (
 					<Descriptions column={1}>
-						<Descriptions.Item label='Ấn phẩm'>{record?.anPham?.ten ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label='Mã ấn phẩm'>{record?.anPham?.ten ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 					</Descriptions>
 				)}
 
-				<Row gutter={[12, 0]}>
-					<Col xs={24}>
+				<Row gutter={[12, 0]} style={{ marginTop: 12 }}>
+					{anPham && (
+						<Col span={24}>
+							<Descriptions column={1}>
+								<Descriptions.Item label='Nhan đề'>{anPham?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
+								<Descriptions.Item label='Tác giả'>{anPham?.anPham?.tacGia ?? '--'}</Descriptions.Item>
+								<Descriptions.Item label='Đăng ký cá biệt'>
+									{anPham?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value ?? '--'}
+								</Descriptions.Item>
+							</Descriptions>
+						</Col>
+					)}
+					<Col xs={24} md={12}>
 						<Form.Item name='ssoIdNguoiMuon' label='Sinh viên' rules={[...rules.required]}>
 							<SelectSinhVienDebounce />
 						</Form.Item>
 					</Col>
-
 					<Col xs={24} md={12}>
 						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
 							<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
@@ -198,7 +163,7 @@ const FormMuonTraSach = (props: any) => {
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='expired' label='Hạn trả' rules={[...rules.required]}>
-							<InputNumber style={{ width: '100%' }} placeholder='Nhập hạn mượn trả sách' addonAfter='Ngày' />
+							<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
@@ -217,6 +182,8 @@ const FormMuonTraSach = (props: any) => {
 					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
+
+			<ModalTimKiem visibleForm={visibleTimKiem} setVisibleForm={setVisibleTimKiem} getData={getDataExternal} />
 		</Card>
 	);
 };

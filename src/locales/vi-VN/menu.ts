@@ -18,6 +18,7 @@ export default {
 	'menu.SachTaiLieu.BienMuc': 'Biên mục',
 	'menu.SachTaiLieu.AnPham': 'Ấn phẩm',
 	'menu.SachTaiLieu.MuonTraSach': 'Mượn trả sách',
+	'menu.SachTaiLieu.ThongKeBanDoc': 'Thống kê bạn đọc',
 
 	'menu.DanhMuc': 'Danh mục',
 	'menu.DanhMuc.ChucVu': 'Chức vụ',
