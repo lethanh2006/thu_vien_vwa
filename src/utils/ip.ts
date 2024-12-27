@@ -9,6 +9,7 @@ const ip3 = ipRoot + 'thu-vien'; // ip dev
 const ipNotif = ipRoot + 'notification'; // ip dev
 const ipSlink = ipRoot + 'slink'; // ip dev
 const ipDaoTao = ipRoot + 'qldt'; // ip dev
+const ipNhanSu = ipRoot + 'tcns'; // ip dev
 
 const currentRole = EModuleKey.CONG_CAN_BO;
 const oneSignalRole = EModuleKey.CONG_CAN_BO;
@@ -28,6 +29,7 @@ export {
 	ipNotif,
 	ipSlink,
 	ipDaoTao,
+	ipNhanSu,
 	currentRole,
 	oneSignalRole,
 	keycloakClientID,

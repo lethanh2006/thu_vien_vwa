@@ -1,3 +1,4 @@
+import SelectDonVi from '@/pages/ToChucNhanSu/DonVi/Select';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import rules from '@/utils/rules';
 import { Button, Col, Form, InputNumber, Modal, Row, Spin } from 'antd';
@@ -31,7 +32,12 @@ const CauHinhThoiHanMuonTra = (props: { visible: boolean; setVisible: (val: bool
 							</Form.Item>
 						</Col>
 						<Col span={24}>
-							<Form.Item name='hanNgachMuon' label='Hạn ngạch mượn' rules={[...rules.required]}>
+							<Form.Item name='idDonViThuVien' label='Đơn vị thư viện' rules={[...rules.required]}>
+								<SelectDonVi />
+							</Form.Item>
+						</Col>
+						<Col span={24}>
+							<Form.Item name='soLuongMuonToiDa' label='Hạn ngạch mượn' rules={[...rules.required]}>
 								<InputNumber style={{ width: '100%' }} placeholder='Nhập số hạn ngạch mượn' />
 							</Form.Item>
 						</Col>
