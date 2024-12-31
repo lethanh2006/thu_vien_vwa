@@ -28,3 +28,8 @@ export enum ETrangThaiBienMuc {
 	CHO_BIEN_MUC = 'Chờ biên mục chi tiết',
 	DA_BIEN_MUC = 'Đã biên mục chi tiết',
 }
+
+export const colorTrangThaiBienMuc: Record<ETrangThaiBienMuc, string> = {
+	[ETrangThaiBienMuc.CHO_BIEN_MUC]: 'blue',
+	[ETrangThaiBienMuc.DA_BIEN_MUC]: 'green',
+};

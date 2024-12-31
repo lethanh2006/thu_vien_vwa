@@ -7,18 +7,19 @@ import SelectKieuBanGhi from '@/pages/DanhMuc/KieuBanGhi/components/Select';
 import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
-import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Popconfirm } from 'antd';
+import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { Popconfirm, Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import ModalBienMucTaiLieu from './components/Modal';
+import ChiTietBienMuc from './components/ChiTiet';
 
 const BienMucSachTaiLieuPage = () => {
 	const intl = useIntl();
-	const { getModel, page, limit, deleteModel, handleEdit } = useModel('sachtailieu.anpham.anpham');
+	const { getModel, page, limit, deleteModel, handleEdit, handleView, isView } = useModel('sachtailieu.anpham.anpham');
 
 	const getData = () => {
-		getModel({ trangThai: ETrangThaiBienMuc.DA_BIEN_MUC });
+		getModel({ trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC });
 	};
 
 	const columns: IColumn<AnPham.IRecord>[] = [
@@ -71,6 +72,12 @@ const BienMucSachTaiLieuPage = () => {
 			sortable: true,
 		},
 		{
+			title: 'Mã tài liệu',
+			dataIndex: 'ten',
+			width: 150,
+			filterType: 'string',
+		},
+		{
 			title: 'Tác giả',
 			dataIndex: 'tacGia',
 			width: 150,
@@ -78,62 +85,33 @@ const BienMucSachTaiLieuPage = () => {
 		},
 		{
 			title: 'Nhan đề chính',
-			dataIndex: 'nhanDeChinh',
+			dataIndex: 'nhanDe',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Tên tập',
-			dataIndex: 'tenTap',
-			width: 150,
-			filterType: 'string',
-		},
-		{
-			title: 'Phụ đề',
-			dataIndex: 'phuDe',
-			width: 120,
-			filterType: 'string',
-		},
-		{
-			title: 'Lần xuất bản',
-			dataIndex: 'lanXuatBan',
-			align: 'center',
-			width: 100,
-		},
-		{
-			title: 'Nơi xuất bản',
-			dataIndex: 'noiXuatBan',
-			width: 120,
-		},
-		{
-			title: 'Năm xuất bản',
-			dataIndex: 'namXuatBan',
+			title: 'Trạng thái',
+			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
-			filterType: 'number',
-			sortable: true,
-		},
-		{
-			title: 'Nhà xuất bản',
-			dataIndex: 'nhaXuatBan',
-			width: 150,
-			filterType: 'string',
-		},
-		{
-			title: 'Số trang',
-			dataIndex: 'soTrang',
-			align: 'center',
-			width: 90,
-			filterType: 'number',
-			sortable: true,
+			render: (val, rec) => (
+				<Tag
+					style={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}
+					color={colorTrangThaiBienMuc[val as ETrangThaiBienMuc]}
+				>
+					{val}
+				</Tag>
+			),
+			fixed: 'right',
 		},
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 90,
+			width: 120,
 			fixed: 'right',
 			render: (val, record) => (
 				<>
+					<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(record)} type='link' icon={<EyeOutlined />} />
 					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
 					<Popconfirm
 						onConfirm={() => deleteModel(record._id)}
@@ -154,7 +132,8 @@ const BienMucSachTaiLieuPage = () => {
 			dependencies={[page, limit]}
 			modelName='sachtailieu.anpham.anpham'
 			title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}
-			Form={ModalBienMucTaiLieu}
+			Form={isView ? ChiTietBienMuc : ModalBienMucTaiLieu}
+			formProps={{ getData }}
 			widthDrawer={1000}
 		/>
 	);

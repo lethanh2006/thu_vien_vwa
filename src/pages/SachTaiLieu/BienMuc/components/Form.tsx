@@ -4,18 +4,28 @@ import SelectKieuBanGhi from '@/pages/DanhMuc/KieuBanGhi/components/Select';
 import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
-const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void }) => {
+const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; getData: () => void }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { record, setVisibleForm, edit, postBienMucModel, putModel, formSubmiting, setRecord, setEdit, visibleForm } =
-		useModel('sachtailieu.anpham.anpham');
-	const { afterAddNew } = props;
+	const {
+		record,
+		setVisibleForm,
+		edit,
+		postBienMucSoLuocModel,
+		putBienMucSoLuocModel,
+		formSubmiting,
+		setRecord,
+		setEdit,
+		visibleForm,
+	} = useModel('sachtailieu.anpham.anpham');
+	const { afterAddNew, getData } = props;
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
@@ -24,11 +34,11 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 
 	const onFinish = async (values: AnPham.IRecord) => {
 		if (edit) {
-			putModel(record?._id ?? '', values, undefined, undefined, false)
+			putBienMucSoLuocModel(record?._id ?? '', values, getData)
 				.then((rec) => setVisibleForm(false))
 				.catch((er) => console.log(er));
 		} else
-			postBienMucModel(values)
+			postBienMucSoLuocModel({ ...values, trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC }, getData)
 				.then((rec) => {
 					setRecord(rec);
 					setEdit(true);
@@ -88,12 +98,17 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='tacGia' label='Tác giả [100$a]'>
+					<Form.Item name='ten' label='Mã tài liệu' rules={[...rules.required]}>
+						<Input placeholder='Nhập mã tài liệu' />
+					</Form.Item>
+				</Col>
+				<Col xs={24} md={12}>
+					<Form.Item name='tacGia' label='Tác giả [100$a]' rules={[...rules.required]}>
 						<Input placeholder='Nhập tác giả' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='nhanDeChinh' label='Nhan đề chính [245$a]' rules={[...rules.required]}>
+					<Form.Item name='nhanDe' label='Nhan đề chính [245$a]' rules={[...rules.required]}>
 						<Input placeholder='Nhập nhan đề chính' />
 					</Form.Item>
 				</Col>

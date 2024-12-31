@@ -3,14 +3,14 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { DollarOutlined, EyeOutlined } from '@ant-design/icons';
-import { Card } from 'antd';
+import { Card, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalAnPham from './components/Modal';
 import StatAnPham from './components/Stat';
 import ModalXepGia from './components/XepGia';
-import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 
 const CardAnPham = () => {
 	const intl = useIntl();
@@ -51,6 +51,21 @@ const CardAnPham = () => {
 			width: 150,
 			filterType: 'string',
 			onCell,
+		},
+		{
+			title: 'Trạng thái',
+			dataIndex: 'trangThai',
+			align: 'center',
+			width: 120,
+			render: (val, rec) => (
+				<Tag
+					style={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}
+					color={colorTrangThaiBienMuc[val as ETrangThaiBienMuc]}
+				>
+					{val}
+				</Tag>
+			),
+			fixed: 'right',
 		},
 		{
 			title: 'Thao tác',

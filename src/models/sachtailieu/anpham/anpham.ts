@@ -1,6 +1,12 @@
 import { EOperatorType } from '@/components/Table/constant';
 import useInitModel from '@/hooks/useInitModel';
-import { bienMucChiTiet, bienMucSoLuoc, getChiTietAnPham, getThongKeAnPham } from '@/services/SachTaiLieu/AnPham';
+import {
+	bienMucChiTiet,
+	bienMucSoLuoc,
+	chinhSuaBienMucSoLuoc,
+	getChiTietAnPham,
+	getThongKeAnPham,
+} from '@/services/SachTaiLieu/AnPham';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { message } from 'antd';
 import type { AxiosResponse } from 'axios';
@@ -80,6 +86,28 @@ export default () => {
 
 		try {
 			const res = await bienMucSoLuoc(payLoad);
+			message.success('Thêm mới thành công');
+
+			if (getData) getData();
+
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
+	const putBienMucSoLuocModel = async (
+		idBienMuc: string,
+		payLoad: Partial<AnPham.IRecord>,
+		getData?: () => void,
+	): Promise<AnPham.IRecord> => {
+		if (formSubmiting) return Promise.reject('form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await chinhSuaBienMucSoLuoc(idBienMuc, payLoad);
 			message.success('Lưu thành công');
 
 			if (getData) getData();
@@ -120,5 +148,6 @@ export default () => {
 		getThongKeAnPhamModel,
 		postBienMucSoLuocModel,
 		putBienMucChiTietModel,
+		putBienMucSoLuocModel,
 	};
 };

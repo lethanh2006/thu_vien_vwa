@@ -20,8 +20,6 @@ declare module AnPham {
 		mauBienMuc?: MauBienMuc.IRecord;
 		ISBN: string;
 		ISSN: string;
-		tacGia: string;
-		nhanDeChinh: string;
 		soThuTuCuaTap: string;
 		tenTap: string;
 		nhanDeSongSong: string;

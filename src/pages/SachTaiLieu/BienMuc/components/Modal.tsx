@@ -5,7 +5,7 @@ import Form from './Form';
 import FormBienMucChiTiet from './FormBienMucChiTiet';
 
 const ModalBienMucTaiLieu = (props: any) => {
-	const { title } = props;
+	const { title, getData } = props;
 	const intl = useIntl();
 	const { record, edit } = useModel('sachtailieu.anpham.anpham');
 	const [currentStep, setCurrentStep] = useState(0);
@@ -30,7 +30,7 @@ const ModalBienMucTaiLieu = (props: any) => {
 				<Steps.Step title={intl.formatMessage({ id: 'sachtailieu.bienmuc.step2' })} disabled={!record?._id} />
 			</Steps>
 
-			{currentStep === 0 ? <Form afterAddNew={() => setCurrentStep(1)} /> : <FormBienMucChiTiet />}
+			{currentStep === 0 ? <Form afterAddNew={() => setCurrentStep(1)} getData={getData} /> : <FormBienMucChiTiet />}
 		</Card>
 	);
 };
