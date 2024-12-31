@@ -7,7 +7,7 @@ import FormBienMucChiTiet from './FormBienMucChiTiet';
 const ModalBienMucTaiLieu = (props: any) => {
 	const { title } = props;
 	const intl = useIntl();
-	const { record, edit } = useModel('sachtailieu.bienmuc');
+	const { record, edit } = useModel('sachtailieu.anpham.anpham');
 	const [currentStep, setCurrentStep] = useState(0);
 
 	useEffect(() => {

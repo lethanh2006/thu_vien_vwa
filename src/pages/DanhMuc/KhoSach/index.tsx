@@ -4,22 +4,22 @@ import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
-import ModalMauBienMuc from './components/Modal';
+import Form from './components/Form';
 
-const BieuMauPhuLucPage = () => {
+const KhoSachPage = () => {
 	const intl = useIntl();
-	const { page, limit, handleEdit, deleteModel } = useModel('danhmuc.maubienmuc');
+	const { page, limit, handleEdit, deleteModel } = useModel('danhmuc.khosach');
 
-	const columns: IColumn<MauBienMuc.IRecord>[] = [
+	const columns: IColumn<KhoSach.IRecord>[] = [
 		{
-			title: 'Mã',
+			title: 'Mã kho',
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên biểu mẫu',
+			title: 'Tên kho',
 			dataIndex: 'ten',
 			width: 220,
 			filterType: 'string',
@@ -34,7 +34,7 @@ const BieuMauPhuLucPage = () => {
 					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa biểu mẫu này?'
+						title='Bạn có chắc chắn muốn xóa kho sách này?'
 						placement='topRight'
 					>
 						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
@@ -48,12 +48,11 @@ const BieuMauPhuLucPage = () => {
 		<TableBase
 			columns={columns}
 			dependencies={[page, limit]}
-			modelName='danhmuc.maubienmuc'
-			title={intl.formatMessage({ id: 'danhmuc.maubienmuc.title' })}
-			Form={ModalMauBienMuc}
-			widthDrawer={800}
+			modelName='danhmuc.khosach'
+			title={intl.formatMessage({ id: 'danhmuc.khosach.title' })}
+			Form={Form}
 		/>
 	);
 };
 
-export default BieuMauPhuLucPage;
+export default KhoSachPage;

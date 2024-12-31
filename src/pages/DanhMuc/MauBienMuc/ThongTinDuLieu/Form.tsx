@@ -1,39 +1,35 @@
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, Row } from 'antd';
+import { Button, Card, Col, Form, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+import SelectTruongBienMuc from '../../TruongBienMuc/components/Select';
 
-const FormAnPham = (props: any) => {
-	const { title, getData } = props;
-	const [form] = Form.useForm();
+const FormMauBienMuc = (props: any) => {
+	const { getData, title } = props;
+	const { record: recMauBienMuc } = useModel('danhmuc.maubienmuc');
+	const { record, setVisibleForm, edit, postModel, formSubmiting, visibleForm } = useModel('danhmuc.thongtindulieu');
 	const intl = useIntl();
-	const { edit, record, formSubmiting, visibleForm, setVisibleForm, putModel, postModel } =
-		useModel('sachtailieu.anpham.anpham');
+	const [form] = Form.useForm();
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
 		else if (record?._id) form.setFieldsValue(record);
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: AnPham.IRecord) => {
-		if (edit) {
-			putModel(record?._id ?? '', values, getData)
-				.then()
-				.catch((er) => console.log(er));
-		} else
-			postModel(values, getData)
-				.then()
-				.catch((er) => console.log(er));
+	const onFinish = async (values: MauBienMuc.IThongTinKhaiBao) => {
+		postModel({ ...values, mauBienMucId: recMauBienMuc?._id }, getData)
+			.then()
+			.catch((er) => console.log(er));
 	};
 
 	return (
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
-					<Col xs={24}>
-						<Form.Item name='ten' label='Tên ấn phẩm' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên ấn phẩm' />
+					<Col span={24}>
+						<Form.Item label='Trường biên mục' name='tag' rules={[...rules.required]}>
+							<SelectTruongBienMuc />
 						</Form.Item>
 					</Col>
 				</Row>
@@ -51,4 +47,4 @@ const FormAnPham = (props: any) => {
 	);
 };
 
-export default FormAnPham;
+export default FormMauBienMuc;

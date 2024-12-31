@@ -1,5 +1,3 @@
-import type { ETypeThongTinKhaiBao } from '../constant';
-
 declare module MauBienMuc {
 	export interface IRecord {
 		_id: string;
@@ -12,11 +10,9 @@ declare module MauBienMuc {
 	}
 
 	export type IThongTinKhaiBao = {
-		ten: string;
-		type?: ELoaiDuLieuBieuMau = ELoaiDuLieuBieuMau.Text;
-
-		// Temp
-		isRequired?: boolean = false;
-		value?: string | number;
+		_id: string;
+		mauBienMucId: string;
+		tag: string;
+		thongTinTag?: TruongBienMuc.IRecord;
 	};
 }

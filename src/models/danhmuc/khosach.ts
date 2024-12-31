@@ -1,7 +1,7 @@
 import useInitModel from '@/hooks/useInitModel';
 
 export default () => {
-	const objInit = useInitModel<MauBienMuc.IRecord>('mau-bien-muc');
+	const objInit = useInitModel<DangTaiLieu.IRecord>('kho-sach');
 
 	return {
 		...objInit,

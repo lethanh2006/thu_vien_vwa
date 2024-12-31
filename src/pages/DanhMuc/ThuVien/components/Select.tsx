@@ -5,19 +5,19 @@ import { useModel } from 'umi';
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
  */
-const SelectMauBienMuc = (props: {
+const SelectThuVien = (props: {
 	value?: string;
 	onChange?: (val?: string) => void;
 	multiple?: boolean;
 	allowClear?: boolean;
 	style?: React.CSSProperties;
 	isSetRecord?: boolean;
-	condition?: Partial<MauBienMuc.IRecord>;
+	condition?: Partial<ThuVien.IRecord>;
 	selectMa?: boolean;
 	disabled?: boolean;
 }) => {
 	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, selectMa, disabled } = props;
-	const { danhSach, getAllModel } = useModel('danhmuc.maubienmuc');
+	const { danhSach, getAllModel } = useModel('danhmuc.thuvien');
 
 	useEffect(() => {
 		getAllModel(!!isSetRecord, undefined, condition);
@@ -32,16 +32,16 @@ const SelectMauBienMuc = (props: {
 			onChange={onChange}
 			options={danhSach.map((item) => ({
 				key: item._id,
-				value: selectMa ? item.ma : item._id,
+				value: selectMa ? item.ten : item._id,
 				label: item.ten,
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn tình trạng sử dụng'
+			placeholder='Chọn thư viện'
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>
 	);
 };
 
-export default SelectMauBienMuc;
+export default SelectThuVien;

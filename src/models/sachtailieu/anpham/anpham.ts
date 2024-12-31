@@ -1,6 +1,8 @@
 import { EOperatorType } from '@/components/Table/constant';
 import useInitModel from '@/hooks/useInitModel';
-import { getChiTietAnPham, getThongKeAnPham } from '@/services/SachTaiLieu/AnPham';
+import { bienMucChiTiet, bienMucSoLuoc, getChiTietAnPham, getThongKeAnPham } from '@/services/SachTaiLieu/AnPham';
+import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import { message } from 'antd';
 import type { AxiosResponse } from 'axios';
 import _ from 'lodash';
 import { useState } from 'react';
@@ -11,7 +13,7 @@ export default () => {
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [danhSachTag, setDanhSachTag] = useState<AnPham.IThongTinAnPham[]>([]);
 
-	const { setLoading, getService, setDanhSach } = objInit;
+	const { setLoading, getService, setDanhSach, formSubmiting, setFormSubmiting } = objInit;
 
 	const searchAnPhamModel = async (
 		keyword: string,
@@ -69,6 +71,45 @@ export default () => {
 		}
 	};
 
+	const postBienMucSoLuocModel = async (
+		payLoad: Partial<AnPham.IRecord>,
+		getData?: () => void,
+	): Promise<AnPham.IRecord> => {
+		if (formSubmiting) return Promise.reject('form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await bienMucSoLuoc(payLoad);
+			message.success('Lưu thành công');
+
+			if (getData) getData();
+
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
+	const putBienMucChiTietModel = async (id: string, payLoad: any, getData?: () => void): Promise<any> => {
+		if (formSubmiting) return Promise.reject('form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await bienMucChiTiet(id, payLoad);
+			message.success('Lưu thành công');
+
+			if (getData) getData();
+
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
 	return {
 		...objInit,
 		loadingChiTiet,
@@ -77,5 +118,7 @@ export default () => {
 		searchAnPhamModel,
 		getChiTietAnPhamModal,
 		getThongKeAnPhamModel,
+		postBienMucSoLuocModel,
+		putBienMucChiTietModel,
 	};
 };

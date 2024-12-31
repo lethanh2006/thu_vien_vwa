@@ -31,13 +31,13 @@ const FormThuVien = (props: any) => {
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col xs={24}>
-						<Form.Item name='ten' label='Tên' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên thư viện' disabled={edit || isView} />
+						<Form.Item name='tenVietTat' label='Tên thư viện (viết tắt)' rules={[...rules.required, ...rules.text]}>
+							<Input placeholder='Nhập tên thư viện viết tắt' />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='tenVietTat' label='Tên viết tắt' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên viết tắt thư viện' />
+						<Form.Item name='ten' label='Tên thư viện (đầy đủ)' rules={[...rules.required, ...rules.text]}>
+							<Input placeholder='Nhập tên thư viện đầy đủ' />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>

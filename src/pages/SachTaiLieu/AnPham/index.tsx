@@ -2,16 +2,24 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
-import { EyeOutlined } from '@ant-design/icons';
+import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import { DollarOutlined, EyeOutlined } from '@ant-design/icons';
 import { Card } from 'antd';
+import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
-import Form from './components/Form';
 import ModalAnPham from './components/Modal';
 import StatAnPham from './components/Stat';
+import ModalXepGia from './components/XepGia';
+import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 
 const CardAnPham = () => {
 	const intl = useIntl();
-	const { page, limit, handleView, isView } = useModel('sachtailieu.anpham.anpham');
+	const { getModel, page, limit, handleView, setRecord } = useModel('sachtailieu.anpham.anpham');
+	const [visibleXepGia, setVisibleXepGia] = useState<boolean>(false);
+
+	const getData = () => {
+		getModel({ trangThai: ETrangThaiBienMuc.DA_BIEN_MUC });
+	};
 
 	const onCell = (rec: AnPham.IRecord) => ({
 		onClick: () => handleView(rec),
@@ -22,7 +30,7 @@ const CardAnPham = () => {
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
-			title: 'Mã ấn phẩm',
+			title: 'Mã tài liệu',
 			dataIndex: 'ten',
 			width: 120,
 			render: (val, rec) => val ?? 'Không có thông tin',
@@ -47,11 +55,20 @@ const CardAnPham = () => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 60,
+			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
 					<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
+					<ButtonExtend
+						tooltip='Xếp giá'
+						onClick={() => {
+							setRecord(rec);
+							setVisibleXepGia(true);
+						}}
+						type='link'
+						icon={<DollarOutlined />}
+					/>
 				</>
 			),
 		},
@@ -62,15 +79,18 @@ const CardAnPham = () => {
 			<StatAnPham />
 
 			<TableBase
+				getData={getData}
 				columns={columns}
 				dependencies={[page, limit]}
 				modelName='sachtailieu.anpham.anpham'
 				title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
-				Form={isView ? ModalAnPham : Form}
+				Form={ModalAnPham}
 				widthDrawer={1100}
 				buttons={{ create: false }}
 				hideCard
 			/>
+
+			<ModalXepGia visibleForm={visibleXepGia} setVisibleForm={setVisibleXepGia} />
 		</Card>
 	);
 };

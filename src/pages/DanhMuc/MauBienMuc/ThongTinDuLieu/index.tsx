@@ -1,0 +1,68 @@
+import ExpandText from '@/components/ExpandText';
+import TableBase from '@/components/Table';
+import ButtonExtend from '@/components/Table/ButtonExtend';
+import { type IColumn } from '@/components/Table/typing';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Popconfirm } from 'antd';
+import { useModel } from 'umi';
+import FormMauBienMuc from './Form';
+
+const ThongTinDuLieuBienMucPage = () => {
+	const { record: recMauBienMuc } = useModel('danhmuc.maubienmuc');
+	const { page, limit, deleteModel, getModel } = useModel('danhmuc.thongtindulieu');
+
+	const getData = () => {
+		if (recMauBienMuc?._id) getModel({ mauBienMucId: recMauBienMuc?._id });
+	};
+
+	const columns: IColumn<MauBienMuc.IThongTinKhaiBao>[] = [
+		{
+			title: 'Mã',
+			align: 'center',
+			width: 100,
+			render: (val, rec) => rec?.thongTinTag?.ma,
+		},
+		{
+			title: 'Nội dung',
+			width: 180,
+			render: (val, rec) => <ExpandText>{rec?.thongTinTag?.noiDung}</ExpandText>,
+		},
+		{
+			title: 'Ghi chú',
+			width: 220,
+			render: (val, rec) => <ExpandText>{rec?.thongTinTag?.ghiChu}</ExpandText>,
+		},
+		{
+			title: 'Thao tác',
+			align: 'center',
+			width: 90,
+			fixed: 'right',
+			render: (val, record) => (
+				<>
+					<Popconfirm
+						onConfirm={() => deleteModel(record?._id)}
+						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						placement='topRight'
+					>
+						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+					</Popconfirm>
+				</>
+			),
+		},
+	];
+
+	return (
+		<TableBase
+			title='Thông tin cấu hình mẫu biên mục'
+			getData={getData}
+			columns={columns}
+			dependencies={[page, limit, recMauBienMuc?._id]}
+			modelName='danhmuc.thongtindulieu'
+			hideCard
+			Form={FormMauBienMuc}
+			formProps={{ getData }}
+		/>
+	);
+};
+
+export default ThongTinDuLieuBienMucPage;

@@ -3,18 +3,18 @@ import SelectDangTaiLieu from '@/pages/DanhMuc/DangTaiLieu/components/Select';
 import SelectKieuBanGhi from '@/pages/DanhMuc/KieuBanGhi/components/Select';
 import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
-import type { BienMucSachTaiLieu } from '@/services/SachTaiLieu/BienMuc/typing';
+import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Col, Form, Input, InputNumber, Row } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
-const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: BienMucSachTaiLieu.IRecord) => void }) => {
+const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record, setVisibleForm, edit, postBienMucModel, putModel, formSubmiting, setRecord, setEdit, visibleForm } =
-		useModel('sachtailieu.bienmuc');
+		useModel('sachtailieu.anpham.anpham');
 	const { afterAddNew } = props;
 
 	useEffect(() => {
@@ -22,7 +22,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: BienMucSachTaiLieu.I
 		else if (record?._id) form.setFieldsValue(record);
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: BienMucSachTaiLieu.IRecord) => {
+	const onFinish = async (values: AnPham.IRecord) => {
 		if (edit) {
 			putModel(record?._id ?? '', values, undefined, undefined, false)
 				.then((rec) => setVisibleForm(false))
@@ -46,13 +46,13 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: BienMucSachTaiLieu.I
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='capThuMucId' label='Cấp thư mục' rules={[...rules.required]}>
-						<SelectCapThuMuc />
+					<Form.Item name='dangTaiLieuId' label='Dạng tài liệu' rules={[...rules.required]}>
+						<SelectDangTaiLieu />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='dangTaiLieuId' label='Dạng tài liệu' rules={[...rules.required]}>
-						<SelectDangTaiLieu />
+					<Form.Item name='capThuMucId' label='Cấp thư mục' rules={[...rules.required]}>
+						<SelectCapThuMuc />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
@@ -66,92 +66,99 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: BienMucSachTaiLieu.I
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='doMat' label='Độ mật' rules={[...rules.required, ...rules.number(10, 0)]}>
-						<InputNumber style={{ width: '100%' }} placeholder='Nhập độ mật' />
+					<Form.Item name='doMat' label='Độ mật' rules={[...rules.required]}>
+						<Select placeholder='Chọn độ mật' style={{ width: '100%' }}>
+							{Array.from({ length: 11 }, (_, i) => (
+								<Select.Option key={i} value={i}>
+									{i}
+								</Select.Option>
+							))}
+						</Select>
 					</Form.Item>
 				</Col>
+
 				<Col xs={24} md={12}>
-					<Form.Item name='ISBN' label='ISBN'>
+					<Form.Item name='ISBN' label='ISBN [020$a]'>
 						<Input placeholder='Nhập ISBN' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='ISSN' label='ISSN'>
+					<Form.Item name='ISSN' label='ISSN [022$a]'>
 						<Input placeholder='Nhập ISSN' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='tacGia' label='Tác giả'>
+					<Form.Item name='tacGia' label='Tác giả [100$a]'>
 						<Input placeholder='Nhập tác giả' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='nhanDeChinh' label='Nhan đề chính'>
+					<Form.Item name='nhanDeChinh' label='Nhan đề chính [245$a]' rules={[...rules.required]}>
 						<Input placeholder='Nhập nhan đề chính' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='soThuTuCuaTap' label='Số thứ tự của tập'>
+					<Form.Item name='soThuTuCuaTap' label='Số thứ tự của tập [245$n]'>
 						<Input placeholder='Nhập số thứ tự của tập' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='tenTap' label='Tên tập'>
+					<Form.Item name='tenTap' label='Tên tập [245$p]'>
 						<Input placeholder='Nhập tên tập' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='nhanDeSongSong' label='Nhan đề song song'>
+					<Form.Item name='nhanDeSongSong' label='Nhan đề song song [245$b]'>
 						<Input placeholder='Nhập nhan đề song song' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='phuDe' label='Phụ đề'>
+					<Form.Item name='phuDe' label='Phụ đề [245$b]'>
 						<Input placeholder='Nhập phụ đề' />
 					</Form.Item>
 				</Col>
-				<Col xs={24} md={12}>
-					<Form.Item name='thongTinTrachNhiem' label='Thông tin trách nhiệm'>
+				<Col xs={24}>
+					<Form.Item name='thongTinTrachNhiem' label='Thông tin trách nhiệm [245$c]'>
 						<Input placeholder='Nhập thông tin trách nhiệm' />
 					</Form.Item>
 				</Col>
-				<Col xs={24} md={12}>
-					<Form.Item name='lanXuatBan' label='Lần xuất bản'>
+				<Col xs={24} md={8}>
+					<Form.Item name='lanXuatBan' label='Lần xuất bản [250$a]'>
 						<Input placeholder='Nhập lần xuất bản' />
 					</Form.Item>
 				</Col>
-				<Col xs={24} md={12}>
-					<Form.Item name='noiXuatBan' label='Nơi xuất bản'>
+				<Col xs={24} md={8}>
+					<Form.Item name='noiXuatBan' label='Nơi xuất bản [260$a]'>
 						<Input placeholder='Nhập nơi xuất bản' />
 					</Form.Item>
 				</Col>
-				<Col xs={24} md={12}>
-					<Form.Item name='namXuatBan' label='Năm xuất bản'>
+				<Col xs={24} md={8}>
+					<Form.Item name='namXuatBan' label='Năm xuất bản [260$c]'>
 						<InputNumber style={{ width: '100%' }} placeholder='Nhập năm xuất bản' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='nhaXuatBan' label='Nhà xuất bản'>
+					<Form.Item name='nhaXuatBan' label='Nhà xuất bản [260$b]'>
 						<Input placeholder='Nhập nhà xuất bản' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='soTrang' label='Số trang'>
+					<Form.Item name='soTrang' label='Số trang [300$a]'>
 						<InputNumber style={{ width: '100%' }} placeholder='Nhập số trang' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='dacDiemVatLy' label='Đặc điểm vật lý'>
+					<Form.Item name='dacDiemVatLy' label='Đặc điểm vật lý [300$b]'>
 						<Input placeholder='Nhập đặc điểm vật lý' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='khuonKho' label='Khuôn khổ'>
+					<Form.Item name='khuonKho' label='Khuôn khổ [300$c]'>
 						<Input placeholder='Nhập khuôn khổ' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='tuLieuDiKiem' label='Tư liệu đi kèm'>
+					<Form.Item name='tuLieuDiKiem' label='Tư liệu đi kèm [300$e]'>
 						<Input placeholder='Nhập tư liệu đi kèm' />
 					</Form.Item>
 				</Col>

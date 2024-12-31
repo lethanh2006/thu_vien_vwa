@@ -32,7 +32,7 @@ const CauHinhThoiHanMuonTra = (props: { visible: boolean; setVisible: (val: bool
 							</Form.Item>
 						</Col>
 						<Col span={24}>
-							<Form.Item name='idDonViThuVien' label='Đơn vị thư viện' rules={[...rules.required]}>
+							<Form.Item name='idDonViThuVien' label='Đơn vị nhận thông báo' rules={[...rules.required]}>
 								<SelectDonVi />
 							</Form.Item>
 						</Col>

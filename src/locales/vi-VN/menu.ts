@@ -15,7 +15,7 @@ export default {
 	'menu.LALVKhoaLuan.DanhSachSinhVien': 'Danh sách sinh viên',
 
 	'menu.SachTaiLieu': 'Sách, Tài liệu',
-	'menu.SachTaiLieu.BienMuc': 'Biên mục',
+	'menu.SachTaiLieu.BienMuc': 'Biên mục sơ lược',
 	'menu.SachTaiLieu.AnPham': 'Ấn phẩm',
 	'menu.SachTaiLieu.MuonTraSach': 'Mượn trả sách',
 	'menu.SachTaiLieu.ThongKeBanDoc': 'Thống kê bạn đọc',
@@ -28,5 +28,6 @@ export default {
 	'menu.DanhMuc.KieuBanGhi': 'Kiểu bản ghi',
 	'menu.DanhMuc.CapThuMuc': 'Cấp thư mục',
 	'menu.DanhMuc.VatMangTin': 'Vật mang tin',
+	'menu.DanhMuc.KhoSach': 'Kho sách',
 	'menu.DanhMuc.TruongBienMuc': 'Trường biên mục',
 };

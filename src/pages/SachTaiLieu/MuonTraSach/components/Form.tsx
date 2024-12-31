@@ -4,7 +4,7 @@ import { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLi
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Descriptions, Form, Input, message, Row } from 'antd';
+import { Button, Card, Checkbox, Col, Descriptions, Form, Input, message, Row } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -169,6 +169,11 @@ const FormMuonTraSach = (props: any) => {
 					<Col xs={24}>
 						<Form.Item name='ghiChu' label='Ghi chú' rules={[...rules.text]}>
 							<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
+						</Form.Item>
+					</Col>
+					<Col xs={24}>
+						<Form.Item name='daLaySach' valuePropName='checked' initialValue={false}>
+							<Checkbox>Sinh viên đã lấy sách</Checkbox>
 						</Form.Item>
 					</Col>
 				</Row>

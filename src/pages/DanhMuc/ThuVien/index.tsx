@@ -13,16 +13,16 @@ const ThuVienPage = () => {
 
 	const columns: IColumn<ThuVien.IRecord>[] = [
 		{
-			title: 'Tên',
-			dataIndex: 'ten',
-			width: 150,
+			title: 'Tên thư viện (viết tắt)',
+			dataIndex: 'tenVietTat',
+			width: 120,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên viết tắt',
-			dataIndex: 'tenVietTat',
-			width: 120,
+			title: 'Tên thư viện (đầy đủ)',
+			dataIndex: 'ten',
+			width: 150,
 			filterType: 'string',
 			sortable: true,
 		},
