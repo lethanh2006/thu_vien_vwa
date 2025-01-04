@@ -13,6 +13,7 @@ declare module MauBienMuc {
 		_id: string;
 		mauBienMucId: string;
 		tag: string;
+		ten: string;
 		thongTinTag?: TruongBienMuc.IRecord;
 	};
 }

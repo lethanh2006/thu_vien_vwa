@@ -6,6 +6,9 @@ export default {
 	'danhmuc.vatmangtin.title': 'Vật mang tin',
 	'danhmuc.maubienmuc.title': 'Mẫu biên mục',
 	'danhmuc.khosach.title': 'Kho sách',
+	'danhmuc.giasach.title': 'Giá sách',
+	'danhmuc.nguonbosung.title': 'Nguồn bổ sung',
+	'danhmuc.kieutulieu.title': 'Kiểu tư liệu',
 	'danhmuc.truongbienmuc.title': 'Trường biên mục',
 	'danhmuc.truongcon.title': 'Trường con',
 };

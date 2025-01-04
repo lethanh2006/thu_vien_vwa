@@ -2,6 +2,11 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
+import SelectCapThuMuc from '@/pages/DanhMuc/CapThuMuc/components/Select';
+import SelectDangTaiLieu from '@/pages/DanhMuc/DangTaiLieu/components/Select';
+import SelectKieuBanGhi from '@/pages/DanhMuc/KieuBanGhi/components/Select';
+import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
+import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { DollarOutlined, EyeOutlined } from '@ant-design/icons';
@@ -50,6 +55,60 @@ const CardAnPham = () => {
 			dataIndex: 'tacGia',
 			width: 150,
 			filterType: 'string',
+			onCell,
+		},
+		{
+			title: 'Kiểu bản ghi',
+			dataIndex: 'kieuBanGhiId',
+			width: 150,
+			render: (val, rec) => rec?.kieuBanGhi?.ten,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectKieuBanGhi multiple />,
+			onCell,
+		},
+		{
+			title: 'Dạng tài liệu',
+			dataIndex: 'dangTaiLieuId',
+			width: 150,
+			render: (val, rec) => rec?.dangTaiLieu?.ten,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectDangTaiLieu multiple />,
+			onCell,
+		},
+		{
+			title: 'Cấp thư mục',
+			dataIndex: 'capThuMucId',
+			width: 150,
+			render: (val, rec) => rec?.capThuMuc?.ten,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectCapThuMuc multiple />,
+			onCell,
+		},
+		{
+			title: 'Vật mang tin',
+			dataIndex: 'vatMangTinId',
+			width: 150,
+			render: (val, rec) => rec?.vatMangTin?.ten,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectVatMangTin multiple />,
+			onCell,
+		},
+		{
+			title: 'Mẫu biên mục',
+			dataIndex: 'mauBienMucId',
+			width: 150,
+			render: (val, rec) => rec?.mauBienMuc?.ten,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectMauBienMuc multiple />,
+			onCell,
+		},
+		{
+			title: 'Độ mật',
+			align: 'center',
+			dataIndex: 'doMat',
+			width: 90,
+			filterType: 'number',
+			sortable: true,
 			onCell,
 		},
 		{

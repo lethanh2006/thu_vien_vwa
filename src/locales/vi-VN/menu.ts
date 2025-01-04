@@ -29,5 +29,8 @@ export default {
 	'menu.DanhMuc.CapThuMuc': 'Cấp thư mục',
 	'menu.DanhMuc.VatMangTin': 'Vật mang tin',
 	'menu.DanhMuc.KhoSach': 'Kho sách',
+	'menu.DanhMuc.GiaSach': 'Giá sách',
+	'menu.DanhMuc.NguonBoSung': 'Nguồn bổ sung',
+	'menu.DanhMuc.KieuTuLieu': 'Kiểu tư liệu',
 	'menu.DanhMuc.TruongBienMuc': 'Trường biên mục',
 };

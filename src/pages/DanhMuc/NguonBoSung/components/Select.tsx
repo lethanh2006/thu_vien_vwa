@@ -12,12 +12,12 @@ const SelectKhoSach = (props: {
 	allowClear?: boolean;
 	style?: React.CSSProperties;
 	isSetRecord?: boolean;
-	condition?: Partial<KhoSach.IRecord>;
+	condition?: Partial<NguonBoSung.IRecord>;
 	selectMa?: boolean;
 	disabled?: boolean;
 }) => {
 	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, selectMa, disabled } = props;
-	const { danhSach, getAllModel } = useModel('danhmuc.khosach');
+	const { danhSach, getAllModel } = useModel('danhmuc.nguonbosung');
 
 	useEffect(() => {
 		getAllModel(!!isSetRecord, undefined, condition);
@@ -37,7 +37,7 @@ const SelectKhoSach = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn kho sách'
+			placeholder='Chọn nguồn bổ sung'
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

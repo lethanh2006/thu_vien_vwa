@@ -67,7 +67,6 @@ const FormMuonTraSach = (props: any) => {
 		values.anPhamId = thongTinAnPham?.anPhamId ?? '';
 		values.thongTinAnPhamId = thongTinAnPham?._id ?? '';
 		values.soDangKyCaBiet = thongTinAnPham?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value ?? '';
-		values.daLaySach = values.daLaySach ?? true;
 
 		if (edit) {
 			putModel(record?._id ?? '', values, getData)

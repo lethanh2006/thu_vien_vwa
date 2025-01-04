@@ -153,8 +153,18 @@ const MuonTraSachPage = () => {
 			hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
 		},
 		{
-			title: 'Thời gian đăng ký',
-			dataIndex: 'thoiGianDangKy',
+			title: 'Thời gian dự kiến mượn',
+			dataIndex: 'thoiGianDuKienMuon',
+			width: 130,
+			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			filterType: 'date',
+			sortable: true,
+			onCell,
+			hide: trangThai !== ETrangThaiMuonSach.CHO_XU_LY,
+		},
+		{
+			title: 'Thời gian dự kiến trả',
+			dataIndex: 'thoiGianDuKienTra',
 			width: 130,
 			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
 			filterType: 'date',
@@ -373,11 +383,11 @@ const MuonTraSachPage = () => {
 			<CauHinhThoiHanMuonTra visible={visibleCauHinh} setVisible={setVisibleCauHinh} />
 
 			<Modal
+				title='Chi tiết ấn phẩm'
 				visible={visibleForm}
 				onCancel={() => setVisibleForm(false)}
 				width={900}
 				footer={null}
-				bodyStyle={{ padding: 0 }}
 			>
 				<ChiTietAnPham />
 			</Modal>

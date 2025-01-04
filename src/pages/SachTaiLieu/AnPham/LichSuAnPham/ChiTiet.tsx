@@ -47,8 +47,11 @@ const ChiTietLichSu = () => {
 							{record?.thoiGianTra ? moment(record?.thoiGianTra).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 
-						<Descriptions.Item label='Thời gian đăng ký'>
-							{record?.thoiGianDangKy ? moment(record?.thoiGianDangKy).format('HH:mm DD/MM/YYYY') : '--'}
+						<Descriptions.Item label='Thời gian dự kiến mượn'>
+							{record?.thoiGianDuKienMuon ? moment(record?.thoiGianDuKienMuon).format('HH:mm DD/MM/YYYY') : '--'}
+						</Descriptions.Item>
+						<Descriptions.Item label='Thời gian dự kiến trả'>
+							{record?.thoiGianDuKienTra ? moment(record?.thoiGianDuKienTra).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Ghi chú đăng ký'>{record?.ghiChuDangKy ?? '--'}</Descriptions.Item>

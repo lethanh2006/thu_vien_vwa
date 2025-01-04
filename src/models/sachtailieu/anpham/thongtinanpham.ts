@@ -1,5 +1,6 @@
 import { EOperatorType } from '@/components/Table/constant';
 import useInitModel from '@/hooks/useInitModel';
+import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import type { AxiosResponse } from 'axios';
 import _ from 'lodash';
 

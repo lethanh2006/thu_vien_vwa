@@ -18,5 +18,5 @@ export async function chinhSuaBienMucSoLuoc(idBienMuc: string, payLoad: any) {
 }
 
 export async function bienMucChiTiet(idBienMuc: string, payLoad: any) {
-	return axios.put(`${ip3}/an-pham/bien-muc-chi-tiet/${idBienMuc}`, payLoad);
+	return axios.put(`${ip3}/an-pham/${idBienMuc}/bien-muc-chi-tiet`, payLoad);
 }

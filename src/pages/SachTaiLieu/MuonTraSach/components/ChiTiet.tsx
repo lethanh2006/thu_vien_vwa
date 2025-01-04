@@ -37,7 +37,7 @@ const ChiTietMuonTraSach = (props: any) => {
 			thoiGianMuon: moment().toISOString(),
 			soDangKyCaBiet: danhSach
 				?.find((item) => item?._id === selectedIds[0])
-				?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
+				?.danhSachThuocTinhAnPham?.find((i: any) => i?.code === '$j')?.value,
 		};
 		xuLyThueMuonAnPhamModel(record?._id ?? '', data as any, getDataExternal)
 			.then(() => {
@@ -85,8 +85,11 @@ const ChiTietMuonTraSach = (props: any) => {
 							</>
 						)}
 
-						<Descriptions.Item label='Thời gian đăng ký'>
-							{record?.thoiGianDangKy ? moment(record?.thoiGianDangKy).format('HH:mm DD/MM/YYYY') : '--'}
+						<Descriptions.Item label='Thời gian dự kiến mượn'>
+							{record?.thoiGianDuKienMuon ? moment(record?.thoiGianDuKienMuon).format('HH:mm DD/MM/YYYY') : '--'}
+						</Descriptions.Item>
+						<Descriptions.Item label='Thời gian dự kiến trả'>
+							{record?.thoiGianDuKienTra ? moment(record?.thoiGianDuKienTra).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Ghi chú đăng ký'>{record?.ghiChuDangKy ?? '--'}</Descriptions.Item>

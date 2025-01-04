@@ -9,6 +9,7 @@ const FormMauBienMuc = (props: any) => {
 	const { getData, title } = props;
 	const { record: recMauBienMuc } = useModel('danhmuc.maubienmuc');
 	const { record, setVisibleForm, edit, postModel, formSubmiting, visibleForm } = useModel('danhmuc.thongtindulieu');
+	const { danhSach: danhSachTag } = useModel('danhmuc.truongbienmuc');
 	const intl = useIntl();
 	const [form] = Form.useForm();
 
@@ -18,6 +19,9 @@ const FormMauBienMuc = (props: any) => {
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: MauBienMuc.IThongTinKhaiBao) => {
+		const thongTinTag = danhSachTag.find((item) => item.ma === values.tag);
+		values.ten = thongTinTag?.noiDung ?? '';
+
 		postModel({ ...values, mauBienMucId: recMauBienMuc?._id }, getData)
 			.then()
 			.catch((er) => console.log(er));
@@ -29,7 +33,7 @@ const FormMauBienMuc = (props: any) => {
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
 						<Form.Item label='Trường biên mục' name='tag' rules={[...rules.required]}>
-							<SelectTruongBienMuc />
+							<SelectTruongBienMuc selectMa />
 						</Form.Item>
 					</Col>
 				</Row>

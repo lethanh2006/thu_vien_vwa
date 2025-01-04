@@ -7,8 +7,13 @@ import FormBienMucChiTiet from './FormBienMucChiTiet';
 const ModalBienMucTaiLieu = (props: any) => {
 	const { title, getData } = props;
 	const intl = useIntl();
-	const { record, edit } = useModel('sachtailieu.anpham.anpham');
+	const { record, edit, visibleForm } = useModel('sachtailieu.anpham.anpham');
+	const { getAllModel } = useModel('sachtailieu.anpham.thongtinanpham');
 	const [currentStep, setCurrentStep] = useState(0);
+
+	useEffect(() => {
+		if (record?.mauBienMucId && edit && visibleForm) getAllModel(undefined, undefined, { anPhamId: record?._id });
+	}, [visibleForm]);
 
 	useEffect(() => {
 		setCurrentStep(0);
@@ -30,7 +35,11 @@ const ModalBienMucTaiLieu = (props: any) => {
 				<Steps.Step title={intl.formatMessage({ id: 'sachtailieu.bienmuc.step2' })} disabled={!record?._id} />
 			</Steps>
 
-			{currentStep === 0 ? <Form afterAddNew={() => setCurrentStep(1)} getData={getData} /> : <FormBienMucChiTiet />}
+			{currentStep === 0 ? (
+				<Form afterAddNew={() => setCurrentStep(1)} getData={getData} />
+			) : (
+				<FormBienMucChiTiet getData={getData} />
+			)}
 		</Card>
 	);
 };

@@ -1,16 +1,15 @@
 import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
+import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { UserOutlined } from '@ant-design/icons';
-import { Button, Spin } from 'antd';
+import { Spin } from 'antd';
 import { useEffect, useState } from 'react';
-import { useIntl, useModel } from 'umi';
+import { useModel } from 'umi';
 
 const ChiTietAnPham = () => {
-	const intl = useIntl();
 	const {
 		record: recAnPham,
-		setVisibleForm,
 		getChiTietAnPhamModal,
 		loadingChiTiet,
 		visibleForm,
@@ -95,9 +94,6 @@ const ChiTietAnPham = () => {
 					))}
 				</div>
 			</Spin>
-			<div className='form-footer'>
-				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
-			</div>
 		</>
 	);
 };

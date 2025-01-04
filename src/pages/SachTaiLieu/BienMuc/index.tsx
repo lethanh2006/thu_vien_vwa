@@ -24,6 +24,24 @@ const BienMucSachTaiLieuPage = () => {
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
+			title: 'Mã tài liệu',
+			dataIndex: 'ten',
+			width: 150,
+			filterType: 'string',
+		},
+		{
+			title: 'Tác giả',
+			dataIndex: 'tacGia',
+			width: 150,
+			filterType: 'string',
+		},
+		{
+			title: 'Nhan đề chính',
+			dataIndex: 'nhanDe',
+			width: 150,
+			filterType: 'string',
+		},
+		{
 			title: 'Kiểu bản ghi',
 			dataIndex: 'kieuBanGhiId',
 			width: 150,
@@ -70,24 +88,6 @@ const BienMucSachTaiLieuPage = () => {
 			width: 90,
 			filterType: 'number',
 			sortable: true,
-		},
-		{
-			title: 'Mã tài liệu',
-			dataIndex: 'ten',
-			width: 150,
-			filterType: 'string',
-		},
-		{
-			title: 'Tác giả',
-			dataIndex: 'tacGia',
-			width: 150,
-			filterType: 'string',
-		},
-		{
-			title: 'Nhan đề chính',
-			dataIndex: 'nhanDe',
-			width: 150,
-			filterType: 'string',
 		},
 		{
 			title: 'Trạng thái',

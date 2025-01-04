@@ -143,6 +143,21 @@
 				component: './DanhMuc/KhoSach',
 			},
 			{
+				name: 'GiaSach',
+				path: 'gia-sach',
+				component: './DanhMuc/GiaSach',
+			},
+			{
+				name: 'NguonBoSung',
+				path: 'nguon-bo-sung',
+				component: './DanhMuc/NguonBoSung',
+			},
+			{
+				name: 'KieuTuLieu',
+				path: 'kieu-tu-lieu',
+				component: './DanhMuc/KieuTuLieu',
+			},
+			{
 				name: 'TruongBienMuc',
 				path: 'truong-bien-muc',
 				component: './DanhMuc/TruongBienMuc',

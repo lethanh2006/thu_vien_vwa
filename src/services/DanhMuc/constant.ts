@@ -9,3 +9,8 @@ export const loaiDuLieuBieuMau: Record<ELoaiDuLieuBieuMau, string> = {
 	[ELoaiDuLieuBieuMau.Number]: 'Kiểu số',
 	[ELoaiDuLieuBieuMau.Date]: 'Ngày tháng',
 };
+
+export enum EPhuongGiaSach {
+	NGANG = 'Ngang',
+	DOC = 'Dọc',
+}

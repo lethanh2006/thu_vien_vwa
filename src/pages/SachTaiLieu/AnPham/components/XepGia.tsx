@@ -11,7 +11,7 @@ const ModalXepGia = (props: { visibleForm: boolean; setVisibleForm: (val: boolea
 	const [form] = Form.useForm();
 	const { record, formSubmiting } = useModel('sachtailieu.anpham.anpham');
 
-	const onFinish = async (values: BienMucSachTaiLieu.IRecord) => {
+	const onFinish = async (values: any) => {
 		// if (edit) {
 		// 	putModel(record?._id ?? '', values, undefined, undefined, false)
 		// 		.then((rec) => setVisibleForm(false))

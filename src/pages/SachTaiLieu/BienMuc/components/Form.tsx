@@ -25,11 +25,19 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		setEdit,
 		visibleForm,
 	} = useModel('sachtailieu.anpham.anpham');
+	const { getAllModel, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
 	const { afterAddNew, getData } = props;
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) form.setFieldsValue(record);
+		else if (record?._id) {
+			form.setFieldsValue({
+				...record,
+				ISBN: danhSach
+					?.find((item) => item?.tagCode === '020' && !!item?.isBienMucChiTiet)
+					?.danhSachThuocTinhAnPham?.find((i) => i.code === '$a')?.value,
+			});
+		}
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: AnPham.IRecord) => {
@@ -40,6 +48,9 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		} else
 			postBienMucSoLuocModel({ ...values, trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC }, getData)
 				.then((rec) => {
+					//get thông tin trường thông tin để cấu hình bên mục chi tiết
+					getAllModel(undefined, undefined, { anPhamId: record?._id });
+
 					setRecord(rec);
 					setEdit(true);
 					if (afterAddNew) afterAddNew(rec);
