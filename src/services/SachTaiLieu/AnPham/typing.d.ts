@@ -50,6 +50,7 @@ declare module AnPham {
 		ind1: string;
 		ind2: string;
 		value: string;
+		isBienMucChiTiet: boolean;
 
 		danhSachThuocTinhAnPham: IThuocTinhAnPham[];
 
