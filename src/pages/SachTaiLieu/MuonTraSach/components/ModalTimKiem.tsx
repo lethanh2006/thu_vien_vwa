@@ -1,6 +1,7 @@
 import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
+import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { Button, message, Modal } from 'antd';
 import { useIntl, useModel } from 'umi';
 
@@ -29,7 +30,7 @@ const ModalTimKiem = (props: {
 			title: 'Đăng ký cá biệt',
 			align: 'center',
 			width: 90,
-			render: (val, rec) => rec?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
+			render: (val, rec) => rec?.thuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
 		},
 	];
 

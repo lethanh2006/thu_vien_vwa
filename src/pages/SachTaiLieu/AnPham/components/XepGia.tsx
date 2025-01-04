@@ -1,5 +1,7 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import SelectKhoSach from '@/pages/DanhMuc/KhoSach/components/Select';
+import SelectKieuTuLieu from '@/pages/DanhMuc/KieuTuLieu/components/Select';
+import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import SelectThuVien from '@/pages/DanhMuc/ThuVien/components/Select';
 import rules from '@/utils/rules';
 import { Button, Col, Descriptions, Divider, Form, Input, Modal, Row } from 'antd';
@@ -32,7 +34,7 @@ const ModalXepGia = (props: { visibleForm: boolean; setVisibleForm: (val: boolea
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
 						<Descriptions column={1}>
-							<Descriptions.Item label='Mã tài liệu'>{record?.ten ?? 'Không có thông tin'}</Descriptions.Item>
+							{/* <Descriptions.Item label='Mã tài liệu'>{record?.maTaiLieu ?? 'Không có thông tin'}</Descriptions.Item> */}
 							<Descriptions.Item label='Nhan đề'>{record?.nhanDe ?? '--'}</Descriptions.Item>
 							<Descriptions.Item label='Tác giả'>{record?.tacGia ?? '--'}</Descriptions.Item>
 						</Descriptions>
@@ -43,12 +45,12 @@ const ModalXepGia = (props: { visibleForm: boolean; setVisibleForm: (val: boolea
 
 					<Col xs={24} md={12}>
 						<Form.Item name='nguonBoSung' label='Nguồn bổ sung' rules={[...rules.required]}>
-							<Input placeholder='Ngồn bổ sung' />
+							<SelectNguonBoSung />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='kieuTuLieu' label='Kiểu tư liệu (lưu thông)' rules={[...rules.required]}>
-							<Input placeholder='Kiểu tư liệu ' />
+							<SelectKieuTuLieu />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>

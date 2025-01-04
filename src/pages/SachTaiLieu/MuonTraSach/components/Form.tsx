@@ -66,7 +66,7 @@ const FormMuonTraSach = (props: any) => {
 
 		values.anPhamId = thongTinAnPham?.anPhamId ?? '';
 		values.thongTinAnPhamId = thongTinAnPham?._id ?? '';
-		values.soDangKyCaBiet = thongTinAnPham?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value ?? '';
+		values.soDangKyCaBiet = thongTinAnPham?.thuocTinhAnPham?.find((item) => item?.code === '$j')?.value ?? '';
 
 		if (edit) {
 			putModel(record?._id ?? '', values, getData)
@@ -132,7 +132,7 @@ const FormMuonTraSach = (props: any) => {
 					</>
 				) : (
 					<Descriptions column={1}>
-						<Descriptions.Item label='Mã ấn phẩm'>{record?.anPham?.ten ?? '--'}</Descriptions.Item>
+						{/* <Descriptions.Item label='Mã tài liệu'>{record?.anPham?.maTaiLieu ?? '--'}</Descriptions.Item> */}
 						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 					</Descriptions>
@@ -145,7 +145,7 @@ const FormMuonTraSach = (props: any) => {
 								<Descriptions.Item label='Nhan đề'>{anPham?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
 								<Descriptions.Item label='Tác giả'>{anPham?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 								<Descriptions.Item label='Đăng ký cá biệt'>
-									{anPham?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value ?? '--'}
+									{anPham?.thuocTinhAnPham?.find((item) => item?.code === '$j')?.value ?? '--'}
 								</Descriptions.Item>
 							</Descriptions>
 						</Col>

@@ -3,7 +3,7 @@ import type { ETrangThaiBienMuc } from '../constant';
 declare module AnPham {
 	export interface IRecord {
 		_id: string;
-		ten: string;
+		maTaiLieu: string;
 		nhanDe: string;
 		tacGia: string;
 
@@ -50,9 +50,7 @@ declare module AnPham {
 		ind1: string;
 		ind2: string;
 		value: string;
-		isBienMucChiTiet: boolean;
-
-		danhSachThuocTinhAnPham: IThuocTinhAnPham[];
+		thuocTinhAnPham: TThuocTinhAnPham[];
 
 		total?: number;
 
@@ -60,17 +58,11 @@ declare module AnPham {
 		updatedAt?: Date;
 	}
 
-	export interface IThuocTinhAnPham {
+	export type TThuocTinhAnPham = {
 		_id: string;
-		thongTinAnPhamId: string;
-		thongTinAnPham: IThongTinAnPham;
-		code: TruongCon;
-		thongTinCode: TruongCon.IRecord;
+		code: string;
 		value: string;
-
-		createdAt?: Date;
-		updatedAt?: Date;
-	}
+	};
 
 	export interface IThongKeAnPham {
 		_id: string;

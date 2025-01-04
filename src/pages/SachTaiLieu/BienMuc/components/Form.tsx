@@ -29,14 +29,42 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 	const { afterAddNew, getData } = props;
 
 	useEffect(() => {
-		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) {
-			form.setFieldsValue({
-				...record,
-				ISBN: danhSach
-					?.find((item) => item?.tagCode === '020' && !!item?.isBienMucChiTiet)
-					?.danhSachThuocTinhAnPham?.find((i) => i.code === '$a')?.value,
+		if (!visibleForm) {
+			resetFieldsForm(form);
+		} else if (record?._id) {
+			const fieldMapping = {
+				ISBN: { tagCode: '020', subCode: '$a' },
+				ISSN: { tagCode: '022', subCode: '$a' },
+				tacGia: { tagCode: '100', subCode: '$a' },
+				nhanDe: { tagCode: '245', subCode: '$a' },
+				soThuTuCuaTap: { tagCode: '245', subCode: '$n' },
+				tenTap: { tagCode: '245', subCode: '$p' },
+				nhanDeSongSong: { tagCode: '245', subCode: '$b' },
+				phuDe: { tagCode: '245', subCode: '$b' },
+				thongTinTrachNhiem: { tagCode: '245', subCode: '$c' },
+				lanXuatBan: { tagCode: '250', subCode: '$a' },
+				noiXuatBan: { tagCode: '260', subCode: '$a' },
+				namXuatBan: { tagCode: '260', subCode: '$c' },
+				nhaXuatBan: { tagCode: '260', subCode: '$b' },
+				soTrang: { tagCode: '300', subCode: '$a' },
+				dacDiemVatLy: { tagCode: '300', subCode: '$b' },
+				khuonKho: { tagCode: '300', subCode: '$c' },
+				tuLieuDiKiem: { tagCode: '300', subCode: '$e' },
+			};
+
+			const formValues: Record<string, any> = {};
+			Object.entries(fieldMapping).forEach(([fieldName, { tagCode, subCode }]) => {
+				const tag = danhSach?.find((item) => item?.tagCode === tagCode);
+				if (tag) {
+					const value = tag.thuocTinhAnPham?.find((i) => i.code === subCode)?.value;
+					if (value) {
+						formValues[fieldName] = value;
+					}
+				}
 			});
+
+			// Gán giá trị cho form
+			form.setFieldsValue({ ...record, ...formValues });
 		}
 	}, [record?._id, visibleForm]);
 
@@ -108,11 +136,11 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 						<Input placeholder='Nhập ISSN' />
 					</Form.Item>
 				</Col>
-				<Col xs={24} md={12}>
+				{/* <Col xs={24} md={12}>
 					<Form.Item name='ten' label='Mã tài liệu' rules={[...rules.required]}>
 						<Input placeholder='Nhập mã tài liệu' />
 					</Form.Item>
-				</Col>
+				</Col> */}
 				<Col xs={24} md={12}>
 					<Form.Item name='tacGia' label='Tác giả [100$a]' rules={[...rules.required]}>
 						<Input placeholder='Nhập tác giả' />
@@ -131,11 +159,6 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				<Col xs={24} md={12}>
 					<Form.Item name='tenTap' label='Tên tập [245$p]'>
 						<Input placeholder='Nhập tên tập' />
-					</Form.Item>
-				</Col>
-				<Col xs={24} md={12}>
-					<Form.Item name='nhanDeSongSong' label='Nhan đề song song [245$b]'>
-						<Input placeholder='Nhập nhan đề song song' />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>

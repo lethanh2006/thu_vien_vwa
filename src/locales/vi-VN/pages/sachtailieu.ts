@@ -5,5 +5,4 @@ export default {
 
 	'sachtailieu.anpham.title': 'Ấn phẩm',
 	'sachtailieu.anpham.thongtinanpham.title': 'Thông tin ấn phẩm',
-	'sachtailieu.anpham.thuoctinhanpham.title': 'Thuộc tính ấn phẩm',
 };

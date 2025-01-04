@@ -25,7 +25,7 @@ const FormBienMucChiTiet = (props: any) => {
 				return {
 					ind1: matchedItem?.ind1 || '',
 					ind2: matchedItem?.ind2 || '',
-					danhSachThuocTinh: matchedItem?.danhSachThuocTinhAnPham || [],
+					danhSachThuocTinh: matchedItem?.thuocTinhAnPham || [],
 				};
 			});
 
@@ -37,7 +37,7 @@ const FormBienMucChiTiet = (props: any) => {
 		const data = {
 			danhSachBienMucChiTiet: values.danhSachBienMucChiTiet.map((item: any, index: number) => ({
 				...item,
-				isBienMucChiTiet: true,
+
 				tagCode: record?.mauBienMuc?.thongTinKhaiBao?.[index]?.tag || null,
 				_id: record?.mauBienMuc?.thongTinKhaiBao?.[index]?._id || null,
 			})),

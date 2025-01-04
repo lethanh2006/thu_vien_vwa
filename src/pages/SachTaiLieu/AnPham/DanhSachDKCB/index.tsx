@@ -3,6 +3,7 @@ import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
 import { useModel } from 'umi';
 import StatDanhSachDKCB from './components/Stat';
+import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 
 const DanhSachDKCB = () => {
 	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
@@ -41,7 +42,7 @@ const DanhSachDKCB = () => {
 			title: 'Đăng ký cá biệt',
 			align: 'center',
 			width: 90,
-			render: (val, rec) => rec?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
+			render: (val, rec) => rec?.thuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
 		},
 	];
 

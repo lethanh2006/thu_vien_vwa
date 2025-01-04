@@ -2,6 +2,7 @@ import ExpandText from '@/components/ExpandText';
 import MyDatePicker from '@/components/MyDatePicker';
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
+import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import rules from '@/utils/rules';
 import { Col, Form, type FormInstance, Input, Row } from 'antd';
 import moment from 'moment';
@@ -43,7 +44,7 @@ const FormDuyet = (props: { form: FormInstance }) => {
 			title: 'Đăng ký cá biệt',
 			align: 'center',
 			width: 90,
-			render: (val, rec) => rec?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
+			render: (val, rec) => rec?.thuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
 		},
 	];
 

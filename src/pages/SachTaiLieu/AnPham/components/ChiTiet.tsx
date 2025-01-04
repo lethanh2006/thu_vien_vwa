@@ -46,7 +46,7 @@ const ChiTietAnPham = () => {
 			title: 'Nội dung trường',
 			width: 220,
 			render: (val, rec) => (
-				<ExpandText>{rec?.danhSachThuocTinhAnPham?.map((i) => `${i.code}${i.value}`).join(', ')}</ExpandText>
+				<ExpandText>{rec?.thuocTinhAnPham?.map((i) => `${i.code}${i.value}`).join(', ')}</ExpandText>
 			),
 		},
 	];
@@ -55,7 +55,7 @@ const ChiTietAnPham = () => {
 		<>
 			<div>
 				<h2>
-					{recAnPham?.ten} {recAnPham?.nhanDe}
+					{recAnPham?.maTaiLieu} {recAnPham?.nhanDe}
 				</h2>
 				<UserOutlined /> {recAnPham?.tacGia}
 			</div>
@@ -71,7 +71,7 @@ const ChiTietAnPham = () => {
 							{item?.tagCode === tagCode && danhSach?.length ? null : (
 								<div style={{ marginLeft: 12 }}>
 									<p>
-										{item?.danhSachThuocTinhAnPham?.map((i) => `${i.code}${i.value}`).join(', ')}{' '}
+										{item?.thuocTinhAnPham?.map((i) => `${i.code}${i.value}`).join(', ')}{' '}
 										{item?.total && item?.total > 1 ? (
 											<a onClick={() => setTagCode(item?.tagCode)}>Xem chi tiết</a>
 										) : null}

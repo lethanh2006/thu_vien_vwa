@@ -1,3 +1,4 @@
+import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { Empty, Select, Spin } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -48,7 +49,7 @@ const SelectAnPhamDebounce = (props: {
 			}
 			options={danhSach.map((item) => ({
 				value: item?._id,
-				label: item?.ten ?? 'Không có thông tin',
+				label: item?.nhanDe ?? 'Không có thông tin',
 			}))}
 			showSearch
 			optionFilterProp='label'

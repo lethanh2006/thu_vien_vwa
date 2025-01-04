@@ -8,7 +8,7 @@ import {
 	ETrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
-import { Card, Tag } from 'antd';
+import { Tag } from 'antd';
 import moment from 'moment';
 import { useModel } from 'umi';
 import ChiTietLichSu from './ChiTiet';

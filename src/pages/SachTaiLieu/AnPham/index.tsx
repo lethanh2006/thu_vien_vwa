@@ -34,14 +34,14 @@ const CardAnPham = () => {
 	});
 
 	const columns: IColumn<AnPham.IRecord>[] = [
-		{
-			title: 'Mã tài liệu',
-			dataIndex: 'ten',
-			width: 120,
-			render: (val, rec) => val ?? 'Không có thông tin',
-			filterType: 'string',
-			onCell,
-		},
+		// {
+		// 	title: 'Mã tài liệu',
+		// 	dataIndex: 'maTaiLieu',
+		// 	width: 120,
+		// 	render: (val, rec) => val ?? 'Không có thông tin',
+		// 	filterType: 'string',
+		// 	onCell,
+		// },
 		{
 			title: 'Nhan đề',
 			dataIndex: 'nhanDe',

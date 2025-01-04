@@ -12,7 +12,7 @@ const ModalBienMucTaiLieu = (props: any) => {
 	const [currentStep, setCurrentStep] = useState(0);
 
 	useEffect(() => {
-		if (record?.mauBienMucId && edit && visibleForm) getAllModel(undefined, undefined, { anPhamId: record?._id });
+		if (visibleForm) getAllModel(undefined, undefined, { anPhamId: record?._id });
 	}, [visibleForm]);
 
 	useEffect(() => {

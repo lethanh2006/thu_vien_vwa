@@ -34,7 +34,7 @@ const ModalDuyet = (props: { visibleForm: boolean; setVisibleForm: (val: boolean
 			thoiGianMuon: moment().toISOString(),
 			soDangKyCaBiet: danhSach
 				?.find((item) => item?._id === selectedIds[0])
-				?.danhSachThuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
+				?.thuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
 		};
 		xuLyThueMuonAnPhamModel(recAnPham?._id ?? '', data as any, getDataExternal)
 			.then(() => {
