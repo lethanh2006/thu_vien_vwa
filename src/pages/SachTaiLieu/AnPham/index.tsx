@@ -10,17 +10,20 @@ import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { DollarOutlined, EyeOutlined } from '@ant-design/icons';
-import { Card, Tag } from 'antd';
+import { Card, Tabs, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalAnPham from './components/Modal';
 import StatAnPham from './components/Stat';
 import ModalXepGia from './components/XepGia';
+import XepGiaPage from './XepGia';
 
 const CardAnPham = () => {
 	const intl = useIntl();
 	const { getModel, page, limit, handleView, setRecord } = useModel('sachtailieu.anpham.anpham');
-	const [visibleXepGia, setVisibleXepGia] = useState<boolean>(false);
+	const { setVisibleForm } = useModel('sachtailieu.anpham.xepgia');
+
+	const [tabActive, setTabActive] = useState<string>('1');
 
 	const getData = () => {
 		getModel({ trangThai: ETrangThaiBienMuc.DA_BIEN_MUC });
@@ -138,7 +141,7 @@ const CardAnPham = () => {
 						tooltip='Xếp giá'
 						onClick={() => {
 							setRecord(rec);
-							setVisibleXepGia(true);
+							setVisibleForm(true);
 						}}
 						type='link'
 						icon={<DollarOutlined />}
@@ -152,19 +155,28 @@ const CardAnPham = () => {
 		<Card title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}>
 			<StatAnPham />
 
-			<TableBase
-				getData={getData}
-				columns={columns}
-				dependencies={[page, limit]}
-				modelName='sachtailieu.anpham.anpham'
-				title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
-				Form={ModalAnPham}
-				widthDrawer={1100}
-				buttons={{ create: false }}
-				hideCard
-			/>
+			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
+				<Tabs.TabPane tab='Ấn phẩm' key='1' />
+				<Tabs.TabPane tab='Thông tin xếp giá' key='2' />
+			</Tabs>
 
-			<ModalXepGia visibleForm={visibleXepGia} setVisibleForm={setVisibleXepGia} />
+			{tabActive === '1' ? (
+				<TableBase
+					getData={getData}
+					columns={columns}
+					dependencies={[page, limit]}
+					modelName='sachtailieu.anpham.anpham'
+					title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
+					Form={ModalAnPham}
+					widthDrawer={1100}
+					buttons={{ create: false }}
+					hideCard
+				/>
+			) : (
+				<XepGiaPage />
+			)}
+
+			<ModalXepGia />
 		</Card>
 	);
 };

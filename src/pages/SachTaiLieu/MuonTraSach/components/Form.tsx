@@ -84,18 +84,19 @@ const FormMuonTraSach = (props: any) => {
 		if (tacGia) searchParams.tacGia = tacGia;
 		if (dangKyCaBiet) searchParams.dangKyCaBiet = dangKyCaBiet;
 
-		getModel(searchParams, undefined, undefined, undefined, undefined, 'search', undefined)
+		getModel(searchParams, undefined, undefined, undefined, undefined, 'search/an-pham', undefined)
 			.then()
 			.catch((err) => console.log(err));
 	};
 
 	const handleTimKiem = () => {
-		if (!nhanDe && !tacGia && !dangKyCaBiet) {
-			message.error('Vui lòng điền ít nhất 1 thông tin!');
-			return;
-		}
-		setVisibleTimKiem(true);
-		getDataExternal();
+		message.info('Tính năng đang phát triển!');
+		// if (!nhanDe && !tacGia && !dangKyCaBiet) {
+		// 	message.error('Vui lòng điền ít nhất 1 thông tin!');
+		// 	return;
+		// }
+		// setVisibleTimKiem(true);
+		// getDataExternal();
 	};
 
 	return (
@@ -132,7 +133,6 @@ const FormMuonTraSach = (props: any) => {
 					</>
 				) : (
 					<Descriptions column={1}>
-						{/* <Descriptions.Item label='Mã tài liệu'>{record?.anPham?.maTaiLieu ?? '--'}</Descriptions.Item> */}
 						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 					</Descriptions>

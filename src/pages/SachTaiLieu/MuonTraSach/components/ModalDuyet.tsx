@@ -28,9 +28,7 @@ const ModalDuyet = (props: { visibleForm: boolean; setVisibleForm: (val: boolean
 		}
 		const data = {
 			...values,
-			thongTinAnPhamId: selectedIds[0],
 			trangThaiDuyet: ETrangThaiDuyeMuonSach.DA_DUYET,
-
 			thoiGianMuon: moment().toISOString(),
 			soDangKyCaBiet: danhSach
 				?.find((item) => item?._id === selectedIds[0])

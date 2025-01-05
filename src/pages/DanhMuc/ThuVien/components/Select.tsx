@@ -13,10 +13,9 @@ const SelectThuVien = (props: {
 	style?: React.CSSProperties;
 	isSetRecord?: boolean;
 	condition?: Partial<ThuVien.IRecord>;
-	selectMa?: boolean;
 	disabled?: boolean;
 }) => {
-	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, selectMa, disabled } = props;
+	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled } = props;
 	const { danhSach, getAllModel } = useModel('danhmuc.thuvien');
 
 	useEffect(() => {
@@ -32,7 +31,7 @@ const SelectThuVien = (props: {
 			onChange={onChange}
 			options={danhSach.map((item) => ({
 				key: item._id,
-				value: selectMa ? item.ten : item._id,
+				value: item._id,
 				label: item.ten,
 			}))}
 			showSearch

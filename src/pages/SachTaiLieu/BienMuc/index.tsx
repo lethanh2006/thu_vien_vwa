@@ -8,15 +8,15 @@ import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { Popconfirm, Tag } from 'antd';
+import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
-import ModalBienMucTaiLieu from './components/Modal';
 import ChiTietBienMuc from './components/ChiTiet';
+import ModalBienMucTaiLieu from './components/Modal';
 
 const BienMucSachTaiLieuPage = () => {
 	const intl = useIntl();
-	const { getModel, page, limit, deleteModel, handleEdit, handleView, isView } = useModel('sachtailieu.anpham.anpham');
+	const { getModel, page, limit, handleEdit, handleView, isView } = useModel('sachtailieu.anpham.anpham');
 
 	const getData = () => {
 		getModel({ trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC });
@@ -107,19 +107,19 @@ const BienMucSachTaiLieuPage = () => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 120,
+			width: 90,
 			fixed: 'right',
 			render: (val, record) => (
 				<>
 					<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(record)} type='link' icon={<EyeOutlined />} />
 					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
-					<Popconfirm
+					{/* <Popconfirm
 						onConfirm={() => deleteModel(record._id)}
 						title='Bạn có chắc chắn muốn xóa thông tin này?'
 						placement='topRight'
 					>
 						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
-					</Popconfirm>
+					</Popconfirm> */}
 				</>
 			),
 		},

@@ -6,8 +6,8 @@ declare module MuonSach {
 		soDangKyCaBiet: string;
 		thoiGianMuon: Date;
 		thoiGianDangKy: any;
-		thoiGianDuKienMuon: Date;
-		thoiGianDuKienTra: Date;
+		thoiGianMuonDuKien: Date;
+		thoiGianTraDuKien: Date;
 		expired: Date;
 		thoiGianTra: Date;
 		trangThaiDuyet: ETrangThaiDuyeMuonSach;

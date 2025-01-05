@@ -3,6 +3,7 @@ declare module KieuTuLieu {
 		_id: string;
 		ma: string;
 		ten: string;
+		soTuLieu: number;
 		createdAt?: string;
 		updatedAt?: string;
 	}

@@ -154,7 +154,7 @@ const MuonTraSachPage = () => {
 		},
 		{
 			title: 'Thời gian dự kiến mượn',
-			dataIndex: 'thoiGianDuKienMuon',
+			dataIndex: 'thoiGianMuonDuKien',
 			width: 130,
 			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
 			filterType: 'date',
@@ -164,7 +164,7 @@ const MuonTraSachPage = () => {
 		},
 		{
 			title: 'Thời gian dự kiến trả',
-			dataIndex: 'thoiGianDuKienTra',
+			dataIndex: 'thoiGianTraDuKien',
 			width: 130,
 			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
 			filterType: 'date',

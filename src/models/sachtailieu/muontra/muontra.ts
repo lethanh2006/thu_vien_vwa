@@ -52,7 +52,6 @@ export default () => {
 	const xuLyThueMuonAnPhamModel = async (
 		idThueMuon: string,
 		payLoad: {
-			thongTinAnPhamId: string;
 			trangThaiDuyet: ETrangThaiDuyeMuonSach;
 			ghiChu: string;
 			expired: Date;

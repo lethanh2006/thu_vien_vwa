@@ -1,4 +1,3 @@
-import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
@@ -15,23 +14,23 @@ const ModalTimKiem = (props: {
 
 	const { page, limit, selectedIds, setSelectedIds } = useModel('sachtailieu.anpham.thongtinanpham');
 
-	const columns: IColumn<AnPham.IThongTinAnPham>[] = [
+	const columns: IColumn<AnPham.IRecord>[] = [
 		{
 			title: 'Nhan đề',
+			dataIndex: 'nhanDe',
 			width: 180,
-			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
 		},
 		{
 			title: 'Tác giả',
+			dataIndex: 'tacGia',
 			width: 150,
-			render: (val, rec) => rec?.anPham?.tacGia,
 		},
-		{
-			title: 'Đăng ký cá biệt',
-			align: 'center',
-			width: 90,
-			render: (val, rec) => rec?.thuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
-		},
+		// {
+		// 	title: 'Đăng ký cá biệt',
+		// 	align: 'center',
+		// 	width: 90,
+		// 	render: (val, rec) => rec?.thuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
+		// },
 	];
 
 	const handleTimKiem = () => {

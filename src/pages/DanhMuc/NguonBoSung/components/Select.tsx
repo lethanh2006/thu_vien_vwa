@@ -32,7 +32,7 @@ const SelectNguonBoSung = (props: {
 			onChange={onChange}
 			options={danhSach.map((item) => ({
 				key: item._id,
-				value: selectMa ? item.ten : item._id,
+				value: selectMa ? item.ma : item._id,
 				label: item.ten,
 			}))}
 			showSearch

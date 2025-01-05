@@ -48,10 +48,10 @@ const ChiTietLichSu = () => {
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Thời gian dự kiến mượn'>
-							{record?.thoiGianDuKienMuon ? moment(record?.thoiGianDuKienMuon).format('HH:mm DD/MM/YYYY') : '--'}
+							{record?.thoiGianMuonDuKien ? moment(record?.thoiGianMuonDuKien).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 						<Descriptions.Item label='Thời gian dự kiến trả'>
-							{record?.thoiGianDuKienTra ? moment(record?.thoiGianDuKienTra).format('HH:mm DD/MM/YYYY') : '--'}
+							{record?.thoiGianTraDuKien ? moment(record?.thoiGianTraDuKien).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Ghi chú đăng ký'>{record?.ghiChuDangKy ?? '--'}</Descriptions.Item>

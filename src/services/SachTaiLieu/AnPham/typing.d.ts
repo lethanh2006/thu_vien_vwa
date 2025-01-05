@@ -1,3 +1,4 @@
+import type { GiaSach } from '@/services/DanhMuc/GiaSach/typing';
 import type { ETrangThaiBienMuc } from '../constant';
 
 declare module AnPham {
@@ -69,5 +70,36 @@ declare module AnPham {
 		tongAnPham: number;
 		tongAnPhamDangThueMuon: number;
 		tongSoAnPham: number;
+	}
+
+	export interface IXepGia {
+		_id: string;
+		anPhamId: string;
+		anPham: IRecord;
+		maNguonBoSung: string;
+		nguonBoSung: NguonBoSung.IRecord;
+		maKieuTuLieu: string;
+		kieuTuLieu: KieuTuLieu.IRecord;
+		ngayBoSung: Date;
+		donGia: number;
+		thuVienId: string;
+		thuVien: ThuVien.IRecord;
+		khoSachId: string;
+		khoSach: KhoSach.IRecord;
+		giaSachId: string;
+		giaSach: GiaSach.IRecord;
+		soDangKyCaBien: string;
+		soLuong: number;
+		daXepGia: boolean;
+	}
+
+	export interface IAnPhamXepGia {
+		_id: string;
+		soDangKyCaBiet: string;
+		anPhamId: string;
+		anPham: IRecord;
+		thoiGianXepGia: Date;
+		thongTinXepGiaId: string;
+		thongTinXepGia: IXepGia;
 	}
 }
