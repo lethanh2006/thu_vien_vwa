@@ -11,24 +11,17 @@ import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
-import ChiTietBienMuc from './components/ChiTiet';
 import ModalBienMucTaiLieu from './components/Modal';
 
 const BienMucSachTaiLieuPage = () => {
 	const intl = useIntl();
-	const { getModel, page, limit, handleEdit, handleView, isView } = useModel('sachtailieu.anpham.anpham');
+	const { getModel, page, limit, handleEdit, handleView } = useModel('sachtailieu.anpham.anpham');
 
 	const getData = () => {
 		getModel({ trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC });
 	};
 
 	const columns: IColumn<AnPham.IRecord>[] = [
-		// {
-		// 	title: 'Mã tài liệu',
-		// 	dataIndex: 'maTaiLieu',
-		// 	width: 150,
-		// 	filterType: 'string',
-		// },
 		{
 			title: 'Tác giả',
 			dataIndex: 'tacGia',
@@ -109,17 +102,10 @@ const BienMucSachTaiLieuPage = () => {
 			align: 'center',
 			width: 90,
 			fixed: 'right',
-			render: (val, record) => (
+			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(record)} type='link' icon={<EyeOutlined />} />
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
-					{/* <Popconfirm
-						onConfirm={() => deleteModel(record._id)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
-						placement='topRight'
-					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
-					</Popconfirm> */}
+					<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
+					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
 				</>
 			),
 		},
@@ -132,7 +118,7 @@ const BienMucSachTaiLieuPage = () => {
 			dependencies={[page, limit]}
 			modelName='sachtailieu.anpham.anpham'
 			title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}
-			Form={isView ? ChiTietBienMuc : ModalBienMucTaiLieu}
+			Form={ModalBienMucTaiLieu}
 			formProps={{ getData }}
 			widthDrawer={1000}
 		/>

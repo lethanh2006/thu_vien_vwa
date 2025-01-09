@@ -7,6 +7,8 @@ declare module AnPham {
 		maTaiLieu: string;
 		nhanDe: string;
 		tacGia: string;
+		tacGiaConverse: string;
+		nhanDeConverse: string;
 
 		kieuBanGhiId: string;
 		kieuBanGhi?: KieuBanGhi.IRecord;
@@ -54,6 +56,9 @@ declare module AnPham {
 		thuocTinhAnPham: TThuocTinhAnPham[];
 
 		total?: number;
+
+		//fake
+		soDangKyCaBiet?: string;
 
 		createdAt?: Date;
 		updatedAt?: Date;

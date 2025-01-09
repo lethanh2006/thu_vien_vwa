@@ -3,27 +3,23 @@ import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { inputFormat } from '@/utils/utils';
+import { Card } from 'antd';
 import { useModel } from 'umi';
-import StatDanhSachDKCB from './components/Stat';
+import StatDanhSachDKCB from '../AnPham/DanhSachDKCB/components/Stat';
 
-const DanhSachDKCB = () => {
-	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
-	const { getModel, page, limit } = useModel('sachtailieu.anpham.anphamxepgia');
-
-	const getData = () => {
-		if (recAnPham?._id) getModel({ anPhamId: recAnPham?._id });
-	};
+const DangKyCaBietPage = () => {
+	const { page, limit } = useModel('sachtailieu.anpham.anphamxepgia');
 
 	const columns: IColumn<AnPham.IAnPhamXepGia>[] = [
 		{
 			title: 'Nhan đề',
 			width: 180,
-			render: (val, rec) => <ExpandText>{recAnPham?.nhanDe}</ExpandText>,
+			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
 		},
 		{
 			title: 'Tác giả',
 			width: 150,
-			render: (val, rec) => recAnPham?.tacGia,
+			render: (val, rec) => rec?.anPham?.tacGia,
 		},
 
 		{
@@ -42,19 +38,18 @@ const DanhSachDKCB = () => {
 	];
 
 	return (
-		<>
+		<Card title='Danh sách đăng ký cá biệt'>
 			<StatDanhSachDKCB />
 
 			<TableBase
-				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, recAnPham?._id]}
+				dependencies={[page, limit]}
 				modelName='sachtailieu.anpham.anphamxepgia'
 				buttons={{ create: false }}
 				hideCard
 			/>
-		</>
+		</Card>
 	);
 };
 
-export default DanhSachDKCB;
+export default DangKyCaBietPage;

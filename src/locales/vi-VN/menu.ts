@@ -15,10 +15,16 @@ export default {
 	'menu.LALVKhoaLuan.DanhSachSinhVien': 'Danh sách sinh viên',
 
 	'menu.SachTaiLieu': 'Sách, Tài liệu',
-	'menu.SachTaiLieu.BienMuc': 'Biên mục sơ lược',
+	'menu.SachTaiLieu.BienMuc': 'Biên mục',
 	'menu.SachTaiLieu.AnPham': 'Ấn phẩm',
+	'menu.SachTaiLieu.XepGia': 'Xếp giá',
+	'menu.SachTaiLieu.DangKyCaBiet': 'Đăng ký cá biệt',
 	'menu.SachTaiLieu.MuonTraSach': 'Mượn trả sách',
-	'menu.SachTaiLieu.ThongKeBanDoc': 'Thống kê bạn đọc',
+	'menu.SachTaiLieu.ThongKe': 'Thống kê',
+	'menu.SachTaiLieu.ThongKe.ThongKeAnPham': 'Thống kê ấn phẩm',
+	'menu.SachTaiLieu.ThongKe.ThongKeĐKCB': 'Thống kê ĐKCB',
+	'menu.SachTaiLieu.ThongKe.ThongKeMuonTra': 'Thống kê mượn trả',
+	'menu.SachTaiLieu.ThongKe.ThongKeBanDoc': 'Thống kê bạn đọc',
 
 	'menu.DanhMuc': 'Danh mục',
 	'menu.DanhMuc.ChucVu': 'Chức vụ',

@@ -24,17 +24,26 @@ import CauHinhThoiHanMuonTra from './components/CauHinh';
 import ChiTietMuonTraSach from './components/ChiTiet';
 import Form from './components/Form';
 import GhiTraAnPham from './components/GhiTraSach';
-import ModalDuyet from './components/ModalDuyet';
 import ConfirmGiaHan from './components/ModalGiaHan';
 import StatMuonTraSach from './components/Stat';
 
 const MuonTraSachPage = () => {
-	const { getModel, page, limit, handleView, handleEdit, deleteModel, getSettingModel, isView, setRecord, putModel } =
-		useModel('sachtailieu.muontra.muontra');
+	const {
+		getModel,
+		page,
+		limit,
+		handleView,
+		handleEdit,
+		deleteModel,
+		getSettingModel,
+		isView,
+		setRecord,
+		putModel,
+		thongKeMuonTraSachModel,
+	} = useModel('sachtailieu.muontra.muontra');
 	const { handleView: handleViewAnPham, visibleForm, setVisibleForm } = useModel('sachtailieu.anpham.anpham');
 	const [trangThai, setTrangThai] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.CHO_XU_LY);
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
-	const [visibleDuyet, setVisibleDuyet] = useState<boolean>(false);
 	const [visibleGiaHan, setVisibleGiaHan] = useState<boolean>(false);
 	const [visibleGhiTra, setVisibleGhiTra] = useState<boolean>(false);
 	const [activeKey, setActiveKey] = useState<string>('1');
@@ -263,10 +272,7 @@ const MuonTraSachPage = () => {
 									type='link'
 									icon={<CheckOutlined />}
 									className='text-success'
-									onClick={() => {
-										setRecord(record);
-										setVisibleDuyet(true);
-									}}
+									onClick={() => handleView(record)}
 								/>
 							) : trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
 								<>
@@ -392,10 +398,23 @@ const MuonTraSachPage = () => {
 				<ChiTietAnPham />
 			</Modal>
 
-			<ModalDuyet visibleForm={visibleDuyet} setVisibleForm={setVisibleDuyet} getData={getData} />
-			<ConfirmGiaHan visible={visibleGiaHan} setVisible={setVisibleGiaHan} getData={getData} />
+			<ConfirmGiaHan
+				visible={visibleGiaHan}
+				setVisible={setVisibleGiaHan}
+				getData={() => {
+					thongKeMuonTraSachModel();
+					getData();
+				}}
+			/>
 
-			<GhiTraAnPham visible={visibleGhiTra} setVisible={setVisibleGhiTra} getData={getData} />
+			<GhiTraAnPham
+				visible={visibleGhiTra}
+				setVisible={setVisibleGhiTra}
+				getData={() => {
+					thongKeMuonTraSachModel();
+					getData();
+				}}
+			/>
 		</Card>
 	);
 };

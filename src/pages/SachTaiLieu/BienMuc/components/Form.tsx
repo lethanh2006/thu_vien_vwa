@@ -136,11 +136,6 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 						<Input placeholder='Nhập ISSN' />
 					</Form.Item>
 				</Col>
-				{/* <Col xs={24} md={12}>
-					<Form.Item name='ten' label='Mã tài liệu' rules={[...rules.required]}>
-						<Input placeholder='Nhập mã tài liệu' />
-					</Form.Item>
-				</Col> */}
 				<Col xs={24} md={12}>
 					<Form.Item name='tacGia' label='Tác giả [100$a]' rules={[...rules.required]}>
 						<Input placeholder='Nhập tác giả' />

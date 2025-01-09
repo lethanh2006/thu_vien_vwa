@@ -11,11 +11,20 @@ import { useIntl, useModel } from 'umi';
 import ModalTimKiem from './ModalTimKiem';
 
 const FormMuonTraSach = (props: any) => {
-	const { getData, setTrangThai } = props;
+	const { getData: getDataEx, setTrangThai } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { visibleForm, setVisibleForm, formSubmiting, edit, putModel, postModel, record, settingMuonTra } =
-		useModel('sachtailieu.muontra.muontra');
+	const {
+		visibleForm,
+		setVisibleForm,
+		formSubmiting,
+		edit,
+		putModel,
+		postModel,
+		record,
+		settingMuonTra,
+		thongKeMuonTraSachModel,
+	} = useModel('sachtailieu.muontra.muontra');
 	const { danhSach: danhSachSinhVien } = useModel('sinhvien.sinhvien');
 	const { getModel, loading, setDanhSach, danhSach, selectedIds, setSelectedIds } = useModel(
 		'sachtailieu.anpham.thongtinanpham',
@@ -26,6 +35,11 @@ const FormMuonTraSach = (props: any) => {
 	const dangKyCaBiet: string = Form.useWatch('dangKyCaBiet', form);
 
 	const anPham = danhSach?.find((item) => item?._id === selectedIds?.[0]);
+
+	const getData = () => {
+		thongKeMuonTraSachModel();
+		getDataEx();
+	};
 
 	useEffect(() => {
 		if (!visibleForm) {

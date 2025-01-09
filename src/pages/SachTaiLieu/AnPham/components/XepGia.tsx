@@ -22,13 +22,13 @@ const ModalXepGia = () => {
 		getModel,
 		putModel,
 		record: recXepGia,
-		setRecord: setRecXepGia,
 		visibleForm,
 		setVisibleForm,
 	} = useModel('sachtailieu.anpham.xepgia');
 	const { danhSach: danhSachKieuTuLieu } = useModel('danhmuc.kieutulieu');
 	const khoSachId: string = Form.useWatch('khoSachId', form);
 	const [actionType, setActionType] = useState<string>();
+	const [countXepGia, setCountXepGia] = useState<number>(0);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -36,8 +36,7 @@ const ModalXepGia = () => {
 		} else if (record?._id) {
 			getModel({ anPhamId: record?._id }, undefined, undefined, undefined, undefined, undefined, undefined, false).then(
 				(res) => {
-					form.setFieldsValue(res?.[0]);
-					setRecXepGia(res?.[0]);
+					setCountXepGia(res?.length);
 				},
 			);
 		} else if (recXepGia?._id) {
@@ -70,10 +69,20 @@ const ModalXepGia = () => {
 				<Row gutter={[12, 0]}>
 					<Col span={24} style={{ marginBottom: 12 }}>
 						<Alert
-							type={recXepGia?.daXepGia === true ? 'success' : recXepGia?.daXepGia === false ? 'warning' : 'info'}
+							type={
+								countXepGia
+									? 'info'
+									: recXepGia?.daXepGia === true
+									? 'success'
+									: recXepGia?.daXepGia === false
+									? 'warning'
+									: 'info'
+							}
 							showIcon
 							message={
-								recXepGia?.daXepGia === true
+								countXepGia !== 0
+									? `Ấn phẩm đã được xếp giá ${countXepGia} lần`
+									: recXepGia?.daXepGia === true
 									? 'Ấn phẩm đã xếp giá'
 									: recXepGia?.daXepGia === false
 									? 'Ấn phẩm đang xếp giá'
@@ -103,7 +112,7 @@ const ModalXepGia = () => {
 								onChange={(val) => {
 									const index = danhSachKieuTuLieu?.find((item) => item?.ma === val);
 									form.setFieldsValue({
-										soDangKyCaBien: `${index?.ma}${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
+										soDangKyCaBien: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
 									});
 								}}
 							/>
@@ -168,7 +177,7 @@ const ModalXepGia = () => {
 							setActionType('luu_lai');
 							form.submit();
 						}}
-						disabled={recXepGia?.daXepGia}
+						disabled={!record?._id && recXepGia?.daXepGia}
 					>
 						Lưu lại
 					</ButtonExtend>
@@ -180,7 +189,7 @@ const ModalXepGia = () => {
 						title='Xác nhận xếp giá, lưu ý khi hoàn thành sẽ không được chỉnh sửa lại giá?'
 						placement='topRight'
 					>
-						<ButtonExtend disabled={recXepGia?.daXepGia} loading={formSubmiting} type='primary'>
+						<ButtonExtend disabled={!record?._id && recXepGia?.daXepGia} loading={formSubmiting} type='primary'>
 							Xếp giá
 						</ButtonExtend>
 					</Popconfirm>

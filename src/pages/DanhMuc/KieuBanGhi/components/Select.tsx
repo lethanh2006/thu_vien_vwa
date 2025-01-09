@@ -1,5 +1,5 @@
 import { Select } from 'antd';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useModel } from 'umi';
 
 /**
@@ -20,8 +20,8 @@ const SelectKieuBanGhi = (props: {
 	const { danhSach, getAllModel } = useModel('danhmuc.kieubanghi');
 
 	useEffect(() => {
-		getAllModel(!!isSetRecord, undefined, condition);
-	}, [JSON.stringify(condition)]);
+		if (!danhSach?.length) getAllModel(!!isSetRecord, undefined, condition);
+	}, []);
 
 	return (
 		<Select

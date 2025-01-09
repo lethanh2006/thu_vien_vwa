@@ -20,8 +20,8 @@ const SelectVatMangTin = (props: {
 	const { danhSach, getAllModel } = useModel('danhmuc.vatmangtin');
 
 	useEffect(() => {
-		getAllModel(!!isSetRecord, undefined, condition);
-	}, [JSON.stringify(condition)]);
+		if (!danhSach?.length) getAllModel(!!isSetRecord, undefined, condition);
+	}, []);
 
 	return (
 		<Select

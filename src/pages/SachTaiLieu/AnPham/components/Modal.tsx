@@ -1,5 +1,5 @@
 import { Button, Card, Tabs } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ChiTietBienMuc from '../../BienMuc/components/ChiTiet';
 import DanhSachDKCB from '../DanhSachDKCB';
@@ -8,11 +8,20 @@ import ChiTietAnPham from './ChiTiet';
 
 const ModalAnPham = () => {
 	const intl = useIntl();
-	const { setVisibleForm } = useModel('sachtailieu.anpham.anpham');
+	const { record: recAnPham, setVisibleForm } = useModel('sachtailieu.anpham.anpham');
+	const { getAllModel, loading } = useModel('sachtailieu.anpham.thongtinanpham');
 	const [tabActive, setTabActive] = useState<string>('1');
 
+	const getData = () => {
+		if (recAnPham?._id) getAllModel(undefined, undefined, { anPhamId: recAnPham?._id });
+	};
+
+	useEffect(() => {
+		getData();
+	}, [recAnPham?._id]);
+
 	return (
-		<Card title='Chi tiết ấn phẩm'>
+		<Card title='Chi tiết ấn phẩm' loading={loading}>
 			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
 				<Tabs.TabPane tab='Thông tin chung' key='1' />
 				<Tabs.TabPane tab='Thông tin chi tiết' key='2' />

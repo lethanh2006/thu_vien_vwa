@@ -20,8 +20,8 @@ const SelectDangTaiLieu = (props: {
 	const { danhSach, getAllModel } = useModel('danhmuc.dangtailieu');
 
 	useEffect(() => {
-		getAllModel(!!isSetRecord, undefined, condition);
-	}, [JSON.stringify(condition)]);
+		if (!danhSach?.length) getAllModel(!!isSetRecord, undefined, condition);
+	}, []);
 
 	return (
 		<Select

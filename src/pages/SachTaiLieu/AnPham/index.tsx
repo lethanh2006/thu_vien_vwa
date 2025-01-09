@@ -16,7 +16,7 @@ import { useIntl, useModel } from 'umi';
 import ModalAnPham from './components/Modal';
 import StatAnPham from './components/Stat';
 import ModalXepGia from './components/XepGia';
-import XepGiaPage from './XepGia';
+import LichSuXepGia from './LichSuXepGia';
 
 const CardAnPham = () => {
 	const intl = useIntl();
@@ -47,7 +47,7 @@ const CardAnPham = () => {
 		// },
 		{
 			title: 'Nhan đề',
-			dataIndex: 'nhanDe',
+			dataIndex: 'nhanDeConverse',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
@@ -55,7 +55,7 @@ const CardAnPham = () => {
 		},
 		{
 			title: 'Tác giả',
-			dataIndex: 'tacGia',
+			dataIndex: 'tacGiaConverse',
 			width: 150,
 			filterType: 'string',
 			onCell,
@@ -157,7 +157,7 @@ const CardAnPham = () => {
 
 			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
 				<Tabs.TabPane tab='Ấn phẩm' key='1' />
-				<Tabs.TabPane tab='Thông tin xếp giá' key='2' />
+				<Tabs.TabPane tab='Lịch sử xếp giá' key='2' />
 			</Tabs>
 
 			{tabActive === '1' ? (
@@ -173,7 +173,7 @@ const CardAnPham = () => {
 					hideCard
 				/>
 			) : (
-				<XepGiaPage />
+				<LichSuXepGia />
 			)}
 
 			<ModalXepGia />

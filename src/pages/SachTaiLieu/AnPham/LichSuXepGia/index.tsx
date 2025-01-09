@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { useModel } from 'umi';
 import ChiTietXepGia from './components/ChiTiet';
 
-const XepGiaPage = () => {
+const LichSuXepGia = () => {
 	const { page, limit, handleEdit, setRecord } = useModel('sachtailieu.anpham.xepgia');
 	const { setRecord: setRecAnPham } = useModel('sachtailieu.anpham.anpham');
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
@@ -121,7 +121,6 @@ const XepGiaPage = () => {
 			render: (val, rec) => (
 				<>
 					<ButtonExtend
-						disabled={rec?.daXepGia}
 						tooltip='Chi tiết'
 						onClick={() => {
 							setRecord(rec);
@@ -160,4 +159,4 @@ const XepGiaPage = () => {
 	);
 };
 
-export default XepGiaPage;
+export default LichSuXepGia;

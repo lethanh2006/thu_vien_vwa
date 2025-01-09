@@ -15,8 +15,14 @@ const ChiTietMuonTraSach = (props: any) => {
 	const { getData: getDataExternal, trangThai, setVisibleGhiTra } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { record, setVisibleForm, visibleForm, xuLyThueMuonAnPhamModel } = useModel('sachtailieu.muontra.muontra');
+	const { record, setVisibleForm, visibleForm, xuLyThueMuonAnPhamModel, thongKeMuonTraSachModel } =
+		useModel('sachtailieu.muontra.muontra');
 	const { selectedIds, setSelectedIds, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
+
+	const getData = () => {
+		thongKeMuonTraSachModel();
+		getDataExternal();
+	};
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -33,12 +39,9 @@ const ChiTietMuonTraSach = (props: any) => {
 		const data = {
 			...values,
 			trangThaiDuyet: ETrangThaiDuyeMuonSach.DA_DUYET,
-			thoiGianMuon: moment().toISOString(),
-			soDangKyCaBiet: danhSach
-				?.find((item) => item?._id === selectedIds[0])
-				?.thuocTinhAnPham?.find((i: any) => i?.code === '$j')?.value,
+			soDangKyCaBiet: danhSach?.find((item) => item?._id === selectedIds[0])?.soDangKyCaBiet,
 		};
-		xuLyThueMuonAnPhamModel(record?._id ?? '', data as any, getDataExternal)
+		xuLyThueMuonAnPhamModel(record?._id ?? '', data as any, getData)
 			.then(() => {
 				setVisibleForm(false);
 			})

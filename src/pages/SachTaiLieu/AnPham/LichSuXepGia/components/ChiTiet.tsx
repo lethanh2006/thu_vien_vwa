@@ -34,7 +34,7 @@ const ChiTietXepGia = (props: { visible: boolean; setVisible: (val: boolean) => 
 			title: 'Đơn giá',
 			width: 120,
 			align: 'right',
-			render: (val, rec) => rec?.thongTinXepGia?.donGia && `${inputFormat(rec?.thongTinXepGia?.donGia ?? 0)} VNĐ`,
+			render: (val, rec) => `${inputFormat(recXepGia?.donGia ?? 0)} VNĐ`,
 		},
 	];
 

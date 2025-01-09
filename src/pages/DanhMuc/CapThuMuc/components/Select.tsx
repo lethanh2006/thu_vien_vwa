@@ -20,8 +20,8 @@ const SelectCapThuMuc = (props: {
 	const { danhSach, getAllModel } = useModel('danhmuc.capthumuc');
 
 	useEffect(() => {
-		getAllModel(!!isSetRecord, undefined, condition);
-	}, [JSON.stringify(condition)]);
+		if (!danhSach?.length) getAllModel(!!isSetRecord, undefined, condition);
+	}, []);
 
 	return (
 		<Select

@@ -17,7 +17,8 @@ const FormDuyet = (props: { form: FormInstance }) => {
 
 	useEffect(() => {
 		form.setFieldsValue({
-			expired: moment(recAnPham?.thoiGianDangKy).add(settingMuonTra?.thoiHanMuonTraSach || 150, 'days'),
+			thoiGianMuon: moment(recAnPham?.thoiGianMuonDuKien).toISOString(),
+			expired: moment(recAnPham?.thoiGianTraDuKien).toISOString(),
 		});
 	}, [, recAnPham?._id, settingMuonTra?._id]);
 
@@ -29,7 +30,7 @@ const FormDuyet = (props: { form: FormInstance }) => {
 			});
 	};
 
-	const columns: IColumn<AnPham.IThongTinAnPham>[] = [
+	const columns: IColumn<AnPham.IAnPhamXepGia>[] = [
 		{
 			title: 'Nhan đề',
 			width: 180,
@@ -42,9 +43,9 @@ const FormDuyet = (props: { form: FormInstance }) => {
 		},
 		{
 			title: 'Đăng ký cá biệt',
+			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			width: 90,
-			render: (val, rec) => rec?.thuocTinhAnPham?.find((item) => item?.code === '$j')?.value,
 		},
 	];
 
@@ -72,6 +73,11 @@ const FormDuyet = (props: { form: FormInstance }) => {
 						},
 					}}
 				/>
+			</Col>
+			<Col xs={24} md={12}>
+				<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
+					<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
+				</Form.Item>
 			</Col>
 			<Col xs={24} md={12}>
 				<Form.Item name='expired' label='Hạn trả' rules={[...rules.required]}>

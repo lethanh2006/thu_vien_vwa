@@ -84,14 +84,42 @@
 				component: './SachTaiLieu/AnPham',
 			},
 			{
+				name: 'XepGia',
+				path: 'xep-gia',
+				component: './SachTaiLieu/XepGia',
+			},
+			{
+				name: 'DangKyCaBiet',
+				path: 'dang-ky-ca-biet',
+				component: './SachTaiLieu/DangKyCaBiet',
+			},
+			{
 				name: 'MuonTraSach',
 				path: 'muon-tra-sach',
 				component: './SachTaiLieu/MuonTraSach',
 			},
 			{
-				name: 'ThongKeBanDoc',
-				path: 'thong-ke-ban-doc',
-				component: './SachTaiLieu/ThongKeBanDoc',
+				name: 'ThongKe',
+				path: 'thong-ke',
+				routes: [
+					{
+						name: 'ThongKeAnPham',
+						path: 'thong-ke-an-pham',
+					},
+					{
+						name: 'ThongKeĐKCB',
+						path: 'thong-ke-dkcb',
+					},
+					{
+						name: 'ThongKeMuonTra',
+						path: 'thong-ke-muon-tra',
+					},
+					{
+						name: 'ThongKeBanDoc',
+						path: 'thong-ke-ban-doc',
+						component: './SachTaiLieu/ThongKeBanDoc',
+					},
+				],
 			},
 		],
 	},
