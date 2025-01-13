@@ -22,8 +22,6 @@ declare module MuonSach {
 
 		anPhamId: string;
 		anPham: AnPham.IRecord;
-		thongTinAnPhamId: string;
-		thongTinAnPham: AnPham.IThongTinAnPham;
 		ghiChuTra: string;
 		ghiChuDangKy: string;
 		daLaySach: boolean;
@@ -34,8 +32,8 @@ declare module MuonSach {
 		updatedAt: Date;
 
 		//fake
-		nhanDe?: string;
-		tacGia?: string;
+		tacGiaConverse?: string;
+		nhanDeConverse?: string;
 		dangKyCaBiet?: string;
 	}
 

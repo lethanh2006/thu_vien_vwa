@@ -1,18 +1,25 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
 import type { SinhVien } from '@/services/SinhVien/typings';
-import { useModel } from 'umi';
-import DanhSachBanDoc from './Components/DanhSach';
+import { Button, Modal } from 'antd';
+import { useState } from 'react';
+import { useIntl, useModel } from 'umi';
+import LichSuThueMuonPage from '../MuonTraSach/LichSu';
 
 const ThongKeBanDocPage = () => {
-	const { getModel, page, limit, handleView } = useModel('sachtailieu.muontra.danhsachbandoc');
+	const intl = useIntl();
+	const { getModel, page, limit, record, setRecord } = useModel('sachtailieu.muontra.danhsachbandoc');
+	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 
 	const getData = () => {
 		getModel(undefined, undefined, undefined, undefined, undefined, 'thong-ke/sinh-vien');
 	};
 
 	const onCell = (rec: SinhVien.IRecord) => ({
-		onClick: () => handleView(rec),
+		onClick: () => {
+			setRecord(rec);
+			setVisibleModal(true);
+		},
 		style: { cursor: 'pointer' },
 	});
 
@@ -63,16 +70,30 @@ const ThongKeBanDocPage = () => {
 	];
 
 	return (
-		<TableBase
-			getData={getData}
-			columns={columns}
-			dependencies={[page, limit]}
-			modelName='sachtailieu.muontra.danhsachbandoc'
-			Form={DanhSachBanDoc}
-			widthDrawer={1100}
-			title='Thống kê bạn đọc'
-			buttons={{ create: false }}
-		/>
+		<>
+			<TableBase
+				getData={getData}
+				columns={columns}
+				dependencies={[page, limit]}
+				modelName='sachtailieu.muontra.danhsachbandoc'
+				widthDrawer={1100}
+				title='Thống kê bạn đọc'
+				buttons={{ create: false }}
+			/>
+			<Modal
+				title={`Danh sách lịch sử mượn trả sách sinh viên ${record?.ten}`}
+				visible={visibleModal}
+				onCancel={() => setVisibleModal(false)}
+				width={1100}
+				footer={null}
+			>
+				<LichSuThueMuonPage condition={{ ssoIdNguoiMuon: record?.ssoId }} />
+
+				<div className='form-footer'>
+					<Button onClick={() => setVisibleModal(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
+				</div>
+			</Modal>
+		</>
 	);
 };
 

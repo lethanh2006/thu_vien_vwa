@@ -1,3 +1,4 @@
+import ExpandText from '@/components/ExpandText';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
@@ -7,6 +8,10 @@ const ChiTietAnPham = () => {
 	const { danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
 
 	const columns: IColumn<AnPham.IThongTinAnPham>[] = [
+		{
+			width: 150,
+			render: (val, rec) => <ExpandText>{rec?.tag?.noiDung}</ExpandText>,
+		},
 		{
 			dataIndex: 'tagCode',
 			align: 'center',
@@ -29,7 +34,7 @@ const ChiTietAnPham = () => {
 		<TableStaticData
 			columns={columns}
 			data={danhSach ?? []}
-			otherProps={{ pagination: false, scroll: { y: 400 }, showHeader: false }}
+			otherProps={{ pagination: false, scroll: { y: 500 }, showHeader: false }}
 		/>
 	);
 };

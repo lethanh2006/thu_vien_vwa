@@ -1,6 +1,6 @@
 import ExpandText from '@/components/ExpandText';
-import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import TableStaticData from '@/components/Table/TableStaticData';
 import { type IColumn } from '@/components/Table/typing';
 import SelectGiaSach from '@/pages/DanhMuc/GiaSach/components/Select';
 import SelectKhoSach from '@/pages/DanhMuc/KhoSach/components/Select';
@@ -9,17 +9,27 @@ import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import SelectThuVien from '@/pages/DanhMuc/ThuVien/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { inputFormat } from '@/utils/utils';
-import { DollarOutlined, EyeOutlined } from '@ant-design/icons';
-import { Tag } from 'antd';
+import { CheckOutlined, DeleteOutlined, EditOutlined, MenuOutlined } from '@ant-design/icons';
+import { Button, Modal, Popconfirm, Popover, Tag } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
-import ChiTietXepGia from './components/ChiTiet';
+import FormLichSuXepGia from './components/Form';
 
 const LichSuXepGia = () => {
-	const { page, limit, handleEdit, setRecord } = useModel('sachtailieu.anpham.xepgia');
-	const { setRecord: setRecAnPham } = useModel('sachtailieu.anpham.anpham');
-	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
+	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
+	const { getAllModel, danhSach, putModel, setRecord, deleteModel } = useModel('sachtailieu.anpham.xepgia');
+	const [visibleModal, setVisibleModal] = useState<boolean>(false);
+
+	const getData = () => {
+		if (recAnPham?._id) getAllModel(undefined, undefined, { anPhamId: recAnPham?._id });
+	};
+
+	const handleXepGia = (rec: AnPham.IXepGia) => {
+		putModel(rec?._id, { daXepGia: true }, getData)
+			.then()
+			.catch((err) => console.log(err));
+	};
 
 	const columns: IColumn<AnPham.IXepGia>[] = [
 		{
@@ -116,45 +126,70 @@ const LichSuXepGia = () => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 90,
+			width: 60,
 			fixed: 'right',
 			render: (val, rec) => (
-				<>
-					<ButtonExtend
-						tooltip='Chi tiết'
-						onClick={() => {
-							setRecord(rec);
-							setVisibleChiTiet(true);
-						}}
-						type='link'
-						icon={<EyeOutlined />}
-					/>
-					<ButtonExtend
-						disabled={rec?.daXepGia}
-						tooltip='Xếp giá'
-						onClick={() => {
-							setRecAnPham({} as AnPham.IRecord);
-							handleEdit(rec);
-						}}
-						type='link'
-						icon={<DollarOutlined />}
-					/>
-				</>
+				<Popover
+					placement='topRight'
+					content={
+						<>
+							<Popconfirm
+								onConfirm={() => handleXepGia(rec)}
+								title='Xác nhận áp dụng xếp giá vào ấn phẩm này?'
+								placement='topRight'
+							>
+								<ButtonExtend
+									disabled={rec?.daXepGia}
+									tooltip='Xác nhận'
+									type='link'
+									className='text-success'
+									icon={<CheckOutlined />}
+								/>
+							</Popconfirm>
+							<ButtonExtend
+								tooltip='Chinh sửa'
+								onClick={() => {
+									setRecord(rec);
+									setVisibleModal(true);
+								}}
+								type='link'
+								icon={<EditOutlined />}
+							/>
+							<Popconfirm
+								onConfirm={() => deleteModel(rec._id, getData)}
+								title='Bạn có chắc chắn muốn xóa thông tin này?'
+								placement='topRight'
+							>
+								<ButtonExtend disabled={rec?.daXepGia} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+							</Popconfirm>
+						</>
+					}
+				>
+					<Button type='link' icon={<MenuOutlined />} />
+				</Popover>
 			),
 		},
 	];
 
 	return (
 		<>
-			<TableBase
-				columns={columns}
-				dependencies={[page, limit]}
-				modelName='sachtailieu.anpham.xepgia'
-				buttons={{ create: false }}
-				hideCard
-			/>
+			<TableStaticData columns={columns} data={danhSach ?? []} addStt hasTotal otherProps={{ pagination: true }} />
 
-			<ChiTietXepGia visible={visibleChiTiet} setVisible={setVisibleChiTiet} />
+			<Modal
+				title='Chỉnh sửa xếp giá'
+				visible={visibleModal}
+				onCancel={() => setVisibleModal(false)}
+				width={800}
+				footer={null}
+			>
+				<FormLichSuXepGia
+					onCancel={() => setVisibleModal(false)}
+					onOk={() => {
+						getData();
+						setVisibleModal(false);
+					}}
+				/>
+			</Modal>
 		</>
 	);
 };

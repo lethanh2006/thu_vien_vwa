@@ -4,6 +4,7 @@ import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import rules from '@/utils/rules';
+import { inputFormat } from '@/utils/utils';
 import { Col, Form, type FormInstance, Input, Row } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
@@ -46,6 +47,19 @@ const FormDuyet = (props: { form: FormInstance }) => {
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			width: 90,
+		},
+		{
+			title: 'Thời gian xếp giá',
+			dataIndex: 'thoiGianXepGia',
+			align: 'center',
+			width: 130,
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		},
+		{
+			title: 'Đơn giá',
+			width: 120,
+			align: 'right',
+			render: (val, rec) => `${inputFormat(rec?.thongTinXepGia?.donGia ?? 0)} VNĐ`,
 		},
 	];
 

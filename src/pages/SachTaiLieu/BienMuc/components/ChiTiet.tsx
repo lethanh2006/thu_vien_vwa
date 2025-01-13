@@ -7,8 +7,14 @@ const ChiTietBienMuc = () => {
 
 	return (
 		<Descriptions column={{ xs: 1, md: 2 }} bordered>
-			<Descriptions.Item label='Nhan đề chính [245$a]'>{record?.nhanDe ?? '--'}</Descriptions.Item>
-			<Descriptions.Item label='Tác giả [100$a]'>{record?.tacGia ?? '--'}</Descriptions.Item>
+			<Descriptions.Item label='Nhan đề chính [245$a]'>
+				{danhSach?.find((item) => item?.tagCode === '245')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??
+					'--'}
+			</Descriptions.Item>
+			<Descriptions.Item label='Tác giả [100$a]'>
+				{danhSach?.find((item) => item?.tagCode === '100')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??
+					'--'}
+			</Descriptions.Item>
 			<Descriptions.Item label='Kiểu bản ghi'>{record?.kieuBanGhi?.ten ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='Dạng tài liệu'>{record?.dangTaiLieu?.ten ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='Cấp thư mục'>{record?.capThuMuc?.ten ?? '--'}</Descriptions.Item>
@@ -16,7 +22,8 @@ const ChiTietBienMuc = () => {
 			<Descriptions.Item label='Mẫu biên mục'>{record?.mauBienMuc?.ten ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='Độ mât'>{record?.doMat ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='ISBN [020$a]'>
-				{danhSach?.find((item) => item?.tagCode === '020')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ?? ''}
+				{danhSach?.find((item) => item?.tagCode === '020')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??
+					'--'}
 			</Descriptions.Item>
 			<Descriptions.Item label='ISSN [022$a]'>
 				{danhSach?.find((item) => item?.tagCode === '022')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??

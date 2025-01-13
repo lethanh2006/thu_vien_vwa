@@ -9,21 +9,19 @@ import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
-import { DollarOutlined, EyeOutlined } from '@ant-design/icons';
-import { Card, Tabs, Tag } from 'antd';
-import { useState } from 'react';
+import { DeleteOutlined, DollarOutlined, EditOutlined, EyeOutlined, MenuOutlined } from '@ant-design/icons';
+import { Button, Card, Popconfirm, Popover, Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
+import ModalBienMucTaiLieu from '../BienMuc/components/Modal';
 import ModalAnPham from './components/Modal';
 import StatAnPham from './components/Stat';
 import ModalXepGia from './components/XepGia';
-import LichSuXepGia from './LichSuXepGia';
 
 const CardAnPham = () => {
 	const intl = useIntl();
-	const { getModel, page, limit, handleView, setRecord } = useModel('sachtailieu.anpham.anpham');
+	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit } =
+		useModel('sachtailieu.anpham.anpham');
 	const { setVisibleForm } = useModel('sachtailieu.anpham.xepgia');
-
-	const [tabActive, setTabActive] = useState<string>('1');
 
 	const getData = () => {
 		getModel({ trangThai: ETrangThaiBienMuc.DA_BIEN_MUC });
@@ -37,14 +35,13 @@ const CardAnPham = () => {
 	});
 
 	const columns: IColumn<AnPham.IRecord>[] = [
-		// {
-		// 	title: 'Mã tài liệu',
-		// 	dataIndex: 'maTaiLieu',
-		// 	width: 120,
-		// 	render: (val, rec) => val ?? 'Không có thông tin',
-		// 	filterType: 'string',
-		// 	onCell,
-		// },
+		{
+			title: 'Mã tài liệu',
+			dataIndex: 'maTaiLieu',
+			width: 120,
+			filterType: 'string',
+			onCell,
+		},
 		{
 			title: 'Nhan đề',
 			dataIndex: 'nhanDeConverse',
@@ -132,21 +129,36 @@ const CardAnPham = () => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 90,
+			width: 60,
 			fixed: 'right',
 			render: (val, rec) => (
-				<>
-					<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
-					<ButtonExtend
-						tooltip='Xếp giá'
-						onClick={() => {
-							setRecord(rec);
-							setVisibleForm(true);
-						}}
-						type='link'
-						icon={<DollarOutlined />}
-					/>
-				</>
+				<Popover
+					placement='topRight'
+					content={
+						<>
+							<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
+							<ButtonExtend
+								tooltip='Xếp giá'
+								onClick={() => {
+									setRecord(rec);
+									setVisibleForm(true);
+								}}
+								type='link'
+								icon={<DollarOutlined />}
+							/>
+							<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+							<Popconfirm
+								onConfirm={() => deleteModel(rec._id, getData)}
+								title='Bạn có chắc chắn muốn xóa thông tin này?'
+								placement='topRight'
+							>
+								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+							</Popconfirm>
+						</>
+					}
+				>
+					<Button type='link' icon={<MenuOutlined />} />
+				</Popover>
 			),
 		},
 	];
@@ -155,26 +167,17 @@ const CardAnPham = () => {
 		<Card title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}>
 			<StatAnPham />
 
-			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
-				<Tabs.TabPane tab='Ấn phẩm' key='1' />
-				<Tabs.TabPane tab='Lịch sử xếp giá' key='2' />
-			</Tabs>
-
-			{tabActive === '1' ? (
-				<TableBase
-					getData={getData}
-					columns={columns}
-					dependencies={[page, limit]}
-					modelName='sachtailieu.anpham.anpham'
-					title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
-					Form={ModalAnPham}
-					widthDrawer={1100}
-					buttons={{ create: false }}
-					hideCard
-				/>
-			) : (
-				<LichSuXepGia />
-			)}
+			<TableBase
+				getData={getData}
+				columns={columns}
+				dependencies={[page, limit]}
+				modelName='sachtailieu.anpham.anpham'
+				title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
+				Form={isView ? ModalAnPham : ModalBienMucTaiLieu}
+				widthDrawer={1100}
+				buttons={{ create: false }}
+				hideCard
+			/>
 
 			<ModalXepGia />
 		</Card>

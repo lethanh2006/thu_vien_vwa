@@ -1,9 +1,10 @@
-import { Button, Card, Steps } from 'antd';
+import { Button, Card, Steps, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import ChiTietAnPham from '../../AnPham/components/ChiTiet';
+import ChiTietBienMuc from './ChiTiet';
 import Form from './Form';
 import FormBienMucChiTiet from './FormBienMucChiTiet';
-import ChiTietBienMuc from './ChiTiet';
 
 const ModalBienMucTaiLieu = (props: any) => {
 	const { title, getData } = props;
@@ -11,6 +12,7 @@ const ModalBienMucTaiLieu = (props: any) => {
 	const { record, edit, isView, setVisibleForm, visibleForm } = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel, loading } = useModel('sachtailieu.anpham.thongtinanpham');
 	const [currentStep, setCurrentStep] = useState(0);
+	const [tabActive, setTabActive] = useState<string>('1');
 
 	useEffect(() => {
 		if (record?._id && visibleForm) getAllModel(undefined, undefined, { anPhamId: record?._id });
@@ -28,7 +30,11 @@ const ModalBienMucTaiLieu = (props: any) => {
 		<Card title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()}`} loading={loading}>
 			{isView ? (
 				<>
-					<ChiTietBienMuc />
+					<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
+						<Tabs.TabPane tab='Thông tin chung' key='1' />
+						<Tabs.TabPane tab='Biên mục chi tiết' key='2' />
+					</Tabs>
+					{tabActive === '1' ? <ChiTietBienMuc /> : <ChiTietAnPham />}
 
 					<div className='form-footer'>
 						<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>

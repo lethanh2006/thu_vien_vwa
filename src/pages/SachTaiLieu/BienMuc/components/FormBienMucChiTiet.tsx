@@ -25,7 +25,7 @@ const FormBienMucChiTiet = (props: any) => {
 				return {
 					ind1: matchedItem?.ind1 || '',
 					ind2: matchedItem?.ind2 || '',
-					danhSachThuocTinh: matchedItem?.thuocTinhAnPham || [],
+					thuocTinhAnPham: matchedItem?.thuocTinhAnPham || [],
 				};
 			});
 
@@ -68,7 +68,7 @@ const FormBienMucChiTiet = (props: any) => {
 									<Input placeholder='Nhập chỉ mục 2' />
 								</Form.Item>
 								<Form.List
-									name={['danhSachBienMucChiTiet', index, 'danhSachThuocTinh']}
+									name={['danhSachBienMucChiTiet', index, 'thuocTinhAnPham']}
 									rules={[
 										{
 											validator: async (_, names) => {

@@ -7,7 +7,7 @@ import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd';
+import { Button, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -55,16 +55,28 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 			const formValues: Record<string, any> = {};
 			Object.entries(fieldMapping).forEach(([fieldName, { tagCode, subCode }]) => {
 				const tag = danhSach?.find((item) => item?.tagCode === tagCode);
-				if (tag) {
-					const value = tag.thuocTinhAnPham?.find((i) => i.code === subCode)?.value;
-					if (value) {
-						formValues[fieldName] = value;
-					}
+				let value = tag?.thuocTinhAnPham?.find((i) => i.code === subCode)?.value;
+
+				// Gán giá trị mặc định từ `record` nếu không tìm thấy giá trị từ `tag`
+				if (!value && (fieldName === 'tacGia' || fieldName === 'nhanDe')) {
+					value = record?.[fieldName];
+				}
+
+				if (value) {
+					formValues[fieldName] = value;
 				}
 			});
 
 			// Gán giá trị cho form
-			form.setFieldsValue({ ...record, ...formValues });
+			form.setFieldsValue({
+				...formValues,
+				kieuBanGhiId: record?.kieuBanGhiId,
+				dangTaiLieuId: record?.dangTaiLieuId,
+				capThuMucId: record?.capThuMucId,
+				vatMangTinId: record?.vatMangTinId,
+				mauBienMucId: record?.mauBienMucId,
+				doMat: record?.doMat,
+			});
 		}
 	}, [record?._id, visibleForm]);
 
@@ -161,7 +173,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 						<Input placeholder='Nhập phụ đề' />
 					</Form.Item>
 				</Col>
-				<Col xs={24}>
+				<Col xs={24} md={12}>
 					<Form.Item name='thongTinTrachNhiem' label='Thông tin trách nhiệm [245$c]'>
 						<Input placeholder='Nhập thông tin trách nhiệm' />
 					</Form.Item>
@@ -206,13 +218,16 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 						<Input placeholder='Nhập tư liệu đi kèm' />
 					</Form.Item>
 				</Col>
+				<Col xs={24}>
+					<Form.Item name='anPhamSo' valuePropName='checked' initialValue={false}>
+						<Checkbox>Ấn phẩm số</Checkbox>
+					</Form.Item>
+				</Col>
 			</Row>
 
 			<div className='form-footer'>
 				<Button loading={formSubmiting} htmlType='submit' type='primary'>
-					{!edit
-						? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
-						: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
+					{!edit ? 'Bên mục' : `${intl.formatMessage({ id: 'global.button.luulai' })}`}
 				</Button>
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>

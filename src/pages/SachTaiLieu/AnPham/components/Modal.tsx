@@ -2,8 +2,8 @@ import { Button, Card, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ChiTietBienMuc from '../../BienMuc/components/ChiTiet';
+import LichSuThueMuonPage from '../../MuonTraSach/LichSu';
 import DanhSachDKCB from '../DanhSachDKCB';
-import LichSuAnPham from '../LichSuAnPham';
 import ChiTietAnPham from './ChiTiet';
 
 const ModalAnPham = () => {
@@ -30,13 +30,13 @@ const ModalAnPham = () => {
 			</Tabs>
 
 			{tabActive === '1' ? (
-				<ChiTietBienMuc isAnPham />
+				<ChiTietBienMuc />
 			) : tabActive === '2' ? (
 				<ChiTietAnPham />
 			) : tabActive === '3' ? (
 				<DanhSachDKCB />
 			) : (
-				<LichSuAnPham />
+				<LichSuThueMuonPage condition={{ anPhamId: recAnPham?._id }} />
 			)}
 
 			<div className='form-footer'>

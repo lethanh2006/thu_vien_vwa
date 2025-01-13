@@ -13,12 +13,12 @@ import moment from 'moment';
 import { useModel } from 'umi';
 import ChiTietLichSu from './ChiTiet';
 
-const LichSuAnPham = () => {
-	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
+const LichSuThueMuonPage = (props: { condition: Partial<MuonSach.IRecord> }) => {
+	const { condition } = props;
 	const { getModel, page, limit, handleView } = useModel('sachtailieu.muontra.muontra');
 
 	const getData = () => {
-		if (recAnPham?._id) getModel({ anPhamId: recAnPham?._id });
+		if (condition) getModel(condition);
 	};
 
 	const onCell = (rec: MuonSach.IRecord) => ({
@@ -146,15 +146,14 @@ const LichSuAnPham = () => {
 		<TableBase
 			getData={getData}
 			columns={columns}
-			dependencies={[page, limit, recAnPham?._id]}
+			dependencies={[page, limit, condition]}
 			modelName='sachtailieu.muontra.muontra'
 			Form={ChiTietLichSu}
 			widthDrawer={800}
-			title='Thống kê bạn đọc'
-			buttons={{ create: false }}
 			hideCard
+			buttons={{ create: false }}
 		/>
 	);
 };
 
-export default LichSuAnPham;
+export default LichSuThueMuonPage;

@@ -20,8 +20,8 @@ export enum ETrangThaiDuyeMuonSach {
 
 export const colorTrangThaiDuyeMuonSach: Record<ETrangThaiDuyeMuonSach, string> = {
 	[ETrangThaiDuyeMuonSach.CHO_DUYET]: 'blue',
-	[ETrangThaiDuyeMuonSach.DA_DUYET]: 'orange',
-	[ETrangThaiDuyeMuonSach.KHONG_DUYET]: 'green',
+	[ETrangThaiDuyeMuonSach.DA_DUYET]: 'green',
+	[ETrangThaiDuyeMuonSach.KHONG_DUYET]: 'orange',
 };
 
 export enum ETrangThaiBienMuc {

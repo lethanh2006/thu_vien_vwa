@@ -8,18 +8,26 @@ import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
-import { EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { Tag } from 'antd';
+import { DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Popover, Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import ModalBienMucTaiLieu from './components/Modal';
 
 const BienMucSachTaiLieuPage = () => {
 	const intl = useIntl();
-	const { getModel, page, limit, handleEdit, handleView } = useModel('sachtailieu.anpham.anpham');
+	const { getModel, page, limit, handleEdit, handleView, setRecord, setEdit, setIsView, setVisibleForm, deleteModel } =
+		useModel('sachtailieu.anpham.anpham');
 
 	const getData = () => {
 		getModel({ trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC });
 	};
+
+	const onCell = (rec: AnPham.IRecord) => ({
+		onClick: () => handleView(rec),
+		style: {
+			cursor: 'pointer',
+		},
+	});
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
@@ -27,12 +35,14 @@ const BienMucSachTaiLieuPage = () => {
 			dataIndex: 'tacGia',
 			width: 150,
 			filterType: 'string',
+			onCell,
 		},
 		{
 			title: 'Nhan đề chính',
 			dataIndex: 'nhanDe',
 			width: 150,
 			filterType: 'string',
+			onCell,
 		},
 		{
 			title: 'Kiểu bản ghi',
@@ -41,6 +51,7 @@ const BienMucSachTaiLieuPage = () => {
 			render: (val, rec) => rec?.kieuBanGhi?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectKieuBanGhi multiple />,
+			onCell,
 		},
 		{
 			title: 'Dạng tài liệu',
@@ -49,6 +60,7 @@ const BienMucSachTaiLieuPage = () => {
 			render: (val, rec) => rec?.dangTaiLieu?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectDangTaiLieu multiple />,
+			onCell,
 		},
 		{
 			title: 'Cấp thư mục',
@@ -57,6 +69,7 @@ const BienMucSachTaiLieuPage = () => {
 			render: (val, rec) => rec?.capThuMuc?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectCapThuMuc multiple />,
+			onCell,
 		},
 		{
 			title: 'Vật mang tin',
@@ -65,6 +78,7 @@ const BienMucSachTaiLieuPage = () => {
 			render: (val, rec) => rec?.vatMangTin?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectVatMangTin multiple />,
+			onCell,
 		},
 		{
 			title: 'Mẫu biên mục',
@@ -73,6 +87,7 @@ const BienMucSachTaiLieuPage = () => {
 			render: (val, rec) => rec?.mauBienMuc?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectMauBienMuc multiple />,
+			onCell,
 		},
 		{
 			title: 'Độ mật',
@@ -81,6 +96,7 @@ const BienMucSachTaiLieuPage = () => {
 			width: 90,
 			filterType: 'number',
 			sortable: true,
+			onCell,
 		},
 		{
 			title: 'Trạng thái',
@@ -95,18 +111,34 @@ const BienMucSachTaiLieuPage = () => {
 					{val}
 				</Tag>
 			),
+			onCell,
 			fixed: 'right',
 		},
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 90,
+			width: 60,
 			fixed: 'right',
 			render: (val, rec) => (
-				<>
-					<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
-				</>
+				<Popover
+					placement='topRight'
+					content={
+						<>
+							<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
+							<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+
+							<Popconfirm
+								onConfirm={() => deleteModel(rec._id, getData)}
+								title='Bạn có chắc chắn muốn xóa thông tin này?'
+								placement='topRight'
+							>
+								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+							</Popconfirm>
+						</>
+					}
+				>
+					<Button type='link' icon={<MenuOutlined />} />
+				</Popover>
 			),
 		},
 	];
@@ -121,6 +153,24 @@ const BienMucSachTaiLieuPage = () => {
 			Form={ModalBienMucTaiLieu}
 			formProps={{ getData }}
 			widthDrawer={1000}
+			buttons={{ create: false }}
+			otherButtons={[
+				<ButtonExtend
+					key={'1'}
+					onClick={() => {
+						setRecord({} as AnPham.IRecord);
+						setEdit(false);
+						setIsView(false);
+						setVisibleForm(true);
+					}}
+					icon={<PlusCircleOutlined />}
+					type='primary'
+					notHideText
+					tooltip='Biên mục sơ lược'
+				>
+					Biên mục sơ lược
+				</ButtonExtend>,
+			]}
 		/>
 	);
 };
