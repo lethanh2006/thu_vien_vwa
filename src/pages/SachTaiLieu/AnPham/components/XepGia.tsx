@@ -1,0 +1,227 @@
+import MyDatePicker from '@/components/MyDatePicker';
+import ButtonExtend from '@/components/Table/ButtonExtend';
+import SelectGiaSach from '@/pages/DanhMuc/GiaSach/components/Select';
+import SelectKhoSach from '@/pages/DanhMuc/KhoSach/components/Select';
+import SelectKieuTuLieu from '@/pages/DanhMuc/KieuTuLieu/components/Select';
+import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
+import SelectThuVien from '@/pages/DanhMuc/ThuVien/components/Select';
+import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import rules from '@/utils/rules';
+import { resetFieldsForm } from '@/utils/utils';
+import {
+	Button,
+	Card,
+	Col,
+	Descriptions,
+	Divider,
+	Form,
+	Input,
+	InputNumber,
+	Modal,
+	Popconfirm,
+	Row,
+	Spin,
+	Tabs,
+} from 'antd';
+import { useEffect, useState } from 'react';
+import { useIntl, useModel } from 'umi';
+import LichSuXepGia from '../LichSuXepGia';
+
+const ModalXepGia = () => {
+	const intl = useIntl();
+	const [form] = Form.useForm();
+	const { record } = useModel('sachtailieu.anpham.anpham');
+	const {
+		formSubmiting,
+		postModel,
+		putModel,
+		record: recXepGia,
+		visibleForm,
+		setVisibleForm,
+		getAllModel,
+		danhSach: danhSachXepGia,
+		loading,
+	} = useModel('sachtailieu.anpham.xepgia');
+	const { danhSach: danhSachKieuTuLieu } = useModel('danhmuc.kieutulieu');
+	const khoSachId: string = Form.useWatch('khoSachId', form);
+	const [actionType, setActionType] = useState<string>();
+	const [tabActive, setTabActive] = useState<string>('1');
+
+	useEffect(() => {
+		if (!visibleForm) {
+			resetFieldsForm(form);
+		} else if (record?._id) {
+			getAllModel(undefined, undefined, { anPhamId: record?._id });
+		}
+	}, [visibleForm, record?._id]);
+
+	const onFinish = async (values: AnPham.IXepGia) => {
+		if (recXepGia?._id) {
+			putModel(recXepGia?._id, {
+				...values,
+				daXepGia: actionType === 'luu_lai' ? false : true,
+			})
+				.then((rec) => setVisibleForm(false))
+				.catch((er) => console.log(er));
+		} else {
+			postModel({
+				...values,
+				daXepGia: actionType === 'luu_lai' ? false : true,
+				anPhamId: record?._id,
+			})
+				.then((rec) => setVisibleForm(false))
+				.catch((er) => console.log(er));
+		}
+	};
+
+	return (
+		<Modal
+			title='Xếp giá'
+			visible={visibleForm}
+			onCancel={() => setVisibleForm(false)}
+			footer={null}
+			width={danhSachXepGia?.length !== 0 ? 1000 : 800}
+		>
+			<Spin spinning={loading}>
+				<Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
+					<Col span={12} md={12}>
+						<Card className='card-stat-small'>
+							<span className='num' style={{ color: 'blue' }}>
+								{danhSachXepGia?.filter((item) => item?.daXepGia === false)?.length ?? '--'}
+							</span>
+							<span>Đang xếp giá</span>
+						</Card>
+					</Col>
+					<Col span={12} md={12}>
+						<Card className='card-stat-small'>
+							<span className='num' style={{ color: 'green' }}>
+								{danhSachXepGia?.filter((item) => item?.daXepGia === true)?.length ?? '--'}
+							</span>
+							<span>Đã xếp giá</span>
+						</Card>
+					</Col>
+				</Row>
+			</Spin>
+
+			{danhSachXepGia?.length !== 0 ? (
+				<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
+					<Tabs.TabPane tab='Xếp giá' key='1' />
+					<Tabs.TabPane tab='Lịch sử xếp giá' key='2' />
+				</Tabs>
+			) : null}
+
+			{tabActive === '1' ? (
+				<Form onFinish={onFinish} form={form} layout='vertical'>
+					<Row gutter={[12, 0]}>
+						<Col span={24}>
+							<Descriptions column={1}>
+								<Descriptions.Item label='Nhan đề'>{record?.nhanDe ?? recXepGia?.anPham?.nhanDe}</Descriptions.Item>
+								<Descriptions.Item label='Tác giả'>{record?.tacGia ?? recXepGia?.anPham?.tacGia}</Descriptions.Item>
+							</Descriptions>
+						</Col>
+						<Col span={24}>
+							<Divider>Thông tin xếp giá bổ sung</Divider>
+						</Col>
+						<Col xs={24} md={12}>
+							<Form.Item name='maNguonBoSung' label='Nguồn bổ sung' rules={[...rules.required]}>
+								<SelectNguonBoSung selectMa />
+							</Form.Item>
+						</Col>
+						<Col xs={24} md={12}>
+							<Form.Item name='maKieuTuLieu' label='Kiểu tư liệu (lưu thông)' rules={[...rules.required]}>
+								<SelectKieuTuLieu
+									selectMa
+									onChange={(val) => {
+										const index = danhSachKieuTuLieu?.find((item) => item?.ma === val);
+										form.setFieldsValue({
+											soDangKyCaBien: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
+										});
+									}}
+								/>
+							</Form.Item>
+						</Col>
+						<Col xs={24} md={12}>
+							<Form.Item name='ngayBoSung' label='Ngày bổ sung' rules={[...rules.required]}>
+								<MyDatePicker />
+							</Form.Item>
+						</Col>
+						<Col xs={24} md={12}>
+							<Form.Item name='donGia' label='Đơn giá (đ/bản)' rules={[...rules.required]}>
+								<InputNumber
+									formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+									style={{ width: '100%' }}
+									placeholder='Nhập đơn giá'
+									min={0}
+									addonAfter='VNĐ'
+								/>
+							</Form.Item>
+						</Col>
+						<Col span={24}>
+							<Divider>Thông tin vị trí xếp giá</Divider>
+						</Col>
+						<Col xs={24} md={12}>
+							<Form.Item name='thuVienId' label='Thư viện' rules={[...rules.required]}>
+								<SelectThuVien />
+							</Form.Item>
+						</Col>
+						<Col xs={24} md={12}>
+							<Form.Item name='khoSachId' label='Kho' rules={[...rules.required]}>
+								<SelectKhoSach
+									onChange={() => {
+										form.resetFields(['giaSachId']);
+									}}
+								/>
+							</Form.Item>
+						</Col>
+						<Col xs={24} md={12}>
+							<Form.Item name='giaSachId' label='Giá sách' rules={[...rules.required]}>
+								<SelectGiaSach condition={{ khoSachId: khoSachId }} />
+							</Form.Item>
+						</Col>
+						<Col xs={24} md={12}>
+							<Form.Item name='soDangKyCaBien' label='Đăng ký cá biệt' rules={[...rules.required]}>
+								<Input placeholder='Đăng ký cá biệt' disabled />
+							</Form.Item>
+						</Col>
+						<Col xs={24} md={12}>
+							<Form.Item name='soLuong' label='Số lượng' rules={[...rules.required]}>
+								<InputNumber style={{ width: '100%' }} placeholder='Nhập lượng' />
+							</Form.Item>
+						</Col>
+					</Row>
+
+					<div className='form-footer'>
+						<ButtonExtend
+							loading={formSubmiting}
+							type='primary'
+							onClick={() => {
+								setActionType('luu_lai');
+								form.submit();
+							}}
+							disabled={!record?._id && recXepGia?.daXepGia}
+						>
+							Lưu lại
+						</ButtonExtend>
+						<Popconfirm
+							onConfirm={() => {
+								setActionType('xep_gia');
+								form.submit();
+							}}
+							title='Xác nhận xếp giá, lưu ý khi hoàn thành sẽ không được chỉnh sửa lại giá?'
+							placement='topRight'
+						>
+							<ButtonExtend disabled={!record?._id && recXepGia?.daXepGia} loading={formSubmiting} type='primary'>
+								Xếp giá
+							</ButtonExtend>
+						</Popconfirm>
+						<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+					</div>
+				</Form>
+			) : (
+				<LichSuXepGia />
+			)}
+		</Modal>
+	);
+};
+
+export default ModalXepGia;

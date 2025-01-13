@@ -1,4 +1,4 @@
-import { ip3, ipSlink } from '@/utils/ip';
+import { ipDaoTao, ipSlink } from '@/utils/ip';
 import axios from 'axios';
 
 export async function postRaVaoThuVien(payload: any) {
@@ -80,19 +80,19 @@ export async function postCauHinhThuVien(payload: any) {
 }
 
 export async function getSettingThuVien() {
-	return axios.get(`${ip3}/quan-ly-la-lv-kl/setting`);
+	return axios.get(`${ipDaoTao}/quan-ly-la-lv-kl/setting`);
 }
 
 export async function postSettingThuVien(payLoad: any) {
-	return axios.post(`${ip3}/quan-ly-la-lv-kl/setting`, payLoad);
+	return axios.post(`${ipDaoTao}/quan-ly-la-lv-kl/setting`, payLoad);
 }
 
 export async function changeTrangThaiLuanAn(id: string, payLoad: any) {
-	return axios.put(`${ip3}/quan-ly-la-lv-kl/${id}/status`, payLoad);
+	return axios.put(`${ipDaoTao}/quan-ly-la-lv-kl/${id}/status`, payLoad);
 }
 
 export async function exportThuVien(id: string, type: 'khoa-luan-do-an' | 'luan-an' | 'luan-van') {
-	return axios.get(`${ip3}/quan-ly-la-lv-kl/export/${type}/${id}`, {
+	return axios.get(`${ipDaoTao}/quan-ly-la-lv-kl/export/${type}/${id}`, {
 		responseType: 'arraybuffer',
 	});
 }

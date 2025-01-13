@@ -151,6 +151,9 @@ declare module SinhVien {
 		faceRegImgUrl?: string;
 		/** Có cần cập nhật lại ảnh nhận diện khuôn mặt không */
 		needUpdateFaceReg?: boolean;
+
+		//Thư viện
+		thongKe: { choXuLy: string; dangThueMuon: string; quaHan: string; daTra: string };
 	}
 
 	export interface IHocBongSinhVien {

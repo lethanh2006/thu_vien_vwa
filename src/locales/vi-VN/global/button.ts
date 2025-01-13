@@ -10,4 +10,5 @@ export default {
 	'global.button.tailai': 'Tải lại',
 	'global.button.boloctuychinh': 'Bộ lọc tùy chỉnh',
 	'global.button.tongso': 'Tổng số',
+	'global.button.dong': 'Đóng',
 };
