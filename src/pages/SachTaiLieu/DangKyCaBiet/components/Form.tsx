@@ -47,7 +47,7 @@ const FormDangKyCaBiet = (props: any) => {
 	};
 
 	return (
-		<Card title='Thêm mớisinh viên mượn sách'>
+		<Card title='Thêm mới sinh viên mượn sách'>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginTop: 12 }}>
 					<Col span={24}>

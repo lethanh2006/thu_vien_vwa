@@ -3,7 +3,7 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
-import { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
+import { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach, mapNameTrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import {
 	CheckOutlined,
@@ -354,7 +354,7 @@ const MuonTraSachPage = () => {
 
 			<Tabs activeKey={trangThai} onChange={(tab) => setTrangThai(tab as ETrangThaiMuonSach)}>
 				{Object.values(ETrangThaiMuonSach).map((tab) => (
-					<Tabs.TabPane key={tab} tab={tab} />
+					<Tabs.TabPane key={tab} tab={mapNameTrangThaiMuonSach[tab]} />
 				))}
 			</Tabs>
 

@@ -12,6 +12,13 @@ export const colorTrangThaiMuonSach: Record<ETrangThaiMuonSach, string> = {
 	// [ETrangThaiMuonSach.KHONG_CHO_THUE_MUON]: 'red',
 };
 
+export const mapNameTrangThaiMuonSach: Record<ETrangThaiMuonSach, string> = {
+	[ETrangThaiMuonSach.CHO_XU_LY]: 'Chờ xử lý',
+	[ETrangThaiMuonSach.DANG_THUE_MUON]: 'Đang mượn',
+	[ETrangThaiMuonSach.DA_TRA]: 'Đã trả',
+	// [ETrangThaiMuonSach.KHONG_CHO_THUE_MUON]: 'red',
+};
+
 export enum ETrangThaiDuyeMuonSach {
 	CHO_DUYET = 'Chờ duyệt',
 	DA_DUYET = 'Đã duyệt',

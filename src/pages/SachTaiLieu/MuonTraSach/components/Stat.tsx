@@ -45,7 +45,7 @@ const StatMuonTraSach = (props: {
 						<span className='num' style={{ color: 'orange' }}>
 							{dataThongKe?.dangThueMuon ?? 0}
 						</span>
-						<span>Đang thuê mượn</span>
+						<span>Đang mượn</span>
 					</Card>
 				</Col>
 				<Col span={24} md={6}>
@@ -60,7 +60,7 @@ const StatMuonTraSach = (props: {
 						<span className='num' style={{ color: 'rec' }}>
 							{dataThongKe?.quaHan ?? 0}
 						</span>
-						<span>Quá hạn đang mượn</span>
+						<span>Quá hạn mượn</span>
 					</Card>
 				</Col>
 				<Col span={24} md={6}>
