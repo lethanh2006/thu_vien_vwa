@@ -1,10 +1,10 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import UploadFile from '@/components/Upload/UploadFile';
-import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
 import SelectNganhCoSo from '@/pages/DaoTao/Nganh/Select';
+import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
 import { ELoaiDotQuanLyThuvien, ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
-import { buildUpLoadFile } from '@/services/uploadFile';
+import { EFileScope, uploadFile } from '@/services/uploadFile';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
@@ -46,27 +46,51 @@ const FormQuanLyThuVien = (props: any) => {
 	};
 
 	const onFinish = async (values: QuanLyThuVien.IQuanLyDanhSachNop) => {
-		setFormSubmiting(true);
-		const urlTaiLieu = await buildUpLoadFile(values, 'urlTaiLieu');
-		const urlTomTat = await buildUpLoadFile(values, 'urlTomTat');
-		const urlTaiLieuMinhChung = await buildUpLoadFile(values, 'urlTaiLieuMinhChung');
-		setFormSubmiting(false);
+		const filesToUpload: {
+			field: keyof QuanLyThuVien.IQuanLyDanhSachNop;
+			idField: keyof QuanLyThuVien.IQuanLyDanhSachNop;
+		}[] = [
+			{ field: 'urlTaiLieu', idField: 'idTaiLieu' },
+			{ field: 'urlTomTat', idField: 'idTomTat' },
+			{ field: 'urlTaiLieuMinhChung', idField: 'idTaiLieuMinhChung' },
+		];
 
-		const data = {
-			...values,
-			loai,
-			urlTaiLieu,
-			urlTomTat,
-			urlTaiLieuMinhChung,
-		};
-		if (edit) {
-			putModel(record?._id ?? '', data as any, getData)
-				.then()
-				.catch((er) => console.log(er));
-		} else
-			postModel(data as any, getData)
-				.then()
-				.catch((er) => console.log(er));
+		try {
+			setFormSubmiting(true);
+
+			// Tạo danh sách các promise tải file
+			const uploadPromises = filesToUpload.map(async ({ field, idField }) => {
+				const fileData = values[field]?.fileList?.[0];
+				if (fileData?.originFileObj) {
+					const res = await uploadFile({
+						file: fileData.originFileObj,
+						scope: EFileScope.PUBLIC,
+					});
+					values[field] = res?.data?.data?.url;
+					values[idField] = res?.data?.data?.file?._id;
+				} else {
+					values[field] = fileData?.url;
+				}
+			});
+
+			await Promise.allSettled(uploadPromises);
+
+			const data = {
+				...values,
+				loai,
+			};
+
+			if (edit) {
+				await putModel(record?._id ?? '', data as any, getData);
+			} else {
+				await postModel(data as any, getData);
+			}
+		} catch (error) {
+			console.log(error);
+			return Promise.reject(error);
+		} finally {
+			setFormSubmiting(false);
+		}
 	};
 
 	return (

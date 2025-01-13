@@ -8,26 +8,20 @@ const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) =
 
 	return (
 		<Modal
-			title='Xem chi tiết'
+			title='Chi tiết SV vào ra thư viện'
 			visible={visible}
 			width={800}
-			footer={
-				<div className='form-footer'>
-					<Button onClick={() => setVisible(false)}>Hủy</Button>
-				</div>
-			}
-			onCancel={() => {
-				setVisible(false);
-			}}
+			footer={null}
+			onCancel={() => setVisible(false)}
 		>
-			<Descriptions bordered column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }} labelStyle={{ fontWeight: '600' }}>
+			<Descriptions bordered column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}>
 				<Descriptions.Item label='Mã SV'>{record?.maSv ?? '--'}</Descriptions.Item>
-				<Descriptions.Item label='Họ và tên'>{record?.hoTen ?? '--'}</Descriptions.Item>
+				<Descriptions.Item label='Họ tên'>{record?.hoTen ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Ngày sinh'>
 					{record?.ngaySinh ? moment(record?.ngaySinh).format('DD/MM/YYYY') : '--'}
 				</Descriptions.Item>
-				<Descriptions.Item label='Khóa sinh viên'>{record?.tenKhoaSinhVien ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Số điện thoại'>{record?.soDienThoai ?? '--'}</Descriptions.Item>
+				<Descriptions.Item label='Khóa sinh viên'>{record?.tenKhoaSinhVien ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Ngành đào tạo'>{record?.tenNganh ?? '--'}</Descriptions.Item>
 
 				<Descriptions.Item label='Thời gian vào'>
@@ -47,6 +41,10 @@ const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) =
 					)}
 				</Descriptions.Item>
 			</Descriptions>
+
+			<div className='form-footer'>
+				<Button onClick={() => setVisible(false)}>Đóng</Button>
+			</div>
 		</Modal>
 	);
 };

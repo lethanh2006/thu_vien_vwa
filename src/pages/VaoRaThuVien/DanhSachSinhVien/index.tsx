@@ -3,9 +3,10 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
+import ModalCapNhatAnhNhanDien from '@/pages/SinhVien/CapNhatKhuonMat/Modal';
 import { exportDanhSachRaVaoThuVien } from '@/services/QuanLyThuVien';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
-import { ExportOutlined, EyeOutlined, QrcodeOutlined, SettingOutlined } from '@ant-design/icons';
+import { ExportOutlined, EyeOutlined, QrcodeOutlined, SettingOutlined, SmileOutlined } from '@ant-design/icons';
 import { Card, Space, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import moment from 'moment';
@@ -15,33 +16,42 @@ import CauHinhVaoRaThuVien from './CauHinh';
 import ChiTietSinhVien from './components/ChiTiet';
 import Form from './components/Form';
 
-const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
-	const { maSinhVien } = props;
+const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
+	const { maSinhVien, dateRange: dateRangeProps } = props;
 	const { getModel, page, limit, filters, setRecord } = useModel('quanlythuvien.vaorathuvien');
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
 	const [visibleSetting, setVisibleSetting] = useState<boolean>(false);
 	const [loadingExport, setLoadingExport] = useState<boolean>(false);
+	const [visibleFaceReg, setVisibleFaceReg] = useState<boolean>(false);
 	const [dateRange, setDateRange] = useState<string[]>([
 		moment().startOf('M').toISOString(),
 		moment().endOf('M').toISOString(),
 	]);
 
 	const getData = () => {
-		getModel(undefined, [
+		getModel(
+			undefined,
 			maSinhVien
-				? {
-						active: true,
-						field: 'maSv',
-						values: [maSinhVien],
-						operator: EOperatorType.INCLUDE,
-				  }
-				: {
-						active: true,
-						field: 'thoiGianCheckIn',
-						values: [dateRange[0], dateRange[1]],
-						operator: EOperatorType.BETWEEN,
-				  },
-		]);
+				? [
+						{
+							field: 'maSv',
+							values: [maSinhVien],
+							operator: EOperatorType.INCLUDE,
+						},
+						{
+							field: 'thoiGianCheckIn',
+							values: [dateRange[0], dateRange[1]],
+							operator: EOperatorType.BETWEEN,
+						},
+				  ]
+				: [
+						{
+							field: 'thoiGianCheckIn',
+							values: [dateRange[0], dateRange[1]],
+							operator: EOperatorType.BETWEEN,
+						},
+				  ],
+		);
 	};
 
 	const onCell = (rec: QuanLyThuVien.IVaoRaThuVien) => ({
@@ -82,7 +92,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 		{
 			title: 'Họ tên',
 			dataIndex: 'hoTen',
-			width: 150,
+			width: 160,
 			filterType: 'string',
 			hide: !!maSinhVien,
 			onCell,
@@ -185,7 +195,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 
 	return (
 		<Card
-			title='Danh sách sinh viên vào ra thư viện'
+			title='Lịch sử sinh viên vào ra thư viện'
 			extra={<ButtonExtend icon={<SettingOutlined />} onClick={() => setVisibleSetting(true)} />}
 		>
 			<Space style={{ marginBottom: 12 }}>
@@ -193,39 +203,51 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string }) => {
 					value={[moment(dateRange[0]), moment(dateRange[1])]}
 					onChange={(val: any) => setDateRange(val)}
 					ranges={{
-						'Hôm nay': [moment(), moment()],
+						'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
 						'Tuần này': [moment().startOf('week'), moment().endOf('week')],
 						'Tháng này': [moment().startOf('M'), moment().endOf('M')],
 					}}
 				/>
+				<ButtonExtend
+					key='2'
+					icon={<QrcodeOutlined />}
+					onClick={() => {
+						window.open(`${APP_CONFIG_URL_THU_VIEN}qr-thu-vien.jpg`, '_blank');
+					}}
+					tooltip='Mã QR checkin vào/ra thư viện'
+				>
+					Mã QR
+				</ButtonExtend>
+				<ButtonExtend
+					icon={<SmileOutlined />}
+					onClick={() => setVisibleFaceReg(true)}
+					tooltip='Cập nhật ảnh nhận diện khuôn mặt sinh viên'
+				>
+					Cập nhật nhận diện khuôn mặt
+				</ButtonExtend>
 			</Space>
+
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, dateRange]}
+				dependencies={[page, limit, dateRange, dateRangeProps]}
 				modelName='quanlythuvien.vaorathuvien'
 				hideCard
 				Form={Form}
 				formProps={{ getData }}
-				title='Ra vào thư viện'
+				title='Lịch sử vào ra thư viện'
 				otherButtons={[
 					<ButtonExtend loading={loadingExport} key='1' icon={<ExportOutlined />} onClick={() => handlExport()}>
 						Xuất dữ liệu
-					</ButtonExtend>,
-					<ButtonExtend
-						key='2'
-						icon={<QrcodeOutlined />}
-						onClick={() => {
-							window.open(`${APP_CONFIG_URL_THU_VIEN}qr-thu-vien.jpg`, '_blank');
-						}}
-					>
-						Mã QR
 					</ButtonExtend>,
 				]}
 			/>
 
 			<ChiTietSinhVien visible={visibleChiTiet} setVisible={setVisibleChiTiet} />
+
 			<CauHinhVaoRaThuVien visible={visibleSetting} setVisible={setVisibleSetting} />
+
+			<ModalCapNhatAnhNhanDien visible={visibleFaceReg} setVisible={setVisibleFaceReg} />
 		</Card>
 	);
 };

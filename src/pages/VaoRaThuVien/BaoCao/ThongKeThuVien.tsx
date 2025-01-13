@@ -28,11 +28,11 @@ const ThongKeThuVien = () => {
 			<Col span={24}>
 				<Card title='Tổng hợp vào ra thư viện'>
 					<MyDateRangePicker
-						style={{ width: 300 }}
+						style={{ width: 300, marginBottom: 12 }}
 						value={dateRange}
 						onChange={(val: any) => setDateRange(val)}
 						ranges={{
-							'Hôm nay': [moment(), moment()],
+							'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
 							'Tuần này': [moment().startOf('week'), moment().endOf('week')],
 							'Tháng này': [moment().startOf('M'), moment().endOf('M')],
 						}}
@@ -41,7 +41,12 @@ const ThongKeThuVien = () => {
 
 					<SplitPane split={isMobile ? 'horizontal' : 'vertical'} onChange={handlePaneSizeChange}>
 						<Pane initialSize={paneSize} minSize='40%'>
-							<Card title='Số lượng vào ra thư viện' bordered={false} style={{ marginLeft: -18 }}>
+							<Card
+								title='Số lượng vào ra thư viện'
+								bordered={false}
+								headStyle={{ padding: 0 }}
+								bodyStyle={{ padding: '12px 0 0' }}
+							>
 								<div style={{ marginBottom: 12 }}>
 									<Segmented
 										value={activeKey}
@@ -66,6 +71,7 @@ const ThongKeThuVien = () => {
 					</SplitPane>
 				</Card>
 			</Col>
+
 			<Col span={24}>
 				<SoLuongVaoRaThuVienTheoThang />
 			</Col>
