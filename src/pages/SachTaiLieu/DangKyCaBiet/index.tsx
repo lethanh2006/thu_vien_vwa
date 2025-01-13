@@ -11,10 +11,11 @@ import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import StatDanhSachDKCB from '../AnPham/DanhSachDKCB/components/Stat';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
+import FormDangKyCaBiet from './components/Form';
 
 const DangKyCaBietPage = () => {
 	const intl = useIntl();
-	const { page, limit, handleEdit, record, setRecord } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { getModel, page, limit, handleEdit, record, setRecord } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 
 	const columns: IColumn<AnPham.IAnPhamXepGia>[] = [
@@ -88,6 +89,9 @@ const DangKyCaBietPage = () => {
 				modelName='sachtailieu.anpham.anphamxepgia'
 				buttons={{ create: false }}
 				hideCard
+				Form={FormDangKyCaBiet}
+				formProps={{ getModel }}
+				widthDrawer={800}
 			/>
 
 			<Modal
