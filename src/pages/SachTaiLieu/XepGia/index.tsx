@@ -9,8 +9,8 @@ import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import SelectThuVien from '@/pages/DanhMuc/ThuVien/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { inputFormat } from '@/utils/utils';
-import { DollarOutlined, EyeOutlined } from '@ant-design/icons';
-import { Modal, Tag } from 'antd';
+import { DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined } from '@ant-design/icons';
+import { Button, Modal, Popconfirm, Popover, Tag } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
@@ -18,20 +18,30 @@ import FormLichSuXepGia from '../AnPham/LichSuXepGia/components/Form';
 import ChiTietXepGia from './components/ChiTiet';
 
 const XepGiaPage = () => {
-	const { getModel, page, limit, handleEdit, setRecord, visibleForm, setVisibleForm } =
+	const { getModel, page, limit, handleEdit, setRecord, visibleForm, setVisibleForm, deleteModel } =
 		useModel('sachtailieu.anpham.xepgia');
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
+
+	const onCell = (rec: AnPham.IXepGia) => ({
+		onClick: () => {
+			setRecord(rec);
+			setVisibleChiTiet(true);
+		},
+		style: { cursor: 'pointer' },
+	});
 
 	const columns: IColumn<AnPham.IXepGia>[] = [
 		{
 			title: 'Nhan đề',
 			width: 180,
 			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
+			onCell,
 		},
 		{
 			title: 'Tác giả',
 			width: 120,
 			render: (val, rec) => rec?.anPham?.tacGia,
+			onCell,
 		},
 		{
 			title: 'Nguồn bổ sung',
@@ -40,6 +50,7 @@ const XepGiaPage = () => {
 			render: (val, rec) => rec?.nguonBoSung?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectNguonBoSung multiple selectMa />,
+			onCell,
 		},
 		{
 			title: 'Kiểu tư liệu',
@@ -48,6 +59,7 @@ const XepGiaPage = () => {
 			render: (val, rec) => rec?.kieuTuLieu?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectKieuTuLieu multiple selectMa />,
+			onCell,
 		},
 		{
 			title: 'Thư viện',
@@ -56,6 +68,7 @@ const XepGiaPage = () => {
 			render: (val, rec) => rec?.thuVien?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectThuVien multiple />,
+			onCell,
 		},
 		{
 			title: 'Kho',
@@ -64,6 +77,7 @@ const XepGiaPage = () => {
 			render: (val, rec) => rec?.khoSach?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectKhoSach multiple />,
+			onCell,
 		},
 		{
 			title: 'Giá sách',
@@ -72,6 +86,7 @@ const XepGiaPage = () => {
 			render: (val, rec) => rec?.giaSach?.ten,
 			filterType: 'customselect',
 			filterCustomSelect: <SelectGiaSach multiple />,
+			onCell,
 		},
 		{
 			title: 'Ngày bổ sung',
@@ -81,6 +96,7 @@ const XepGiaPage = () => {
 			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
+			onCell,
 		},
 		{
 			title: 'ĐKCB',
@@ -96,6 +112,7 @@ const XepGiaPage = () => {
 			align: 'center',
 			filterType: 'number',
 			sortable: true,
+			onCell,
 		},
 		{
 			title: 'Đơn giá',
@@ -105,6 +122,7 @@ const XepGiaPage = () => {
 			render: (val, rec) => `${inputFormat(val ?? 0)} VNĐ`,
 			filterType: 'number',
 			sortable: true,
+			onCell,
 		},
 		{
 			title: 'Trạng thái',
@@ -112,26 +130,52 @@ const XepGiaPage = () => {
 			align: 'center',
 			width: 120,
 			render: (val, rec) => (val ? <Tag color='green'>Đã xếp giá</Tag> : <Tag color='blue'>Đang xếp giá</Tag>),
+			filterType: 'select',
+			filterData: [
+				{
+					value: true as any,
+					label: 'Đã xếp giá',
+				},
+				{
+					value: false as any,
+					label: 'Đang xếp giá',
+				},
+			],
 			fixed: 'right',
+			onCell,
 		},
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 90,
+			width: 60,
 			fixed: 'right',
 			render: (val, rec) => (
-				<>
-					<ButtonExtend
-						tooltip='Chi tiết'
-						onClick={() => {
-							setRecord(rec);
-							setVisibleChiTiet(true);
-						}}
-						type='link'
-						icon={<EyeOutlined />}
-					/>
-					<ButtonExtend tooltip='Xếp giá' onClick={() => handleEdit(rec)} type='link' icon={<DollarOutlined />} />
-				</>
+				<Popover
+					placement='topRight'
+					content={
+						<>
+							<ButtonExtend
+								tooltip='Chi tiết'
+								onClick={() => {
+									setRecord(rec);
+									setVisibleChiTiet(true);
+								}}
+								type='link'
+								icon={<EyeOutlined />}
+							/>
+							<ButtonExtend tooltip='Xếp giá' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+							<Popconfirm
+								onConfirm={() => deleteModel(rec._id)}
+								title='Bạn có chắc chắn muốn xóa thông tin này?'
+								placement='topRight'
+							>
+								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+							</Popconfirm>
+						</>
+					}
+				>
+					<Button type='link' icon={<MenuOutlined />} />
+				</Popover>
 			),
 		},
 	];

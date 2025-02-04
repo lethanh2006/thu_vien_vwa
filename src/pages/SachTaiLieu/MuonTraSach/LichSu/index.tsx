@@ -1,17 +1,17 @@
 import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
+import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
+import { Tag } from 'antd';
+import moment from 'moment';
+import { useModel } from 'umi';
+import ChiTietLichSu from './ChiTiet';
 import {
 	colorTrangThaiDuyeMuonSach,
 	colorTrangThaiMuonSach,
 	ETrangThaiDuyeMuonSach,
 	ETrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
-import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
-import { Tag } from 'antd';
-import moment from 'moment';
-import { useModel } from 'umi';
-import ChiTietLichSu from './ChiTiet';
 
 const LichSuThueMuonPage = (props: { condition: Partial<MuonSach.IRecord> }) => {
 	const { condition } = props;
@@ -43,6 +43,18 @@ const LichSuThueMuonPage = (props: { condition: Partial<MuonSach.IRecord> }) => 
 			onCell,
 		},
 		{
+			title: 'Nhan đề',
+			width: 220,
+			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
+			onCell,
+		},
+		{
+			title: 'Tác giả',
+			width: 180,
+			render: (val, rec) => rec?.anPham?.tacGia,
+			onCell,
+		},
+		{
 			title: 'ĐKCB',
 			dataIndex: 'soDangKyCaBiet',
 			width: 90,
@@ -54,18 +66,50 @@ const LichSuThueMuonPage = (props: { condition: Partial<MuonSach.IRecord> }) => 
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			render: (val, rec) => {
+				if (!val) return null;
+
+				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
+
+				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
+				const now = moment().startOf('day');
+
+				const isOverdue = now.isAfter(expirationTime);
+				const isApproachingDeadline = !isOverdue && expirationTime.diff(now, 'days') <= 7;
+
+				const color = isOverdue ? 'red' : isApproachingDeadline ? 'orange' : 'inherit';
+				const fontWeight = isOverdue || isApproachingDeadline ? 600 : 'normal';
+
+				return <span style={{ color, fontWeight }}>{formattedTime}</span>;
+			},
 			filterType: 'date',
 			sortable: true,
 			onCell,
 		},
-
+		{
+			title: 'Thời gian dự kiến mượn',
+			dataIndex: 'thoiGianMuonDuKien',
+			width: 130,
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			filterType: 'date',
+			sortable: true,
+			onCell,
+		},
+		{
+			title: 'Thời gian dự kiến trả',
+			dataIndex: 'thoiGianTraDuKien',
+			width: 130,
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			filterType: 'date',
+			sortable: true,
+			onCell,
+		},
 		{
 			title: 'Hạn trả',
 			align: 'center',
 			dataIndex: 'expired',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -83,7 +127,7 @@ const LichSuThueMuonPage = (props: { condition: Partial<MuonSach.IRecord> }) => 
 			align: 'center',
 			dataIndex: 'thoiGianGiaHan',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -92,11 +136,24 @@ const LichSuThueMuonPage = (props: { condition: Partial<MuonSach.IRecord> }) => 
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			render: (val, rec) => {
+				if (!val) return null;
+
+				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
+
+				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
+				const isOverdue = moment().startOf('day').isAfter(expirationTime);
+
+				return (
+					<span style={{ color: isOverdue ? 'red' : 'inherit', fontWeight: isOverdue ? 600 : 0 }}>{formattedTime}</span>
+				);
+			},
 			filterType: 'date',
 			sortable: true,
+
 			onCell,
 		},
+
 		{
 			title: 'Ghi chú đăng ký',
 			dataIndex: 'ghiChuDangKy',
@@ -146,7 +203,7 @@ const LichSuThueMuonPage = (props: { condition: Partial<MuonSach.IRecord> }) => 
 		<TableBase
 			getData={getData}
 			columns={columns}
-			dependencies={[page, limit, condition]}
+			dependencies={[page, limit, JSON.stringify(condition)]}
 			modelName='sachtailieu.muontra.muontra'
 			Form={ChiTietLichSu}
 			widthDrawer={800}

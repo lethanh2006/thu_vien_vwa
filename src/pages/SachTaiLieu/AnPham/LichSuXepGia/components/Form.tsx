@@ -25,7 +25,11 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 		if (!visibleForm) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			form.setFieldsValue(record);
+			const index = danhSachKieuTuLieu?.find((item) => item?.ma === record?.maKieuTuLieu);
+			form.setFieldsValue({
+				...record,
+				soDangKyCaBien: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
+			});
 		}
 	}, [visibleForm, record?._id]);
 

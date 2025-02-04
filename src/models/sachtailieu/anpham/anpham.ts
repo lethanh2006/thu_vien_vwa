@@ -18,6 +18,7 @@ export default () => {
 	const [loadingChiTiet, setLoadingChiTiet] = useState<boolean>(false);
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [danhSachTag, setDanhSachTag] = useState<AnPham.IThongTinAnPham[]>([]);
+	const [recBienMucChiTiet, setRecBienMucChiTiet] = useState<MauBienMuc.IThongTinKhaiBao>();
 
 	const { setLoading, getService, setDanhSach, formSubmiting, setFormSubmiting } = objInit;
 
@@ -143,6 +144,8 @@ export default () => {
 		loadingChiTiet,
 		danhSachTag,
 		loadingThongKe,
+		recBienMucChiTiet,
+		setRecBienMucChiTiet,
 		searchAnPhamModel,
 		getChiTietAnPhamModal,
 		getThongKeAnPhamModel,

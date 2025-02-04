@@ -15,5 +15,6 @@ declare module MauBienMuc {
 		tag: string;
 		ten: string;
 		thongTinTag?: TruongBienMuc.IRecord;
+		thuocTinhDuLieu?: { code?: string; ten?: string; kieuDuLieu?: string }[];
 	};
 }

@@ -63,10 +63,10 @@ const ChiTietMuonTraSach = (props: any) => {
 							<>
 								<Descriptions.Item label='Đăng ký cá biệt'>{record?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
 								<Descriptions.Item label='Thời gian mượn'>
-									{record?.thoiGianMuon ? moment(record?.thoiGianMuon).format('HH:mm DD/MM/YYYY') : '--'}
+									{record?.thoiGianMuon ? moment(record?.thoiGianMuon).format('DD/MM/YYYY') : '--'}
 								</Descriptions.Item>
 								<Descriptions.Item label='Hạn trả'>
-									{record?.expired ? moment(record?.expired).format('HH:mm DD/MM/YYYY') : '--'}
+									{record?.expired ? moment(record?.expired).format('DD/MM/YYYY') : '--'}
 								</Descriptions.Item>
 
 								<Descriptions.Item label='Trạng thái'>
@@ -78,23 +78,23 @@ const ChiTietMuonTraSach = (props: any) => {
 								</Descriptions.Item>
 
 								<Descriptions.Item label='Thời gian gia hạn'>
-									{record?.thoiGianGiaHan ? moment(record?.thoiGianGiaHan).format('HH:mm DD/MM/YYYY') : '--'}
+									{record?.thoiGianGiaHan ? moment(record?.thoiGianGiaHan).format('DD/MM/YYYY') : '--'}
 								</Descriptions.Item>
 
 								<Descriptions.Item label='Thời gian trả'>
-									{record?.thoiGianTra ? moment(record?.thoiGianTra).format('HH:mm DD/MM/YYYY') : '--'}
+									{record?.thoiGianTra ? moment(record?.thoiGianTra).format('DD/MM/YYYY') : '--'}
 								</Descriptions.Item>
 							</>
 						)}
 
 						<Descriptions.Item label='Thời gian đăng ký'>
-							{record?.thoiGianDangKy ? moment(record?.thoiGianDangKy).format('HH:mm DD/MM/YYYY') : '--'}
+							{record?.thoiGianDangKy ? moment(record?.thoiGianDangKy).format('DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 						<Descriptions.Item label='Thời gian dự kiến mượn'>
-							{record?.thoiGianMuonDuKien ? moment(record?.thoiGianMuonDuKien).format('HH:mm DD/MM/YYYY') : '--'}
+							{record?.thoiGianMuonDuKien ? moment(record?.thoiGianMuonDuKien).format('DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 						<Descriptions.Item label='Thời gian dự kiến trả'>
-							{record?.thoiGianTraDuKien ? moment(record?.thoiGianTraDuKien).format('HH:mm DD/MM/YYYY') : '--'}
+							{record?.thoiGianTraDuKien ? moment(record?.thoiGianTraDuKien).format('DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Ghi chú đăng ký'>{record?.ghiChuDangKy ?? '--'}</Descriptions.Item>

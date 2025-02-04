@@ -31,6 +31,13 @@ const BienMucSachTaiLieuPage = () => {
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
+			title: 'Mã tài liệu',
+			dataIndex: 'maTaiLieu',
+			width: 120,
+			filterType: 'string',
+			onCell,
+		},
+		{
 			title: 'Tác giả',
 			dataIndex: 'tacGia',
 			width: 150,

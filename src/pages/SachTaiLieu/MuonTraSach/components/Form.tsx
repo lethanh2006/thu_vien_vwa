@@ -45,9 +45,9 @@ const FormMuonTraSach = (props: any) => {
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
-			setRecDKCB({} as AnPham.IAnPhamXepGia);
-		} else if (record?._id) form.setFieldsValue(record);
-		else {
+		} else if (record?._id) {
+			form.setFieldsValue(record);
+		} else {
 			form.setFieldsValue({
 				thoiGianMuon: moment().toISOString(),
 				expired: moment()
@@ -57,6 +57,7 @@ const FormMuonTraSach = (props: any) => {
 		}
 
 		setDanhSach([]);
+		setRecDKCB({} as AnPham.IAnPhamXepGia);
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: MuonSach.IRecord) => {
@@ -182,12 +183,12 @@ const FormMuonTraSach = (props: any) => {
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
-							<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
+							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='expired' label='Hạn trả' rules={[...rules.required]}>
-							<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
+							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>

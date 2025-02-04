@@ -38,9 +38,9 @@ const ModalXepGia = () => {
 		record: recXepGia,
 		visibleForm,
 		setVisibleForm,
-		getAllModel,
-		danhSach: danhSachXepGia,
-		loading,
+		thongKeXepGiaModel,
+		loadingThongKe,
+		datathongKeXepGia,
 	} = useModel('sachtailieu.anpham.xepgia');
 	const { danhSach: danhSachKieuTuLieu } = useModel('danhmuc.kieutulieu');
 	const khoSachId: string = Form.useWatch('khoSachId', form);
@@ -51,7 +51,7 @@ const ModalXepGia = () => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			getAllModel(undefined, undefined, { anPhamId: record?._id });
+			thongKeXepGiaModel({ anPhamId: record?._id });
 		}
 	}, [visibleForm, record?._id]);
 
@@ -80,14 +80,15 @@ const ModalXepGia = () => {
 			visible={visibleForm}
 			onCancel={() => setVisibleForm(false)}
 			footer={null}
-			width={danhSachXepGia?.length !== 0 ? 1000 : 800}
+			width={1000}
+			destroyOnClose
 		>
-			<Spin spinning={loading}>
+			<Spin spinning={loadingThongKe}>
 				<Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
 					<Col span={12} md={12}>
 						<Card className='card-stat-small'>
 							<span className='num' style={{ color: 'blue' }}>
-								{danhSachXepGia?.filter((item) => item?.daXepGia === false)?.length ?? '--'}
+								{datathongKeXepGia?.chuaXepGia ?? '--'}
 							</span>
 							<span>Đang xếp giá</span>
 						</Card>
@@ -95,7 +96,7 @@ const ModalXepGia = () => {
 					<Col span={12} md={12}>
 						<Card className='card-stat-small'>
 							<span className='num' style={{ color: 'green' }}>
-								{danhSachXepGia?.filter((item) => item?.daXepGia === true)?.length ?? '--'}
+								{datathongKeXepGia?.daXepGia ?? '--'}
 							</span>
 							<span>Đã xếp giá</span>
 						</Card>
@@ -103,12 +104,10 @@ const ModalXepGia = () => {
 				</Row>
 			</Spin>
 
-			{danhSachXepGia?.length !== 0 ? (
-				<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
-					<Tabs.TabPane tab='Xếp giá' key='1' />
-					<Tabs.TabPane tab='Lịch sử xếp giá' key='2' />
-				</Tabs>
-			) : null}
+			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
+				<Tabs.TabPane tab='Xếp giá' key='1' />
+				<Tabs.TabPane tab='Lịch sử xếp giá' key='2' />
+			</Tabs>
 
 			{tabActive === '1' ? (
 				<Form onFinish={onFinish} form={form} layout='vertical'>
@@ -218,7 +217,7 @@ const ModalXepGia = () => {
 					</div>
 				</Form>
 			) : (
-				<LichSuXepGia />
+				<LichSuXepGia setTabActive={setTabActive} />
 			)}
 		</Modal>
 	);

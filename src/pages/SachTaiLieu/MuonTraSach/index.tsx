@@ -36,6 +36,7 @@ const MuonTraSachPage = () => {
 		handleEdit,
 		deleteModel,
 		getSettingModel,
+		settingMuonTra,
 		isView,
 		setRecord,
 		putModel,
@@ -49,7 +50,7 @@ const MuonTraSachPage = () => {
 	const [activeKey, setActiveKey] = useState<string>('1');
 
 	useEffect(() => {
-		getSettingModel();
+		if (!settingMuonTra) getSettingModel();
 	}, []);
 
 	const getData = () => {
@@ -59,7 +60,7 @@ const MuonTraSachPage = () => {
 						{
 							active: true,
 							field: 'expired',
-							values: [moment().subtract(7, 'day').toISOString(), moment().toISOString()],
+							values: [moment().toISOString(), moment().add(7, 'day').toISOString()],
 							operator: EOperatorType.BETWEEN,
 						},
 				  ]
@@ -142,17 +143,17 @@ const MuonTraSachPage = () => {
 			width: 150,
 			render: (val, rec) => {
 				if (!val) return null;
-				const formattedTime = moment(val).format('HH:mm DD/MM/YYYY');
 
-				const expirationTime = rec?.expired ? moment(rec.expired) : moment();
-				const now = moment();
+				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
 
-				const isOverdue = now.isAfter(expirationTime) && trangThai === ETrangThaiMuonSach.DANG_THUE_MUON;
+				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
+				const now = moment().startOf('day');
 
-				const isOverdueMoreThan7Days = isOverdue && now.diff(expirationTime, 'days') > 7;
+				const isOverdue = now.isAfter(expirationTime);
+				const isApproachingDeadline = !isOverdue && expirationTime.diff(now, 'days') <= 7;
 
-				const color = isOverdueMoreThan7Days ? 'orange' : isOverdue ? 'red' : 'inherit';
-				const fontWeight = isOverdue ? 600 : 0;
+				const color = isOverdue ? 'red' : isApproachingDeadline ? 'orange' : 'inherit';
+				const fontWeight = isOverdue || isApproachingDeadline ? 600 : 'normal';
 
 				return <span style={{ color, fontWeight }}>{formattedTime}</span>;
 			},
@@ -165,7 +166,7 @@ const MuonTraSachPage = () => {
 			title: 'Thời gian dự kiến mượn',
 			dataIndex: 'thoiGianMuonDuKien',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -175,7 +176,7 @@ const MuonTraSachPage = () => {
 			title: 'Thời gian dự kiến trả',
 			dataIndex: 'thoiGianTraDuKien',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -186,7 +187,7 @@ const MuonTraSachPage = () => {
 			align: 'center',
 			dataIndex: 'expired',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -206,7 +207,7 @@ const MuonTraSachPage = () => {
 			align: 'center',
 			dataIndex: 'thoiGianGiaHan',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -219,10 +220,10 @@ const MuonTraSachPage = () => {
 			render: (val, rec) => {
 				if (!val) return null;
 
-				const formattedTime = moment(val).format('HH:mm DD/MM/YYYY');
+				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
 
-				const expirationTime = rec?.expired ? moment(rec.expired) : moment();
-				const isOverdue = moment().isAfter(expirationTime);
+				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
+				const isOverdue = moment().startOf('day').isAfter(expirationTime);
 
 				return (
 					<span style={{ color: isOverdue ? 'red' : 'inherit', fontWeight: isOverdue ? 600 : 0 }}>{formattedTime}</span>
@@ -233,6 +234,7 @@ const MuonTraSachPage = () => {
 			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
 			onCell,
 		},
+
 		{
 			title: 'Ghi chú đăng ký',
 			dataIndex: 'ghiChuDangKy',

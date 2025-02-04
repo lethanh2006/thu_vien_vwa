@@ -9,6 +9,14 @@ export async function getThongKeAnPham(params?: { condition?: any; filters?: any
 	return axios.get(`${ip3}/an-pham/thong-ke`, { params });
 }
 
+export async function thongKeDangKyCaBiet(params?: { condition?: any; filters?: any[] }) {
+	return axios.get(`${ip3}/an-pham-sep-gia/thong-ke`, { params });
+}
+
+export async function thongKeXepGia(params?: { condition?: any; filters?: any[] }) {
+	return axios.get(`${ip3}/xep-gia/thong-ke`, { params });
+}
+
 export async function bienMucSoLuoc(payLoad: any) {
 	return axios.post(`${ip3}/an-pham/bien-muc-so-luoc`, payLoad);
 }

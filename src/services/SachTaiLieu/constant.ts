@@ -40,3 +40,13 @@ export const colorTrangThaiBienMuc: Record<ETrangThaiBienMuc, string> = {
 	[ETrangThaiBienMuc.CHO_BIEN_MUC]: 'blue',
 	[ETrangThaiBienMuc.DA_BIEN_MUC]: 'green',
 };
+
+export enum ETrangThaiDangKyCaBiet {
+	RANH = 'Rảnh',
+	BAN = 'Bận',
+}
+
+export const colorTrangThaiDangKyCaBiet: Record<ETrangThaiDangKyCaBiet, string> = {
+	[ETrangThaiDangKyCaBiet.RANH]: 'green',
+	[ETrangThaiDangKyCaBiet.BAN]: 'red',
+};
