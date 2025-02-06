@@ -99,13 +99,6 @@ const XepGiaPage = () => {
 			onCell,
 		},
 		{
-			title: 'ĐKCB',
-			dataIndex: 'soDangKyCaBien',
-			align: 'center',
-			width: 80,
-			filterType: 'string',
-		},
-		{
 			title: 'Số lượng',
 			dataIndex: 'soLuong',
 			width: 80,

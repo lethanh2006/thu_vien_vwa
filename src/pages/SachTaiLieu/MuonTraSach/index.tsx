@@ -315,13 +315,13 @@ const MuonTraSachPage = () => {
 								</>
 							) : null}
 
-							<ButtonExtend
+							{/* <ButtonExtend
 								disabled={record?.trangThai === ETrangThaiMuonSach.DA_TRA}
 								tooltip='Chỉnh sửa'
 								onClick={() => handleEdit(record)}
 								type='link'
 								icon={<EditOutlined />}
-							/>
+							/> */}
 							<Popconfirm
 								onConfirm={() => deleteModel(record._id, getData)}
 								title='Bạn có chắc chắn muốn xóa thông tin này?'

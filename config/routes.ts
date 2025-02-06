@@ -130,20 +130,20 @@
 		path: '/danh-muc',
 		icon: 'copy',
 		routes: [
-			// {
-			// 	name: 'ChucVu',
-			// 	path: 'chuc-vu',
-			// 	component: './DanhMuc/ChucVu',
-			// },
-			{
-				name: 'MauBienMuc',
-				path: 'mau-bien-muc',
-				component: './DanhMuc/MauBienMuc',
-			},
 			{
 				name: 'ThuVien',
 				path: 'thu-vien',
 				component: './DanhMuc/ThuVien',
+			},
+			{
+				name: 'KhoSach',
+				path: 'kho-sach',
+				component: './DanhMuc/KhoSach',
+			},
+			{
+				name: 'GiaSach',
+				path: 'gia-sach',
+				component: './DanhMuc/GiaSach',
 			},
 			{
 				name: 'DangTaiLieu',
@@ -166,16 +166,6 @@
 				component: './DanhMuc/VatMangTin',
 			},
 			{
-				name: 'KhoSach',
-				path: 'kho-sach',
-				component: './DanhMuc/KhoSach',
-			},
-			{
-				name: 'GiaSach',
-				path: 'gia-sach',
-				component: './DanhMuc/GiaSach',
-			},
-			{
 				name: 'NguonBoSung',
 				path: 'nguon-bo-sung',
 				component: './DanhMuc/NguonBoSung',
@@ -184,6 +174,11 @@
 				name: 'KieuTuLieu',
 				path: 'kieu-tu-lieu',
 				component: './DanhMuc/KieuTuLieu',
+			},
+			{
+				name: 'MauBienMuc',
+				path: 'mau-bien-muc',
+				component: './DanhMuc/MauBienMuc',
 			},
 			{
 				name: 'TruongBienMuc',

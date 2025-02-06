@@ -42,6 +42,9 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 					daXepGia: actionType === 'luu_lai' ? false : true,
 				},
 				onOk,
+				undefined,
+				false,
+				'Lưu thành công',
 			)
 				.then()
 				.catch((er) => console.log(er));
@@ -141,6 +144,11 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 					<Col xs={24} md={12}>
 						<Form.Item name='soLuong' label='Số lượng' rules={[...rules.required]}>
 							<InputNumber style={{ width: '100%' }} placeholder='Nhập lượng' />
+						</Form.Item>
+					</Col>
+					<Col xs={24} md={12}>
+						<Form.Item name='ghiChu' label='Ghi chú'>
+							<Input placeholder='Nhập ghi chú' />
 						</Form.Item>
 					</Col>
 				</Row>

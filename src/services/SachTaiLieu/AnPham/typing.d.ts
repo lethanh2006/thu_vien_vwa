@@ -40,8 +40,14 @@ declare module AnPham {
 
 		trangThai: ETrangThaiBienMuc;
 
+		online: boolean;
+		dpsaceId: string;
+
 		createdAt?: Date;
 		updatedAt?: Date;
+
+		//fake
+		soDangKyCaBiet?: string;
 	}
 
 	export interface IThongTinAnPham {
@@ -96,6 +102,7 @@ declare module AnPham {
 		soDangKyCaBien: string;
 		soLuong: number;
 		daXepGia: boolean;
+		ghiChu: string;
 	}
 
 	export interface IAnPhamXepGia {

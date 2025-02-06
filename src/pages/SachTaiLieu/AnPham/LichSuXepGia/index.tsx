@@ -17,10 +17,10 @@ import { useModel } from 'umi';
 import ChiTietXepGia from '../../XepGia/components/ChiTiet';
 import FormLichSuXepGia from './components/Form';
 
-const LichSuXepGia = (props: any) => {
-	const { setTabActive } = props;
+const LichSuXepGia = () => {
 	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
-	const { getModel, page, limit, putModel, setRecord, deleteModel } = useModel('sachtailieu.anpham.xepgia');
+	const { getModel, page, limit, putModel, setRecord, deleteModel, thongKeXepGiaModel } =
+		useModel('sachtailieu.anpham.xepgia');
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
 
@@ -29,8 +29,17 @@ const LichSuXepGia = (props: any) => {
 	};
 
 	const handleXepGia = (rec: AnPham.IXepGia) => {
-		putModel(rec?._id, { ...rec, daXepGia: true }, getData, undefined, false)
-			.then(() => setTabActive('2'))
+		putModel(
+			rec?._id,
+			{ ...rec, daXepGia: true },
+			() => {
+				getData();
+				thongKeXepGiaModel({ anPhamId: recAnPham?._id });
+			},
+			undefined,
+			false,
+		)
+			.then()
 			.catch((err) => console.log(err));
 	};
 
@@ -111,13 +120,6 @@ const LichSuXepGia = (props: any) => {
 			onCell,
 		},
 		{
-			title: 'ĐKCB',
-			dataIndex: 'soDangKyCaBien',
-			align: 'center',
-			width: 80,
-			filterType: 'string',
-		},
-		{
 			title: 'Số lượng',
 			dataIndex: 'soLuong',
 			width: 80,
@@ -187,7 +189,11 @@ const LichSuXepGia = (props: any) => {
 								icon={<EditOutlined />}
 							/>
 							<Popconfirm
-								onConfirm={() => deleteModel(rec._id, getData)}
+								onConfirm={() =>
+									deleteModel(rec._id, getData).then(() => {
+										thongKeXepGiaModel({ anPhamId: recAnPham?._id });
+									})
+								}
 								title='Bạn có chắc chắn muốn xóa thông tin này?'
 								placement='topRight'
 							>
@@ -224,6 +230,7 @@ const LichSuXepGia = (props: any) => {
 					onCancel={() => setVisibleModal(false)}
 					onOk={() => {
 						getData();
+						thongKeXepGiaModel({ anPhamId: recAnPham?._id });
 						setVisibleModal(false);
 					}}
 				/>

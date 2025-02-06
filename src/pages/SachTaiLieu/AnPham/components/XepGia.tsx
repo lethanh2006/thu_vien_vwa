@@ -34,7 +34,6 @@ const ModalXepGia = () => {
 	const {
 		formSubmiting,
 		postModel,
-		putModel,
 		record: recXepGia,
 		visibleForm,
 		setVisibleForm,
@@ -56,22 +55,22 @@ const ModalXepGia = () => {
 	}, [visibleForm, record?._id]);
 
 	const onFinish = async (values: AnPham.IXepGia) => {
-		if (recXepGia?._id) {
-			putModel(recXepGia?._id, {
-				...values,
-				daXepGia: actionType === 'luu_lai' ? false : true,
-			})
-				.then((rec) => setVisibleForm(false))
-				.catch((er) => console.log(er));
-		} else {
-			postModel({
+		postModel(
+			{
 				...values,
 				daXepGia: actionType === 'luu_lai' ? false : true,
 				anPhamId: record?._id,
-			})
-				.then((rec) => setVisibleForm(false))
-				.catch((er) => console.log(er));
-		}
+			},
+			() => {
+				thongKeXepGiaModel({ anPhamId: record?._id });
+				resetFieldsForm(form);
+				setTabActive('2');
+			},
+			false,
+			'Lưu thành công',
+		)
+			.then()
+			.catch((er) => console.log(er));
 	};
 
 	return (
@@ -187,6 +186,12 @@ const ModalXepGia = () => {
 								<InputNumber style={{ width: '100%' }} placeholder='Nhập lượng' />
 							</Form.Item>
 						</Col>
+
+						<Col xs={24}>
+							<Form.Item name='ghiChu' label='Ghi chú'>
+								<Input placeholder='Nhập ghi chú' />
+							</Form.Item>
+						</Col>
 					</Row>
 
 					<div className='form-footer'>
@@ -197,7 +202,6 @@ const ModalXepGia = () => {
 								setActionType('luu_lai');
 								form.submit();
 							}}
-							disabled={!record?._id && recXepGia?.daXepGia}
 						>
 							Lưu lại
 						</ButtonExtend>
@@ -209,7 +213,7 @@ const ModalXepGia = () => {
 							title='Xác nhận xếp giá, lưu ý khi hoàn thành sẽ không được chỉnh sửa lại giá?'
 							placement='topRight'
 						>
-							<ButtonExtend disabled={!record?._id && recXepGia?.daXepGia} loading={formSubmiting} type='primary'>
+							<ButtonExtend loading={formSubmiting} type='primary'>
 								Xếp giá
 							</ButtonExtend>
 						</Popconfirm>
@@ -217,7 +221,7 @@ const ModalXepGia = () => {
 					</div>
 				</Form>
 			) : (
-				<LichSuXepGia setTabActive={setTabActive} />
+				<LichSuXepGia />
 			)}
 		</Modal>
 	);

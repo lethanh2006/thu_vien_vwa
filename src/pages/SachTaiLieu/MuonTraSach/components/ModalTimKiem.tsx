@@ -1,10 +1,11 @@
+import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { inputFormat } from '@/utils/utils';
 import { CheckOutlined } from '@ant-design/icons';
-import { Button, Card, Modal } from 'antd';
+import { Button, Card, Empty, Modal } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -16,9 +17,11 @@ const ModalTimKiem = (props: {
 	visibleForm: boolean;
 	setVisibleForm: (val: boolean) => void;
 	getData?: () => void;
+	thoiGianMuon: Date;
+	expired: Date;
 }) => {
 	const intl = useIntl();
-	const { visibleForm, setVisibleForm, getData: getDataExternal } = props;
+	const { visibleForm, setVisibleForm, getData: getDataExternal, thoiGianMuon, expired } = props;
 	const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 	const [paneSize, setPaneSize] = useState('40%');
 
@@ -26,16 +29,21 @@ const ModalTimKiem = (props: {
 		setPaneSize(size[0]);
 	};
 
-	const { page, limit, record, setRecord } = useModel('sachtailieu.anpham.thongtinanpham');
+	const { page, limit, record, setRecord } = useModel('sachtailieu.anpham.anpham');
+
 	const {
 		getModel,
 		page: pageDKCB,
 		limit: limitDKCB,
 		setRecord: setRecDKCB,
-	} = useModel('sachtailieu.anpham.anphamxepgia');
+	} = useModel('sachtailieu.anpham.anphamkhadung');
 
 	const getData = () => {
-		if (record?._id) getModel({ anPhamId: record?._id });
+		if (record?._id)
+			getModel(undefined, undefined, undefined, undefined, undefined, `${record?._id}/kha-dung`, {
+				thoiGianBatDau: thoiGianMuon,
+				thoiGianKetThuc: expired,
+			});
 	};
 
 	const onCell = (rec: AnPham.IRecord) => ({
@@ -52,6 +60,7 @@ const ModalTimKiem = (props: {
 			title: 'Nhan đề',
 			dataIndex: 'nhanDe',
 			width: 180,
+			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			onCell,
 		},
 		{
@@ -80,7 +89,7 @@ const ModalTimKiem = (props: {
 			title: 'Đơn giá',
 			width: 120,
 			align: 'right',
-			render: (val, rec) => `${inputFormat(rec?.thongTinXepGia?.donGia ?? 0)} VNĐ`,
+			render: (val, rec) => rec?.thongTinXepGia?.donGia && `${inputFormat(rec?.thongTinXepGia?.donGia)} VNĐ`,
 		},
 		{
 			title: 'Thao tác',
@@ -109,6 +118,7 @@ const ModalTimKiem = (props: {
 			onCancel={() => setVisibleForm(false)}
 			width={1000}
 			footer={null}
+			destroyOnClose
 		>
 			<SplitPane split={isMobile ? 'horizontal' : 'vertical'} onChange={handlePaneSizeChange}>
 				<Pane initialSize={paneSize} minSize='30%'>
@@ -122,7 +132,7 @@ const ModalTimKiem = (props: {
 							getData={getDataExternal}
 							columns={columns}
 							dependencies={[page, limit]}
-							modelName='sachtailieu.anpham.thongtinanpham'
+							modelName='sachtailieu.anpham.anpham'
 							buttons={{ create: false }}
 							hideCard
 							otherProps={{ size: 'small' }}
@@ -131,22 +141,26 @@ const ModalTimKiem = (props: {
 				</Pane>
 
 				<Pane minSize='30%'>
-					<Card
-						title='Danh sách đăng ký cá biệt'
-						bordered={false}
-						bodyStyle={{ padding: '8px 0 0' }}
-						headStyle={{ padding: 0 }}
-					>
-						<TableBase
-							getData={getData}
-							columns={columnsĐKCB}
-							dependencies={[pageDKCB, limitDKCB, record?._id]}
-							modelName='sachtailieu.anpham.anphamxepgia'
-							buttons={{ create: false }}
-							hideCard
-							otherProps={{ size: 'small' }}
-						/>
-					</Card>
+					{record?._id ? (
+						<Card
+							title='Danh sách đăng ký cá biệt'
+							bordered={false}
+							bodyStyle={{ padding: '8px 0 0' }}
+							headStyle={{ padding: 0 }}
+						>
+							<TableBase
+								getData={getData}
+								columns={columnsĐKCB}
+								dependencies={[pageDKCB, limitDKCB, record?._id]}
+								modelName='sachtailieu.anpham.anphamkhadung'
+								buttons={{ create: false }}
+								hideCard
+								otherProps={{ size: 'small' }}
+							/>
+						</Card>
+					) : (
+						<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='Không có thông tin ấn phẩm' />
+					)}
 				</Pane>
 			</SplitPane>
 

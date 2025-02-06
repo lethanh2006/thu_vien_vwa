@@ -17,7 +17,7 @@ const ChiTietMuonTraSach = (props: any) => {
 	const [form] = Form.useForm();
 	const { record, setVisibleForm, visibleForm, xuLyThueMuonAnPhamModel, thongKeMuonTraSachModel } =
 		useModel('sachtailieu.muontra.muontra');
-	const { selectedIds, setSelectedIds, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
+	const { selectedIds, setSelectedIds, danhSach } = useModel('sachtailieu.anpham.anpham');
 
 	const getData = () => {
 		thongKeMuonTraSachModel();
@@ -36,11 +36,13 @@ const ChiTietMuonTraSach = (props: any) => {
 			message.error('Vui lòng chọn thông tin ấn phẩm cho mượn!');
 			return;
 		}
+
 		const data = {
 			...values,
 			trangThaiDuyet: ETrangThaiDuyeMuonSach.DA_DUYET,
 			soDangKyCaBiet: danhSach?.find((item) => item?._id === selectedIds[0])?.soDangKyCaBiet,
 		};
+
 		xuLyThueMuonAnPhamModel(record?._id ?? '', data as any, getData)
 			.then(() => {
 				setVisibleForm(false);

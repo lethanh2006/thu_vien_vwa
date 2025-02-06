@@ -53,7 +53,7 @@ const ModalBienMucTaiLieu = (props: any) => {
 					</Steps>
 
 					{currentStep === 0 ? (
-						<Form afterAddNew={() => setCurrentStep(1)} getData={getData} />
+						<Form afterAddNew={() => setCurrentStep(1)} />
 					) : (
 						<FormBienMucChiTiet getData={getData} />
 					)}

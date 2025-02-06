@@ -26,7 +26,10 @@ const ChiTietAnPham = () => {
 		{
 			dataIndex: 'thuocTinhAnPham',
 			width: 220,
-			render: (val) => val?.map((i: any) => `${i.code ?? ''}${i.value?.replace(/\u00A0/g, ' ') ?? ''}`).join(' '),
+			render: (val, rec) =>
+				!!val?.length
+					? val?.map((i: any) => `${i.code ?? ''}${i.value?.replace(/\u00A0/g, ' ') ?? ''}`).join(' ')
+					: rec?.value,
 		},
 	];
 

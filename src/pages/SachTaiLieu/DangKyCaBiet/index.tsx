@@ -6,7 +6,7 @@ import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiDangKyCaBiet, ETrangThaiDangKyCaBiet } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
 import { HistoryOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Modal, Segmented, Tag } from 'antd';
+import { Button, Card, Modal, Tag } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -19,7 +19,7 @@ const DangKyCaBietPage = () => {
 	const { getSettingModel, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
 	const { page, limit, handleEdit, record, setRecord } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
-	const [activeKey, setActiveKey] = useState<string>('1');
+	// const [activeKey, setActiveKey] = useState<string>('1');
 
 	useEffect(() => {
 		if (!settingMuonTra) getSettingModel();
@@ -122,18 +122,18 @@ const DangKyCaBietPage = () => {
 				hideCard
 				Form={FormDangKyCaBiet}
 				widthDrawer={800}
-				otherButtons={[
-					<Segmented
-						key={'1'}
-						value={activeKey}
-						onChange={(value) => setActiveKey(value.toString())}
-						options={[
-							{ value: '1', label: 'Tất cả' },
-							{ value: '2', label: 'Rảnh' },
-							{ value: '3', label: 'Bận' },
-						]}
-					/>,
-				]}
+				// otherButtons={[
+				// 	<Segmented
+				// 		key={'1'}
+				// 		value={activeKey}
+				// 		onChange={(value) => setActiveKey(value.toString())}
+				// 		options={[
+				// 			{ value: '1', label: 'Tất cả' },
+				// 			{ value: '2', label: 'Rảnh' },
+				// 			{ value: '3', label: 'Bận' },
+				// 		]}
+				// 	/>,
+				// ]}
 			/>
 
 			<Modal
@@ -142,6 +142,7 @@ const DangKyCaBietPage = () => {
 				onCancel={() => setVisibleModal(false)}
 				width={1100}
 				footer={null}
+				destroyOnClose
 			>
 				<LichSuThueMuonPage condition={{ soDangKyCaBiet: record?.soDangKyCaBiet }} />
 

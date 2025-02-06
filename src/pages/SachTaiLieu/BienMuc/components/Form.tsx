@@ -11,7 +11,7 @@ import { Button, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'an
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
-const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; getData: () => void }) => {
+const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const {
@@ -24,9 +24,15 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		setRecord,
 		setEdit,
 		visibleForm,
+		getModel,
 	} = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
-	const { afterAddNew, getData } = props;
+	const { afterAddNew } = props;
+
+	const getData = async (): Promise<AnPham.IRecord[]> => {
+		const response = await getModel({ trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC });
+		return response; // Trả về danh sách dữ liệu
+	};
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -81,19 +87,24 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: AnPham.IRecord) => {
+		values.namXuatBan = Number(values.namXuatBan);
+		values.soTrang = Number(values.soTrang);
+
 		if (edit) {
 			putBienMucSoLuocModel(record?._id ?? '', values, getData)
 				.then((rec) => setVisibleForm(false))
 				.catch((er) => console.log(er));
 		} else
-			postBienMucSoLuocModel({ ...values, trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC }, getData)
-				.then((rec) => {
-					//get thông tin trường thông tin để cấu hình bên mục chi tiết
-					getAllModel(undefined, undefined, { anPhamId: record?._id });
+			postBienMucSoLuocModel({ ...values, trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC })
+				.then(async (res) => {
+					const updatedList = await getData();
 
-					setRecord(rec);
+					const index = updatedList?.find((item) => item?._id === res?._id);
+					setRecord(index);
 					setEdit(true);
-					if (afterAddNew) afterAddNew(rec);
+					if (index && afterAddNew) afterAddNew(index);
+
+					getAllModel(undefined, undefined, { anPhamId: res?._id });
 				})
 				.catch((er) => console.log(er));
 	};
@@ -219,7 +230,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 					</Form.Item>
 				</Col>
 				<Col xs={24}>
-					<Form.Item name='anPhamSo' valuePropName='checked' initialValue={false}>
+					<Form.Item name='online' valuePropName='checked' initialValue={false}>
 						<Checkbox>Ấn phẩm số</Checkbox>
 					</Form.Item>
 				</Col>
@@ -227,7 +238,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 
 			<div className='form-footer'>
 				<Button loading={formSubmiting} htmlType='submit' type='primary'>
-					{!edit ? 'Bên mục' : `${intl.formatMessage({ id: 'global.button.luulai' })}`}
+					{!edit ? 'Biên mục' : `${intl.formatMessage({ id: 'global.button.luulai' })}`}
 				</Button>
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>

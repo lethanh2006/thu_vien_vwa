@@ -6,6 +6,7 @@ import { Button, Card, Col, Form, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectTruongBienMuc from '../../TruongBienMuc/components/Select';
+import _ from 'lodash';
 
 const FormMauBienMuc = (props: any) => {
 	const { getData: getDataExternal, title } = props;
@@ -87,7 +88,7 @@ const FormMauBienMuc = (props: any) => {
 							</div>
 							<TableStaticData
 								columns={columns}
-								data={danhSach}
+								data={_.orderBy(danhSach, ['code'], ['asc'])}
 								size='small'
 								addStt
 								hasTotal

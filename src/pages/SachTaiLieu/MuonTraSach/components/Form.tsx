@@ -1,5 +1,4 @@
 import MyDatePicker from '@/components/MyDatePicker';
-import { EOperatorType } from '@/components/Table/constant';
 import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
@@ -28,11 +27,11 @@ const FormMuonTraSach = (props: any) => {
 		thongKeMuonTraSachModel,
 	} = useModel('sachtailieu.muontra.muontra');
 	const { danhSach: danhSachSinhVien } = useModel('sinhvien.sinhvien');
-	const { getModel, loading, setDanhSach, setRecord } = useModel('sachtailieu.anpham.thongtinanpham');
-	const { record: recDKCB, setRecord: setRecDKCB } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { getModel, loading, setDanhSach, setRecord } = useModel('sachtailieu.anpham.anpham');
+	const { record: recDKCB, setRecord: setRecDKCB } = useModel('sachtailieu.anpham.anphamkhadung');
 	const [visibleTimKiem, setVisibleTimKiem] = useState<boolean>(false);
-	const nhanDeConverse: string = Form.useWatch('nhanDeConverse', form);
-	const tacGiaConverse: string = Form.useWatch('tacGiaConverse', form);
+	const nhanDe: string = Form.useWatch('nhanDe', form);
+	const tacGia: string = Form.useWatch('tacGia', form);
 	const dangKyCaBiet: string = Form.useWatch('dangKyCaBiet', form);
 	const thoiGianMuon: Date = Form.useWatch('thoiGianMuon', form);
 	const expired: Date = Form.useWatch('expired', form);
@@ -61,8 +60,8 @@ const FormMuonTraSach = (props: any) => {
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: MuonSach.IRecord) => {
-		delete values.nhanDeConverse;
-		delete values.tacGiaConverse;
+		delete values.nhanDe;
+		delete values.tacGia;
 		delete values.dangKyCaBiet;
 
 		if (!recDKCB?._id && !edit) {
@@ -92,22 +91,13 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	const getDataExternal = () => {
-		const conditions = [
-			{ field: 'nhanDeConverse', value: nhanDeConverse },
-			{ field: 'tacGiaConverse', value: tacGiaConverse },
-			{ field: 'dangKyCaBiet', value: dangKyCaBiet },
-		];
+		const conditions = {
+			...(nhanDe && { nhanDe }),
+			...(tacGia && { tacGia }),
+			...(dangKyCaBiet && { dangKyCaBiet }),
+		};
 
-		const searchParams = conditions
-			.filter((condition) => condition.value)
-			.map((condition) => ({
-				active: true,
-				field: condition.field,
-				operator: EOperatorType.CONTAIN,
-				values: [condition.value],
-			}));
-
-		getModel(undefined, searchParams as any, undefined, undefined, undefined, 'an-pham/kha-dung', {
+		getModel(conditions, undefined, undefined, undefined, undefined, 'search/kha-dung', {
 			thoiGianBatDau: thoiGianMuon,
 			thoiGianKetThuc: expired,
 		})
@@ -116,7 +106,7 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	const handleTimKiem = () => {
-		if (!nhanDeConverse && !tacGiaConverse && !dangKyCaBiet) {
+		if (!nhanDe && !tacGia && !dangKyCaBiet) {
 			message.error('Vui lòng điền ít nhất 1 thông tin!');
 			return;
 		}
@@ -134,12 +124,12 @@ const FormMuonTraSach = (props: any) => {
 								<div className='fw500'>Tìm kiếm thông tin ấn phẩm ấn phẩm</div>
 							</Col>
 							<Col span={24} md={8}>
-								<Form.Item name='nhanDeConverse' label='Nhan đề'>
+								<Form.Item name='nhanDe' label='Nhan đề'>
 									<Input placeholder='Nhập đăng ký cá biệt' allowClear />
 								</Form.Item>
 							</Col>
 							<Col span={24} md={8}>
-								<Form.Item name='tacGiaConverse' label='Tác giả'>
+								<Form.Item name='tacGia' label='Tác giả'>
 									<Input placeholder='Nhập đăng ký cá biệt' allowClear />
 								</Form.Item>
 							</Col>
@@ -158,8 +148,8 @@ const FormMuonTraSach = (props: any) => {
 					</>
 				) : (
 					<Descriptions column={1}>
-						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDeConverse ?? '--'}</Descriptions.Item>
-						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGiaConverse ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 					</Descriptions>
 				)}
 
@@ -167,8 +157,8 @@ const FormMuonTraSach = (props: any) => {
 					{recDKCB?._id && (
 						<Col span={24}>
 							<Descriptions column={1}>
-								<Descriptions.Item label='Nhan đề'>{recDKCB?.anPham?.nhanDeConverse ?? '--'}</Descriptions.Item>
-								<Descriptions.Item label='Tác giả'>{recDKCB?.anPham?.tacGiaConverse ?? '--'}</Descriptions.Item>
+								<Descriptions.Item label='Nhan đề'>{recDKCB?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
+								<Descriptions.Item label='Tác giả'>{recDKCB?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 								<Descriptions.Item label='Đăng ký cá biệt'>{recDKCB?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
 								<Descriptions.Item label='Đơn giá'>{`${inputFormat(
 									recDKCB?.thongTinXepGia?.donGia ?? 0,
@@ -213,7 +203,13 @@ const FormMuonTraSach = (props: any) => {
 				</div>
 			</Form>
 
-			<ModalTimKiem visibleForm={visibleTimKiem} setVisibleForm={setVisibleTimKiem} getData={getDataExternal} />
+			<ModalTimKiem
+				visibleForm={visibleTimKiem}
+				setVisibleForm={setVisibleTimKiem}
+				getData={getDataExternal}
+				thoiGianMuon={thoiGianMuon}
+				expired={expired}
+			/>
 		</Card>
 	);
 };

@@ -32,8 +32,8 @@ declare module MuonSach {
 		updatedAt: Date;
 
 		//fake
-		tacGiaConverse?: string;
-		nhanDeConverse?: string;
+		tacGia?: string;
+		nhanDe?: string;
 		dangKyCaBiet?: string;
 	}
 
