@@ -141,6 +141,11 @@
 				component: './DanhMuc/KhoSach',
 			},
 			{
+				name: 'PhongDoc',
+				path: 'phong-doc',
+				component: './DanhMuc/PhongDoc',
+			},
+			{
 				name: 'GiaSach',
 				path: 'gia-sach',
 				component: './DanhMuc/GiaSach',

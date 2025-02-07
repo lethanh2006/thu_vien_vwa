@@ -1,6 +1,6 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
-import { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
+import { ETrangThaiDuyetMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import rules from '@/utils/rules';
 import { inputFormat, resetFieldsForm } from '@/utils/utils';
@@ -42,7 +42,7 @@ const FormDangKyCaBiet = () => {
 
 	const onFinish = async (values: MuonSach.IRecord) => {
 		values.trangThai = ETrangThaiMuonSach.DANG_THUE_MUON;
-		values.trangThaiDuyet = ETrangThaiDuyeMuonSach.DA_DUYET;
+		values.trangThaiDuyet = ETrangThaiDuyetMuonSach.DA_DUYET;
 
 		const sinhVien = danhSachSinhVien?.find((item) => item?.ssoId === values?.ssoIdNguoiMuon);
 		values.maDinhDanhNguoiMuon = sinhVien?.ma ?? '';

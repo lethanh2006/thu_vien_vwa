@@ -3,10 +3,10 @@ import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import SelectPhongDoc from '../../PhongDoc/components/Select';
 
-const FormKhoSach = (props: any) => {
-	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } = useModel('danhmuc.khosach');
+const FormPhongDoc = (props: any) => {
+	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } =
+		useModel('danhmuc.phongdoc');
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { title } = props;
@@ -16,7 +16,7 @@ const FormKhoSach = (props: any) => {
 		else if (record?._id) form.setFieldsValue(record);
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: KhoSach.IRecord) => {
+	const onFinish = async (values: PhongDoc.IRecord) => {
 		if (edit) {
 			putModel(record?._id ?? '', values)
 				.then()
@@ -33,18 +33,22 @@ const FormKhoSach = (props: any) => {
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item label='Mã kho' name='ma' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
+						<Form.Item label='Mã phòng đọc' name='ma' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
 							<Input placeholder='Nhập mã kho' disabled={edit} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Tên kho' name='ten' rules={[...rules.required, ...rules.text, ...rules.length(250)]}>
+						<Form.Item
+							label='Tên phòng đọc'
+							name='ten'
+							rules={[...rules.required, ...rules.text, ...rules.length(250)]}
+						>
 							<Input placeholder='Nhập tên kho' />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Phòng đọc' name='maPhongDoc' rules={[...rules.required]}>
-							<SelectPhongDoc selectMa />
+						<Form.Item label='Địa chỉ' name='diaChi'>
+							<Input.TextArea placeholder='Nhập dịa chỉ' />
 						</Form.Item>
 					</Col>
 				</Row>
@@ -62,4 +66,4 @@ const FormKhoSach = (props: any) => {
 	);
 };
 
-export default FormKhoSach;
+export default FormPhongDoc;

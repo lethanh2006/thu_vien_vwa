@@ -1,7 +1,7 @@
 import {
 	colorTrangThaiDuyeMuonSach,
 	colorTrangThaiMuonSach,
-	type ETrangThaiDuyeMuonSach,
+	type ETrangThaiDuyetMuonSach,
 	type ETrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
 import { Button, Card, Col, Descriptions, Row, Tag } from 'antd';
@@ -17,8 +17,10 @@ const ChiTietLichSu = () => {
 			<Row gutter={[12, 0]}>
 				<Col xs={24}>
 					<Descriptions column={1}>
-						<Descriptions.Item label='Mã sinh viên'>{record?.maDinhDanhNguoiMuon ?? '--'}</Descriptions.Item>
-						<Descriptions.Item label='Họ tên'>{record?.hotenNguoiMuon ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label='Mã định danh'>
+							{record?.phieuMuonTra?.maDinhDanhNguoiMuon ?? '--'}
+						</Descriptions.Item>
+						<Descriptions.Item label='Họ tên'>{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
 
 						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
@@ -31,13 +33,13 @@ const ChiTietLichSu = () => {
 							{record?.expired ? moment(record?.expired).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 
-						<Descriptions.Item label='Trạng thái'>
+						{/* <Descriptions.Item label='Trạng thái'>
 							{record?.daLaySach ? <Tag color='green'>Đã lấy</Tag> : <Tag color='red'>Chưa lấy</Tag>}
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Gia hạn'>
 							{record?.giaHan ? <Tag color='green'>Có gian hạn</Tag> : <Tag color='red'>Không gia hạn</Tag>}
-						</Descriptions.Item>
+						</Descriptions.Item> */}
 
 						<Descriptions.Item label='Thời gian gia hạn'>
 							{record?.thoiGianGiaHan ? moment(record?.thoiGianGiaHan).format('HH:mm DD/MM/YYYY') : '--'}
@@ -48,10 +50,12 @@ const ChiTietLichSu = () => {
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Thời gian đăng ký'>
-							{record?.thoiGianDangKy ? moment(record?.thoiGianDangKy).format('HH:mm DD/MM/YYYY') : '--'}
+							{record?.phieuMuonTra?.thoiGianDangKy
+								? moment(record?.phieuMuonTra?.thoiGianDangKy).format('HH:mm DD/MM/YYYY')
+								: '--'}
 						</Descriptions.Item>
 
-						<Descriptions.Item label='Ghi chú đăng ký'>{record?.ghiChuDangKy ?? '--'}</Descriptions.Item>
+						{/* <Descriptions.Item label='Ghi chú đăng ký'>{record?.ghiChuDangKy ?? '--'}</Descriptions.Item> */}
 
 						<Descriptions.Item label='Ghi chú'>{record?.ghiChu ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Ghi chú trả'>{record?.ghiChuTra ?? '--'}</Descriptions.Item>
@@ -61,8 +65,8 @@ const ChiTietLichSu = () => {
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Trạng thái duyệt'>
-							<Tag color={colorTrangThaiDuyeMuonSach[record?.trangThaiDuyet as ETrangThaiDuyeMuonSach]}>
-								{record?.trangThaiDuyet}
+							<Tag color={colorTrangThaiDuyeMuonSach[record?.phieuMuonTra?.trangThaiDuyet as ETrangThaiDuyetMuonSach]}>
+								{record?.phieuMuonTra?.trangThaiDuyet}
 							</Tag>
 						</Descriptions.Item>
 					</Descriptions>

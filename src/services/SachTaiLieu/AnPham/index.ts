@@ -10,7 +10,7 @@ export async function getThongKeAnPham(params?: { condition?: any; filters?: any
 }
 
 export async function thongKeDangKyCaBiet(params?: { condition?: any; filters?: any[] }) {
-	return axios.get(`${ip3}/an-pham-sep-gia/thong-ke`, { params });
+	return axios.get(`${ip3}/an-pham-xep-gia/thong-ke`, { params });
 }
 
 export async function thongKeXepGia(params?: { condition?: any; filters?: any[] }) {

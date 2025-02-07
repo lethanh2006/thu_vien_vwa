@@ -77,13 +77,13 @@ export default () => {
 		}
 	};
 
-	const updateFaceRegModel = (sinhVienSsoId: string, data: { faceRegImgUrl: string }, getData?: () => void) =>
-		putModel(`${sinhVienSsoId}/admin/face-reg`, data, getData);
+	// const updateFaceRegModel = (sinhVienSsoId: string, data: { faceRegImgUrl: string }, getData?: () => void) =>
+	// 	putModel(`${sinhVienSsoId}/admin/face-reg`, data, getData);
 
 	return {
 		...objInit,
 		getThongTinSinhVienBySsoIdModel,
 		searchSinhVienModel,
-		updateFaceRegModel,
+		// updateFaceRegModel,
 	};
 };

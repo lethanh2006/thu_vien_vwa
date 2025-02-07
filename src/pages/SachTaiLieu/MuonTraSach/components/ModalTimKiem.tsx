@@ -13,36 +13,37 @@ import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
 import { useIntl, useModel } from 'umi';
 
-const ModalTimKiem = (props: {
-	visibleForm: boolean;
-	setVisibleForm: (val: boolean) => void;
-	getData?: () => void;
-	thoiGianMuon: Date;
-	expired: Date;
-}) => {
+const ModalTimKiem = (props: { visibleForm: boolean; setVisibleForm: (val: boolean) => void }) => {
 	const intl = useIntl();
-	const { visibleForm, setVisibleForm, getData: getDataExternal, thoiGianMuon, expired } = props;
+	const { visibleForm, setVisibleForm } = props;
 	const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 	const [paneSize, setPaneSize] = useState('40%');
-
 	const handlePaneSizeChange = (size: any) => {
 		setPaneSize(size[0]);
 	};
+	const { settingMuonTra } = useModel('sachtailieu.muontra.muontra');
+	const { getModel, page, limit, record, setRecord } = useModel('sachtailieu.anpham.anpham');
+	const { getModel: getModalDKCB, page: pageDKCB, limit: limitDKCB } = useModel('sachtailieu.anpham.anphamkhadung');
+	const { setDanhSach } = useModel('sachtailieu.anpham.anphamxepgia');
 
-	const { page, limit, record, setRecord } = useModel('sachtailieu.anpham.anpham');
-
-	const {
-		getModel,
-		page: pageDKCB,
-		limit: limitDKCB,
-		setRecord: setRecDKCB,
-	} = useModel('sachtailieu.anpham.anphamkhadung');
+	const getDataExternal = () => {
+		getModel(undefined, undefined, undefined, undefined, undefined, 'search/kha-dung', {
+			thoiGianBatDau: moment().toISOString(),
+			thoiGianKetThuc: moment()
+				.add(settingMuonTra?.thoiHanMuonTraSach ?? 150, 'd')
+				.toISOString(),
+		})
+			.then((res: any) => setRecord(res?.[0]))
+			.catch((err) => console.error('Error:', err));
+	};
 
 	const getData = () => {
 		if (record?._id)
-			getModel(undefined, undefined, undefined, undefined, undefined, `${record?._id}/kha-dung`, {
-				thoiGianBatDau: thoiGianMuon,
-				thoiGianKetThuc: expired,
+			getModalDKCB(undefined, undefined, undefined, undefined, undefined, `${record?._id}/kha-dung`, {
+				thoiGianBatDau: moment().toISOString(),
+				thoiGianKetThuc: moment()
+					.add(settingMuonTra?.thoiHanMuonTraSach ?? 150, 'd')
+					.toISOString(),
 			});
 	};
 
@@ -61,12 +62,14 @@ const ModalTimKiem = (props: {
 			dataIndex: 'nhanDe',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			filterType: 'string',
 			onCell,
 		},
 		{
 			title: 'Tác giả',
 			dataIndex: 'tacGia',
 			width: 150,
+			filterType: 'string',
 			onCell,
 		},
 	];
@@ -76,6 +79,7 @@ const ModalTimKiem = (props: {
 			title: 'ĐKCB',
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
+			filterType: 'string',
 			width: 120,
 		},
 		{
@@ -99,7 +103,17 @@ const ModalTimKiem = (props: {
 			render: (val, rec) => (
 				<ButtonExtend
 					onClick={() => {
-						setRecDKCB(rec);
+						setDanhSach(
+							(prev) =>
+								[
+									...prev,
+									{
+										...rec,
+										thoiGianMuon: moment(),
+										expired: moment().add(settingMuonTra?.thoiHanMuonTraSach ?? 150, 'd'),
+									},
+								] as any,
+						);
 						setVisibleForm(false);
 					}}
 					tooltip='Xác nhận'
@@ -116,7 +130,7 @@ const ModalTimKiem = (props: {
 			title='Thông tin ấn phẩm tìm kiếm'
 			visible={visibleForm}
 			onCancel={() => setVisibleForm(false)}
-			width={1000}
+			width={900}
 			footer={null}
 			destroyOnClose
 		>

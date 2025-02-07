@@ -4,7 +4,7 @@ import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { useState } from 'react';
 
 export default () => {
-	const objInit = useInitModel<AnPham.IAnPhamXepGia>('an-pham-sep-gia');
+	const objInit = useInitModel<AnPham.IAnPhamXepGia>('an-pham-xep-gia');
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [thongKeDKCB, setThongKeDKCB] = useState<AnPham.IThongKeAnPhamXepGia>();
 

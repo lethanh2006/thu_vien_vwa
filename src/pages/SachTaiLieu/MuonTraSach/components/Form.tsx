@@ -1,215 +1,460 @@
-import MyDatePicker from '@/components/MyDatePicker';
-import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
-import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
-import { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
+import ExpandText from '@/components/ExpandText';
+import PrintTemplate from '@/components/PrintTemplate';
+import ButtonExtend from '@/components/Table/ButtonExtend';
+import TableStaticData from '@/components/Table/TableStaticData';
+import type { IColumn } from '@/components/Table/typing';
+import { ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
-import rules from '@/utils/rules';
-import { inputFormat, resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Checkbox, Col, Descriptions, Form, Input, message, Row } from 'antd';
+import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
+import type { SinhVien } from '@/services/SinhVien/typings';
+import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
+import { resetFieldsForm } from '@/utils/utils';
+import { DeleteOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons';
+import {
+	Button,
+	Card,
+	Col,
+	Descriptions,
+	Form,
+	Input,
+	message,
+	Modal,
+	Popconfirm,
+	Row,
+	Segmented,
+	Space,
+	Spin,
+} from 'antd';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import ReactToPrint from 'react-to-print';
 import { useIntl, useModel } from 'umi';
+import LichSuThueMuonPage from '../LichSu';
+import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
+import TitlePrintMuonTra from './TitlePrintMuonTra';
 
 const FormMuonTraSach = (props: any) => {
-	const { getData: getDataEx, setTrangThai } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const {
+		getModel: getData,
 		visibleForm,
 		setVisibleForm,
 		formSubmiting,
 		edit,
-		putModel,
-		postModel,
+		postPhieuMuonTraSachModel,
 		record,
-		settingMuonTra,
-		thongKeMuonTraSachModel,
-	} = useModel('sachtailieu.muontra.muontra');
-	const { danhSach: danhSachSinhVien } = useModel('sinhvien.sinhvien');
-	const { getModel, loading, setDanhSach, setRecord } = useModel('sachtailieu.anpham.anpham');
-	const { record: recDKCB, setRecord: setRecDKCB } = useModel('sachtailieu.anpham.anphamkhadung');
+	} = useModel('sachtailieu.muontra.phieumuontra');
+	const { getModel, settingMuonTra, loading, thongKeMuonTraSachModel } = useModel('sachtailieu.muontra.muontra');
+	const { getOneModel, danhSach, setDanhSach, handleEdit } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [visibleTimKiem, setVisibleTimKiem] = useState<boolean>(false);
-	const nhanDe: string = Form.useWatch('nhanDe', form);
-	const tacGia: string = Form.useWatch('tacGia', form);
-	const dangKyCaBiet: string = Form.useWatch('dangKyCaBiet', form);
-	const thoiGianMuon: Date = Form.useWatch('thoiGianMuon', form);
-	const expired: Date = Form.useWatch('expired', form);
+	const [recSinhVien, setRecSinhVien] = useState<SinhVien.IRecord>();
+	const [recCanBo, setRecCanBo] = useState<ToChucNhanSu.INhanSu>();
+	const [visibleModal, setVisibleModal] = useState<boolean>(false);
+	const dkcb: string = Form.useWatch('dkcb', form);
+	const soThe: string = Form.useWatch('soThe', form);
+	const vaiTro: EVaiTroMuonTra = Form.useWatch('vaiTro', form);
+	const componentRef = useRef(null);
 
-	const getData = () => {
-		thongKeMuonTraSachModel();
-		getDataEx();
-	};
+	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
+
+	const reactToPrintTrigger = useCallback(
+		() => (
+			<ButtonExtend icon={<PrinterOutlined />} tooltip='Phiếu'>
+				Phiếu
+			</ButtonExtend>
+		),
+		[],
+	);
 
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
-		} else if (record?._id) {
-			form.setFieldsValue(record);
+			setRecSinhVien({} as SinhVien.IRecord);
+			setRecCanBo({} as ToChucNhanSu.INhanSu);
 		} else {
-			form.setFieldsValue({
-				thoiGianMuon: moment().toISOString(),
-				expired: moment()
-					.add(settingMuonTra?.thoiHanMuonTraSach || 150, 'days')
-					.toISOString(),
-			});
+			form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
 		}
-
-		setDanhSach([]);
-		setRecDKCB({} as AnPham.IAnPhamXepGia);
 	}, [record?._id, visibleForm]);
 
-	const onFinish = async (values: MuonSach.IRecord) => {
-		delete values.nhanDe;
-		delete values.tacGia;
-		delete values.dangKyCaBiet;
-
-		if (!recDKCB?._id && !edit) {
-			message.error('Vui lòng chọn thông tin ấn phẩm cho mượn!');
+	const onFinish = async (values: PhieuMuonTra.IRecord) => {
+		if (!recSinhVien?._id && vaiTro === EVaiTroMuonTra.SINHVIEN) {
+			message.error('Không tồn tại thông tin sinh viên!');
 			return;
 		}
 
-		values.trangThai = values.trangThai ?? ETrangThaiMuonSach.DANG_THUE_MUON;
-		values.trangThaiDuyet = values.trangThaiDuyet ?? ETrangThaiDuyeMuonSach.DA_DUYET;
+		if (!recSinhVien?._id && vaiTro === EVaiTroMuonTra.CANBO) {
+			message.error('Không tồn tại thông tin cán bộ!');
+			return;
+		}
 
-		const sinhVien = danhSachSinhVien?.find((item) => item?.ssoId === values?.ssoIdNguoiMuon);
-		values.maDinhDanhNguoiMuon = sinhVien?.ma ?? '';
-		values.hotenNguoiMuon = sinhVien?.ten ?? '';
-		values.thoiGianDangKy = moment().toISOString();
+		if (!danhSach?.length) {
+			message.error('Không tồn tại ấn phẩm ghi mượn!');
+			return;
+		}
 
-		values.anPhamId = recDKCB?.anPhamId ?? '';
-		values.soDangKyCaBiet = recDKCB?.soDangKyCaBiet ?? '';
+		const data = {
+			danhSachAnPhamMuonTra: (danhSach as any)?.map((item: any) => ({
+				anPhamId: item?.anPhamId,
+				soDangKyCaBiet: item?.soDangKyCaBiet,
+				thoiGianMuon: item?.thoiGianMuon,
+				expired: item?.expired,
+				ghiChu: item?.ghiChu,
+			})),
 
-		if (edit) {
-			putModel(record?._id ?? '', values, getData)
-				.then()
-				.catch((er) => console.log(er));
-		} else
-			postModel(values, getData)
-				.then(() => setTrangThai(ETrangThaiMuonSach.DANG_THUE_MUON))
-				.catch((er) => console.log(er));
-	};
+			hoTenNguoiMuon: recSinhVien?.ten,
+			maDinhDanhNguoiMuon: recSinhVien?.ma,
+			ssoIdNguoiMuon: recSinhVien?.ssoId,
+			trangThaiDuyet: ETrangThaiDuyetMuonSach.DA_DUYET,
 
-	const getDataExternal = () => {
-		const conditions = {
-			...(nhanDe && { nhanDe }),
-			...(tacGia && { tacGia }),
-			...(dangKyCaBiet && { dangKyCaBiet }),
+			vaiTro: values?.vaiTro,
 		};
 
-		getModel(conditions, undefined, undefined, undefined, undefined, 'search/kha-dung', {
-			thoiGianBatDau: thoiGianMuon,
-			thoiGianKetThuc: expired,
+		postPhieuMuonTraSachModel(data as any, () => {
+			thongKeMuonTraSachModel();
+			getData();
 		})
-			.then((res: any) => setRecord(res?.[0]))
-			.catch((err) => console.error('Error:', err));
+			.then(() => {
+				setVisibleForm(false);
+			})
+			.catch((err) => console.log(err));
 	};
 
-	const handleTimKiem = () => {
-		if (!nhanDe && !tacGia && !dangKyCaBiet) {
-			message.error('Vui lòng điền ít nhất 1 thông tin!');
+	const handleDeleteItem = (itemId: string) => {
+		const updatedList = danhSach.filter((item) => item._id !== itemId);
+		setDanhSach(updatedList);
+	};
+
+	const columns: IColumn<MuonSach.IRecord>[] = [
+		{
+			title: 'ĐKCB',
+			dataIndex: 'soDangKyCaBiet',
+			align: 'center',
+			width: 120,
+		},
+		{
+			title: 'Nhan đề',
+			width: 220,
+			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
+		},
+		{
+			title: 'Tác giả',
+			width: 150,
+			render: (val, rec) => rec?.anPham?.tacGia,
+		},
+		{
+			title: 'Thời gian mượn',
+			dataIndex: 'thoiGianMuon',
+			align: 'center',
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			width: 120,
+		},
+		{
+			title: 'Hạn trả',
+			dataIndex: 'expired',
+			align: 'center',
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			width: 120,
+		},
+		{
+			title: 'Ghi chú',
+			dataIndex: 'ghiChu' as any,
+			width: 220,
+			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+		},
+		{
+			title: 'Thao tác',
+			align: 'center',
+			width: 90,
+			fixed: 'right',
+			render: (val, rec) => (
+				<>
+					<ButtonExtend
+						tooltip='Chỉnh sửa'
+						type='link'
+						icon={<EditOutlined />}
+						onClick={() => handleEdit(rec as any)}
+					/>
+
+					<Popconfirm
+						onConfirm={() => handleDeleteItem(rec?._id)}
+						title='Bạn có chắc chắn muốn xóa ấn phẩm này?'
+						placement='topRight'
+					>
+						<ButtonExtend tooltip='Xóa' type='link' danger icon={<DeleteOutlined />} />
+					</Popconfirm>
+				</>
+			),
+		},
+	];
+
+	const columnsPrint = columns.filter((col) => col.title !== 'Thao tác');
+
+	const handleLuuDKCB = async () => {
+		const anPhamData = await getOneModel({ soDangKyCaBiet: dkcb });
+
+		if (!anPhamData) {
+			message.error('Không tìm thấy ấn phẩm!');
 			return;
 		}
-		setVisibleTimKiem(true);
-		getDataExternal();
+
+		setDanhSach(
+			(prev) =>
+				[
+					...prev,
+					{
+						...anPhamData,
+						thoiGianMuon: moment(),
+						expired: moment().add(settingMuonTra?.thoiHanMuonTraSach ?? 150, 'd'),
+						// daLay: true,
+					},
+				] as any,
+		);
+
+		form.resetFields(['dkcb']);
+	};
+
+	const handleLuuSinhVien = async () => {
+		const nguoiMuon = await getModel(
+			vaiTro === EVaiTroMuonTra.SINHVIEN ? ({ ma: soThe } as any) : ({ maCanBo: soThe } as any),
+			undefined,
+			undefined,
+			undefined,
+			undefined,
+			`thong-ke/${vaiTro === EVaiTroMuonTra.SINHVIEN ? 'sinh-vien' : 'can-bo'}`,
+			undefined,
+			false,
+		);
+
+		if (!nguoiMuon?.length) {
+			message.error('Không tìm thấy người mượn!');
+			return;
+		}
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+		vaiTro === EVaiTroMuonTra.SINHVIEN ? setRecSinhVien(nguoiMuon?.[0] as any) : setRecCanBo(nguoiMuon?.[0] as any);
 	};
 
 	return (
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} sinh viên mượn sách`}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
-				{!edit ? (
-					<>
+				<Row gutter={[12, 0]}>
+					<Col span={24} md={6}>
 						<Row gutter={[12, 0]}>
 							<Col span={24}>
-								<div className='fw500'>Tìm kiếm thông tin ấn phẩm ấn phẩm</div>
-							</Col>
-							<Col span={24} md={8}>
-								<Form.Item name='nhanDe' label='Nhan đề'>
-									<Input placeholder='Nhập đăng ký cá biệt' allowClear />
+								<Form.Item name='vaiTro'>
+									<Segmented
+										options={Object.values(EVaiTroMuonTra)?.map((item) => ({
+											value: item,
+											label: item,
+										}))}
+										onChange={() => form.resetFields(['soThe'])}
+									/>
 								</Form.Item>
 							</Col>
-							<Col span={24} md={8}>
-								<Form.Item name='tacGia' label='Tác giả'>
-									<Input placeholder='Nhập đăng ký cá biệt' allowClear />
+							<Col span={24}>
+								<Form.Item name='soThe' label={vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}>
+									<Input
+										placeholder='Nhập sinh viên'
+										onPressEnter={(e) => {
+											e.preventDefault();
+											handleLuuSinhVien();
+										}}
+									/>
 								</Form.Item>
+								<Space>
+									<a type='link' onClick={handleLuuSinhVien}>
+										Thêm
+									</a>
+								</Space>
 							</Col>
-							<Col span={24} md={8}>
-								<Form.Item name='dangKyCaBiet' label='Đăng ký cá biệt'>
-									<Input placeholder='Nhập đăng ký cá biệt' allowClear />
+							<Col span={24}>
+								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
+									<Input
+										placeholder='Nhập đăng ký cá biệt'
+										onPressEnter={(e) => {
+											e.preventDefault();
+											handleLuuDKCB();
+										}}
+									/>
 								</Form.Item>
+								<Space>
+									<a type='link' onClick={handleLuuDKCB}>
+										Thêm
+									</a>{' '}
+									|{' '}
+									<a type='link' onClick={() => setVisibleTimKiem(true)}>
+										Tìm
+									</a>
+								</Space>
 							</Col>
 						</Row>
+					</Col>
 
-						<div className='form-footer'>
-							<Button loading={loading} onClick={handleTimKiem}>
-								Tìm kiếm
-							</Button>
-						</div>
-					</>
-				) : (
-					<Descriptions column={1}>
-						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
-						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
-					</Descriptions>
-				)}
+					<Col span={24} md={18}>
+						<Row gutter={[12, 0]}>
+							<Col span={24}>
+								<Spin spinning={loading}>
+									<Descriptions
+										column={{ xs: 1, sm: 1, md: 2 }}
+										bordered
+										style={{ marginBottom: 18 }}
+										title='Thông tin người mượn'
+									>
+										{vaiTro === EVaiTroMuonTra.SINHVIEN ? (
+											<>
+												<Descriptions.Item label='Mã SV'>{recSinhVien?.ma ?? '--'}</Descriptions.Item>
+												<Descriptions.Item label='Họ tên'>{recSinhVien?.ten ?? '--'}</Descriptions.Item>
+												<Descriptions.Item label='Lớp'>{recSinhVien?.tenLopHanhChinhVirtual ?? '--'}</Descriptions.Item>
+												<Descriptions.Item label='Khóa sinh viên'>
+													{recSinhVien?.khoaSinhVien?.ten ?? '--'}
+												</Descriptions.Item>
+												<Descriptions.Item label='Khóa ngành'>{recSinhVien?.khoaNganh?.ten ?? '--'}</Descriptions.Item>
+											</>
+										) : (
+											<>
+												<Descriptions.Item label='Mã cán bộ'>{recCanBo?.maCanBo ?? '--'}</Descriptions.Item>
+												<Descriptions.Item label='Họ tên'>
+													{[recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' ')}
+												</Descriptions.Item>
+												<Descriptions.Item label='Đơn vị'>{recCanBo?.donViChinh?.ten ?? '--'}</Descriptions.Item>
+											</>
+										)}
+									</Descriptions>
+								</Spin>
+							</Col>
+							{(recSinhVien?._id || recCanBo?._id) && (
+								<Col xs={24}>
+									<Row gutter={[12, 0]}>
+										<Col span={24} md={6}>
+											<Card
+												className='card-stat-small'
+												style={{ cursor: 'pointer' }}
+												onClick={() => setVisibleModal(true)}
+											>
+												<span className='num' style={{ color: 'blue' }}>
+													{settingMuonTra?.soLuongMuonToiDa ?? 0}
+												</span>
+												<span>Hạn ngạch mượn</span>
+											</Card>
+										</Col>
+										<Col span={24} md={6}>
+											<Card
+												className='card-stat-small'
+												style={{ cursor: 'pointer' }}
+												onClick={() => setVisibleModal(true)}
+											>
+												<span className='num' style={{ color: 'orange' }}>
+													{(vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ?? 0}
+												</span>
+												<span>Đang mượn</span>
+											</Card>
+										</Col>
+										<Col span={24} md={6}>
+											<Card
+												className='card-stat-small'
+												style={{ cursor: 'pointer' }}
+												onClick={() => setVisibleModal(true)}
+											>
+												<span className='num' style={{ color: 'rec' }}>
+													{(vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien : recCanBo)?.thongKe?.quaHan ?? 0}
+												</span>
+												<span>Quá hạn mượn</span>
+											</Card>
+										</Col>
+										<Col span={24} md={6}>
+											<Card
+												className='card-stat-small'
+												style={{ cursor: 'pointer' }}
+												onClick={() => setVisibleModal(true)}
+											>
+												<span className='num' style={{ color: 'green' }}>
+													{Math.max(
+														0,
+														(settingMuonTra?.soLuongMuonToiDa ?? 0) -
+															Number(
+																(vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ??
+																	0,
+															),
+													)}
+												</span>
+												<span>Còn mượn được</span>
+											</Card>
+										</Col>
+									</Row>
+								</Col>
+							)}
+							<Col span={24}>
+								<div className='fw500' style={{ marginTop: 12 }}>
+									Danh sách ấn phẩm ghi mượn
+								</div>
 
-				<Row gutter={[12, 0]} style={{ marginTop: 12 }}>
-					{recDKCB?._id && (
-						<Col span={24}>
-							<Descriptions column={1}>
-								<Descriptions.Item label='Nhan đề'>{recDKCB?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
-								<Descriptions.Item label='Tác giả'>{recDKCB?.anPham?.tacGia ?? '--'}</Descriptions.Item>
-								<Descriptions.Item label='Đăng ký cá biệt'>{recDKCB?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
-								<Descriptions.Item label='Đơn giá'>{`${inputFormat(
-									recDKCB?.thongTinXepGia?.donGia ?? 0,
-								)} VNĐ`}</Descriptions.Item>
-							</Descriptions>
-						</Col>
-					)}
-					<Col xs={24} md={12}>
-						<Form.Item name='ssoIdNguoiMuon' label='Sinh viên' rules={[...rules.required]}>
-							<SelectSinhVienDebounce />
-						</Form.Item>
-					</Col>
-					<Col xs={24} md={12}>
-						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
-							<MyDatePicker />
-						</Form.Item>
-					</Col>
-					<Col xs={24} md={12}>
-						<Form.Item name='expired' label='Hạn trả' rules={[...rules.required]}>
-							<MyDatePicker />
-						</Form.Item>
-					</Col>
-					<Col xs={24}>
-						<Form.Item name='ghiChu' label='Ghi chú' rules={[...rules.text]}>
-							<Input placeholder='Nhập ghi chú' />
-						</Form.Item>
-					</Col>
-					<Col xs={24}>
-						<Form.Item name='daLaySach' valuePropName='checked' initialValue={false}>
-							<Checkbox>Sinh viên đã lấy sách</Checkbox>
-						</Form.Item>
+								<TableStaticData
+									columns={columns}
+									data={danhSach ?? []}
+									size='small'
+									addStt
+									hasTotal
+									otherProps={{ pagination: true }}
+								/>
+							</Col>
+						</Row>
 					</Col>
 				</Row>
 
 				<div className='form-footer'>
-					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						{!edit
-							? `${intl.formatMessage({ id: 'global.button.themmoi' })}`
-							: `${intl.formatMessage({ id: 'global.button.luulai' })}`}
+					<Button loading={formSubmiting} onClick={() => form.submit()} type='primary'>
+						Ghi mượn
 					</Button>
+					<ReactToPrint
+						content={reactToPrintContent}
+						documentTitle='Phiếu'
+						trigger={reactToPrintTrigger}
+						removeAfterPrint
+					/>
 					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
 
-			<ModalTimKiem
-				visibleForm={visibleTimKiem}
-				setVisibleForm={setVisibleTimKiem}
-				getData={getDataExternal}
-				thoiGianMuon={thoiGianMuon}
-				expired={expired}
-			/>
+			<PrintTemplate
+				ref={componentRef}
+				footer={
+					<Row gutter={[5, 5]}>
+						<Col span={12} push={12} style={{ textAlign: 'center' }}>
+							<b>Chữ ký người mượn</b>
+						</Col>
+					</Row>
+				}
+			>
+				<TitlePrintMuonTra vaiTro={vaiTro} recSinhVien={recSinhVien} recCanBo={recCanBo} />
+				<div className='to-print'>
+					<TableStaticData
+						columns={columnsPrint}
+						data={danhSach ?? []}
+						size='small'
+						otherProps={{ pagination: false, scroll: false }}
+					/>
+				</div>
+			</PrintTemplate>
+
+			<ModalTimKiem visibleForm={visibleTimKiem} setVisibleForm={setVisibleTimKiem} />
+
+			<FormMuonTra />
+
+			<Modal
+				title={`Danh sách lịch sử mượn trả sách sinh viên ${recSinhVien?.ten}`}
+				visible={visibleModal}
+				onCancel={() => setVisibleModal(false)}
+				width={1000}
+				footer={null}
+			>
+				<LichSuThueMuonPage ssoId={recSinhVien?.ssoId} />
+
+				<div className='form-footer'>
+					<Button onClick={() => setVisibleModal(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
+				</div>
+			</Modal>
 		</Card>
 	);
 };

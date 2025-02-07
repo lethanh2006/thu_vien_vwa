@@ -1,5 +1,5 @@
 import useInitModel from '@/hooks/useInitModel';
-import type { ETrangThaiDuyeMuonSach } from '@/services/SachTaiLieu/constant';
+import type { ETrangThaiDuyetMuonSach } from '@/services/SachTaiLieu/constant';
 import {
 	getSetting,
 	ghiTraThueMuonAnPham,
@@ -52,7 +52,7 @@ export default () => {
 	const xuLyThueMuonAnPhamModel = async (
 		idThueMuon: string,
 		payLoad: {
-			trangThaiDuyet: ETrangThaiDuyeMuonSach;
+			trangThaiDuyet: ETrangThaiDuyetMuonSach;
 			ghiChu: string;
 			expired: Date;
 			thoiGianMuon: Date;
