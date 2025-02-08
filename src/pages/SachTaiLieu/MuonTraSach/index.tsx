@@ -18,6 +18,7 @@ const PhieuMuonTraSachPage = () => {
 		'sachtailieu.muontra.phieumuontra',
 	);
 	const { getSettingModel, settingMuonTra, thongKeMuonTraSachModel } = useModel('sachtailieu.muontra.muontra');
+	const { setDanhSach } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
 	const [tabActive, setTabActive] = useState<string>('1');
 
@@ -134,6 +135,9 @@ const PhieuMuonTraSachPage = () => {
 								setEdit(false);
 								setIsView(false);
 								setVisibleForm(true);
+
+								//Set danhSach đăng ký cá biệt rỗng
+								setDanhSach([]);
 							}}
 							icon={<PlusCircleOutlined />}
 							type='primary'

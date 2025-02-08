@@ -231,6 +231,7 @@ const MuonTraSachPage = (props: any) => {
 			filterData: Object.values(ETrangThaiMuonSach),
 			onCell,
 			hide: !tatCaLichSu,
+			fixed: 'right',
 		},
 		{
 			title: 'Thao tác',

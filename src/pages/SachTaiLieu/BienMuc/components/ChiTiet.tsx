@@ -50,7 +50,7 @@ const ChiTietBienMuc = () => {
 					'--'}
 			</Descriptions.Item>
 			<Descriptions.Item label='Nơi xuất bản [260$a]'>
-				{danhSach?.find((item) => item?.tagCode === '260')?.thuocTinhAnPham?.find((i) => i.code === '$c')?.value ??
+				{danhSach?.find((item) => item?.tagCode === '260')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??
 					'--'}
 			</Descriptions.Item>
 			<Descriptions.Item label='Năm xuất bản [260$c]'>

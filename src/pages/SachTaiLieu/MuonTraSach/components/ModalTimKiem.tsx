@@ -5,7 +5,7 @@ import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { inputFormat } from '@/utils/utils';
 import { CheckOutlined } from '@ant-design/icons';
-import { Button, Card, Empty, Modal } from 'antd';
+import { Button, Card, Empty, message, Modal } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -24,7 +24,7 @@ const ModalTimKiem = (props: { visibleForm: boolean; setVisibleForm: (val: boole
 	const { settingMuonTra } = useModel('sachtailieu.muontra.muontra');
 	const { getModel, page, limit, record, setRecord } = useModel('sachtailieu.anpham.anpham');
 	const { getModel: getModalDKCB, page: pageDKCB, limit: limitDKCB } = useModel('sachtailieu.anpham.anphamkhadung');
-	const { setDanhSach } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { danhSach, setDanhSach } = useModel('sachtailieu.anpham.anphamxepgia');
 
 	const getDataExternal = () => {
 		getModel(undefined, undefined, undefined, undefined, undefined, 'search/kha-dung', {
@@ -103,6 +103,11 @@ const ModalTimKiem = (props: { visibleForm: boolean; setVisibleForm: (val: boole
 			render: (val, rec) => (
 				<ButtonExtend
 					onClick={() => {
+						if (danhSach?.find((i) => i?._id === rec?._id)) {
+							message.error('Ấn phẩm đã tồn tại trong danh sách!');
+							return;
+						}
+
 						setDanhSach(
 							(prev) =>
 								[

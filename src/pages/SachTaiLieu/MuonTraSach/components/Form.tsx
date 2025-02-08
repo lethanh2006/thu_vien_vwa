@@ -3,7 +3,7 @@ import PrintTemplate from '@/components/PrintTemplate';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
-import { ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
+import { ETrangThaiDangKyCaBiet, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
 import type { SinhVien } from '@/services/SinhVien/typings';
@@ -47,7 +47,7 @@ const FormMuonTraSach = (props: any) => {
 		record,
 	} = useModel('sachtailieu.muontra.phieumuontra');
 	const { getModel, settingMuonTra, loading, thongKeMuonTraSachModel } = useModel('sachtailieu.muontra.muontra');
-	const { getOneModel, danhSach, setDanhSach, handleEdit } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { getModel: getAnPhamXepGia, danhSach, setDanhSach, handleEdit } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [visibleTimKiem, setVisibleTimKiem] = useState<boolean>(false);
 	const [recSinhVien, setRecSinhVien] = useState<SinhVien.IRecord>();
 	const [recCanBo, setRecCanBo] = useState<ToChucNhanSu.INhanSu>();
@@ -68,6 +68,12 @@ const FormMuonTraSach = (props: any) => {
 		[],
 	);
 
+	const slConMuonDuoc = Math.max(
+		0,
+		(settingMuonTra?.soLuongMuonToiDa ?? 0) -
+			Number((vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ?? 0),
+	);
+
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
@@ -84,13 +90,18 @@ const FormMuonTraSach = (props: any) => {
 			return;
 		}
 
-		if (!recSinhVien?._id && vaiTro === EVaiTroMuonTra.CANBO) {
+		if (!recCanBo?._id && vaiTro === EVaiTroMuonTra.CANBO) {
 			message.error('Không tồn tại thông tin cán bộ!');
 			return;
 		}
 
 		if (!danhSach?.length) {
 			message.error('Không tồn tại ấn phẩm ghi mượn!');
+			return;
+		}
+
+		if (danhSach?.length > slConMuonDuoc) {
+			message.error('Đã quá hạn ngạch mượn, vui lòng kiểm tra lại danh sách!');
 			return;
 		}
 
@@ -192,10 +203,29 @@ const FormMuonTraSach = (props: any) => {
 	const columnsPrint = columns.filter((col) => col.title !== 'Thao tác');
 
 	const handleLuuDKCB = async () => {
-		const anPhamData = await getOneModel({ soDangKyCaBiet: dkcb });
+		const anPhamData = await getAnPhamXepGia(
+			{ soDangKyCaBiet: dkcb },
+			undefined,
+			undefined,
+			undefined,
+			undefined,
+			undefined,
+			undefined,
+			false,
+		);
 
-		if (!anPhamData) {
+		if (!anPhamData?.length) {
 			message.error('Không tìm thấy ấn phẩm!');
+			return;
+		}
+
+		if (anPhamData?.[0]?.trangThai === ETrangThaiDangKyCaBiet.BAN) {
+			message.error('Ấn phẩm đang được mượn!');
+			return;
+		}
+
+		if (danhSach?.find((i) => i?._id === anPhamData?.[0]?._id)) {
+			message.error('Ấn phẩm đã tồn tại trong danh sách!');
 			return;
 		}
 
@@ -204,7 +234,7 @@ const FormMuonTraSach = (props: any) => {
 				[
 					...prev,
 					{
-						...anPhamData,
+						...anPhamData?.[0],
 						thoiGianMuon: moment(),
 						expired: moment().add(settingMuonTra?.thoiHanMuonTraSach ?? 150, 'd'),
 						// daLay: true,
@@ -324,7 +354,7 @@ const FormMuonTraSach = (props: any) => {
 									</Descriptions>
 								</Spin>
 							</Col>
-							{(recSinhVien?._id || recCanBo?._id) && (
+							{(recSinhVien?.ssoId || recCanBo?.ssoId) && (
 								<Col xs={24}>
 									<Row gutter={[12, 0]}>
 										<Col span={24} md={6}>
@@ -370,14 +400,7 @@ const FormMuonTraSach = (props: any) => {
 												onClick={() => setVisibleModal(true)}
 											>
 												<span className='num' style={{ color: 'green' }}>
-													{Math.max(
-														0,
-														(settingMuonTra?.soLuongMuonToiDa ?? 0) -
-															Number(
-																(vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ??
-																	0,
-															),
-													)}
+													{slConMuonDuoc}
 												</span>
 												<span>Còn mượn được</span>
 											</Card>
@@ -443,13 +466,17 @@ const FormMuonTraSach = (props: any) => {
 			<FormMuonTra />
 
 			<Modal
-				title={`Danh sách lịch sử mượn trả sách sinh viên ${recSinhVien?.ten}`}
+				title={`Danh sách lịch sử mượn trả sách người mượn ${
+					vaiTro === EVaiTroMuonTra.SINHVIEN
+						? recSinhVien?.ten
+						: [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' ')
+				}`}
 				visible={visibleModal}
 				onCancel={() => setVisibleModal(false)}
 				width={1000}
 				footer={null}
 			>
-				<LichSuThueMuonPage ssoId={recSinhVien?.ssoId} />
+				<LichSuThueMuonPage ssoId={vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien?.ssoId : recCanBo?.ssoId} />
 
 				<div className='form-footer'>
 					<Button onClick={() => setVisibleModal(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
