@@ -55,7 +55,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				soTrang: { tagCode: '300', subCode: '$a' },
 				dacDiemVatLy: { tagCode: '300', subCode: '$b' },
 				khuonKho: { tagCode: '300', subCode: '$c' },
-				tuLieuDiKiem: { tagCode: '300', subCode: '$e' },
+				tuLieuDiKem: { tagCode: '300', subCode: '$e' },
 			};
 
 			const formValues: Record<string, any> = {};
@@ -225,7 +225,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='tuLieuDiKiem' label='Tư liệu đi kèm [300$e]'>
+					<Form.Item name='tuLieuDiKem' label='Tư liệu đi kèm [300$e]'>
 						<Input placeholder='Nhập tư liệu đi kèm' />
 					</Form.Item>
 				</Col>

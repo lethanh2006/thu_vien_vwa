@@ -26,11 +26,8 @@ const MuonTraSachPage = (props: any) => {
 	const { record: recPhieu, setVisibleForm, visibleForm: visiblePhieu } = useModel('sachtailieu.muontra.phieumuontra');
 	const { thongKeMuonTraSachModel, getModel, page, limit, handleView, setRecord, deleteModel, putModel } =
 		useModel('sachtailieu.muontra.muontra');
-	const {
-		handleView: handleViewAnPham,
-		visibleForm,
-		setVisibleForm: setVisibleAnPham,
-	} = useModel('sachtailieu.anpham.anpham');
+	const { visibleForm, setVisibleForm: setVisibleAnPham } = useModel('sachtailieu.anpham.anpham');
+	const { getAllModel } = useModel('sachtailieu.anpham.thongtinanpham');
 	const [trangThai, setTrangThai] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.DANG_THUE_MUON);
 	const [visibleGiaHan, setVisibleGiaHan] = useState<boolean>(false);
 	const [visibleGhiTra, setVisibleGhiTra] = useState<boolean>(false);
@@ -76,6 +73,23 @@ const MuonTraSachPage = (props: any) => {
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
+			title: 'Vai trò',
+			align: 'center',
+			width: 90,
+			render: (val, rec) => rec?.phieuMuonTra?.vaiTro,
+			onCell,
+			hide: !tatCaLichSu,
+		},
+
+		{
+			title: 'Họ tên',
+			width: 150,
+			render: (val, rec) =>
+				`${rec?.phieuMuonTra?.hoTenNguoiMuon ?? ''} (${rec?.phieuMuonTra?.maDinhDanhNguoiMuon ?? ''})`,
+			onCell,
+			hide: !tatCaLichSu,
+		},
+		{
 			title: 'Nhan đề',
 			width: 220,
 			render: (val, rec) => (
@@ -86,7 +100,8 @@ const MuonTraSachPage = (props: any) => {
 						icon={<InfoCircleOutlined />}
 						onClick={(e) => {
 							e.stopPropagation();
-							handleViewAnPham(rec?.anPham);
+							getAllModel(undefined, undefined, { anPhamId: rec?.anPhamId });
+							setVisibleAnPham(true);
 						}}
 					/>
 					{rec?.anPham?.nhanDe}
@@ -103,7 +118,7 @@ const MuonTraSachPage = (props: any) => {
 		{
 			title: 'ĐKCB',
 			dataIndex: 'soDangKyCaBiet',
-			width: 90,
+			width: 120,
 			filterType: 'string',
 			onCell,
 			// hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
@@ -344,7 +359,13 @@ const MuonTraSachPage = (props: any) => {
 					visible={visibleForm}
 					onCancel={() => setVisibleAnPham(false)}
 					width={900}
-					footer={null}
+					footer={
+						<div className='form-footer'>
+							<Button onClick={() => setVisibleAnPham(false)}>
+								{intl.formatMessage({ id: 'global.button.dong' })}
+							</Button>
+						</div>
+					}
 				>
 					<ChiTietAnPham />
 				</Modal>

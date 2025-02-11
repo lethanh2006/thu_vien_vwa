@@ -144,22 +144,21 @@ const FormBienMucChiTiet = (props: any) => {
 											<Col span={24}>
 												<Col span={24}>
 													<Row gutter={[12, 0]}>
-														{_.orderBy(
-															form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.thuocTinhAnPham,
-															'code',
-														)?.map((item: any, i: number) => (
-															// eslint-disable-next-line react/no-array-index-key
-															<Col md={12} key={`${field.name}-thuocTinh-${i}`}>
-																<Form.Item
-																	label={`${item.ten ?? ''} [${
-																		form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.tagCode
-																	}${item?.code}]`}
-																	name={[field.name, 'thuocTinhAnPham', i, 'value']}
-																>
-																	<Input placeholder={`Nhập ${item.ten}`} />
-																</Form.Item>
-															</Col>
-														))}
+														{form
+															.getFieldValue('danhSachBienMucChiTiet')
+															?.[index]?.thuocTinhAnPham?.map((item: any, i: number) => (
+																// eslint-disable-next-line react/no-array-index-key
+																<Col md={12} key={`${field.name}-thuocTinh-${i}`}>
+																	<Form.Item
+																		label={`${item.ten ?? ''} [${
+																			form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.tagCode
+																		}${item?.code}]`}
+																		name={[field.name, 'thuocTinhAnPham', i, 'value']}
+																	>
+																		<Input placeholder={`Nhập ${item.ten}`} />
+																	</Form.Item>
+																</Col>
+															))}
 													</Row>
 												</Col>
 

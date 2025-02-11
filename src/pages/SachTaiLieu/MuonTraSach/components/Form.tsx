@@ -8,6 +8,7 @@ import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
 import type { SinhVien } from '@/services/SinhVien/typings';
 import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
+import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons';
 import {
@@ -85,12 +86,12 @@ const FormMuonTraSach = (props: any) => {
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: PhieuMuonTra.IRecord) => {
-		if (!recSinhVien?._id && vaiTro === EVaiTroMuonTra.SINHVIEN) {
+		if (!recSinhVien?.ssoId && vaiTro === EVaiTroMuonTra.SINHVIEN) {
 			message.error('Không tồn tại thông tin sinh viên!');
 			return;
 		}
 
-		if (!recCanBo?._id && vaiTro === EVaiTroMuonTra.CANBO) {
+		if (!recCanBo?.ssoId && vaiTro === EVaiTroMuonTra.CANBO) {
 			message.error('Không tồn tại thông tin cán bộ!');
 			return;
 		}
@@ -114,9 +115,12 @@ const FormMuonTraSach = (props: any) => {
 				ghiChu: item?.ghiChu,
 			})),
 
-			hoTenNguoiMuon: recSinhVien?.ten,
-			maDinhDanhNguoiMuon: recSinhVien?.ma,
-			ssoIdNguoiMuon: recSinhVien?.ssoId,
+			hoTenNguoiMuon:
+				vaiTro === EVaiTroMuonTra.SINHVIEN
+					? recSinhVien?.ten
+					: [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' '),
+			maDinhDanhNguoiMuon: vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien?.ma : recCanBo?.maCanBo,
+			ssoIdNguoiMuon: vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien?.ssoId : recCanBo?.ssoId,
 			trangThaiDuyet: ETrangThaiDuyetMuonSach.DA_DUYET,
 
 			vaiTro: values?.vaiTro,
@@ -203,6 +207,11 @@ const FormMuonTraSach = (props: any) => {
 	const columnsPrint = columns.filter((col) => col.title !== 'Thao tác');
 
 	const handleLuuDKCB = async () => {
+		if (!dkcb) {
+			message.error('Vui lòng nhập đăng ký cá biệt trước khi thêm!');
+			return;
+		}
+
 		const anPhamData = await getAnPhamXepGia(
 			{ soDangKyCaBiet: dkcb },
 			undefined,
@@ -246,6 +255,11 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	const handleLuuSinhVien = async () => {
+		if (!soThe) {
+			message.error('Vui lòng nhập mã trước khi thêm!');
+			return;
+		}
+
 		const nguoiMuon = await getModel(
 			vaiTro === EVaiTroMuonTra.SINHVIEN ? ({ ma: soThe } as any) : ({ maCanBo: soThe } as any),
 			undefined,
@@ -284,7 +298,11 @@ const FormMuonTraSach = (props: any) => {
 								</Form.Item>
 							</Col>
 							<Col span={24}>
-								<Form.Item name='soThe' label={vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}>
+								<Form.Item
+									name='soThe'
+									label={vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}
+									rules={[...rules.required]}
+								>
 									<Input
 										placeholder='Nhập sinh viên'
 										onPressEnter={(e) => {
@@ -300,7 +318,7 @@ const FormMuonTraSach = (props: any) => {
 								</Space>
 							</Col>
 							<Col span={24}>
-								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
+								<Form.Item name='dkcb' label='Đăng ký cá biệt' rules={[...rules.required]}>
 									<Input
 										placeholder='Nhập đăng ký cá biệt'
 										onPressEnter={(e) => {
