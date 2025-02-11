@@ -51,7 +51,7 @@ ENV APP_CONFIG_TITLE_QLVB='Quản lý văn bản'
 WORKDIR /app
 
 COPY package.json /app/
-RUN yarn install
+RUN npm i --force
 
 COPY . /app
 
