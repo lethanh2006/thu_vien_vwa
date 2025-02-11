@@ -4,7 +4,7 @@ import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { inputFormat } from '@/utils/utils';
 import { useModel } from 'umi';
-import StatDanhSachDKCB from './components/Stat';
+import StatDanhSachDKCB from '../../DangKyCaBiet/components/Stat';
 
 const DanhSachDKCB = () => {
 	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
@@ -43,7 +43,11 @@ const DanhSachDKCB = () => {
 
 	return (
 		<>
-			<StatDanhSachDKCB />
+			<StatDanhSachDKCB
+				condition={{
+					anPhamId: recAnPham?._id,
+				}}
+			/>
 
 			<TableBase
 				getData={getData}

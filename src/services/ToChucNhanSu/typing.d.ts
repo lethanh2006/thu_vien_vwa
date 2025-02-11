@@ -124,6 +124,9 @@ declare module ToChucNhanSu {
 
 		// Fake để truyền vào filter
 		maDonVi?: string;
+
+		//Thư viện
+		thongKe: { choXuLy: string; dangThueMuon: string; quaHan: string; daTra: string };
 	}
 
 	export interface IThongKeNhanSuXepLich extends INhanSu {

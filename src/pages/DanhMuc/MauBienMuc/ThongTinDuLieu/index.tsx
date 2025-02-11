@@ -2,14 +2,14 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useModel } from 'umi';
 import FormMauBienMuc from './Form';
 
 const ThongTinDuLieuBienMucPage = () => {
 	const { record: recMauBienMuc } = useModel('danhmuc.maubienmuc');
-	const { page, limit, deleteModel, getModel } = useModel('danhmuc.thongtindulieu');
+	const { page, limit, deleteModel, getModel, handleEdit } = useModel('danhmuc.thongtindulieu');
 
 	const getData = () => {
 		if (recMauBienMuc?._id) getModel({ mauBienMucId: recMauBienMuc?._id });
@@ -28,19 +28,22 @@ const ThongTinDuLieuBienMucPage = () => {
 			render: (val, rec) => <ExpandText>{rec?.thongTinTag?.noiDung}</ExpandText>,
 		},
 		{
-			title: 'Ghi chú',
+			title: 'DS trường con',
 			width: 220,
-			render: (val, rec) => <ExpandText>{rec?.thongTinTag?.ghiChu}</ExpandText>,
+			render: (val, rec) => (
+				<ExpandText>{rec?.thuocTinhDuLieu?.map((item) => `${item?.code}${item?.ten}`).join(', ')}</ExpandText>
+			),
 		},
 		{
 			title: 'Thao tác',
 			align: 'center',
 			width: 90,
 			fixed: 'right',
-			render: (val, record) => (
+			render: (val, rec) => (
 				<>
+					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
 					<Popconfirm
-						onConfirm={() => deleteModel(record?._id)}
+						onConfirm={() => deleteModel(rec?._id, getData)}
 						title='Bạn có chắc chắn muốn xóa thông tin này?'
 						placement='topRight'
 					>
@@ -61,6 +64,7 @@ const ThongTinDuLieuBienMucPage = () => {
 			hideCard
 			Form={FormMauBienMuc}
 			formProps={{ getData }}
+			widthDrawer={700}
 		/>
 	);
 };

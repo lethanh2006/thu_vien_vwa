@@ -34,13 +34,12 @@ const ModalXepGia = () => {
 	const {
 		formSubmiting,
 		postModel,
-		putModel,
 		record: recXepGia,
 		visibleForm,
 		setVisibleForm,
-		getAllModel,
-		danhSach: danhSachXepGia,
-		loading,
+		thongKeXepGiaModel,
+		loadingThongKe,
+		datathongKeXepGia,
 	} = useModel('sachtailieu.anpham.xepgia');
 	const { danhSach: danhSachKieuTuLieu } = useModel('danhmuc.kieutulieu');
 	const khoSachId: string = Form.useWatch('khoSachId', form);
@@ -51,27 +50,27 @@ const ModalXepGia = () => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			getAllModel(undefined, undefined, { anPhamId: record?._id });
+			thongKeXepGiaModel({ anPhamId: record?._id });
 		}
 	}, [visibleForm, record?._id]);
 
 	const onFinish = async (values: AnPham.IXepGia) => {
-		if (recXepGia?._id) {
-			putModel(recXepGia?._id, {
-				...values,
-				daXepGia: actionType === 'luu_lai' ? false : true,
-			})
-				.then((rec) => setVisibleForm(false))
-				.catch((er) => console.log(er));
-		} else {
-			postModel({
+		postModel(
+			{
 				...values,
 				daXepGia: actionType === 'luu_lai' ? false : true,
 				anPhamId: record?._id,
-			})
-				.then((rec) => setVisibleForm(false))
-				.catch((er) => console.log(er));
-		}
+			},
+			() => {
+				thongKeXepGiaModel({ anPhamId: record?._id });
+				resetFieldsForm(form);
+				setTabActive('2');
+			},
+			false,
+			'Lưu thành công',
+		)
+			.then()
+			.catch((er) => console.log(er));
 	};
 
 	return (
@@ -80,14 +79,15 @@ const ModalXepGia = () => {
 			visible={visibleForm}
 			onCancel={() => setVisibleForm(false)}
 			footer={null}
-			width={danhSachXepGia?.length !== 0 ? 1000 : 800}
+			width={1000}
+			destroyOnClose
 		>
-			<Spin spinning={loading}>
+			<Spin spinning={loadingThongKe}>
 				<Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
 					<Col span={12} md={12}>
 						<Card className='card-stat-small'>
 							<span className='num' style={{ color: 'blue' }}>
-								{danhSachXepGia?.filter((item) => item?.daXepGia === false)?.length ?? '--'}
+								{datathongKeXepGia?.chuaXepGia ?? '--'}
 							</span>
 							<span>Đang xếp giá</span>
 						</Card>
@@ -95,7 +95,7 @@ const ModalXepGia = () => {
 					<Col span={12} md={12}>
 						<Card className='card-stat-small'>
 							<span className='num' style={{ color: 'green' }}>
-								{danhSachXepGia?.filter((item) => item?.daXepGia === true)?.length ?? '--'}
+								{datathongKeXepGia?.daXepGia ?? '--'}
 							</span>
 							<span>Đã xếp giá</span>
 						</Card>
@@ -103,12 +103,10 @@ const ModalXepGia = () => {
 				</Row>
 			</Spin>
 
-			{danhSachXepGia?.length !== 0 ? (
-				<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
-					<Tabs.TabPane tab='Xếp giá' key='1' />
-					<Tabs.TabPane tab='Lịch sử xếp giá' key='2' />
-				</Tabs>
-			) : null}
+			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
+				<Tabs.TabPane tab='Xếp giá' key='1' />
+				<Tabs.TabPane tab='Lịch sử xếp giá' key='2' />
+			</Tabs>
 
 			{tabActive === '1' ? (
 				<Form onFinish={onFinish} form={form} layout='vertical'>
@@ -188,6 +186,12 @@ const ModalXepGia = () => {
 								<InputNumber style={{ width: '100%' }} placeholder='Nhập lượng' />
 							</Form.Item>
 						</Col>
+
+						<Col xs={24}>
+							<Form.Item name='ghiChu' label='Ghi chú'>
+								<Input placeholder='Nhập ghi chú' />
+							</Form.Item>
+						</Col>
 					</Row>
 
 					<div className='form-footer'>
@@ -198,7 +202,6 @@ const ModalXepGia = () => {
 								setActionType('luu_lai');
 								form.submit();
 							}}
-							disabled={!record?._id && recXepGia?.daXepGia}
 						>
 							Lưu lại
 						</ButtonExtend>
@@ -210,7 +213,7 @@ const ModalXepGia = () => {
 							title='Xác nhận xếp giá, lưu ý khi hoàn thành sẽ không được chỉnh sửa lại giá?'
 							placement='topRight'
 						>
-							<ButtonExtend disabled={!record?._id && recXepGia?.daXepGia} loading={formSubmiting} type='primary'>
+							<ButtonExtend loading={formSubmiting} type='primary'>
 								Xếp giá
 							</ButtonExtend>
 						</Popconfirm>

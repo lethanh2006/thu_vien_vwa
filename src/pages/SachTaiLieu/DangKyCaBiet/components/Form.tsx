@@ -1,6 +1,6 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
-import { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
+import { ETrangThaiDuyetMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import rules from '@/utils/rules';
 import { inputFormat, resetFieldsForm } from '@/utils/utils';
@@ -9,24 +9,40 @@ import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
-const FormDangKyCaBiet = (props: any) => {
-	const { getData } = props;
+const FormDangKyCaBiet = () => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { visibleForm, setVisibleForm, formSubmiting, edit, putModel, postModel, record } =
-		useModel('sachtailieu.muontra.muontra');
+	const { formSubmiting, edit, putModel, postModel, record, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
 	const { danhSach: danhSachSinhVien } = useModel('sinhvien.sinhvien');
-	const { record: recDKCB } = useModel('sachtailieu.anpham.anphamxepgia');
+	const {
+		record: recDKCB,
+		getModel,
+		thongKeDangKyCaBietModel,
+		visibleForm,
+		setVisibleForm,
+	} = useModel('sachtailieu.anpham.anphamxepgia');
+
+	const getData = () => {
+		getModel();
+		thongKeDangKyCaBietModel();
+	};
 
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
+		} else if (recDKCB?._id) {
+			form.setFieldsValue({
+				thoiGianMuon: moment().toISOString(),
+				expired: moment()
+					.add(settingMuonTra?.thoiHanMuonTraSach || 150, 'days')
+					.toISOString(),
+			});
 		}
-	}, [visibleForm]);
+	}, [visibleForm, recDKCB?._id]);
 
 	const onFinish = async (values: MuonSach.IRecord) => {
 		values.trangThai = ETrangThaiMuonSach.DANG_THUE_MUON;
-		values.trangThaiDuyet = ETrangThaiDuyeMuonSach.DA_DUYET;
+		values.trangThaiDuyet = ETrangThaiDuyetMuonSach.DA_DUYET;
 
 		const sinhVien = danhSachSinhVien?.find((item) => item?.ssoId === values?.ssoIdNguoiMuon);
 		values.maDinhDanhNguoiMuon = sinhVien?.ma ?? '';
@@ -38,11 +54,11 @@ const FormDangKyCaBiet = (props: any) => {
 
 		if (edit) {
 			putModel(record?._id ?? '', values, getData)
-				.then()
+				.then(() => setVisibleForm(false))
 				.catch((er) => console.log(er));
 		} else
 			postModel(values, getData)
-				.then()
+				.then(() => setVisibleForm(false))
 				.catch((er) => console.log(er));
 	};
 
@@ -68,12 +84,12 @@ const FormDangKyCaBiet = (props: any) => {
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
-							<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
+							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='expired' label='Hạn trả' rules={[...rules.required]}>
-							<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
+							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>

@@ -31,6 +31,13 @@ const BienMucSachTaiLieuPage = () => {
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
+			title: 'Mã tài liệu',
+			dataIndex: 'maTaiLieu',
+			width: 120,
+			filterType: 'string',
+			onCell,
+		},
+		{
 			title: 'Tác giả',
 			dataIndex: 'tacGia',
 			width: 150,
@@ -125,7 +132,12 @@ const BienMucSachTaiLieuPage = () => {
 					content={
 						<>
 							<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
-							<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+							<ButtonExtend
+								tooltip='Biên mục chi tiết'
+								onClick={() => handleEdit(rec)}
+								type='link'
+								icon={<EditOutlined />}
+							/>
 
 							<Popconfirm
 								onConfirm={() => deleteModel(rec._id, getData)}

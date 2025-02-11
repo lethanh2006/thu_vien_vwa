@@ -1,5 +1,5 @@
 import type { GiaSach } from '@/services/DanhMuc/GiaSach/typing';
-import type { ETrangThaiBienMuc } from '../constant';
+import type { ETrangThaiBienMuc, ETrangThaiDangKyCaBiet } from '../constant';
 
 declare module AnPham {
 	export interface IRecord {
@@ -40,8 +40,14 @@ declare module AnPham {
 
 		trangThai: ETrangThaiBienMuc;
 
+		online: boolean;
+		dpsaceId: string;
+
 		createdAt?: Date;
 		updatedAt?: Date;
+
+		//fake
+		soDangKyCaBiet?: string;
 	}
 
 	export interface IThongTinAnPham {
@@ -96,6 +102,7 @@ declare module AnPham {
 		soDangKyCaBien: string;
 		soLuong: number;
 		daXepGia: boolean;
+		ghiChu: string;
 	}
 
 	export interface IAnPhamXepGia {
@@ -106,5 +113,16 @@ declare module AnPham {
 		thoiGianXepGia: Date;
 		thongTinXepGiaId: string;
 		thongTinXepGia: IXepGia;
+		trangThai: ETrangThaiDangKyCaBiet;
+	}
+
+	export interface IThongKeAnPhamXepGia {
+		tongSoAnPham: number;
+		tongSoAnPhamDangThueMuon: number;
+	}
+
+	export interface IThongKeXepGia {
+		daXepGia: number;
+		chuaXepGia: number;
 	}
 }

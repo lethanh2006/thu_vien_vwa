@@ -1,94 +1,48 @@
-import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
-import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
-import { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach, mapNameTrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
-import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
-import {
-	CheckOutlined,
-	DeleteOutlined,
-	EditOutlined,
-	InfoCircleOutlined,
-	MenuOutlined,
-	RetweetOutlined,
-	SettingOutlined,
-	UserOutlined,
-} from '@ant-design/icons';
-import { Button, Card, Modal, Popconfirm, Popover, Segmented, Tabs, Tag } from 'antd';
+import { colorTrangThaiDuyeMuonSach, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
+import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
+import { DeleteOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { Card, Popconfirm, Tabs, Tag } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import ChiTietAnPham from '../AnPham/components/ChiTiet';
 import CauHinhThoiHanMuonTra from './components/CauHinh';
-import ChiTietMuonTraSach from './components/ChiTiet';
 import Form from './components/Form';
-import GhiTraAnPham from './components/GhiTraSach';
-import ConfirmGiaHan from './components/ModalGiaHan';
 import StatMuonTraSach from './components/Stat';
+import MuonTraSachPage from './MuonTra';
 
-const MuonTraSachPage = () => {
-	const {
-		getModel,
-		page,
-		limit,
-		handleView,
-		handleEdit,
-		deleteModel,
-		getSettingModel,
-		isView,
-		setRecord,
-		putModel,
-		thongKeMuonTraSachModel,
-	} = useModel('sachtailieu.muontra.muontra');
-	const { handleView: handleViewAnPham, visibleForm, setVisibleForm } = useModel('sachtailieu.anpham.anpham');
-	const [trangThai, setTrangThai] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.CHO_XU_LY);
+const PhieuMuonTraSachPage = () => {
+	const { page, limit, handleView, setEdit, setIsView, isView, setRecord, setVisibleForm, deleteModel } = useModel(
+		'sachtailieu.muontra.phieumuontra',
+	);
+	const { getSettingModel, settingMuonTra, thongKeMuonTraSachModel } = useModel('sachtailieu.muontra.muontra');
+	const { setDanhSach } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
-	const [visibleGiaHan, setVisibleGiaHan] = useState<boolean>(false);
-	const [visibleGhiTra, setVisibleGhiTra] = useState<boolean>(false);
-	const [activeKey, setActiveKey] = useState<string>('1');
+	const [tabActive, setTabActive] = useState<string>('1');
 
 	useEffect(() => {
-		getSettingModel();
+		if (!settingMuonTra) getSettingModel();
 	}, []);
 
-	const getData = () => {
-		const filter: any[] =
-			activeKey === '2'
-				? [
-						{
-							active: true,
-							field: 'expired',
-							values: [moment().subtract(7, 'day').toISOString(), moment().toISOString()],
-							operator: EOperatorType.BETWEEN,
-						},
-				  ]
-				: activeKey === '3'
-				? [{ active: true, field: 'expired', values: [moment().toISOString()], operator: EOperatorType.LESS_THAN }]
-				: activeKey === '4'
-				? [{ active: true, field: 'daLaySach', values: [false], operator: EOperatorType.EQUAL }]
-				: [];
-
-		getModel(
-			trangThai === ETrangThaiMuonSach.CHO_XU_LY ? { trangThaiDuyet: ETrangThaiDuyeMuonSach.CHO_DUYET } : { trangThai },
-			activeKey !== '1' && trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? filter : undefined,
-		);
-	};
-
-	const handleLaySach = (rec: MuonSach.IRecord) => {
-		putModel(rec?._id, { daLaySach: true }, getData)
-			.then()
-			.catch((err) => console.log(err));
-	};
-
-	const onCell = (rec: MuonSach.IRecord) => ({
+	const onCell = (rec: PhieuMuonTra.IRecord) => ({
 		onClick: () => handleView(rec),
 		style: { cursor: 'pointer' },
 	});
 
-	const columns: IColumn<MuonSach.IRecord>[] = [
+	const columns: IColumn<PhieuMuonTra.IRecord>[] = [
 		{
-			title: 'Mã SV',
+			title: 'Vai trò',
+			dataIndex: 'vaiTro',
+			align: 'center',
+			width: 90,
+			filterType: 'select',
+			filterData: Object.values(EVaiTroMuonTra),
+			onCell,
+		},
+		{
+			title: 'Mã định danh',
 			dataIndex: 'maDinhDanhNguoiMuon',
 			align: 'center',
 			width: 120,
@@ -97,248 +51,55 @@ const MuonTraSachPage = () => {
 		},
 		{
 			title: 'Họ tên',
-			dataIndex: 'hotenNguoiMuon',
+			dataIndex: 'hoTenNguoiMuon',
 			width: 150,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Nhan đề',
-			width: 220,
-			render: (val, rec) => (
-				<ExpandText>
-					<ButtonExtend
-						size='small'
-						type='link'
-						icon={<InfoCircleOutlined />}
-						onClick={(e) => {
-							e.stopPropagation();
-							handleViewAnPham(rec?.anPham);
-						}}
-					/>
-					{rec?.anPham?.nhanDe}
-				</ExpandText>
-			),
-			onCell,
-		},
-		{
-			title: 'Tác giả',
-			width: 180,
-			render: (val, rec) => rec?.anPham?.tacGia,
-			onCell,
-		},
-		{
-			title: 'ĐKCB',
-			dataIndex: 'soDangKyCaBiet',
-			width: 90,
-			filterType: 'string',
-			onCell,
-			hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
-		},
-		{
-			title: 'Thời gian mượn',
-			dataIndex: 'thoiGianMuon',
+			title: 'Thời gian đăng ký',
+			dataIndex: 'thoiGianDangKy',
 			align: 'center',
-			width: 150,
-			render: (val, rec) => {
-				if (!val) return null;
-				const formattedTime = moment(val).format('HH:mm DD/MM/YYYY');
-
-				const expirationTime = rec?.expired ? moment(rec.expired) : moment();
-				const now = moment();
-
-				const isOverdue = now.isAfter(expirationTime) && trangThai === ETrangThaiMuonSach.DANG_THUE_MUON;
-
-				const isOverdueMoreThan7Days = isOverdue && now.diff(expirationTime, 'days') > 7;
-
-				const color = isOverdueMoreThan7Days ? 'orange' : isOverdue ? 'red' : 'inherit';
-				const fontWeight = isOverdue ? 600 : 0;
-
-				return <span style={{ color, fontWeight }}>{formattedTime}</span>;
-			},
+			width: 120,
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
-			hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
-		},
-		{
-			title: 'Thời gian dự kiến mượn',
-			dataIndex: 'thoiGianMuonDuKien',
-			width: 130,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-			onCell,
-			hide: trangThai !== ETrangThaiMuonSach.CHO_XU_LY,
-		},
-		{
-			title: 'Thời gian dự kiến trả',
-			dataIndex: 'thoiGianTraDuKien',
-			width: 130,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-			onCell,
-			hide: trangThai !== ETrangThaiMuonSach.CHO_XU_LY,
-		},
-		{
-			title: 'Hạn trả',
-			align: 'center',
-			dataIndex: 'expired',
-			width: 130,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-			onCell,
-			hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
 		},
 		{
 			title: 'Trạng thái',
+			dataIndex: 'trangThaiDuyet',
 			align: 'center',
-			dataIndex: 'daLaySach',
 			width: 120,
-			render: (val, rec) => (val ? <Tag color='green'>Đã lấy</Tag> : <Tag color='red'>Chưa lấy</Tag>),
+			render: (val, rec) => <Tag color={colorTrangThaiDuyeMuonSach[val as ETrangThaiDuyetMuonSach]}>{val}</Tag>,
+			filterType: 'select',
+			filterData: Object.values(ETrangThaiDuyetMuonSach),
 			onCell,
-			hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
-		},
-		{
-			title: 'Thời gian gia hạn',
-			align: 'center',
-			dataIndex: 'thoiGianGiaHan',
-			width: 130,
-			render: (val, rec) => val && moment(val).format('HH:mm DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-			onCell,
-			hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
-		},
-		{
-			title: 'Thời gian trả',
-			dataIndex: 'thoiGianTra',
-			width: 150,
-			render: (val, rec) => {
-				if (!val) return null;
-
-				const formattedTime = moment(val).format('HH:mm DD/MM/YYYY');
-
-				const expirationTime = rec?.expired ? moment(rec.expired) : moment();
-				const isOverdue = moment().isAfter(expirationTime);
-
-				return (
-					<span style={{ color: isOverdue ? 'red' : 'inherit', fontWeight: isOverdue ? 600 : 0 }}>{formattedTime}</span>
-				);
-			},
-			filterType: 'date',
-			sortable: true,
-			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
-			onCell,
-		},
-		{
-			title: 'Ghi chú đăng ký',
-			dataIndex: 'ghiChuDangKy',
-			width: 220,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
-			onCell,
-		},
-		{
-			title: 'Ghi chú',
-			dataIndex: 'ghiChu',
-			width: 220,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
-			onCell,
-			hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
-		},
-		{
-			title: 'Ghi chú trả',
-			dataIndex: 'ghiChuTra',
-			width: 220,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
-			onCell,
-			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
 		},
 		{
 			title: 'Thao tác',
 			align: 'center',
 			width: 60,
 			fixed: 'right',
-			render: (val, record) => (
-				<Popover
-					placement='topRight'
-					content={
-						<>
-							{trangThai === ETrangThaiMuonSach.CHO_XU_LY ? (
-								<ButtonExtend
-									tooltip='Duyệt'
-									type='link'
-									icon={<CheckOutlined />}
-									className='text-success'
-									onClick={() => handleView(record)}
-								/>
-							) : trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
-								<>
-									<ButtonExtend
-										onClick={() => {
-											setRecord(record);
-											setVisibleGhiTra(true);
-										}}
-										tooltip='Ghi trả'
-										className='text-success'
-										type='link'
-										icon={<CheckOutlined />}
-									/>
-
-									<Popconfirm
-										onConfirm={() => handleLaySach(record)}
-										title='Bạn có chắc chắn sinh viên đã lấy đầu sách này?'
-										placement='topRight'
-									>
-										<ButtonExtend
-											disabled={record?.daLaySach}
-											tooltip='Xác nhận sinh viên lấy sách'
-											type='link'
-											icon={<UserOutlined />}
-										/>
-									</Popconfirm>
-
-									<ButtonExtend
-										tooltip='Gia hạn'
-										type='link'
-										icon={<RetweetOutlined />}
-										onClick={() => {
-											setRecord(record);
-											setVisibleGiaHan(true);
-										}}
-										disabled={moment().isBefore(moment(record?.expired))}
-									/>
-								</>
-							) : null}
-
-							<ButtonExtend
-								disabled={record?.trangThai === ETrangThaiMuonSach.DA_TRA}
-								tooltip='Chỉnh sửa'
-								onClick={() => handleEdit(record)}
-								type='link'
-								icon={<EditOutlined />}
-							/>
-							<Popconfirm
-								onConfirm={() => deleteModel(record._id, getData)}
-								title='Bạn có chắc chắn muốn xóa thông tin này?'
-								placement='topRight'
-							>
-								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
-							</Popconfirm>
-						</>
+			render: (val, rec) => (
+				<Popconfirm
+					onConfirm={() =>
+						deleteModel(rec._id).then(() => {
+							thongKeMuonTraSachModel();
+						})
 					}
+					title='Bạn có chắc chắn muốn xóa thông tin này?'
+					placement='topRight'
 				>
-					<Button type='link' icon={<MenuOutlined />} />
-				</Popover>
+					<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+				</Popconfirm>
 			),
 		},
 	];
 
 	return (
 		<Card
-			title='Danh sách sinh viên mượn sách'
+			title='Danh sách phiếu mượn'
 			extra={
 				<ButtonExtend
 					tooltip='Cấu hình'
@@ -349,74 +110,51 @@ const MuonTraSachPage = () => {
 			}
 		>
 			<div style={{ marginBottom: 12 }}>
-				<StatMuonTraSach setTrangThai={setTrangThai} setActiveKey={setActiveKey} />
+				<StatMuonTraSach />
 			</div>
 
-			<Tabs activeKey={trangThai} onChange={(tab) => setTrangThai(tab as ETrangThaiMuonSach)}>
-				{Object.values(ETrangThaiMuonSach).map((tab) => (
-					<Tabs.TabPane key={tab} tab={mapNameTrangThaiMuonSach[tab]} />
-				))}
+			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
+				<Tabs.TabPane tab='Phiếu mượn' key='1' />
+				<Tabs.TabPane tab='Tất cả lịch sử' key='2' />
 			</Tabs>
 
-			<TableBase
-				getData={getData}
-				columns={columns}
-				dependencies={[page, limit, trangThai, activeKey]}
-				modelName='sachtailieu.muontra.muontra'
-				widthDrawer={900}
-				formProps={{ getData, trangThai, setTrangThai, setVisibleGhiTra }}
-				Form={isView ? ChiTietMuonTraSach : Form}
-				hideCard
-				otherButtons={
-					trangThai === ETrangThaiMuonSach.DANG_THUE_MUON
-						? [
-								<Segmented
-									key={'1'}
-									value={activeKey}
-									onChange={(value) => setActiveKey(value.toString())}
-									options={[
-										{ value: '1', label: 'Tất cả' },
-										{ value: '2', label: 'Sắp đến hạn' },
-										{ value: '3', label: 'Quá hạn' },
-										{ value: '4', label: 'Chưa lấy sách' },
-									]}
-								/>,
-						  ]
-						: []
-				}
-			/>
+			{tabActive === '1' ? (
+				<TableBase
+					columns={columns}
+					dependencies={[page, limit]}
+					modelName='sachtailieu.muontra.phieumuontra'
+					widthDrawer={1100}
+					Form={isView ? MuonTraSachPage : Form}
+					hideCard
+					buttons={{ create: false }}
+					otherButtons={[
+						<ButtonExtend
+							key={'1'}
+							onClick={() => {
+								setRecord({} as PhieuMuonTra.IRecord);
+								setEdit(false);
+								setIsView(false);
+								setVisibleForm(true);
+
+								//Set danhSach đăng ký cá biệt rỗng
+								setDanhSach([]);
+							}}
+							icon={<PlusCircleOutlined />}
+							type='primary'
+							notHideText
+							tooltip='Ghi mượn'
+						>
+							Ghi mượn
+						</ButtonExtend>,
+					]}
+				/>
+			) : (
+				<MuonTraSachPage tatCaLichSu />
+			)}
 
 			<CauHinhThoiHanMuonTra visible={visibleCauHinh} setVisible={setVisibleCauHinh} />
-
-			<Modal
-				title='Chi tiết ấn phẩm'
-				visible={visibleForm}
-				onCancel={() => setVisibleForm(false)}
-				width={900}
-				footer={null}
-			>
-				<ChiTietAnPham />
-			</Modal>
-
-			<ConfirmGiaHan
-				visible={visibleGiaHan}
-				setVisible={setVisibleGiaHan}
-				getData={() => {
-					thongKeMuonTraSachModel();
-					getData();
-				}}
-			/>
-
-			<GhiTraAnPham
-				visible={visibleGhiTra}
-				setVisible={setVisibleGhiTra}
-				getData={() => {
-					thongKeMuonTraSachModel();
-					getData();
-				}}
-			/>
 		</Card>
 	);
 };
 
-export default MuonTraSachPage;
+export default PhieuMuonTraSachPage;

@@ -46,11 +46,11 @@ const ChiTietBienMuc = () => {
 					'--'}
 			</Descriptions.Item>
 			<Descriptions.Item label='Lần xuất bản [250$a]'>
-				{danhSach?.find((item) => item?.tagCode === '245')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??
+				{danhSach?.find((item) => item?.tagCode === '250')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??
 					'--'}
 			</Descriptions.Item>
 			<Descriptions.Item label='Nơi xuất bản [260$a]'>
-				{danhSach?.find((item) => item?.tagCode === '260')?.thuocTinhAnPham?.find((i) => i.code === '$c')?.value ??
+				{danhSach?.find((item) => item?.tagCode === '260')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??
 					'--'}
 			</Descriptions.Item>
 			<Descriptions.Item label='Năm xuất bản [260$c]'>

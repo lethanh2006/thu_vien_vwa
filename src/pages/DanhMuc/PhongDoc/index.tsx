@@ -5,33 +5,30 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
-import SelectPhongDoc from '../PhongDoc/components/Select';
 
 const KhoSachPage = () => {
 	const intl = useIntl();
-	const { page, limit, handleEdit, deleteModel } = useModel('danhmuc.khosach');
+	const { page, limit, handleEdit, deleteModel } = useModel('danhmuc.phongdoc');
 
-	const columns: IColumn<KhoSach.IRecord>[] = [
+	const columns: IColumn<PhongDoc.IRecord>[] = [
 		{
-			title: 'Mã kho',
+			title: 'Mã phòng đọc',
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên kho',
+			title: 'Tên phòng đọc',
 			dataIndex: 'ten',
 			width: 220,
 			filterType: 'string',
 		},
 		{
-			title: 'Phòng đọc',
-			dataIndex: 'maPhongDoc',
-			width: 180,
-			render: (val, rec) => rec?.phongDoc?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectPhongDoc multiple selectMa />,
+			title: 'Địa chỉ',
+			dataIndex: 'diaChi',
+			width: 220,
+			filterType: 'string',
 		},
 		{
 			title: 'Thao tác',
@@ -43,7 +40,7 @@ const KhoSachPage = () => {
 					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa kho sách này?'
+						title='Bạn có chắc chắn muốn xóa phòng đọc này?'
 						placement='topRight'
 					>
 						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
@@ -57,8 +54,8 @@ const KhoSachPage = () => {
 		<TableBase
 			columns={columns}
 			dependencies={[page, limit]}
-			modelName='danhmuc.khosach'
-			title={intl.formatMessage({ id: 'danhmuc.khosach.title' })}
+			modelName='danhmuc.phongdoc'
+			title={intl.formatMessage({ id: 'danhmuc.phongdoc.title' })}
 			Form={Form}
 		/>
 	);

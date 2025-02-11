@@ -130,6 +130,7 @@ declare module SinhVien {
 		nganh2: NganhDaoTao.IRecordCoSo;
 
 		lopHanhChinhList?: LopHanhChinh.IRecord[];
+		tenLopHanhChinhVirtual: string;
 		maTrinhDo: string;
 		trinhDoDaoTao: TrinhDoDaoTao.IRecordCoSo;
 		maHinhThuc: string;

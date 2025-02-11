@@ -12,21 +12,21 @@ import { useModel } from 'umi';
 
 const FormDuyet = (props: { form: FormInstance }) => {
 	const { form } = props;
-	const { record: recAnPham, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
-	const { getModel, page, limit, selectedIds, setSelectedIds } = useModel('sachtailieu.anpham.thongtinanpham');
+	const { record: recMuonTra, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
+	const { getModel, page, limit, selectedIds, setSelectedIds } = useModel('sachtailieu.anpham.anpham');
 	const expired: Date = Form.useWatch('expired', form);
 
 	useEffect(() => {
 		form.setFieldsValue({
-			thoiGianMuon: moment(recAnPham?.thoiGianMuonDuKien).toISOString(),
-			expired: moment(recAnPham?.thoiGianTraDuKien).toISOString(),
+			thoiGianMuon: moment(recMuonTra?.thoiGianMuonDuKien).toISOString(),
+			expired: moment(recMuonTra?.thoiGianTraDuKien).toISOString(),
 		});
-	}, [, recAnPham?._id, settingMuonTra?._id]);
+	}, [, recMuonTra?._id, settingMuonTra?._id]);
 
 	const getData = () => {
-		if (recAnPham?.anPhamId)
-			getModel(undefined, undefined, undefined, undefined, undefined, `an-pham/${recAnPham?.anPhamId}/kha-dung`, {
-				thoiGianBatDau: moment(recAnPham?.thoiGianDangKy).toISOString(),
+		if (recMuonTra?.anPhamId)
+			getModel(undefined, undefined, undefined, undefined, undefined, `${recMuonTra?.anPhamId}/kha-dung`, {
+				thoiGianBatDau: moment(recMuonTra?.thoiGianDangKy).toISOString(),
 				thoiGianKetThuc: moment(expired).toISOString(),
 			});
 	};
@@ -69,8 +69,8 @@ const FormDuyet = (props: { form: FormInstance }) => {
 				<TableBase
 					getData={getData}
 					columns={columns}
-					dependencies={[page, limit, recAnPham?.anPhamId, expired]}
-					modelName='sachtailieu.anpham.thongtinanpham'
+					dependencies={[page, limit, recMuonTra?.anPhamId, expired]}
+					modelName='sachtailieu.anpham.anpham'
 					buttons={{ create: false }}
 					hideCard
 					otherProps={{

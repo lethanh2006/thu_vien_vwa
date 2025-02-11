@@ -1,40 +1,31 @@
-import type { ETrangThaiDuyeMuonSach, ETrangThaiMuonSach } from '../constant';
+import type { AnPham } from '../AnPham/typing';
+import type { ETrangThaiDuyetMuonSach, ETrangThaiMuonSach } from '../constant';
+import type { PhieuMuonTra } from '../PhieuMuonTra/typing';
 
 declare module MuonSach {
 	export interface IRecord {
 		_id: string;
 		soDangKyCaBiet: string;
+		thongTinAnPham: AnPham.IAnPhamXepGia;
 		thoiGianMuon: Date;
-		thoiGianDangKy: any;
-		thoiGianMuonDuKien: Date;
-		thoiGianTraDuKien: Date;
 		expired: Date;
 		thoiGianTra: Date;
-		trangThaiDuyet: ETrangThaiDuyeMuonSach;
-		trangThai: ETrangThaiMuonSach;
-		ghiChu: string;
-		ssoIdNguoiMuon: string;
-		maDinhDanhNguoiMuon: string;
-		hotenNguoiMuon: string;
-		ssoIdNguoiDuyetChoMuon: string;
-		maDinhDanhNguoiDuyetChoMuon: string;
-		hotenNguoiDuyetChoMuon: string;
-
 		anPhamId: string;
 		anPham: AnPham.IRecord;
 		ghiChuTra: string;
-		ghiChuDangKy: string;
 		daLaySach: boolean;
 		giaHan: boolean;
 		thoiGianGiaHan: Date;
-
+		thoiGianMuonDuKien: Date;
+		thoiGianTraDuKien: Date;
+		phieuMuonTraId: string;
+		phieuMuonTra: PhieuMuonTra.IRecord;
+		trangThai: ETrangThaiMuonSach;
 		createdAt: Date;
 		updatedAt: Date;
 
-		//fake
-		tacGiaConverse?: string;
-		nhanDeConverse?: string;
-		dangKyCaBiet?: string;
+		ghiChuDangKy: string;
+		ghiChu: string;
 	}
 
 	export type TSetting = {

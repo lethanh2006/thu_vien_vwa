@@ -3,6 +3,8 @@ declare module KhoSach {
 		_id: string;
 		ma: string;
 		ten: string;
+		maPhongDoc: string;
+		phongDoc: PhongDoc.IRecord;
 		createdAt?: string;
 		updatedAt?: string;
 	}

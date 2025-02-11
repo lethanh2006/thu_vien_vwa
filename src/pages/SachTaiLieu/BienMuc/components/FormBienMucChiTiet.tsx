@@ -1,10 +1,11 @@
+import ButtonExtend from '@/components/Table/ButtonExtend';
 import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
-import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, Popconfirm, Row, Spin, Tooltip } from 'antd';
+import { Button, Card, Col, Form, Input, Row, Spin, Tooltip } from 'antd';
+import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { useIntl, useModel } from 'umi';
+import { history, useIntl, useModel } from 'umi';
 
 const FormBienMucChiTiet = (props: any) => {
 	const { getData } = props;
@@ -14,131 +15,185 @@ const FormBienMucChiTiet = (props: any) => {
 		useModel('sachtailieu.anpham.anpham');
 
 	const { danhSach, loading } = useModel('sachtailieu.anpham.thongtinanpham');
+
 	const [actionType, setActionType] = useState<ETrangThaiBienMuc>(ETrangThaiBienMuc.CHO_BIEN_MUC);
 
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			const mappedValues = record?.mauBienMuc?.thongTinKhaiBao.map((item, index) => {
-				const matchedItem = danhSach.find((dsItem) => dsItem.tagCode === item.tag);
-				return {
-					ind1: matchedItem?.ind1 || '',
-					ind2: matchedItem?.ind2 || '',
-					thuocTinhAnPham: matchedItem?.thuocTinhAnPham || [],
-				};
-			});
+			const danhSachTags = danhSach.map((dsItem) => dsItem.tagCode);
 
-			form.setFieldsValue({ danhSachBienMucChiTiet: mappedValues });
+			const khaiBaoMoi = (record?.mauBienMuc?.thongTinKhaiBao || []).filter((item) => !danhSachTags.includes(item.tag));
+
+			const mergedData = [
+				...danhSach.map((item) => {
+					const thongTinKhaiBao = record?.mauBienMuc?.thongTinKhaiBao?.find((kb) => kb.tag === item.tagCode);
+
+					const existingCodes = new Set(item?.thuocTinhAnPham?.map((tp) => tp.code));
+
+					const additionalAttributes = (thongTinKhaiBao?.thuocTinhDuLieu || [])
+						.filter((tp) => tp.code && !existingCodes.has(tp.code))
+						.map((tp) => ({
+							...tp,
+							value: '',
+							ten: tp.ten,
+						}));
+
+					return {
+						...item,
+						ten: item.tag?.noiDung,
+						thuocTinhAnPham: [
+							...(item?.thuocTinhAnPham || []).map((tp) => ({
+								...tp,
+								value: tp.value,
+								ten: item?.tag?.thuocTinh?.find((i) => i?.code === tp?.code)?.tieuDe,
+							})),
+							...additionalAttributes,
+						],
+					};
+				}),
+				...khaiBaoMoi.map((item) => ({
+					thuocTinhAnPham: (item?.thuocTinhDuLieu || []).map((tp) => ({
+						...tp,
+						value: '',
+						ten: tp.ten,
+					})),
+					tagCode: item.tag,
+					ten: item.ten,
+					_id: null,
+				})),
+			];
+
+			form.setFieldsValue({ danhSachBienMucChiTiet: _.orderBy(mergedData, 'tagCode') });
 		}
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: any) => {
 		const data = {
-			danhSachBienMucChiTiet: values.danhSachBienMucChiTiet.map((item: any, index: number) => ({
-				...item,
-
-				tagCode: record?.mauBienMuc?.thongTinKhaiBao?.[index]?.tag || null,
-				_id: record?.mauBienMuc?.thongTinKhaiBao?.[index]?._id || null,
+			danhSachBienMucChiTiet: values.danhSachBienMucChiTiet.map((item: any) => ({
+				_id: item._id ?? null,
+				ind1: item.ind1 ?? null,
+				ind2: item.ind2 ?? null,
+				tagCode: item.tagCode,
+				value: item.value ?? null,
+				thuocTinhAnPham: (item.thuocTinhAnPham || []).map((thuocTinh: any) => ({
+					code: thuocTinh.code,
+					value: thuocTinh.value ?? '',
+				})),
 			})),
 			trangThai: actionType,
 		};
 
 		putBienMucChiTietModel(record?._id ?? '', data, getData)
-			.then(() => setVisibleForm(false))
+			.then(() => {
+				setVisibleForm(false);
+				if (actionType === ETrangThaiBienMuc.DA_BIEN_MUC) {
+					history.push('/sach-tai-lieu/an-pham');
+				}
+			})
 			.catch((er) => console.log(er));
+	};
+
+	const addTag = (index: number) => {
+		const values = form.getFieldValue('danhSachBienMucChiTiet') || [];
+		const newTag = {
+			...values[index],
+			isNewTag: true,
+			_id: null,
+		};
+		const updatedValues = [...values];
+		updatedValues.splice(index + 1, 0, newTag);
+		form.setFieldsValue({ danhSachBienMucChiTiet: updatedValues });
 	};
 
 	return (
 		<Spin spinning={loading}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
-				{record?.mauBienMuc?.thongTinKhaiBao?.map((item, index) => (
-					<div key={item._id || index}>
-						<Card
-							size='small'
-							headStyle={{ padding: '0px 24px' }}
-							bodyStyle={{ padding: '8px 24px' }}
-							title={`${item.tag} - ${item.ten}`}
-						>
-							<>
-								<Form.Item label='Chỉ mục 1' name={['danhSachBienMucChiTiet', index, 'ind1']}>
-									<Input placeholder='Nhập chỉ mục 1' />
-								</Form.Item>
-								<Form.Item label='Chỉ mục 2' name={['danhSachBienMucChiTiet', index, 'ind2']}>
-									<Input placeholder='Nhập chỉ mục 2' />
-								</Form.Item>
-								<Form.List
-									name={['danhSachBienMucChiTiet', index, 'thuocTinhAnPham']}
-									rules={[
-										{
-											validator: async (_, names) => {
-												if (!names || names.length < 1) {
-													return Promise.reject(new Error('Ít nhất 1 thuộc tính'));
-												}
-												return '';
-											},
-										},
-									]}
+				<Form.List name='danhSachBienMucChiTiet'>
+					{(fields, { add, remove, move }, { errors }) => {
+						return fields.map((field, index) => (
+							<div key={field.key}>
+								<Card
+									size='small'
+									headStyle={{ padding: '0px 24px' }}
+									bodyStyle={{ padding: '8px 24px' }}
+									title={`${form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.tagCode} - ${
+										form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.ten
+									}`}
+									extra={
+										form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.isNewTag ? (
+											<Tooltip title='Xóa'>
+												<CloseOutlined onClick={() => remove(field.name)} />
+											</Tooltip>
+										) : null
+									}
 								>
-									{(fields, { add, remove }, { errors }) => (
-										<>
-											{fields.map((field, thuocTinhIndex) => (
-												<div key={field.key}>
-													<Card
-														size='small'
-														headStyle={{ padding: '0px 12px' }}
-														bodyStyle={{ padding: '8px 12px' }}
-														title={
-															<>
-																<div style={{ float: 'left' }}>Thuộc tính {thuocTinhIndex + 1}</div>
-																<Tooltip title='Xóa'>
-																	<CloseOutlined
-																		style={{ float: 'right', marginTop: 4, marginLeft: 8 }}
-																		onClick={() => remove(field.name)}
-																	/>
-																</Tooltip>
-															</>
-														}
-													>
-														<Row gutter={[12, 0]}>
-															<Col md={12} lg={16}>
-																<Form.Item label='Code' name={[field.name, 'code']} rules={[...rules.required]}>
-																	<Input placeholder='Nhập code' />
-																</Form.Item>
-															</Col>
-															<Col md={12} lg={8}>
-																<Form.Item label='Value' name={[field.name, 'value']} rules={[...rules.required]}>
-																	<Input placeholder='Nhập value' />
-																</Form.Item>
-															</Col>
-														</Row>
-													</Card>
-													<br />
-												</div>
-											))}
-											<Form.Item>
-												<Button
-													type='dashed'
-													onClick={() => add()}
-													style={{ width: '100%' }}
-													icon={<PlusOutlined />}
-													size='small'
-												>
-													Thêm thuộc tính
-												</Button>
-												<Form.ErrorList errors={errors} />
+									<Row gutter={[12, 0]}>
+										<Col span={24} md={12}>
+											<Form.Item label='Chỉ mục 1' name={[field.name, 'ind1']}>
+												<Input placeholder='Nhập chỉ mục 1' />
 											</Form.Item>
-										</>
-									)}
-								</Form.List>
-							</>
-						</Card>
-						<br />
-					</div>
-				))}
+										</Col>
+										<Col span={24} md={12}>
+											<Form.Item label='Chỉ mục 2' name={[field.name, 'ind2']}>
+												<Input placeholder='Nhập chỉ mục 2' />
+											</Form.Item>
+										</Col>
+										{form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.thuocTinhAnPham?.length ? (
+											<Col span={24}>
+												<Col span={24}>
+													<Row gutter={[12, 0]}>
+														{form
+															.getFieldValue('danhSachBienMucChiTiet')
+															?.[index]?.thuocTinhAnPham?.map((item: any, i: number) => (
+																// eslint-disable-next-line react/no-array-index-key
+																<Col md={12} key={`${field.name}-thuocTinh-${i}`}>
+																	<Form.Item
+																		label={`${item.ten ?? ''} [${
+																			form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.tagCode
+																		}${item?.code}]`}
+																		name={[field.name, 'thuocTinhAnPham', i, 'value']}
+																	>
+																		<Input placeholder={`Nhập ${item.ten}`} />
+																	</Form.Item>
+																</Col>
+															))}
+													</Row>
+												</Col>
+
+												<Col span={24}>
+													<Form.Item>
+														<Button
+															type='dashed'
+															onClick={() => addTag(index)}
+															style={{ width: '100%' }}
+															icon={<PlusOutlined />}
+															size='small'
+														>
+															{/* eslint-disable-next-line react/no-unescaped-entities */}
+															Bổ sung thông tin "{form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.ten}"
+														</Button>
+													</Form.Item>
+												</Col>
+											</Col>
+										) : (
+											<Col span={24}>
+												<Form.Item name={[field.name, 'value']}>
+													<Input placeholder='Nhập thông tin' />
+												</Form.Item>
+											</Col>
+										)}
+									</Row>
+								</Card>
+								<br />
+							</div>
+						));
+					}}
+				</Form.List>
 
 				<div className='form-footer'>
-					<Button
+					<ButtonExtend
 						loading={formSubmiting}
 						type='primary'
 						onClick={() => {
@@ -147,19 +202,19 @@ const FormBienMucChiTiet = (props: any) => {
 						}}
 					>
 						Lưu lại
-					</Button>
-					<Popconfirm
-						onConfirm={() => {
+					</ButtonExtend>
+
+					<ButtonExtend
+						loading={formSubmiting}
+						type='primary'
+						onClick={() => {
 							setActionType(ETrangThaiBienMuc.DA_BIEN_MUC);
 							form.submit();
 						}}
-						title='Xác nhận hoàn thành biên mục chi tiết, lưu ý khi hoàn thành sẽ không được chỉnh sửa lại biên mục?'
-						placement='topRight'
 					>
-						<Button loading={formSubmiting} type='primary'>
-							Hoàn thành
-						</Button>
-					</Popconfirm>
+						Hoàn thành
+					</ButtonExtend>
+
 					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
