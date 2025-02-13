@@ -1,4 +1,4 @@
-import type { ETrangThaiDuyetMuonSach, ETrangThaiMuonSach, EVaiTroMuonTra } from '../constant';
+import type { ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '../constant';
 import type { MuonSach } from '../MuonSach/typing';
 
 declare module PhieuMuonTra {
@@ -13,9 +13,21 @@ declare module PhieuMuonTra {
 		hoTenNguoiMuon: string;
 		ssoIdNguoiDuyetChoMuon: string;
 		maDinhDanhNguoiDuyetChoMuon: string;
-		hotenNguoiDuyetChoMuon: string;
+		hoTenNguoiDuyetChoMuon: string;
 		thoiGianDangKy: Date;
 		trangThaiDuyet: ETrangThaiDuyetMuonSach;
+
+		maNganhNguoiMuon: string;
+		tenNganhNguoiMuon: string;
+		maKhoaSinhVienNguoiMuon: string;
+		tenKhoaSinhVienNguoiMuon: string;
+		maKhoaNguoiMuon: string;
+		tenKhoaNguoiMuon: string;
+
+		maDonViNguoiMuon: string;
+		tenDonViNguoiMuon: string;
+
+		thoiGianDuyetXacNhan: Date;
 
 		danhSachAnPhamMuonTra?: MuonSach.IRecord;
 

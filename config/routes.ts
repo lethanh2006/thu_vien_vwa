@@ -105,19 +105,17 @@
 					{
 						name: 'ThongKeAnPham',
 						path: 'thong-ke-an-pham',
-					},
-					{
-						name: 'ThongKeĐKCB',
-						path: 'thong-ke-dkcb',
-					},
-					{
-						name: 'ThongKeMuonTra',
-						path: 'thong-ke-muon-tra',
+						component: './SachTaiLieu/ThongKeAnPham',
 					},
 					{
 						name: 'ThongKeBanDoc',
 						path: 'thong-ke-ban-doc',
 						component: './SachTaiLieu/ThongKeBanDoc',
+					},
+					{
+						name: 'DanhSachBanDoc',
+						path: 'danh-sach-ban-doc',
+						component: './SachTaiLieu/DanhSachBanDoc',
 					},
 				],
 			},
@@ -180,6 +178,11 @@
 				path: 'kieu-tu-lieu',
 				component: './DanhMuc/KieuTuLieu',
 			},
+			// {
+			// 	name: 'DonViSo',
+			// 	path: 'don-vi-so',
+			// 	component: './DanhMuc/DonViSo',
+			// },
 			{
 				name: 'MauBienMuc',
 				path: 'mau-bien-muc',

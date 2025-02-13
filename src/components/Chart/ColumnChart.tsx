@@ -7,7 +7,7 @@ import './style.less';
 import vi from './vi.json';
 
 const ColumnChart = (props: DataChartType) => {
-	const { title, xAxis, yAxis, yLabel, height, type, formatY, colors, otherOptions } = props;
+	const { title, xAxis, yAxis, yLabel, height, type, formatY, colors, onColumnClick, otherOptions } = props;
 
 	const options: ApexOptions = {
 		chart: {
@@ -27,6 +27,14 @@ const ColumnChart = (props: DataChartType) => {
 						opacity: 0.4,
 						width: 1,
 					},
+				},
+			},
+			events: {
+				dataPointSelection: (event, chartContext, config) => {
+					const index = config.dataPointIndex;
+					if (index !== -1 && onColumnClick) {
+						onColumnClick(xAxis[index]);
+					}
 				},
 			},
 		},

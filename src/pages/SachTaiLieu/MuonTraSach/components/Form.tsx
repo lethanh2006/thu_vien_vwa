@@ -8,7 +8,6 @@ import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
 import type { SinhVien } from '@/services/SinhVien/typings';
 import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
-import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons';
 import {
@@ -124,6 +123,18 @@ const FormMuonTraSach = (props: any) => {
 			trangThaiDuyet: ETrangThaiDuyetMuonSach.DA_DUYET,
 
 			vaiTro: values?.vaiTro,
+
+			//Sinh Viên
+			maNganhNguoiMuon: recSinhVien?.maNganh ?? '',
+			tenNganhNguoiMuon: recSinhVien?.nganh?.ten ?? '',
+			maKhoaSinhVienNguoiMuon: recSinhVien?.maKhoaSinhVien ?? '',
+			tenKhoaSinhVienNguoiMuon: recSinhVien?.khoaSinhVien?.ten ?? '',
+			maKhoaNguoiMuon: recSinhVien?.maKhoaNganh ?? '',
+			tenKhoaNguoiMuon: recSinhVien?.khoaNganh?.ten ?? '',
+
+			//Cán bộ, giảng viên
+			maDonViNguoiMuon: recCanBo?.maDonVi ?? '',
+			tenDonViNguoiMuon: recCanBo?.donViChinh?.ten ?? '',
 		};
 
 		postPhieuMuonTraSachModel(data as any, () => {
@@ -298,11 +309,7 @@ const FormMuonTraSach = (props: any) => {
 								</Form.Item>
 							</Col>
 							<Col span={24}>
-								<Form.Item
-									name='soThe'
-									label={vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}
-									rules={[...rules.required]}
-								>
+								<Form.Item name='soThe' label={vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}>
 									<Input
 										placeholder='Nhập sinh viên'
 										onPressEnter={(e) => {
@@ -318,7 +325,7 @@ const FormMuonTraSach = (props: any) => {
 								</Space>
 							</Col>
 							<Col span={24}>
-								<Form.Item name='dkcb' label='Đăng ký cá biệt' rules={[...rules.required]}>
+								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
 									<Input
 										placeholder='Nhập đăng ký cá biệt'
 										onPressEnter={(e) => {

@@ -42,6 +42,10 @@ declare module AnPham {
 
 		online: boolean;
 		dpsaceId: string;
+		collectionId: string;
+		communityId: string;
+		urlFileUpload: any;
+		idTaiLieu: string;
 
 		createdAt?: Date;
 		updatedAt?: Date;

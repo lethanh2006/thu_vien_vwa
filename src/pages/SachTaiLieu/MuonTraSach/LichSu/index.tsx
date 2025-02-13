@@ -56,7 +56,7 @@ const LichSuThueMuonPage = (props: { condition?: Partial<MuonSach.IRecord>; ssoI
 		{
 			title: 'ĐKCB',
 			dataIndex: 'soDangKyCaBiet',
-			width: 90,
+			width: 120,
 			filterType: 'string',
 			onCell,
 		},

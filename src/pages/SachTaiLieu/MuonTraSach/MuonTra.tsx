@@ -411,6 +411,19 @@ const MuonTraSachPage = (props: any) => {
 							<Descriptions.Item label='Thời gian đăng ký'>
 								{recPhieu?.thoiGianDangKy ? moment(recPhieu?.thoiGianDangKy).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
+
+							{recPhieu?.vaiTro === EVaiTroMuonTra.SINHVIEN ? (
+								<>
+									<Descriptions.Item label='Khóa sinh viên'>
+										{recPhieu?.tenKhoaSinhVienNguoiMuon ?? '--'}
+									</Descriptions.Item>
+									<Descriptions.Item label='Khóa ngành'>{recPhieu?.tenNganhNguoiMuon ?? '--'}</Descriptions.Item>
+								</>
+							) : (
+								<>
+									<Descriptions.Item label='Đơn vị'>{recPhieu?.tenDonViNguoiMuon ?? '--'}</Descriptions.Item>
+								</>
+							)}
 						</Descriptions>
 					</Col>
 				</Col>

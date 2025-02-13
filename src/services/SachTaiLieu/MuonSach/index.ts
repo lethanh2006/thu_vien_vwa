@@ -24,3 +24,14 @@ export async function giaHanThueMuonAnPham(idThueMuon: string, payload: any) {
 export async function thongKeMuonTraSach() {
 	return axios.get(`${ip3}/thue-muon-an-pham/thong-ke`);
 }
+
+export async function thongKeAnPhamMuonTra(
+	mode: 'ngay' | 'thang' | 'nam',
+	isBanDoc?: boolean,
+	params?: { condition?: any; filters?: any[] },
+) {
+	return axios.get(
+		`${ip3}/${isBanDoc ? 'phieu-muon-tra-an-pham/thong-ke' : 'thue-muon-an-pham/an-pham-da-dang-ky/thong-ke'}/${mode}`,
+		{ params },
+	);
+}
