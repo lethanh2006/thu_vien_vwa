@@ -36,7 +36,7 @@ const ModalAnPham = () => {
 			) : tabActive === '3' ? (
 				<DanhSachDKCB />
 			) : (
-				<LichSuThueMuonPage condition={{ anPhamId: recAnPham?._id }} />
+				<LichSuThueMuonPage condition={{ anPhamId: recAnPham?._id }} hideModal />
 			)}
 
 			<div className='form-footer'>

@@ -29,3 +29,19 @@ export enum ETrangThaiNhanSu {
 	NGHI_THEO_CHE_DO = 'Nghỉ theo chế độ',
 	HET_HAN_HOP_DONG = 'Hết hạn hợp đồng',
 }
+
+export const MapColorETrangThaiNhanSu = {
+	[ETrangThaiNhanSu.DANG_LAM_VIEC]: 'green',
+	[ETrangThaiNhanSu.DA_CHUYEN_DI]: 'orange',
+	[ETrangThaiNhanSu.DA_DIEU_DONG]: 'orange',
+	[ETrangThaiNhanSu.CHO_NGHI_HUU]: 'orange',
+	[ETrangThaiNhanSu.DA_NGHI_HUU]: 'red',
+	[ETrangThaiNhanSu.DA_BIET_PHAI]: 'blue',
+	[ETrangThaiNhanSu.CHUYEN_DEN]: 'blue',
+	[ETrangThaiNhanSu.THOI_VIEC]: 'red',
+	[ETrangThaiNhanSu.DANG_DI_HOC]: 'blue',
+	[ETrangThaiNhanSu.KHAC]: 'blue',
+	[ETrangThaiNhanSu.NGHI_KHONG_LUONG]: 'yellow',
+	[ETrangThaiNhanSu.NGHI_THEO_CHE_DO]: 'yellow',
+	[ETrangThaiNhanSu.HET_HAN_HOP_DONG]: 'red',
+};

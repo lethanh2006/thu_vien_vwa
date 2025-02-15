@@ -95,8 +95,13 @@
 			},
 			{
 				name: 'MuonTraSach',
-				path: 'muon-tra-sach',
+				path: 'ghi-muon-sach',
 				component: './SachTaiLieu/MuonTraSach',
+			},
+			{
+				name: 'GhiTraSach',
+				path: 'muon-tra-sach',
+				component: './SachTaiLieu/GhiTraSach',
 			},
 			{
 				name: 'ThongKe',

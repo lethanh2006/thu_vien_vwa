@@ -6,16 +6,15 @@ import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiDangKyCaBiet, ETrangThaiDangKyCaBiet } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
 import { HistoryOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Modal, Tag } from 'antd';
+import { Card, Tag } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useIntl, useModel } from 'umi';
+import { useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
 import FormDangKyCaBiet from './components/Form';
 import StatDanhSachDKCB from './components/Stat';
 
 const DangKyCaBietPage = () => {
-	const intl = useIntl();
 	const { getSettingModel, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
 	const { page, limit, handleEdit, record, setRecord } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
@@ -136,20 +135,13 @@ const DangKyCaBietPage = () => {
 				// ]}
 			/>
 
-			<Modal
+			<LichSuThueMuonPage
 				title='Lịch sử thuê mượn'
 				visible={visibleModal}
-				onCancel={() => setVisibleModal(false)}
+				setVisible={setVisibleModal}
 				width={1100}
-				footer={null}
-				destroyOnClose
-			>
-				<LichSuThueMuonPage condition={{ soDangKyCaBiet: record?.soDangKyCaBiet }} />
-
-				<div className='form-footer'>
-					<Button onClick={() => setVisibleModal(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
-				</div>
-			</Modal>
+				condition={{ soDangKyCaBiet: record?.soDangKyCaBiet }}
+			/>
 		</Card>
 	);
 };

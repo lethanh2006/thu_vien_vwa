@@ -1,16 +1,38 @@
 import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
+import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import { colorTrangThaiMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
-import { Tag } from 'antd';
+import { CheckOutlined } from '@ant-design/icons';
+import { Button, Modal, Tag } from 'antd';
 import moment from 'moment';
-import { useModel } from 'umi';
+import { useEffect, useState } from 'react';
+import { useIntl, useModel } from 'umi';
+import GhiTraAnPham from '../components/GhiTraSach';
 import ChiTietLichSu from './ChiTiet';
 
-const LichSuThueMuonPage = (props: { condition?: Partial<MuonSach.IRecord>; ssoId?: string }) => {
-	const { condition, ssoId } = props;
-	const { getModel, page, limit, handleView } = useModel('sachtailieu.muontra.muontra');
+const LichSuThueMuonPage = (props: {
+	visible?: boolean;
+	setVisible?: (val: boolean) => void;
+	title?: string;
+	width?: number;
+	condition?: Partial<MuonSach.IRecord>;
+	ssoId?: string;
+	isGhiTra?: boolean;
+	hideModal?: boolean;
+}) => {
+	const intl = useIntl();
+	const { visible, setVisible, title, width, condition, ssoId, isGhiTra, hideModal } = props;
+	const { getModel, page, limit, handleView, setDanhSach } = useModel('sachtailieu.muontra.lichsumuontra');
+	const { setRecord } = useModel('sachtailieu.muontra.muontra');
+	const [visibleGhiTra, setVisibleGhiTra] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (!visible) {
+			setDanhSach([]);
+		}
+	}, [visible]);
 
 	const getData = () => {
 		if (ssoId) {
@@ -56,6 +78,7 @@ const LichSuThueMuonPage = (props: { condition?: Partial<MuonSach.IRecord>; ssoI
 		{
 			title: 'ĐKCB',
 			dataIndex: 'soDangKyCaBiet',
+			align: 'center',
 			width: 120,
 			filterType: 'string',
 			onCell,
@@ -85,24 +108,24 @@ const LichSuThueMuonPage = (props: { condition?: Partial<MuonSach.IRecord>; ssoI
 			sortable: true,
 			onCell,
 		},
-		{
-			title: 'Thời gian dự kiến mượn',
-			dataIndex: 'thoiGianMuonDuKien',
-			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-			onCell,
-		},
-		{
-			title: 'Thời gian dự kiến trả',
-			dataIndex: 'thoiGianTraDuKien',
-			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-			onCell,
-		},
+		// {
+		// 	title: 'Thời gian dự kiến mượn',
+		// 	dataIndex: 'thoiGianMuonDuKien',
+		// 	width: 130,
+		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	filterType: 'date',
+		// 	sortable: true,
+		// 	onCell,
+		// },
+		// {
+		// 	title: 'Thời gian dự kiến trả',
+		// 	dataIndex: 'thoiGianTraDuKien',
+		// 	width: 130,
+		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	filterType: 'date',
+		// 	sortable: true,
+		// 	onCell,
+		// },
 		{
 			title: 'Hạn trả',
 			align: 'center',
@@ -184,19 +207,70 @@ const LichSuThueMuonPage = (props: { condition?: Partial<MuonSach.IRecord>; ssoI
 			fixed: 'right',
 			onCell,
 		},
+		{
+			title: 'Thao tác',
+			align: 'center',
+			width: 60,
+			fixed: 'right',
+			render: (val, rec) => (
+				<ButtonExtend
+					disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA}
+					onClick={() => {
+						setRecord(rec);
+						setVisibleGhiTra(true);
+					}}
+					tooltip='Ghi trả'
+					className='text-success'
+					type='link'
+					icon={<CheckOutlined />}
+				/>
+			),
+			hide: !isGhiTra,
+		},
 	];
 
+	const main = () => (
+		<>
+			<TableBase
+				getData={getData}
+				columns={columns}
+				dependencies={[page, limit, JSON.stringify(condition), ssoId]}
+				modelName='sachtailieu.muontra.lichsumuontra'
+				Form={ChiTietLichSu}
+				widthDrawer={800}
+				hideCard
+				buttons={{ create: false }}
+			/>
+
+			<GhiTraAnPham
+				visible={visibleGhiTra}
+				setVisible={setVisibleGhiTra}
+				getData={() => {
+					getData();
+				}}
+			/>
+		</>
+	);
+
+	if (hideModal) return main();
+
 	return (
-		<TableBase
-			getData={getData}
-			columns={columns}
-			dependencies={[page, limit, JSON.stringify(condition), ssoId]}
-			modelName='sachtailieu.muontra.muontra'
-			Form={ChiTietLichSu}
-			widthDrawer={800}
-			hideCard
-			buttons={{ create: false }}
-		/>
+		<Modal
+			title={title}
+			visible={visible}
+			onCancel={() => setVisible && setVisible(false)}
+			width={width}
+			footer={null}
+			destroyOnClose
+		>
+			{main()}
+
+			<div className='form-footer'>
+				<Button onClick={() => setVisible && setVisible(false)}>
+					{intl.formatMessage({ id: 'global.button.dong' })}
+				</Button>
+			</div>
+		</Modal>
 	);
 };
 

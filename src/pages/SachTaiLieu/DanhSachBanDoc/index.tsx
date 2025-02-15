@@ -2,13 +2,13 @@ import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
 import type { SinhVien } from '@/services/SinhVien/typings';
 import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
-import { Button, Modal, Segmented } from 'antd';
+import { Segmented } from 'antd';
+import moment from 'moment';
 import { useState } from 'react';
-import { useIntl, useModel } from 'umi';
+import { useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
 
 const DanhSachBanDocPage = () => {
-	const intl = useIntl();
 	const { getModel, page, limit, record, setRecord } = useModel('sachtailieu.muontra.danhsachbandoc');
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const [activeKey, setActiveKey] = useState<string>('sinh-vien');
@@ -40,6 +40,25 @@ const DanhSachBanDocPage = () => {
 			dataIndex: 'ten',
 			width: 150,
 			filterType: 'string',
+			onCell,
+			hide: activeKey !== 'sinh-vien',
+		},
+		{
+			title: 'Ngày sinh',
+			dataIndex: 'ngaySinh',
+			width: 100,
+			align: 'center',
+			filterType: 'date',
+			sortable: true,
+			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			onCell,
+			hide: activeKey !== 'sinh-vien',
+		},
+		{
+			title: 'Khóa ngành',
+			dataIndex: 'maKhoaNganh',
+			width: 180,
+			render: (val, rec) => rec.khoaNganh?.ten ?? val,
 			onCell,
 			hide: activeKey !== 'sinh-vien',
 		},
@@ -119,21 +138,16 @@ const DanhSachBanDocPage = () => {
 					/>,
 				]}
 			/>
-			<Modal
+
+			<LichSuThueMuonPage
 				title={`Danh sách lịch sử mượn trả sách người mượn ${
 					activeKey === 'sinh-vien' ? record?.ten : [record?.hoDem, record?.ten]?.filter(Boolean).join(' ')
 				}`}
 				visible={visibleModal}
-				onCancel={() => setVisibleModal(false)}
+				setVisible={setVisibleModal}
 				width={1100}
-				footer={null}
-			>
-				<LichSuThueMuonPage ssoId={record?.ssoId} />
-
-				<div className='form-footer'>
-					<Button onClick={() => setVisibleModal(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
-				</div>
-			</Modal>
+				ssoId={record?.ssoId}
+			/>
 		</>
 	);
 };

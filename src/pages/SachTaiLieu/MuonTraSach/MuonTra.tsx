@@ -23,7 +23,12 @@ import ConfirmGiaHan from './components/ModalGiaHan';
 const MuonTraSachPage = (props: any) => {
 	const { tatCaLichSu } = props;
 	const intl = useIntl();
-	const { record: recPhieu, setVisibleForm, visibleForm: visiblePhieu } = useModel('sachtailieu.muontra.phieumuontra');
+	const {
+		record: recPhieu,
+		setVisibleForm,
+		visibleForm: visiblePhieu,
+		ngoaiThoiGian,
+	} = useModel('sachtailieu.muontra.phieumuontra');
 	const { thongKeMuonTraSachModel, getModel, page, limit, handleView, setRecord, deleteModel, putModel } =
 		useModel('sachtailieu.muontra.muontra');
 	const { visibleForm, setVisibleForm: setVisibleAnPham } = useModel('sachtailieu.anpham.anpham');
@@ -271,6 +276,7 @@ const MuonTraSachPage = (props: any) => {
 								trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
 									<>
 										<ButtonExtend
+											disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA}
 											onClick={() => {
 												setRecord(rec);
 												setVisibleGhiTra(true);
@@ -300,7 +306,7 @@ const MuonTraSachPage = (props: any) => {
 												setRecord(rec);
 												setVisibleGiaHan(true);
 											}}
-											disabled={moment().isBefore(moment(rec?.expired))}
+											disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA || moment().isBefore(moment(rec?.expired))}
 										/>
 									</>
 								) : null
@@ -316,7 +322,7 @@ const MuonTraSachPage = (props: any) => {
 						</>
 					}
 				>
-					<Button type='link' icon={<MenuOutlined />} />
+					<ButtonExtend disabled={ngoaiThoiGian} type='link' icon={<MenuOutlined />} />
 				</Popover>
 			),
 		},

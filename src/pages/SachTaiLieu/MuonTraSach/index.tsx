@@ -14,9 +14,8 @@ import StatMuonTraSach from './components/Stat';
 import MuonTraSachPage from './MuonTra';
 
 const PhieuMuonTraSachPage = () => {
-	const { page, limit, handleView, setEdit, setIsView, isView, setRecord, setVisibleForm, deleteModel } = useModel(
-		'sachtailieu.muontra.phieumuontra',
-	);
+	const { page, limit, handleView, setEdit, setIsView, isView, setRecord, setVisibleForm, deleteModel, ngoaiThoiGian } =
+		useModel('sachtailieu.muontra.phieumuontra');
 	const { getSettingModel, settingMuonTra, thongKeMuonTraSachModel } = useModel('sachtailieu.muontra.muontra');
 	const { setDanhSach } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
@@ -91,7 +90,7 @@ const PhieuMuonTraSachPage = () => {
 					title='Bạn có chắc chắn muốn xóa thông tin này?'
 					placement='topRight'
 				>
-					<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+					<ButtonExtend disabled={ngoaiThoiGian} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
 				</Popconfirm>
 			),
 		},
@@ -110,12 +109,15 @@ const PhieuMuonTraSachPage = () => {
 			}
 		>
 			<div style={{ marginBottom: 12 }}>
+				<b>⏰ Thời gian mượn – trả sách: 08:00 - 17:00 hằng ngày 📚</b>
+			</div>
+			<div style={{ marginBottom: 12 }}>
 				<StatMuonTraSach />
 			</div>
 
 			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
 				<Tabs.TabPane tab='Phiếu mượn' key='1' />
-				<Tabs.TabPane tab='Tất cả lịch sử' key='2' />
+				<Tabs.TabPane tab='Lịch sử mượn' key='2' />
 			</Tabs>
 
 			{tabActive === '1' ? (
@@ -130,6 +132,7 @@ const PhieuMuonTraSachPage = () => {
 					otherButtons={[
 						<ButtonExtend
 							key={'1'}
+							disabled={ngoaiThoiGian}
 							onClick={() => {
 								setRecord({} as PhieuMuonTra.IRecord);
 								setEdit(false);

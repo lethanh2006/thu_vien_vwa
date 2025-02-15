@@ -10,6 +10,7 @@ const ChiTietMuonTraSach = (props: any) => {
 	const { getData: getDataExternal, trangThai, setVisibleGhiTra } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
+	const { ngoaiThoiGian } = useModel('sachtailieu.muontra.phieumuontra');
 	const { record, setVisibleForm, visibleForm, xuLyThueMuonAnPhamModel, thongKeMuonTraSachModel } =
 		useModel('sachtailieu.muontra.muontra');
 	const { selectedIds, setSelectedIds, danhSach } = useModel('sachtailieu.anpham.anpham');
@@ -50,6 +51,8 @@ const ChiTietMuonTraSach = (props: any) => {
 			<Row gutter={[12, 0]}>
 				<Col xs={24}>
 					<Descriptions column={1}>
+						<Descriptions.Item label='Mã'>{record?.phieuMuonTra?.maDinhDanhNguoiMuon ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label='Họ tên'>{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 
@@ -124,6 +127,7 @@ const ChiTietMuonTraSach = (props: any) => {
 
 				{record?.trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
 					<Button
+						disabled={ngoaiThoiGian}
 						type='primary'
 						onClick={() => {
 							setVisibleForm(false);
