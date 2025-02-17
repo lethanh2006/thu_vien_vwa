@@ -23,12 +23,7 @@ import ConfirmGiaHan from './components/ModalGiaHan';
 const MuonTraSachPage = (props: any) => {
 	const { tatCaLichSu } = props;
 	const intl = useIntl();
-	const {
-		record: recPhieu,
-		setVisibleForm,
-		visibleForm: visiblePhieu,
-		ngoaiThoiGian,
-	} = useModel('sachtailieu.muontra.phieumuontra');
+	const { record: recPhieu, setVisibleForm, visibleForm: visiblePhieu } = useModel('sachtailieu.muontra.phieumuontra');
 	const { thongKeMuonTraSachModel, getModel, page, limit, handleView, setRecord, deleteModel, putModel } =
 		useModel('sachtailieu.muontra.muontra');
 	const { visibleForm, setVisibleForm: setVisibleAnPham } = useModel('sachtailieu.anpham.anpham');
@@ -79,23 +74,37 @@ const MuonTraSachPage = (props: any) => {
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
 			title: 'Vai trò',
+			dataIndex: ['phieuMuonTra', 'vaiTro'],
 			align: 'center',
 			width: 90,
 			render: (val, rec) => rec?.phieuMuonTra?.vaiTro,
 			onCell,
+			filterType: 'select',
+			filterData: Object.values(EVaiTroMuonTra),
 			hide: !tatCaLichSu,
 		},
-
 		{
-			title: 'Họ tên',
-			width: 150,
-			render: (val, rec) =>
-				`${rec?.phieuMuonTra?.hoTenNguoiMuon ?? ''} (${rec?.phieuMuonTra?.maDinhDanhNguoiMuon ?? ''})`,
+			title: 'Mã định danh',
+			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
+			align: 'center',
+			width: 120,
+			render: (val, rec) => rec?.phieuMuonTra?.maDinhDanhNguoiMuon,
+			filterType: 'string',
 			onCell,
 			hide: !tatCaLichSu,
 		},
 		{
+			title: 'Họ tên',
+			dataIndex: ['phieuMuonTra', 'hoTenNguoiMuon'],
+			width: 180,
+			render: (val, rec) => rec?.phieuMuonTra?.hoTenNguoiMuon,
+			onCell,
+			filterType: 'string',
+			hide: !tatCaLichSu,
+		},
+		{
 			title: 'Nhan đề',
+			dataIndex: ['anPham', 'nhanDe'],
 			width: 220,
 			render: (val, rec) => (
 				<ExpandText>
@@ -112,12 +121,15 @@ const MuonTraSachPage = (props: any) => {
 					{rec?.anPham?.nhanDe}
 				</ExpandText>
 			),
+			filterType: 'string',
 			onCell,
 		},
 		{
 			title: 'Tác giả',
+			dataIndex: ['anPham', 'tacGia'],
 			width: 180,
 			render: (val, rec) => rec?.anPham?.tacGia,
+			filterType: 'string',
 			onCell,
 		},
 		{
@@ -215,7 +227,7 @@ const MuonTraSachPage = (props: any) => {
 			},
 			filterType: 'date',
 			sortable: true,
-			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
+			hide: trangThai !== ETrangThaiMuonSach.DA_TRA && !tatCaLichSu,
 			onCell,
 		},
 		// {
@@ -239,7 +251,7 @@ const MuonTraSachPage = (props: any) => {
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			onCell,
-			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
+			hide: trangThai !== ETrangThaiMuonSach.DA_TRA && !tatCaLichSu,
 		},
 		{
 			title: 'Trạng thái',
@@ -322,7 +334,7 @@ const MuonTraSachPage = (props: any) => {
 						</>
 					}
 				>
-					<ButtonExtend disabled={ngoaiThoiGian} type='link' icon={<MenuOutlined />} />
+					<ButtonExtend type='link' icon={<MenuOutlined />} />
 				</Popover>
 			),
 		},

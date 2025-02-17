@@ -23,9 +23,8 @@ export default {
 	'menu.SachTaiLieu.GhiTraSach': 'Ghi trả',
 	'menu.SachTaiLieu.ThongKe': 'Thống kê',
 	'menu.SachTaiLieu.ThongKe.ThongKeAnPham': 'Thống kê ấn phẩm',
-	'menu.SachTaiLieu.ThongKe.ThongKeĐKCB': 'Thống kê ĐKCB',
-	'menu.SachTaiLieu.ThongKe.ThongKeMuonTra': 'Thống kê mượn trả',
 	'menu.SachTaiLieu.ThongKe.ThongKeBanDoc': 'Thống kê bạn đọc',
+	'menu.SachTaiLieu.ThongKe.ThongKeMuonTra': 'Thống kê mượn trả',
 	'menu.SachTaiLieu.ThongKe.DanhSachBanDoc': 'Danh sách bạn đọc',
 
 	'menu.DanhMuc': 'Danh mục',

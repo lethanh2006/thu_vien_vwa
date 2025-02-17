@@ -2,7 +2,7 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
-import { colorTrangThaiMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
+import { colorTrangThaiMuonSach, ETrangThaiMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import { CheckOutlined } from '@ant-design/icons';
 import { Button, Modal, Tag } from 'antd';
@@ -21,9 +21,10 @@ const LichSuThueMuonPage = (props: {
 	ssoId?: string;
 	isGhiTra?: boolean;
 	hideModal?: boolean;
+	getData?: () => void;
 }) => {
 	const intl = useIntl();
-	const { visible, setVisible, title, width, condition, ssoId, isGhiTra, hideModal } = props;
+	const { visible, setVisible, title, width, condition, ssoId, isGhiTra, hideModal, getData: getDataExternal } = props;
 	const { getModel, page, limit, handleView, setDanhSach } = useModel('sachtailieu.muontra.lichsumuontra');
 	const { setRecord } = useModel('sachtailieu.muontra.muontra');
 	const [visibleGhiTra, setVisibleGhiTra] = useState<boolean>(false);
@@ -49,30 +50,49 @@ const LichSuThueMuonPage = (props: {
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
+			title: 'Vai trò',
+			dataIndex: ['phieuMuonTra', 'vaiTro'],
+			align: 'center',
+			width: 90,
+			render: (val, rec) => rec?.phieuMuonTra?.vaiTro,
+			onCell,
+			filterType: 'select',
+			filterData: Object.values(EVaiTroMuonTra),
+			hide: !!ssoId,
+		},
+		{
 			title: 'Mã định danh',
+			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
 			align: 'center',
 			width: 120,
 			render: (val, rec) => rec?.phieuMuonTra?.maDinhDanhNguoiMuon,
 			onCell,
+			filterType: 'string',
 			hide: !!ssoId,
 		},
 		{
 			title: 'Họ tên',
+			dataIndex: ['phieuMuonTra', 'hoTenNguoiMuon'],
 			width: 150,
 			render: (val, rec) => rec?.phieuMuonTra?.hoTenNguoiMuon,
 			onCell,
+			filterType: 'string',
 			hide: !!ssoId,
 		},
 		{
 			title: 'Nhan đề',
+			dataIndex: ['anPham', 'nhanDe'],
 			width: 220,
 			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
+			filterType: 'string',
 			onCell,
 		},
 		{
 			title: 'Tác giả',
+			dataIndex: ['anPham', 'tacGia'],
 			width: 180,
 			render: (val, rec) => rec?.anPham?.tacGia,
+			filterType: 'string',
 			onCell,
 		},
 		{
@@ -247,6 +267,7 @@ const LichSuThueMuonPage = (props: {
 				setVisible={setVisibleGhiTra}
 				getData={() => {
 					getData();
+					if (getDataExternal) getDataExternal();
 				}}
 			/>
 		</>

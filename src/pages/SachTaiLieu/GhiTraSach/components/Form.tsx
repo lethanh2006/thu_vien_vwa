@@ -1,4 +1,4 @@
-import { EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
+import { ETrangThaiMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import { colorTrangThaiHocSv, type ETrangThaiHocSv } from '@/services/SinhVien/constant';
 import type { SinhVien } from '@/services/SinhVien/typings';
 import { type ETrangThaiNhanSu, MapColorETrangThaiNhanSu } from '@/services/ToChucNhanSu/constant';
@@ -29,9 +29,6 @@ const FormGhiTraSach = (props: any) => {
 			resetFieldsForm(form);
 			setRecSinhVien({} as SinhVien.IRecord);
 			setRecCanBo({} as ToChucNhanSu.INhanSu);
-
-			//Thực hiện get lại data khi ghi trả
-			if (getData) getData();
 		} else {
 			form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
 		}
@@ -44,7 +41,7 @@ const FormGhiTraSach = (props: any) => {
 		}
 
 		const anPhamData = await getModel(
-			{ soDangKyCaBiet: dkcb },
+			{ soDangKyCaBiet: dkcb, trangThai: ETrangThaiMuonSach.DANG_THUE_MUON },
 			undefined,
 			undefined,
 			undefined,
@@ -199,6 +196,7 @@ const FormGhiTraSach = (props: any) => {
 									ssoId={vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien?.ssoId : recCanBo?.ssoId}
 									isGhiTra
 									hideModal
+									getData={getData}
 								/>
 							</Col>
 						</Row>
@@ -210,7 +208,7 @@ const FormGhiTraSach = (props: any) => {
 				</div>
 			</Form>
 
-			<GhiTraAnPham visible={visibleGhiTra} setVisible={setVisibleGhiTra} isThongTin />
+			<GhiTraAnPham visible={visibleGhiTra} setVisible={setVisibleGhiTra} getData={getData} isThongTin />
 		</Card>
 	);
 };

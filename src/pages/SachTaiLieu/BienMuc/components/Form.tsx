@@ -82,13 +82,8 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 
 			// Gán giá trị cho form
 			form.setFieldsValue({
+				...record,
 				...formValues,
-				kieuBanGhiId: record?.kieuBanGhiId,
-				dangTaiLieuId: record?.dangTaiLieuId,
-				capThuMucId: record?.capThuMucId,
-				vatMangTinId: record?.vatMangTinId,
-				mauBienMucId: record?.mauBienMucId,
-				doMat: record?.doMat,
 			});
 		}
 	}, [record?._id, visibleForm]);

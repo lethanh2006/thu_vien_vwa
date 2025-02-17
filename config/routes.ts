@@ -118,6 +118,11 @@
 						component: './SachTaiLieu/ThongKeBanDoc',
 					},
 					{
+						name: 'ThongKeMuonTra',
+						path: 'thong-ke-muon-tra',
+						component: './SachTaiLieu/ThongKeMuonTra',
+					},
+					{
 						name: 'DanhSachBanDoc',
 						path: 'danh-sach-ban-doc',
 						component: './SachTaiLieu/DanhSachBanDoc',

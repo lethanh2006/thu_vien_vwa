@@ -8,6 +8,7 @@ import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import {
 	CheckOutlined,
 	DeleteOutlined,
+	ImportOutlined,
 	InfoCircleOutlined,
 	MenuOutlined,
 	PlusCircleOutlined,
@@ -15,13 +16,14 @@ import {
 } from '@ant-design/icons';
 import { Button, Modal, Popconfirm, Popover, Segmented, Tag } from 'antd';
 import moment from 'moment';
-import { useState } from 'react';
-import { useIntl, useModel } from 'umi';
+import { useEffect, useState } from 'react';
+import { history, useIntl, useModel } from 'umi';
 import ChiTietAnPham from '../AnPham/components/ChiTiet';
 import ChiTietMuonTraSach from '../MuonTraSach/components/ChiTiet';
 import GhiTraAnPham from '../MuonTraSach/components/GhiTraSach';
 import ConfirmGiaHan from '../MuonTraSach/components/ModalGiaHan';
 import FormGhiTra from './components/Form';
+import ModalImport from '@/components/Table/Import';
 
 const GhiTraPage = () => {
 	const intl = useIntl();
@@ -44,6 +46,40 @@ const GhiTraPage = () => {
 	const [visibleGiaHan, setVisibleGiaHan] = useState<boolean>(false);
 	const [visibleGhiTra, setVisibleGhiTra] = useState<boolean>(false);
 	const [activeKey, setActiveKey] = useState<string>('1');
+	const [visibleImport, setVisibleImport] = useState(false);
+
+	useEffect(() => {
+		if (ngoaiThoiGian) {
+			Modal.info({
+				bodyStyle: { padding: 0 },
+				icon: null,
+				okButtonProps: { hidden: true },
+				content: (
+					<>
+						<div style={{ marginTop: -8 }}>
+							<img style={{ width: '100%' }} src='/logi-thong-bao.png' alt={'image'} />
+						</div>
+						<div style={{ padding: '20px 16px' }}>
+							<div style={{ color: '#1890ff', fontSize: 20, fontWeight: 600, textAlign: 'center' }}>
+								⏰ Thời gian mượn – trả sách: 08:00 - 17:00 hằng ngày 📚
+							</div>
+						</div>
+						<div className='form-footer'>
+							<Button
+								type={'primary'}
+								onClick={() => {
+									Modal.destroyAll();
+									history.push('/');
+								}}
+							>
+								Đóng
+							</Button>
+						</div>
+					</>
+				),
+			});
+		}
+	}, [ngoaiThoiGian]);
 
 	const getData = () => {
 		const filter: any[] =
@@ -73,17 +109,18 @@ const GhiTraPage = () => {
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
 			title: 'Vai trò',
+			dataIndex: ['phieuMuonTra', 'vaiTro'],
 			align: 'center',
-			dataIndex: 'phieuMuonTra.vaiTro' as any,
 			width: 90,
 			render: (val, rec) => rec?.phieuMuonTra?.vaiTro,
+			onCell,
 			filterType: 'select',
 			filterData: Object.values(EVaiTroMuonTra),
-			onCell,
 		},
 		{
-			title: 'Mã',
-			dataIndex: 'maDinhDanhNguoiMuon' as any,
+			title: 'Mã định danh',
+			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
+			align: 'center',
 			width: 120,
 			render: (val, rec) => rec?.phieuMuonTra?.maDinhDanhNguoiMuon,
 			filterType: 'string',
@@ -91,12 +128,15 @@ const GhiTraPage = () => {
 		},
 		{
 			title: 'Họ tên',
+			dataIndex: ['phieuMuonTra', 'hoTenNguoiMuon'],
 			width: 180,
 			render: (val, rec) => rec?.phieuMuonTra?.hoTenNguoiMuon,
 			onCell,
+			filterType: 'string',
 		},
 		{
 			title: 'Nhan đề',
+			dataIndex: ['anPham', 'nhanDe'],
 			width: 220,
 			render: (val, rec) => (
 				<ExpandText>
@@ -113,12 +153,15 @@ const GhiTraPage = () => {
 					{rec?.anPham?.nhanDe}
 				</ExpandText>
 			),
+			filterType: 'string',
 			onCell,
 		},
 		{
 			title: 'Tác giả',
+			dataIndex: ['anPham', 'tacGia'],
 			width: 180,
 			render: (val, rec) => rec?.anPham?.tacGia,
+			filterType: 'string',
 			onCell,
 		},
 		{
@@ -244,7 +287,7 @@ const GhiTraPage = () => {
 						</>
 					}
 				>
-					<ButtonExtend disabled={ngoaiThoiGian} type='link' icon={<MenuOutlined />} />
+					<ButtonExtend type='link' icon={<MenuOutlined />} />
 				</Popover>
 			),
 		},
@@ -265,7 +308,6 @@ const GhiTraPage = () => {
 				otherButtons={[
 					<ButtonExtend
 						key={'1'}
-						disabled={ngoaiThoiGian}
 						onClick={() => {
 							setRecord({} as MuonSach.IRecord);
 							setEdit(false);
@@ -280,6 +322,10 @@ const GhiTraPage = () => {
 						Ghi trả
 					</ButtonExtend>,
 
+					<ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
+						Nhập dữ liệu
+					</ButtonExtend>,
+
 					<Segmented
 						key={'2'}
 						value={activeKey}
@@ -291,11 +337,7 @@ const GhiTraPage = () => {
 						]}
 					/>,
 				]}
-			>
-				<div style={{ marginBottom: 12 }}>
-					<b>⏰ Thời gian mượn – trả sách: 08:00 - 17:00 hằng ngày 📚</b>
-				</div>
-			</TableBase>
+			/>
 
 			<Modal
 				title='Chi tiết ấn phẩm'
@@ -327,6 +369,14 @@ const GhiTraPage = () => {
 					thongKeMuonTraSachModel();
 					getData();
 				}}
+			/>
+
+			<ModalImport
+				visible={visibleImport}
+				modelName='sachtailieu.muontra.phieumuontra'
+				onCancel={() => setVisibleImport(false)}
+				titleTemplate={'Biểu mẫu phiếu mượn.xlsx'}
+				onOk={() => getModel()}
 			/>
 		</>
 	);
