@@ -6,25 +6,27 @@ import type { IColumn } from '@/components/Table/typing';
 import { ETrangThaiDangKyCaBiet, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
+import { colorTrangThaiHocSv, type ETrangThaiHocSv } from '@/services/SinhVien/constant';
 import type { SinhVien } from '@/services/SinhVien/typings';
+import { type ETrangThaiNhanSu, MapColorETrangThaiNhanSu } from '@/services/ToChucNhanSu/constant';
 import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
-import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons';
 import {
 	Button,
 	Card,
+	Checkbox,
 	Col,
 	Descriptions,
 	Form,
 	Input,
 	message,
-	Modal,
 	Popconfirm,
 	Row,
 	Segmented,
 	Space,
 	Spin,
+	Tag,
 } from 'antd';
 import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -80,6 +82,7 @@ const FormMuonTraSach = (props: any) => {
 			resetFieldsForm(form);
 			setRecSinhVien({} as SinhVien.IRecord);
 			setRecCanBo({} as ToChucNhanSu.INhanSu);
+			setDanhSach([]);
 		} else {
 			form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
 		}
@@ -101,7 +104,7 @@ const FormMuonTraSach = (props: any) => {
 			return;
 		}
 
-		if (danhSach?.length > slConMuonDuoc) {
+		if (danhSach?.length > slConMuonDuoc && !values.quaHanNgach) {
 			message.error('Đã quá hạn ngạch mượn, vui lòng kiểm tra lại danh sách!');
 			return;
 		}
@@ -124,6 +127,19 @@ const FormMuonTraSach = (props: any) => {
 			trangThaiDuyet: ETrangThaiDuyetMuonSach.DA_DUYET,
 
 			vaiTro: values?.vaiTro,
+			// quaHanNgach: values?.quaHanNgach,
+
+			//Sinh Viên
+			maNganhNguoiMuon: recSinhVien?.maNganh ?? '',
+			tenNganhNguoiMuon: recSinhVien?.nganh?.ten ?? '',
+			maKhoaSinhVienNguoiMuon: recSinhVien?.maKhoaSinhVien ?? '',
+			tenKhoaSinhVienNguoiMuon: recSinhVien?.khoaSinhVien?.ten ?? '',
+			maKhoaNguoiMuon: recSinhVien?.maKhoaNganh ?? '',
+			tenKhoaNguoiMuon: recSinhVien?.khoaNganh?.ten ?? '',
+
+			//Cán bộ, giảng viên
+			maDonViNguoiMuon: recCanBo?.maDonVi ?? '',
+			tenDonViNguoiMuon: recCanBo?.donViChinh?.ten ?? '',
 		};
 
 		postPhieuMuonTraSachModel(data as any, () => {
@@ -298,11 +314,7 @@ const FormMuonTraSach = (props: any) => {
 								</Form.Item>
 							</Col>
 							<Col span={24}>
-								<Form.Item
-									name='soThe'
-									label={vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}
-									rules={[...rules.required]}
-								>
+								<Form.Item name='soThe' label={vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}>
 									<Input
 										placeholder='Nhập sinh viên'
 										onPressEnter={(e) => {
@@ -318,7 +330,7 @@ const FormMuonTraSach = (props: any) => {
 								</Space>
 							</Col>
 							<Col span={24}>
-								<Form.Item name='dkcb' label='Đăng ký cá biệt' rules={[...rules.required]}>
+								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
 									<Input
 										placeholder='Nhập đăng ký cá biệt'
 										onPressEnter={(e) => {
@@ -337,6 +349,11 @@ const FormMuonTraSach = (props: any) => {
 									</a>
 								</Space>
 							</Col>
+							<Col span={24} style={{ marginTop: 8 }}>
+								<Form.Item name='quaHanNgach' initialValue={false}>
+									<Checkbox>Cho phép đăng ký quá hạn ngạch</Checkbox>
+								</Form.Item>
+							</Col>
 						</Row>
 					</Col>
 
@@ -354,11 +371,19 @@ const FormMuonTraSach = (props: any) => {
 											<>
 												<Descriptions.Item label='Mã SV'>{recSinhVien?.ma ?? '--'}</Descriptions.Item>
 												<Descriptions.Item label='Họ tên'>{recSinhVien?.ten ?? '--'}</Descriptions.Item>
+												<Descriptions.Item label='Ngày sinh'>
+													{recSinhVien?.ngaySinh ? moment(recSinhVien?.ngaySinh).format('DD/MM/YYYY') : '--'}
+												</Descriptions.Item>
 												<Descriptions.Item label='Lớp'>{recSinhVien?.tenLopHanhChinhVirtual ?? '--'}</Descriptions.Item>
 												<Descriptions.Item label='Khóa sinh viên'>
 													{recSinhVien?.khoaSinhVien?.ten ?? '--'}
 												</Descriptions.Item>
 												<Descriptions.Item label='Khóa ngành'>{recSinhVien?.khoaNganh?.ten ?? '--'}</Descriptions.Item>
+												<Descriptions.Item label='Trạng thái học'>
+													<Tag color={colorTrangThaiHocSv[recSinhVien?.trangThaiHoc as ETrangThaiHocSv]}>
+														{recSinhVien?.trangThaiHoc ?? '--'}
+													</Tag>
+												</Descriptions.Item>
 											</>
 										) : (
 											<>
@@ -366,7 +391,15 @@ const FormMuonTraSach = (props: any) => {
 												<Descriptions.Item label='Họ tên'>
 													{[recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' ')}
 												</Descriptions.Item>
+												<Descriptions.Item label='Ngày sinh'>
+													{recCanBo?.ngaySinh ? moment(recCanBo?.ngaySinh).format('DD/MM/YYYY') : '--'}
+												</Descriptions.Item>
 												<Descriptions.Item label='Đơn vị'>{recCanBo?.donViChinh?.ten ?? '--'}</Descriptions.Item>
+												<Descriptions.Item label='Trạng thái'>
+													<Tag color={MapColorETrangThaiNhanSu[recCanBo?.trangThai as ETrangThaiNhanSu]}>
+														{recCanBo?.trangThai ?? '--'}
+													</Tag>
+												</Descriptions.Item>
 											</>
 										)}
 									</Descriptions>
@@ -483,23 +516,17 @@ const FormMuonTraSach = (props: any) => {
 
 			<FormMuonTra />
 
-			<Modal
+			<LichSuThueMuonPage
+				visible={visibleModal}
+				setVisible={setVisibleModal}
 				title={`Danh sách lịch sử mượn trả sách người mượn ${
 					vaiTro === EVaiTroMuonTra.SINHVIEN
 						? recSinhVien?.ten
 						: [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' ')
 				}`}
-				visible={visibleModal}
-				onCancel={() => setVisibleModal(false)}
 				width={1000}
-				footer={null}
-			>
-				<LichSuThueMuonPage ssoId={vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien?.ssoId : recCanBo?.ssoId} />
-
-				<div className='form-footer'>
-					<Button onClick={() => setVisibleModal(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
-				</div>
-			</Modal>
+				ssoId={vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien?.ssoId : recCanBo?.ssoId}
+			/>
 		</Card>
 	);
 };

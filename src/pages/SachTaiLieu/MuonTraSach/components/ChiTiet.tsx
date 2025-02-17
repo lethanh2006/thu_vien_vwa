@@ -50,6 +50,8 @@ const ChiTietMuonTraSach = (props: any) => {
 			<Row gutter={[12, 0]}>
 				<Col xs={24}>
 					<Descriptions column={1}>
+						<Descriptions.Item label='Mã'>{record?.phieuMuonTra?.maDinhDanhNguoiMuon ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label='Họ tên'>{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 

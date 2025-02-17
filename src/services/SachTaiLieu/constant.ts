@@ -55,3 +55,15 @@ export enum EVaiTroMuonTra {
 	SINHVIEN = 'Sinh viên',
 	CANBO = 'Cán bộ/ Giảng viên',
 }
+
+export enum EKieuHienThi {
+	NAM = 'nam',
+	THANG = 'thang',
+	NGAY = 'ngay',
+}
+
+export const KieuHienThi = {
+	[EKieuHienThi.NAM]: 'Năm',
+	[EKieuHienThi.THANG]: 'Tháng',
+	[EKieuHienThi.NGAY]: 'Ngày',
+};

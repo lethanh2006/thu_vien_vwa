@@ -4,6 +4,7 @@ import {
 	getSetting,
 	ghiTraThueMuonAnPham,
 	giaHanThueMuonAnPham,
+	thongKeAnPhamMuonTra,
 	thongKeMuonTraSach,
 	updateSetting,
 	xuLyThueMuonAnPham,
@@ -18,6 +19,7 @@ export default () => {
 	const [settingMuonTra, setSettingMuonTra] = useState<MuonSach.TSetting>();
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [dataThongKe, setDataThongKe] = useState<MuonSach.IThongKe>();
+	const [dataThongKeAnPhamMuonTra, setDataThongKeAnPhamMuonTra] = useState<MuonSach.IThongKeAnPhamMuonTra[]>();
 
 	const getSettingModel = async (): Promise<MuonSach.TSetting> => {
 		setLoading(true);
@@ -141,16 +143,37 @@ export default () => {
 		}
 	};
 
+	const thongKeAnPhamMuonTraModel = async (
+		mode: 'ngay' | 'thang' | 'nam',
+		isBanDoc?: boolean,
+		condition?: any,
+		filters?: any[],
+	): Promise<MuonSach.IThongKeAnPhamMuonTra> => {
+		setLoadingThongKe(true);
+		try {
+			const res = await thongKeAnPhamMuonTra(mode, isBanDoc, { condition, filters });
+			setDataThongKeAnPhamMuonTra(res.data?.data);
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setLoadingThongKe(false);
+		}
+	};
+
 	return {
 		...objInit,
 		dataThongKe,
 		loadingThongKe,
 		settingMuonTra,
+		dataThongKeAnPhamMuonTra,
+		setDataThongKeAnPhamMuonTra,
 		getSettingModel,
 		updateSettingModel,
 		xuLyThueMuonAnPhamModel,
 		ghiTraThueMuonAnPhamModel,
 		giaHanThueMuonAnPhamModel,
 		thongKeMuonTraSachModel,
+		thongKeAnPhamMuonTraModel,
 	};
 };

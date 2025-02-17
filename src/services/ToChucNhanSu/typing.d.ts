@@ -1,4 +1,4 @@
-import type { ELoaiHoSoNhanSu, ETrangThaiChinhSuaNhanSu } from './constant';
+import type { ELoaiHoSoNhanSu, ETrangThaiChinhSuaNhanSu, ETrangThaiNhanSu } from './constant';
 
 declare module ToChucNhanSu {
 	export interface IDonVi {
@@ -119,7 +119,7 @@ declare module ToChucNhanSu {
 		};
 		maDonViChinh: string;
 		donViChinh?: Partial<IDonVi>;
-		trangThai: string; // 'Đang làm việc';
+		trangThai: ETrangThaiNhanSu; // 'Đang làm việc';
 		trangThaiChinhSua: ETrangThaiChinhSuaNhanSu; // 'Bản nháp chuyên viên';
 
 		// Fake để truyền vào filter

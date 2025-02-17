@@ -10,7 +10,7 @@ import { useIntl, useModel } from 'umi';
 
 const ChiTietLichSu = () => {
 	const intl = useIntl();
-	const { record, setVisibleForm } = useModel('sachtailieu.muontra.muontra');
+	const { record, setVisibleForm } = useModel('sachtailieu.muontra.lichsumuontra');
 
 	return (
 		<Card title='Chi tiết sinh viên mượn sách'>

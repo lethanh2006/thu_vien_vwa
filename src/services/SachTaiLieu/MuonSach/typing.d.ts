@@ -42,4 +42,9 @@ declare module MuonSach {
 		dangThueMuon: number;
 		quaHan: number;
 	}
+
+	export interface IThongKeAnPhamMuonTra {
+		soLuong: string;
+		title: string;
+	}
 }

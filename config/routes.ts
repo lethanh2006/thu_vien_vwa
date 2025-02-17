@@ -95,8 +95,13 @@
 			},
 			{
 				name: 'MuonTraSach',
-				path: 'muon-tra-sach',
+				path: 'ghi-muon-sach',
 				component: './SachTaiLieu/MuonTraSach',
+			},
+			{
+				name: 'GhiTraSach',
+				path: 'muon-tra-sach',
+				component: './SachTaiLieu/GhiTraSach',
 			},
 			{
 				name: 'ThongKe',
@@ -105,19 +110,22 @@
 					{
 						name: 'ThongKeAnPham',
 						path: 'thong-ke-an-pham',
-					},
-					{
-						name: 'ThongKeĐKCB',
-						path: 'thong-ke-dkcb',
-					},
-					{
-						name: 'ThongKeMuonTra',
-						path: 'thong-ke-muon-tra',
+						component: './SachTaiLieu/ThongKeAnPham',
 					},
 					{
 						name: 'ThongKeBanDoc',
 						path: 'thong-ke-ban-doc',
 						component: './SachTaiLieu/ThongKeBanDoc',
+					},
+					{
+						name: 'ThongKeMuonTra',
+						path: 'thong-ke-muon-tra',
+						component: './SachTaiLieu/ThongKeMuonTra',
+					},
+					{
+						name: 'DanhSachBanDoc',
+						path: 'danh-sach-ban-doc',
+						component: './SachTaiLieu/DanhSachBanDoc',
 					},
 				],
 			},
@@ -180,6 +188,11 @@
 				path: 'kieu-tu-lieu',
 				component: './DanhMuc/KieuTuLieu',
 			},
+			// {
+			// 	name: 'DonViSo',
+			// 	path: 'don-vi-so',
+			// 	component: './DanhMuc/DonViSo',
+			// },
 			{
 				name: 'MauBienMuc',
 				path: 'mau-bien-muc',
