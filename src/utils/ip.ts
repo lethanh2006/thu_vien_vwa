@@ -11,8 +11,8 @@ const ipSlink = ipRoot + 'slink'; // ip dev
 const ipDaoTao = ipRoot + 'qldt'; // ip dev
 const ipNhanSu = ipRoot + 'tcns'; // ip dev
 
-const currentRole = EModuleKey.CONG_CAN_BO;
-const oneSignalRole = EModuleKey.CONG_CAN_BO;
+const currentRole = EModuleKey.THU_VIEN;
+const oneSignalRole = EModuleKey.THU_VIEN;
 
 // DO NOT TOUCH
 const keycloakClientID = AppModules[currentRole].clientId;
