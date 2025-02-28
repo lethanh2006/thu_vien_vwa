@@ -17,7 +17,7 @@ import {
 	LinkOutlined,
 	MenuOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Popconfirm, Popover, Tag } from 'antd';
+import { Button, Card, Checkbox, Popconfirm, Popover, Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import ModalBienMucTaiLieu from '../BienMuc/components/Modal';
 import ModalAnPham from './components/Modal';
@@ -116,6 +116,14 @@ const CardAnPham = () => {
 			width: 90,
 			filterType: 'number',
 			sortable: true,
+			onCell,
+		},
+		{
+			title: 'Ấn phẩm số',
+			align: 'center',
+			dataIndex: 'online',
+			width: 100,
+			render: (val, rec) => <Checkbox checked={val} />,
 			onCell,
 		},
 		{

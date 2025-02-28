@@ -9,7 +9,7 @@ import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Popconfirm, Popover, Tag } from 'antd';
+import { Button, Checkbox, Popconfirm, Popover, Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import ModalBienMucTaiLieu from './components/Modal';
 
@@ -103,6 +103,14 @@ const BienMucSachTaiLieuPage = () => {
 			width: 90,
 			filterType: 'number',
 			sortable: true,
+			onCell,
+		},
+		{
+			title: 'Ấn phẩm số',
+			align: 'center',
+			dataIndex: 'online',
+			width: 100,
+			render: (val, rec) => <Checkbox checked={val} />,
 			onCell,
 		},
 		{

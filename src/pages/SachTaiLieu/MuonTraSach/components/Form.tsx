@@ -3,6 +3,8 @@ import PrintTemplate from '@/components/PrintTemplate';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
+import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
+import SelectNhanSuDebounce from '@/pages/ToChucNhanSu/NhanSu/Select';
 import { ETrangThaiDangKyCaBiet, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
@@ -271,11 +273,6 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	const handleLuuSinhVien = async () => {
-		if (!soThe) {
-			message.error('Vui lòng nhập mã trước khi thêm!');
-			return;
-		}
-
 		const nguoiMuon = await getModel(
 			vaiTro === EVaiTroMuonTra.SINHVIEN ? ({ ma: soThe } as any) : ({ maCanBo: soThe } as any),
 			undefined,
@@ -296,6 +293,10 @@ const FormMuonTraSach = (props: any) => {
 		vaiTro === EVaiTroMuonTra.SINHVIEN ? setRecSinhVien(nguoiMuon?.[0] as any) : setRecCanBo(nguoiMuon?.[0] as any);
 	};
 
+	useEffect(() => {
+		if (soThe) handleLuuSinhVien();
+	}, [soThe]);
+
 	return (
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} sinh viên mượn sách`}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
@@ -315,19 +316,12 @@ const FormMuonTraSach = (props: any) => {
 							</Col>
 							<Col span={24}>
 								<Form.Item name='soThe' label={vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}>
-									<Input
-										placeholder='Nhập sinh viên'
-										onPressEnter={(e) => {
-											e.preventDefault();
-											handleLuuSinhVien();
-										}}
-									/>
+									{vaiTro === EVaiTroMuonTra.SINHVIEN ? (
+										<SelectSinhVienDebounce selectMa />
+									) : (
+										<SelectNhanSuDebounce selectMa />
+									)}
 								</Form.Item>
-								<Space>
-									<a type='link' onClick={handleLuuSinhVien}>
-										Thêm
-									</a>
-								</Space>
 							</Col>
 							<Col span={24}>
 								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
