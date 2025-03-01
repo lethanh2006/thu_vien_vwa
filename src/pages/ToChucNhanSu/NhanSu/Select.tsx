@@ -1,5 +1,4 @@
 import { EOperatorType } from '@/components/Table/constant';
-import { ETrangThaiChinhSuaNhanSu } from '@/services/ToChucNhanSu/constant';
 import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
 import { Empty, Select, Spin } from 'antd';
 import _ from 'lodash';
@@ -8,37 +7,38 @@ import { useModel } from 'umi';
 
 const SelectNhanSuDebounce = (props: {
 	value?: string | string[];
-	onChange?: (val: string | string[], option: any) => void;
+	onChange?: (val: string | string[] | null) => void;
 	multiple?: boolean;
-	placeholder?: string;
-	maDonVi?: string;
 	disabled?: boolean;
-	condition?: Partial<ToChucNhanSu.INhanSu>;
 	style?: React.CSSProperties;
-	isView?: boolean;
 	selectMa?: boolean;
-}): any => {
-	const { value, onChange, multiple, placeholder, maDonVi, disabled, condition, style, selectMa } = props;
-	const { danhSach, getModel, loading, searchMultiModel } = useModel('tochucnhansu.nhansu');
+	isView?: boolean;
+	allowClear?: boolean;
+	condition?: Partial<ToChucNhanSu.INhanSu>;
+	maDonVi?: string;
+	placeholder?: string;
+}) => {
+	const { value, onChange, multiple, disabled, style, selectMa, allowClear, condition, maDonVi, placeholder } = props;
+	const { danhSach, getModel, loading, searchCanBoModel } = useModel('tochucnhansu.nhansu');
 	const [keyword, setKeyword] = useState<string>();
 
 	useEffect(() => {
-		const cond = { ...condition, trangThaiChinhSua: ETrangThaiChinhSuaNhanSu.DUYET_DANG_AP_DUNG };
+		// Nếu trong danh sách đã có 1 giá trị trong `value` rồi thì ko get lại data nữa
+		// Nhưng `có thể` bug khi lần đầu render
+		const gotData = danhSach.some((item) =>
+			Array.isArray(value)
+				? value.includes(selectMa ? item.maCanBo : item.ssoId)
+				: value === (selectMa ? item.maCanBo : item.ssoId),
+		);
 
-		if (keyword) searchMultiModel(keyword, maDonVi, cond);
-		else {
-			// Nếu trong danh sách đã có 1 giá trị trong `value` rồi thì ko get lại data nữa
-			// Nhưng `có thể` bug khi lần đầu render
-			const gotData = danhSach.some((item) =>
-				Array.isArray(value) ? value.includes(item.ssoId) : value === item.ssoId,
-			);
+		if (keyword) searchCanBoModel(keyword, maDonVi, undefined, condition);
+		else if (!gotData)
 			getModel(
-				cond,
-				value && !gotData
+				condition,
+				value?.length
 					? [
 							{
-								active: true,
-								field: 'ssoId',
+								field: selectMa ? 'maCanBo' : 'ssoId',
 								values: Array.isArray(value) ? value : [value],
 								operator: EOperatorType.INCLUDE,
 							},
@@ -50,8 +50,7 @@ const SelectNhanSuDebounce = (props: {
 				1,
 				20,
 			);
-		}
-	}, [keyword, value, JSON.stringify(condition)]);
+	}, [keyword, JSON.stringify(value)]);
 
 	const searchDebounceSinhVien = _.debounce((val) => {
 		setKeyword(val);
@@ -60,15 +59,18 @@ const SelectNhanSuDebounce = (props: {
 	const dataView = danhSach.find((item) => item.ssoId === value);
 
 	return props.isView ? (
-		`${dataView?.hoDem ?? ''} ${dataView?.ten ?? ''} - ${dataView?.maCanBo ?? ''}`
+		<>
+			{dataView?.hoDem ?? ''} ${dataView?.ten ?? ''} - ${dataView?.maCanBo ?? ''}
+		</>
 	) : (
 		<Select
-			disabled={disabled}
+			loading={loading}
 			mode={multiple ? 'multiple' : undefined}
 			value={value}
+			allowClear={allowClear}
 			onChange={onChange}
+			disabled={disabled}
 			onSearch={(val) => searchDebounceSinhVien(val)}
-			loading={loading}
 			notFoundContent={
 				loading ? (
 					<Spin spinning={true} tip='Đang tìm kiếm...' style={{ width: '100%', margin: 10 }} />
@@ -77,8 +79,8 @@ const SelectNhanSuDebounce = (props: {
 				)
 			}
 			options={danhSach.map((item) => ({
-				key: item._id,
-				value: selectMa ? item.maCanBo : item.ssoId,
+				key: item?.ssoId,
+				value: selectMa ? item.maCanBo : item?.ssoId,
 				label: `${item.hoDem ?? ''} ${item.ten ?? ''} - ${item.maCanBo ?? ''} - ${item.donViChinh?.ten ?? ''}`,
 			}))}
 			showSearch

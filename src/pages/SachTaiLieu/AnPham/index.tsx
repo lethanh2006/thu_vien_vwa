@@ -17,7 +17,8 @@ import {
 	LinkOutlined,
 	MenuOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Checkbox, Popconfirm, Popover, Tag } from 'antd';
+import { Button, Card, Popconfirm, Popover, Tabs, Tag } from 'antd';
+import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalBienMucTaiLieu from '../BienMuc/components/Modal';
 import ModalAnPham from './components/Modal';
@@ -29,9 +30,10 @@ const CardAnPham = () => {
 	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit } =
 		useModel('sachtailieu.anpham.anpham');
 	const { setVisibleForm } = useModel('sachtailieu.anpham.xepgia');
+	const [tabActive, setTabActive] = useState<string>('1');
 
 	const getData = () => {
-		getModel({ trangThai: ETrangThaiBienMuc.DA_BIEN_MUC });
+		getModel({ trangThai: ETrangThaiBienMuc.DA_BIEN_MUC, online: tabActive === '1' ? false : true });
 	};
 
 	const onCell = (rec: AnPham.IRecord) => ({
@@ -119,14 +121,6 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Ấn phẩm số',
-			align: 'center',
-			dataIndex: 'online',
-			width: 100,
-			render: (val, rec) => <Checkbox checked={val} />,
-			onCell,
-		},
-		{
 			title: 'Trạng thái',
 			dataIndex: 'trangThai',
 			align: 'center',
@@ -183,10 +177,15 @@ const CardAnPham = () => {
 		<Card title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}>
 			<StatAnPham />
 
+			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
+				<Tabs.TabPane tab='Ấn phẩm vật lý' key='1' />
+				<Tabs.TabPane tab='Ấn phẩm số' key='2' />
+			</Tabs>
+
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit]}
+				dependencies={[page, limit, tabActive]}
 				modelName='sachtailieu.anpham.anpham'
 				title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
 				Form={isView ? ModalAnPham : ModalBienMucTaiLieu}

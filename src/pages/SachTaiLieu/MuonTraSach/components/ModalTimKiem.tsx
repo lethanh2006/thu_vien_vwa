@@ -3,6 +3,7 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import { EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
 import { CheckOutlined } from '@ant-design/icons';
 import { Button, Card, Empty, message, Modal } from 'antd';
@@ -13,9 +14,13 @@ import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
 import { useIntl, useModel } from 'umi';
 
-const ModalTimKiem = (props: { visibleForm: boolean; setVisibleForm: (val: boolean) => void }) => {
+const ModalTimKiem = (props: {
+	visibleForm: boolean;
+	setVisibleForm: (val: boolean) => void;
+	vaiTro: EVaiTroMuonTra;
+}) => {
 	const intl = useIntl();
-	const { visibleForm, setVisibleForm } = props;
+	const { visibleForm, setVisibleForm, vaiTro } = props;
 	const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 	const [paneSize, setPaneSize] = useState('40%');
 	const handlePaneSizeChange = (size: any) => {
@@ -115,7 +120,12 @@ const ModalTimKiem = (props: { visibleForm: boolean; setVisibleForm: (val: boole
 									{
 										...rec,
 										thoiGianMuon: moment(),
-										expired: moment().add(settingMuonTra?.thoiHanMuonTraSach ?? 150, 'd'),
+										expired: moment().add(
+											vaiTro === EVaiTroMuonTra.SINHVIEN
+												? settingMuonTra?.thoiHanMuonTraSach ?? 150
+												: settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7,
+											'd',
+										),
 									},
 								] as any,
 						);

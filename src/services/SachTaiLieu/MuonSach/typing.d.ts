@@ -31,8 +31,12 @@ declare module MuonSach {
 	export type TSetting = {
 		_id?: string;
 		thoiHanMuonTraSach: number;
-		idDonViThuVien: string;
 		soLuongMuonToiDa: number;
+
+		soLuongMuonToiDaCanBo: number;
+		thoiHanMuonTraSachCanBo: number;
+
+		idDonViThuVien: string;
 	};
 
 	export interface IThongKe {

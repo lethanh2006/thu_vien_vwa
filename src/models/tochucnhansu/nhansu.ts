@@ -10,27 +10,38 @@ export default () => {
 	const objInit = useInitModel<ToChucNhanSu.INhanSu>('thong-tin-nhan-su', undefined, undefined, ipNhanSu);
 	const { setLoading, getService, setDanhSach } = objInit;
 
-	const searchMultiModel = async (
+	const searchCanBoModel = async (
 		keyword: string,
 		maDonVi?: string,
+		isSetDanhSach?: boolean,
 		condition?: Partial<ToChucNhanSu.INhanSu>,
 	): Promise<ToChucNhanSu.INhanSu[]> => {
 		setLoading(true);
 		try {
-			const filters: TFilter<ToChucNhanSu.INhanSu>[] = [];
-			if (maDonVi) filters.push({ field: 'maDonVi', values: [maDonVi], operator: EOperatorType.INCLUDE });
+			const filterStatus: TFilter<ToChucNhanSu.INhanSu> = {
+				active: true,
+				field: 'maDonVi',
+				operator: EOperatorType.INCLUDE,
+				values: [maDonVi ?? ''],
+			};
 			const payloads = [
 				{
 					page: 1,
 					limit: 20,
-					filters: [{ field: 'maCanBo', values: [keyword], operator: EOperatorType.CONTAIN }, ...filters],
 					condition,
+					filters: [
+						{ active: true, field: 'ma', values: [keyword], operator: EOperatorType.CONTAIN },
+						...(maDonVi ? [filterStatus] : []),
+					],
 				},
 				{
 					page: 1,
 					limit: 20,
-					filters: [{ field: 'hoTen', values: [keyword], operator: EOperatorType.CONTAIN }, ...filters],
 					condition,
+					filters: [
+						{ active: true, field: 'ten', values: [keyword], operator: EOperatorType.CONTAIN },
+						...(maDonVi ? [filterStatus] : []),
+					],
 				},
 			];
 			const responses = await Promise.allSettled(payloads.map((payload) => getService(payload, 'page')));
@@ -39,7 +50,7 @@ export default () => {
 			).map((item) => item.value.data?.data?.result);
 			const flatData: ToChucNhanSu.INhanSu[] = data.flat();
 			const uniqData = _.uniqBy(flatData, (item) => item.ssoId);
-			setDanhSach(uniqData);
+			if (isSetDanhSach !== false) setDanhSach(uniqData);
 
 			return uniqData;
 		} catch (er) {
@@ -51,6 +62,6 @@ export default () => {
 
 	return {
 		...objInit,
-		searchMultiModel,
+		searchCanBoModel,
 	};
 };

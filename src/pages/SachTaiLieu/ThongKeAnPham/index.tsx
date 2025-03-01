@@ -1,12 +1,17 @@
 import ColumnChart from '@/components/Chart/ColumnChart';
 import DonutChart from '@/components/Chart/DonutChart';
+import MyDatePicker from '@/components/MyDatePicker';
+import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
+import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EKieuHienThi, ETrangThaiMuonSach, KieuHienThi } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
+import { ExportOutlined } from '@ant-design/icons';
 import { Card, Col, Empty, Row, Segmented, Select, Space, Spin, Tabs } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
+import ModalExportAnPham from './ModalExport';
 
 const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	const { isBanDoc } = props;
@@ -17,12 +22,26 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	const [tabActive, setTabActive] = useState<string>('1');
 	const [yearSelect, setYearSelect] = useState(moment().year());
 	const [monthSelect, setMonthSelect] = useState(moment().month());
+	const [dateRange, setDateRange] = useState<string[] | null>(null);
+	const [modalExport, setModalExport] = useState<boolean>(false);
 
-	const total = dataThongKeAnPhamMuonTra?.reduce((sum, item) => sum + Number(item.soLuong), 0);
+	const filteredData = dataThongKeAnPhamMuonTra?.filter((item) => {
+		if (!dateRange || dateRange.length < 2 || kieuHienThi !== EKieuHienThi.NGAY) {
+			return true;
+		}
+
+		const itemDate = moment.utc(item.title, 'YYYY-MM-DD').startOf('day');
+		const startDate = moment.utc(dateRange[0]).startOf('day');
+		const endDate = moment.utc(dateRange[1]).startOf('day');
+
+		return itemDate.isBetween(startDate, endDate, 'day', '[]');
+	});
+
+	const total = filteredData?.reduce((sum, item) => sum + Number(item.soLuong), 0);
 
 	const chartData = (() => {
-		if (!dataThongKeAnPhamMuonTra?.length) return [];
-		const rawPercentages = dataThongKeAnPhamMuonTra.map((item) => ({
+		if (!filteredData?.length) return [];
+		const rawPercentages = filteredData.map((item) => ({
 			x: item.title ?? 'Không có thông tin',
 			y: (Number(item.soLuong) / (total ?? 1)) * 100,
 		}));
@@ -37,6 +56,26 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 		}
 		return roundedPercentages;
 	})();
+
+	useEffect(() => {
+		let startOfMonth, endOfMonth;
+
+		if (yearSelect && monthSelect) {
+			startOfMonth = moment()
+				.year(yearSelect)
+				.month(monthSelect - 1)
+				.startOf('month');
+			endOfMonth = moment()
+				.year(yearSelect)
+				.month(monthSelect - 1)
+				.endOf('month');
+		} else {
+			startOfMonth = moment().startOf('month');
+			endOfMonth = moment().endOf('month');
+		}
+
+		setDateRange([startOfMonth.toISOString(), endOfMonth.toISOString()]);
+	}, [yearSelect, monthSelect]);
 
 	useEffect(() => {
 		const params = {
@@ -65,43 +104,100 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 
 				{kieuHienThi === EKieuHienThi.NGAY ? (
 					<>
+						<MyDateRangePicker
+							format={'DD/MM'}
+							style={{ width: 180 }}
+							value={dateRange ? [moment(dateRange[0]), moment(dateRange[1])] : undefined}
+							onChange={(val: any) => {
+								if (!val) {
+									setDateRange(null);
+									return;
+								}
+								setDateRange(val);
+								setMonthSelect(moment(val[0]).month() + 1);
+								setYearSelect(moment(val[0]).year());
+							}}
+							disabledDate={(current) => {
+								if (!monthSelect || !yearSelect) return false;
+								const startOfMonth = moment()
+									.year(yearSelect)
+									.month(monthSelect - 1)
+									.startOf('month');
+								const endOfMonth = moment()
+									.year(yearSelect)
+									.month(monthSelect - 1)
+									.endOf('month');
+								return moment(current).isBefore(startOfMonth) || moment(current).isAfter(endOfMonth);
+							}}
+							allowClear
+						/>
+
 						<Select
 							placeholder='Chọn tháng'
-							style={{ width: 150 }}
+							style={{ width: 120 }}
 							value={monthSelect}
 							options={_.range(1, 13).map((item) => ({
 								key: item,
 								value: item,
 								label: `Tháng ${item}`,
 							}))}
-							onChange={(val) => setMonthSelect(val)}
+							onChange={(val) => {
+								setMonthSelect(val);
+
+								if (dateRange) {
+									const startOfMonth = moment()
+										.year(yearSelect)
+										.month(val - 1)
+										.startOf('month');
+									const endOfMonth = moment()
+										.year(yearSelect)
+										.month(val - 1)
+										.endOf('month');
+									setDateRange([startOfMonth.toISOString(), endOfMonth.toISOString()]);
+								}
+							}}
 						/>
-						<Select
-							placeholder='Chọn năm'
-							style={{ width: 150 }}
-							value={yearSelect}
-							options={_.range(2020, moment().year() + 1).map((item) => ({
-								key: item,
-								value: item,
-								label: item,
-							}))}
-							onChange={(val) => setYearSelect(val)}
+
+						<MyDatePicker
+							style={{ width: 90 }}
+							value={moment(yearSelect, 'YYYY')}
+							pickerStyle={'year'}
+							format={'YYYY'}
+							onChange={(val) => {
+								setYearSelect(moment(val).year());
+
+								if (dateRange) {
+									const startOfMonth = moment()
+										.year(moment(val).year())
+										.month(monthSelect - 1)
+										.startOf('month');
+									const endOfMonth = moment()
+										.year(moment(val).year())
+										.month(monthSelect - 1)
+										.endOf('month');
+									setDateRange([startOfMonth.toISOString(), endOfMonth.toISOString()]);
+								}
+							}}
 						/>
 					</>
 				) : kieuHienThi === EKieuHienThi.THANG ? (
-					<Select
-						placeholder='Chọn năm'
-						style={{ width: 150 }}
-						value={yearSelect}
-						options={_.range(2020, moment().year() + 1).map((item) => ({
-							key: item,
-							value: item,
-							label: item,
-						}))}
-						onChange={(val) => setYearSelect(val)}
+					<MyDatePicker
+						style={{ width: 90 }}
+						value={moment(yearSelect, 'YYYY')}
+						pickerStyle={'year'}
+						format={'YYYY'}
+						onChange={(val) => {
+							setYearSelect(moment(val).year());
+						}}
 					/>
 				) : null}
 			</Space>
+
+			<div>
+				<ButtonExtend icon={<ExportOutlined />} onClick={() => setModalExport(true)}>
+					Xuất dữ liệu
+				</ButtonExtend>
+			</div>
 
 			{!isBanDoc && (
 				<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
@@ -111,21 +207,21 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 			)}
 
 			<Spin spinning={loadingThongKe}>
-				{dataThongKeAnPhamMuonTra?.length ? (
+				{filteredData?.length ? (
 					<Row gutter={[12, 0]}>
 						<Col span={24} md={16}>
 							<ColumnChart
 								yLabel={['Số lượt']}
-								xAxis={dataThongKeAnPhamMuonTra?.map((item) =>
+								xAxis={filteredData?.map((item) =>
 									kieuHienThi === EKieuHienThi.NGAY
-										? moment(item.title ?? '').format('DD/MM/YYYY')
+										? moment(item.title ?? '').format('DD/MM')
 										: kieuHienThi === EKieuHienThi.THANG
 										? `Tháng ${item.title ?? ''}`
 										: item.title ?? 'Không có thông tin',
 								)}
-								yAxis={[dataThongKeAnPhamMuonTra?.map((item) => Number(item.soLuong) ?? 0)]}
+								yAxis={[filteredData?.map((item) => Number(item.soLuong) ?? 0)]}
 								showTotal
-								type={dataThongKeAnPhamMuonTra.length && dataThongKeAnPhamMuonTra.length >= 12 ? 'area' : 'bar'}
+								type={filteredData.length && filteredData.length >= 10 ? 'area' : 'bar'}
 								otherOptions={{
 									yaxis: {
 										labels: { formatter: (val) => `${inputFormat(val)}` },
@@ -133,7 +229,6 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 									plotOptions: { bar: { columnWidth: '20%' } },
 									responsive: [
 										{
-											breakpoint: 1600,
 											options: {
 												plotOptions: {
 													bar: {
@@ -184,6 +279,8 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 					<Empty description='Không có dữ liệu' style={{ marginBottom: 32, marginTop: 32 }} />
 				)}
 			</Spin>
+
+			<ModalExportAnPham visible={modalExport} setVisible={setModalExport} />
 		</Card>
 	);
 };

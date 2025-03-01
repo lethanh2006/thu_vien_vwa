@@ -35,3 +35,10 @@ export async function thongKeAnPhamMuonTra(
 		{ params },
 	);
 }
+
+export async function exportThongKeTheMuon(params?: { condition?: any; filters?: any[] }) {
+	return axios.get(`${ip3}/thue-muon-an-pham/muon-qua-han/export`, {
+		responseType: 'arraybuffer',
+		params,
+	});
+}

@@ -16,7 +16,9 @@ import StatDanhSachDKCB from './components/Stat';
 
 const DangKyCaBietPage = () => {
 	const { getSettingModel, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
-	const { page, limit, handleEdit, record, setRecord } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { page, limit, handleEdit, record, setRecord, selectedIds, setSelectedIds } = useModel(
+		'sachtailieu.anpham.anphamxepgia',
+	);
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	// const [activeKey, setActiveKey] = useState<string>('1');
 
@@ -121,6 +123,15 @@ const DangKyCaBietPage = () => {
 				hideCard
 				Form={FormDangKyCaBiet}
 				widthDrawer={800}
+				otherProps={{
+					rowKey: (rec: AnPham.IAnPhamXepGia) => rec.soDangKyCaBiet,
+					rowSelection: {
+						type: 'checkbox',
+						selectedRowKeys: selectedIds ?? [],
+						onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
+						columnWidth: 40,
+					},
+				}}
 				// otherButtons={[
 				// 	<Segmented
 				// 		key={'1'}
