@@ -67,7 +67,7 @@ const ModalExportAnPham = (props: { visible: boolean; setVisible: (val: boolean)
 	return (
 		<Modal title='Xuất dữ liệu thống kê ấn phẩm' visible={visible} onCancel={() => setVisible(false)} footer={null}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
-				<Row gutter={[12, 12]}>
+				<Row gutter={[12, 0]}>
 					<Col xs={24}>
 						<Form.Item name='kieuXuatDuLieu' label='Kiểu xuất dữ liệu' rules={[...rules.required]}>
 							<Radio.Group

@@ -68,7 +68,7 @@ const CardAnPham = () => {
 		},
 		{
 			title: 'Kiểu bản ghi',
-			dataIndex: 'kieuBanGhiId',
+			dataIndex: 'maKieuBanGhi',
 			width: 150,
 			render: (val, rec) => rec?.kieuBanGhi?.ten,
 			filterType: 'customselect',
@@ -77,16 +77,16 @@ const CardAnPham = () => {
 		},
 		{
 			title: 'Dạng tài liệu',
-			dataIndex: 'dangTaiLieuId',
+			dataIndex: 'maDangTaiLieu',
 			width: 150,
 			render: (val, rec) => rec?.dangTaiLieu?.ten,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectDangTaiLieu multiple />,
+			filterCustomSelect: <SelectDangTaiLieu multiple selectMa />,
 			onCell,
 		},
 		{
 			title: 'Cấp thư mục',
-			dataIndex: 'capThuMucId',
+			dataIndex: 'maCapThuMuc',
 			width: 150,
 			render: (val, rec) => rec?.capThuMuc?.ten,
 			filterType: 'customselect',
@@ -95,7 +95,7 @@ const CardAnPham = () => {
 		},
 		{
 			title: 'Vật mang tin',
-			dataIndex: 'vatMangTinId',
+			dataIndex: 'maVatMangTin',
 			width: 150,
 			render: (val, rec) => rec?.vatMangTin?.ten,
 			filterType: 'customselect',

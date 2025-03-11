@@ -193,11 +193,11 @@
 			// 	path: 'don-vi-so',
 			// 	component: './DanhMuc/DonViSo',
 			// },
-			{
-				name: 'MauDinhDang',
-				path: 'mau-dinh-dang',
-				component: './DanhMuc/MauDinhDang',
-			},
+			// {
+			// 	name: 'MauDinhDang',
+			// 	path: 'mau-dinh-dang',
+			// 	component: './DanhMuc/MauDinhDang',
+			// },
 			{
 				name: 'MauBienMuc',
 				path: 'mau-bien-muc',

@@ -193,11 +193,13 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 				) : null}
 			</Space>
 
-			<div>
-				<ButtonExtend icon={<ExportOutlined />} onClick={() => setModalExport(true)}>
-					Xuất dữ liệu
-				</ButtonExtend>
-			</div>
+			{!isBanDoc && (
+				<div>
+					<ButtonExtend icon={<ExportOutlined />} onClick={() => setModalExport(true)}>
+						Xuất dữ liệu
+					</ButtonExtend>
+				</div>
+			)}
 
 			{!isBanDoc && (
 				<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>

@@ -30,7 +30,7 @@ export default () => {
 					limit: 20,
 					condition,
 					filters: [
-						{ active: true, field: 'ma', values: [keyword], operator: EOperatorType.CONTAIN },
+						{ active: true, field: 'maCanBo', values: [keyword], operator: EOperatorType.CONTAIN },
 						...(maDonVi ? [filterStatus] : []),
 					],
 				},
@@ -39,7 +39,7 @@ export default () => {
 					limit: 20,
 					condition,
 					filters: [
-						{ active: true, field: 'ten', values: [keyword], operator: EOperatorType.CONTAIN },
+						{ active: true, field: 'hoTen', values: [keyword], operator: EOperatorType.CONTAIN },
 						...(maDonVi ? [filterStatus] : []),
 					],
 				},
