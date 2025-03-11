@@ -13,11 +13,15 @@ import { useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
 import FormDangKyCaBiet from './components/Form';
 import StatDanhSachDKCB from './components/Stat';
+import ModalInLazer from './components/ModalInLazer';
 
 const DangKyCaBietPage = () => {
 	const { getSettingModel, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
-	const { page, limit, handleEdit, record, setRecord } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { page, limit, handleEdit, record, setRecord, selectedIds, setSelectedIds } = useModel(
+		'sachtailieu.anpham.anphamxepgia',
+	);
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
+	const [visibleIn, setVisibleIn] = useState<boolean>(false);
 	// const [activeKey, setActiveKey] = useState<string>('1');
 
 	useEffect(() => {
@@ -97,13 +101,13 @@ const DangKyCaBietPage = () => {
 						type='link'
 						icon={<HistoryOutlined />}
 					/>
-					<ButtonExtend
+					{/* <ButtonExtend
 						disabled={rec?.trangThai === ETrangThaiDangKyCaBiet.BAN}
 						tooltip={rec?.trangThai === ETrangThaiDangKyCaBiet.BAN ? 'Đăng ký cá biệt bận' : 'Thuê mượn'}
 						onClick={() => handleEdit(rec)}
 						type='link'
 						icon={<PlusCircleOutlined />}
-					/>
+					/> */}
 				</>
 			),
 		},
@@ -121,17 +125,29 @@ const DangKyCaBietPage = () => {
 				hideCard
 				Form={FormDangKyCaBiet}
 				widthDrawer={800}
+				// otherProps={{
+				// 	rowKey: (rec: AnPham.IAnPhamXepGia) => rec.soDangKyCaBiet,
+				// 	rowSelection: {
+				// 		type: 'checkbox',
+				// 		selectedRowKeys: selectedIds ?? [],
+				// 		onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
+				// 		columnWidth: 40,
+				// 	},
+				// }}
 				// otherButtons={[
-				// 	<Segmented
-				// 		key={'1'}
-				// 		value={activeKey}
-				// 		onChange={(value) => setActiveKey(value.toString())}
-				// 		options={[
-				// 			{ value: '1', label: 'Tất cả' },
-				// 			{ value: '2', label: 'Rảnh' },
-				// 			{ value: '3', label: 'Bận' },
-				// 		]}
-				// 	/>,
+				// 	// <Segmented
+				// 	// 	key={'1'}
+				// 	// 	value={activeKey}
+				// 	// 	onChange={(value) => setActiveKey(value.toString())}
+				// 	// 	options={[
+				// 	// 		{ value: '1', label: 'Tất cả' },
+				// 	// 		{ value: '2', label: 'Rảnh' },
+				// 	// 		{ value: '3', label: 'Bận' },
+				// 	// 	]}
+				// 	// />,
+				// 	<ButtonExtend key='print' disabled={!selectedIds?.length} onClick={() => setVisibleIn(true)}>
+				// 		In ra máy in Lazer {(selectedIds?.length ?? 0) > 0 ? `(${selectedIds?.length})` : ''}
+				// 	</ButtonExtend>,
 				// ]}
 			/>
 
@@ -142,6 +158,8 @@ const DangKyCaBietPage = () => {
 				width={1100}
 				condition={{ soDangKyCaBiet: record?.soDangKyCaBiet }}
 			/>
+
+			<ModalInLazer visible={visibleIn} setVisible={setVisibleIn} />
 		</Card>
 	);
 };

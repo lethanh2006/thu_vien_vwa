@@ -42,4 +42,5 @@ export default {
 	'menu.DanhMuc.KieuTuLieu': 'Kiểu tư liệu',
 	'menu.DanhMuc.DonViSo': 'Đơn vị số',
 	'menu.DanhMuc.TruongBienMuc': 'Trường biên mục',
+	'menu.DanhMuc.MauDinhDang': 'Mẫu định dạng',
 };

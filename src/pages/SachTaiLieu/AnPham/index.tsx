@@ -17,7 +17,8 @@ import {
 	LinkOutlined,
 	MenuOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Popconfirm, Popover, Tag } from 'antd';
+import { Button, Card, Popconfirm, Popover, Tabs, Tag } from 'antd';
+import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalBienMucTaiLieu from '../BienMuc/components/Modal';
 import ModalAnPham from './components/Modal';
@@ -29,9 +30,10 @@ const CardAnPham = () => {
 	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit } =
 		useModel('sachtailieu.anpham.anpham');
 	const { setVisibleForm } = useModel('sachtailieu.anpham.xepgia');
+	const [tabActive, setTabActive] = useState<string>('1');
 
 	const getData = () => {
-		getModel({ trangThai: ETrangThaiBienMuc.DA_BIEN_MUC });
+		getModel({ trangThai: ETrangThaiBienMuc.DA_BIEN_MUC, online: tabActive === '1' ? false : true });
 	};
 
 	const onCell = (rec: AnPham.IRecord) => ({
@@ -66,7 +68,7 @@ const CardAnPham = () => {
 		},
 		{
 			title: 'Kiểu bản ghi',
-			dataIndex: 'kieuBanGhiId',
+			dataIndex: 'maKieuBanGhi',
 			width: 150,
 			render: (val, rec) => rec?.kieuBanGhi?.ten,
 			filterType: 'customselect',
@@ -75,16 +77,16 @@ const CardAnPham = () => {
 		},
 		{
 			title: 'Dạng tài liệu',
-			dataIndex: 'dangTaiLieuId',
+			dataIndex: 'maDangTaiLieu',
 			width: 150,
 			render: (val, rec) => rec?.dangTaiLieu?.ten,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectDangTaiLieu multiple />,
+			filterCustomSelect: <SelectDangTaiLieu multiple selectMa />,
 			onCell,
 		},
 		{
 			title: 'Cấp thư mục',
-			dataIndex: 'capThuMucId',
+			dataIndex: 'maCapThuMuc',
 			width: 150,
 			render: (val, rec) => rec?.capThuMuc?.ten,
 			filterType: 'customselect',
@@ -93,7 +95,7 @@ const CardAnPham = () => {
 		},
 		{
 			title: 'Vật mang tin',
-			dataIndex: 'vatMangTinId',
+			dataIndex: 'maVatMangTin',
 			width: 150,
 			render: (val, rec) => rec?.vatMangTin?.ten,
 			filterType: 'customselect',
@@ -175,10 +177,15 @@ const CardAnPham = () => {
 		<Card title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}>
 			<StatAnPham />
 
+			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
+				<Tabs.TabPane tab='Ấn phẩm vật lý' key='1' />
+				<Tabs.TabPane tab='Ấn phẩm số' key='2' />
+			</Tabs>
+
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit]}
+				dependencies={[page, limit, tabActive]}
 				modelName='sachtailieu.anpham.anpham'
 				title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
 				Form={isView ? ModalAnPham : ModalBienMucTaiLieu}

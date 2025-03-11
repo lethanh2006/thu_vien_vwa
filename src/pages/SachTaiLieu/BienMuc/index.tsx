@@ -9,7 +9,7 @@ import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Popconfirm, Popover, Tag } from 'antd';
+import { Button, Checkbox, Popconfirm, Popover, Tag } from 'antd';
 import { useIntl, useModel } from 'umi';
 import ModalBienMucTaiLieu from './components/Modal';
 
@@ -53,38 +53,38 @@ const BienMucSachTaiLieuPage = () => {
 		},
 		{
 			title: 'Kiểu bản ghi',
-			dataIndex: 'kieuBanGhiId',
+			dataIndex: 'maKieuBanGhi',
 			width: 150,
 			render: (val, rec) => rec?.kieuBanGhi?.ten,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectKieuBanGhi multiple />,
+			filterCustomSelect: <SelectKieuBanGhi multiple selectMa />,
 			onCell,
 		},
 		{
 			title: 'Dạng tài liệu',
-			dataIndex: 'dangTaiLieuId',
+			dataIndex: 'maDangTaiLieu',
 			width: 150,
 			render: (val, rec) => rec?.dangTaiLieu?.ten,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectDangTaiLieu multiple />,
+			filterCustomSelect: <SelectDangTaiLieu multiple selectMa />,
 			onCell,
 		},
 		{
 			title: 'Cấp thư mục',
-			dataIndex: 'capThuMucId',
+			dataIndex: 'maCapThuMuc',
 			width: 150,
 			render: (val, rec) => rec?.capThuMuc?.ten,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectCapThuMuc multiple />,
+			filterCustomSelect: <SelectCapThuMuc multiple selectMa />,
 			onCell,
 		},
 		{
 			title: 'Vật mang tin',
-			dataIndex: 'vatMangTinId',
+			dataIndex: 'maVatMangTin',
 			width: 150,
 			render: (val, rec) => rec?.vatMangTin?.ten,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectVatMangTin multiple />,
+			filterCustomSelect: <SelectVatMangTin multiple selectMa />,
 			onCell,
 		},
 		{
@@ -103,6 +103,14 @@ const BienMucSachTaiLieuPage = () => {
 			width: 90,
 			filterType: 'number',
 			sortable: true,
+			onCell,
+		},
+		{
+			title: 'Ấn phẩm số',
+			align: 'center',
+			dataIndex: 'online',
+			width: 100,
+			render: (val, rec) => <Checkbox checked={val} />,
 			onCell,
 		},
 		{

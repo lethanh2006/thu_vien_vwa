@@ -136,23 +136,23 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 				<Col xs={24} md={12}>
-					<Form.Item name='kieuBanGhiId' label='Kiểu bản ghi' rules={[...rules.required]}>
-						<SelectKieuBanGhi />
+					<Form.Item name='maKieuBanGhi' label='Kiểu bản ghi' rules={[...rules.required]}>
+						<SelectKieuBanGhi selectMa />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='dangTaiLieuId' label='Dạng tài liệu' rules={[...rules.required]}>
-						<SelectDangTaiLieu />
+					<Form.Item name='maDangTaiLieu' label='Dạng tài liệu' rules={[...rules.required]}>
+						<SelectDangTaiLieu selectMa />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='capThuMucId' label='Cấp thư mục' rules={[...rules.required]}>
-						<SelectCapThuMuc />
+					<Form.Item name='maCapThuMuc' label='Cấp thư mục' rules={[...rules.required]}>
+						<SelectCapThuMuc selectMa />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='vatMangTinId' label='Vật mang tin' rules={[...rules.required]}>
-						<SelectVatMangTin />
+					<Form.Item name='maVatMangTin' label='Vật mang tin' rules={[...rules.required]}>
+						<SelectVatMangTin selectMa />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>

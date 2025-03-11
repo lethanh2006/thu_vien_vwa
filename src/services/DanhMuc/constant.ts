@@ -14,3 +14,8 @@ export enum EPhuongGiaSach {
 	NGANG = 'Ngang',
 	DOC = 'Dọc',
 }
+
+export enum ELoaiMauDinhDang {
+	MAU_BARCODE = 'Mẫu barcode',
+	MAU_IN_GAY = 'Mẫu in gáy',
+}

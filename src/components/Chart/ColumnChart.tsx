@@ -36,6 +36,11 @@ const ColumnChart = (props: DataChartType) => {
 						onColumnClick(xAxis[index]);
 					}
 				},
+				click: (event, chartContext, config) => {
+					if (type === 'area' && config?.dataPointIndex !== undefined) {
+						onColumnClick?.(xAxis[config.dataPointIndex]);
+					}
+				},
 			},
 		},
 		title: {

@@ -48,38 +48,38 @@ const GhiTraPage = () => {
 	const [activeKey, setActiveKey] = useState<string>('1');
 	const [visibleImport, setVisibleImport] = useState(false);
 
-	useEffect(() => {
-		if (ngoaiThoiGian) {
-			Modal.info({
-				bodyStyle: { padding: 0 },
-				icon: null,
-				okButtonProps: { hidden: true },
-				content: (
-					<>
-						<div style={{ marginTop: -8 }}>
-							<img style={{ width: '100%' }} src='/logi-thong-bao.png' alt={'image'} />
-						</div>
-						<div style={{ padding: '20px 16px' }}>
-							<div style={{ color: '#1890ff', fontSize: 20, fontWeight: 600, textAlign: 'center' }}>
-								⏰ Thời gian mượn – trả sách: 08:00 - 17:00 hằng ngày 📚
-							</div>
-						</div>
-						<div className='form-footer'>
-							<Button
-								type={'primary'}
-								onClick={() => {
-									Modal.destroyAll();
-									history.push('/');
-								}}
-							>
-								Đóng
-							</Button>
-						</div>
-					</>
-				),
-			});
-		}
-	}, [ngoaiThoiGian]);
+	// useEffect(() => {
+	// 	if (ngoaiThoiGian) {
+	// 		Modal.info({
+	// 			bodyStyle: { padding: 0 },
+	// 			icon: null,
+	// 			okButtonProps: { hidden: true },
+	// 			content: (
+	// 				<>
+	// 					<div style={{ marginTop: -8 }}>
+	// 						<img style={{ width: '100%' }} src='/logi-thong-bao.png' alt={'image'} />
+	// 					</div>
+	// 					<div style={{ padding: '20px 16px' }}>
+	// 						<div style={{ color: '#1890ff', fontSize: 20, fontWeight: 600, textAlign: 'center' }}>
+	// 							⏰ Thời gian mượn – trả sách: 08:00 - 17:00 hằng ngày 📚
+	// 						</div>
+	// 					</div>
+	// 					<div className='form-footer'>
+	// 						<Button
+	// 							type={'primary'}
+	// 							onClick={() => {
+	// 								Modal.destroyAll();
+	// 								history.push('/');
+	// 							}}
+	// 						>
+	// 							Đóng
+	// 						</Button>
+	// 					</div>
+	// 				</>
+	// 			),
+	// 		});
+	// 	}
+	// }, [ngoaiThoiGian]);
 
 	const getData = () => {
 		const filter: any[] =

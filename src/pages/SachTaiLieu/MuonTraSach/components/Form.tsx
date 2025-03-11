@@ -3,6 +3,8 @@ import PrintTemplate from '@/components/PrintTemplate';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
+import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
+import SelectNhanSuDebounce from '@/pages/ToChucNhanSu/NhanSu/Select';
 import { ETrangThaiDangKyCaBiet, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
@@ -15,7 +17,6 @@ import { DeleteOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons
 import {
 	Button,
 	Card,
-	Checkbox,
 	Col,
 	Descriptions,
 	Form,
@@ -58,6 +59,9 @@ const FormMuonTraSach = (props: any) => {
 	const dkcb: string = Form.useWatch('dkcb', form);
 	const soThe: string = Form.useWatch('soThe', form);
 	const vaiTro: EVaiTroMuonTra = Form.useWatch('vaiTro', form);
+	const isSinhVien = vaiTro === EVaiTroMuonTra.SINHVIEN;
+	const isCanBo = vaiTro === EVaiTroMuonTra.CANBO;
+
 	const componentRef = useRef(null);
 
 	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
@@ -73,9 +77,11 @@ const FormMuonTraSach = (props: any) => {
 
 	const slConMuonDuoc = Math.max(
 		0,
-		(settingMuonTra?.soLuongMuonToiDa ?? 0) -
-			Number((vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ?? 0),
+		(isSinhVien ? settingMuonTra?.soLuongMuonToiDa ?? 7 : settingMuonTra?.soLuongMuonToiDaCanBo ?? 5) -
+			Number((isSinhVien ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ?? 0),
 	);
+
+	const isOverLimit = danhSach?.length > slConMuonDuoc;
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -89,23 +95,18 @@ const FormMuonTraSach = (props: any) => {
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: PhieuMuonTra.IRecord) => {
-		if (!recSinhVien?.ssoId && vaiTro === EVaiTroMuonTra.SINHVIEN) {
+		if (!recSinhVien?.ssoId && isSinhVien) {
 			message.error('Không tồn tại thông tin sinh viên!');
 			return;
 		}
 
-		if (!recCanBo?.ssoId && vaiTro === EVaiTroMuonTra.CANBO) {
+		if (!recCanBo?.ssoId && isCanBo) {
 			message.error('Không tồn tại thông tin cán bộ!');
 			return;
 		}
 
 		if (!danhSach?.length) {
 			message.error('Không tồn tại ấn phẩm ghi mượn!');
-			return;
-		}
-
-		if (danhSach?.length > slConMuonDuoc && !values.quaHanNgach) {
-			message.error('Đã quá hạn ngạch mượn, vui lòng kiểm tra lại danh sách!');
 			return;
 		}
 
@@ -118,16 +119,13 @@ const FormMuonTraSach = (props: any) => {
 				ghiChu: item?.ghiChu,
 			})),
 
-			hoTenNguoiMuon:
-				vaiTro === EVaiTroMuonTra.SINHVIEN
-					? recSinhVien?.ten
-					: [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' '),
-			maDinhDanhNguoiMuon: vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien?.ma : recCanBo?.maCanBo,
-			ssoIdNguoiMuon: vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien?.ssoId : recCanBo?.ssoId,
+			hoTenNguoiMuon: isSinhVien ? recSinhVien?.ten : [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' '),
+			maDinhDanhNguoiMuon: isSinhVien ? recSinhVien?.ma : recCanBo?.maCanBo,
+			ssoIdNguoiMuon: isSinhVien ? recSinhVien?.ssoId : recCanBo?.ssoId,
+			ngaySinh: isSinhVien ? recSinhVien?.ngaySinh : recCanBo?.ngaySinh,
 			trangThaiDuyet: ETrangThaiDuyetMuonSach.DA_DUYET,
 
 			vaiTro: values?.vaiTro,
-			// quaHanNgach: values?.quaHanNgach,
 
 			//Sinh Viên
 			maNganhNguoiMuon: recSinhVien?.maNganh ?? '',
@@ -261,7 +259,10 @@ const FormMuonTraSach = (props: any) => {
 					{
 						...anPhamData?.[0],
 						thoiGianMuon: moment(),
-						expired: moment().add(settingMuonTra?.thoiHanMuonTraSach ?? 150, 'd'),
+						expired: moment().add(
+							isSinhVien ? settingMuonTra?.thoiHanMuonTraSach ?? 150 : settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7,
+							'd',
+						),
 						// daLay: true,
 					},
 				] as any,
@@ -271,18 +272,13 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	const handleLuuSinhVien = async () => {
-		if (!soThe) {
-			message.error('Vui lòng nhập mã trước khi thêm!');
-			return;
-		}
-
 		const nguoiMuon = await getModel(
-			vaiTro === EVaiTroMuonTra.SINHVIEN ? ({ ma: soThe } as any) : ({ maCanBo: soThe } as any),
+			isSinhVien ? ({ ma: soThe } as any) : ({ maCanBo: soThe } as any),
 			undefined,
 			undefined,
 			undefined,
 			undefined,
-			`thong-ke/${vaiTro === EVaiTroMuonTra.SINHVIEN ? 'sinh-vien' : 'can-bo'}`,
+			`thong-ke/${isSinhVien ? 'sinh-vien' : 'can-bo'}`,
 			undefined,
 			false,
 		);
@@ -293,8 +289,12 @@ const FormMuonTraSach = (props: any) => {
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		vaiTro === EVaiTroMuonTra.SINHVIEN ? setRecSinhVien(nguoiMuon?.[0] as any) : setRecCanBo(nguoiMuon?.[0] as any);
+		isSinhVien ? setRecSinhVien(nguoiMuon?.[0] as any) : setRecCanBo(nguoiMuon?.[0] as any);
 	};
+
+	useEffect(() => {
+		if (soThe) handleLuuSinhVien();
+	}, [soThe]);
 
 	return (
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} sinh viên mượn sách`}>
@@ -314,20 +314,9 @@ const FormMuonTraSach = (props: any) => {
 								</Form.Item>
 							</Col>
 							<Col span={24}>
-								<Form.Item name='soThe' label={vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}>
-									<Input
-										placeholder='Nhập sinh viên'
-										onPressEnter={(e) => {
-											e.preventDefault();
-											handleLuuSinhVien();
-										}}
-									/>
+								<Form.Item name='soThe' label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}>
+									{isSinhVien ? <SelectSinhVienDebounce selectMa /> : <SelectNhanSuDebounce selectMa />}
 								</Form.Item>
-								<Space>
-									<a type='link' onClick={handleLuuSinhVien}>
-										Thêm
-									</a>
-								</Space>
 							</Col>
 							<Col span={24}>
 								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
@@ -349,11 +338,6 @@ const FormMuonTraSach = (props: any) => {
 									</a>
 								</Space>
 							</Col>
-							<Col span={24} style={{ marginTop: 8 }}>
-								<Form.Item name='quaHanNgach' initialValue={false}>
-									<Checkbox>Cho phép đăng ký quá hạn ngạch</Checkbox>
-								</Form.Item>
-							</Col>
 						</Row>
 					</Col>
 
@@ -367,7 +351,7 @@ const FormMuonTraSach = (props: any) => {
 										style={{ marginBottom: 18 }}
 										title='Thông tin người mượn'
 									>
-										{vaiTro === EVaiTroMuonTra.SINHVIEN ? (
+										{isSinhVien ? (
 											<>
 												<Descriptions.Item label='Mã SV'>{recSinhVien?.ma ?? '--'}</Descriptions.Item>
 												<Descriptions.Item label='Họ tên'>{recSinhVien?.ten ?? '--'}</Descriptions.Item>
@@ -405,7 +389,7 @@ const FormMuonTraSach = (props: any) => {
 									</Descriptions>
 								</Spin>
 							</Col>
-							{(recSinhVien?.ssoId || recCanBo?.ssoId) && (
+							{(recSinhVien?.ma || recCanBo?.maCanBo) && (
 								<Col xs={24}>
 									<Row gutter={[12, 0]}>
 										<Col span={24} md={6}>
@@ -415,7 +399,9 @@ const FormMuonTraSach = (props: any) => {
 												onClick={() => setVisibleModal(true)}
 											>
 												<span className='num' style={{ color: 'blue' }}>
-													{settingMuonTra?.soLuongMuonToiDa ?? 0}
+													{isSinhVien
+														? settingMuonTra?.soLuongMuonToiDa ?? 7
+														: settingMuonTra?.soLuongMuonToiDaCanBo ?? 5}
 												</span>
 												<span>Hạn ngạch mượn</span>
 											</Card>
@@ -427,7 +413,7 @@ const FormMuonTraSach = (props: any) => {
 												onClick={() => setVisibleModal(true)}
 											>
 												<span className='num' style={{ color: 'orange' }}>
-													{(vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ?? 0}
+													{(isSinhVien ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ?? 0}
 												</span>
 												<span>Đang mượn</span>
 											</Card>
@@ -439,7 +425,7 @@ const FormMuonTraSach = (props: any) => {
 												onClick={() => setVisibleModal(true)}
 											>
 												<span className='num' style={{ color: 'rec' }}>
-													{(vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien : recCanBo)?.thongKe?.quaHan ?? 0}
+													{(isSinhVien ? recSinhVien : recCanBo)?.thongKe?.quaHan ?? 0}
 												</span>
 												<span>Quá hạn mượn</span>
 											</Card>
@@ -478,9 +464,18 @@ const FormMuonTraSach = (props: any) => {
 				</Row>
 
 				<div className='form-footer'>
-					<Button loading={formSubmiting} onClick={() => form.submit()} type='primary'>
-						Ghi mượn
-					</Button>
+					{isOverLimit ? (
+						<Popconfirm title='Đã quá hạn ngạch mượn. Bạn có chắc chắn muốn ghi mượn?' onConfirm={() => form.submit()}>
+							<Button type='primary' loading={formSubmiting}>
+								Ghi mượn
+							</Button>
+						</Popconfirm>
+					) : (
+						<Button loading={formSubmiting} onClick={() => form.submit()} type='primary'>
+							Ghi mượn
+						</Button>
+					)}
+
 					<ReactToPrint
 						content={reactToPrintContent}
 						documentTitle='Phiếu'
@@ -512,7 +507,7 @@ const FormMuonTraSach = (props: any) => {
 				</div>
 			</PrintTemplate>
 
-			<ModalTimKiem visibleForm={visibleTimKiem} setVisibleForm={setVisibleTimKiem} />
+			<ModalTimKiem visibleForm={visibleTimKiem} setVisibleForm={setVisibleTimKiem} vaiTro={vaiTro} />
 
 			<FormMuonTra />
 
@@ -520,12 +515,10 @@ const FormMuonTraSach = (props: any) => {
 				visible={visibleModal}
 				setVisible={setVisibleModal}
 				title={`Danh sách lịch sử mượn trả sách người mượn ${
-					vaiTro === EVaiTroMuonTra.SINHVIEN
-						? recSinhVien?.ten
-						: [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' ')
+					isSinhVien ? recSinhVien?.ten : [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' ')
 				}`}
 				width={1000}
-				ssoId={vaiTro === EVaiTroMuonTra.SINHVIEN ? recSinhVien?.ssoId : recCanBo?.ssoId}
+				ssoId={isSinhVien ? recSinhVien?.ssoId : recCanBo?.ssoId}
 			/>
 		</Card>
 	);

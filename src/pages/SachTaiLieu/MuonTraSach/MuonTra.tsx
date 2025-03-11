@@ -426,6 +426,7 @@ const MuonTraSachPage = (props: any) => {
 								{recPhieu?.maDinhDanhNguoiMuon ?? '--'}
 							</Descriptions.Item>
 							<Descriptions.Item label='Họ tên'>{recPhieu?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
+							<Descriptions.Item label='Ngày sinh'>{recPhieu?.ngaySinhNguoiMuon ?? '--'}</Descriptions.Item>
 							<Descriptions.Item label='Thời gian đăng ký'>
 								{recPhieu?.thoiGianDangKy ? moment(recPhieu?.thoiGianDangKy).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
