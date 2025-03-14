@@ -1,21 +1,18 @@
-import UploadFile from '@/components/Upload/UploadFile';
 import SelectCapThuMuc from '@/pages/DanhMuc/CapThuMuc/components/Select';
 import SelectDangTaiLieu from '@/pages/DanhMuc/DangTaiLieu/components/Select';
-import SelectBoSuuTap from '@/pages/DanhMuc/DonViSo/components/SelectBoSuuTap';
-import SelectDonViSo from '@/pages/DanhMuc/DonViSo/components/SelectDonViSo';
 import SelectKieuBanGhi from '@/pages/DanhMuc/KieuBanGhi/components/Select';
 import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
-import { EFileScope, uploadFile } from '@/services/uploadFile';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+import FormItemTaiLieuSo from '../DanhSachTaiLieu/FormItem';
 
-const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void }) => {
+const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; tabActive: string }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const {
@@ -29,15 +26,16 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		setEdit,
 		visibleForm,
 		getModel,
-		setFormSubmiting,
 	} = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
-	const { afterAddNew } = props;
+	const { afterAddNew, tabActive } = props;
 	const online: boolean = Form.useWatch('online', form);
-	const communityId: string = Form.useWatch('communityId', form);
 
 	const getData = async (): Promise<AnPham.IRecord[]> => {
-		const response = await getModel({ trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC });
+		const response = await getModel({
+			trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC,
+			online: tabActive === '1' ? false : true,
+		});
 		return response;
 	};
 
@@ -89,27 +87,6 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: AnPham.IRecord) => {
-		const fileUpload = values.urlFileUpload?.fileList?.[0];
-		if (fileUpload?.originFileObj) {
-			try {
-				setFormSubmiting(true);
-				const res = await uploadFile({
-					file: fileUpload.originFileObj,
-					scope: EFileScope.PUBLIC,
-				});
-
-				values.urlFileUpload = res?.data?.data?.url;
-				values.idTaiLieu = res?.data?.data?.file?._id;
-			} catch (error) {
-				return Promise.reject(error);
-			} finally {
-				setFormSubmiting(false);
-			}
-		} else {
-			values.urlFileUpload = fileUpload?.urlFileUpload;
-			values.idTaiLieu = fileUpload?.idFileMau;
-		}
-
 		values.namXuatBan = Number(values.namXuatBan);
 		values.soTrang = Number(values.soTrang);
 
@@ -258,27 +235,11 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				</Col>
 
 				{online ? (
-					<>
-						<Col xs={24} md={12}>
-							<Form.Item name='communityId' label='Đơn vị số' rules={[...rules.required]}>
-								<SelectDonViSo
-									onChange={() => {
-										form.resetFields(['collectionId']);
-									}}
-								/>
-							</Form.Item>
-						</Col>
-						<Col xs={24} md={12}>
-							<Form.Item name='collectionId' label='Bộ sưu tập' rules={[...rules.required]}>
-								<SelectBoSuuTap idDonViSo={communityId} />
-							</Form.Item>
-						</Col>
-						<Col xs={24} md={12}>
-							<Form.Item name='urlFileUpload' label='Tệp đính kèm' rules={[...rules.required]}>
-								<UploadFile />
-							</Form.Item>
-						</Col>
-					</>
+					<Col xs={24}>
+						<Form.Item name='thongTinAnPhamTrucTuyen' label='Danh sách tài liệu ấn phẩm số' rules={[...rules.required]}>
+							<FormItemTaiLieuSo />
+						</Form.Item>
+					</Col>
 				) : null}
 			</Row>
 

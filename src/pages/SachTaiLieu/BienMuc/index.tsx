@@ -9,7 +9,8 @@ import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Popconfirm, Popover, Tag } from 'antd';
+import { Button, Card, Popconfirm, Popover, Tabs, Tag } from 'antd';
+import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalBienMucTaiLieu from './components/Modal';
 
@@ -17,9 +18,10 @@ const BienMucSachTaiLieuPage = () => {
 	const intl = useIntl();
 	const { getModel, page, limit, handleEdit, handleView, setRecord, setEdit, setIsView, setVisibleForm, deleteModel } =
 		useModel('sachtailieu.anpham.anpham');
+	const [tabActive, setTabActive] = useState<string>('1');
 
 	const getData = () => {
-		getModel({ trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC });
+		getModel({ trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC, online: tabActive === '1' ? false : true });
 	};
 
 	const onCell = (rec: AnPham.IRecord) => ({
@@ -106,14 +108,6 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
-			title: 'Ấn phẩm số',
-			align: 'center',
-			dataIndex: 'online',
-			width: 100,
-			render: (val, rec) => <Checkbox checked={val} />,
-			onCell,
-		},
-		{
 			title: 'Trạng thái',
 			dataIndex: 'trangThai',
 			align: 'center',
@@ -164,34 +158,42 @@ const BienMucSachTaiLieuPage = () => {
 	];
 
 	return (
-		<TableBase
-			getData={getData}
-			columns={columns}
-			dependencies={[page, limit]}
-			modelName='sachtailieu.anpham.anpham'
-			title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}
-			Form={ModalBienMucTaiLieu}
-			formProps={{ getData }}
-			widthDrawer={1000}
-			buttons={{ create: false }}
-			otherButtons={[
-				<ButtonExtend
-					key={'1'}
-					onClick={() => {
-						setRecord({} as AnPham.IRecord);
-						setEdit(false);
-						setIsView(false);
-						setVisibleForm(true);
-					}}
-					icon={<PlusCircleOutlined />}
-					type='primary'
-					notHideText
-					tooltip='Biên mục sơ lược'
-				>
-					Biên mục sơ lược
-				</ButtonExtend>,
-			]}
-		/>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}>
+			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
+				<Tabs.TabPane tab='Ấn phẩm vật lý' key='1' />
+				<Tabs.TabPane tab='Ấn phẩm số' key='2' />
+			</Tabs>
+
+			<TableBase
+				getData={getData}
+				columns={columns}
+				dependencies={[page, limit, tabActive]}
+				modelName='sachtailieu.anpham.anpham'
+				title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}
+				Form={ModalBienMucTaiLieu}
+				formProps={{ getData, tabActive }}
+				widthDrawer={1000}
+				buttons={{ create: false }}
+				otherButtons={[
+					<ButtonExtend
+						key={'1'}
+						onClick={() => {
+							setRecord({} as AnPham.IRecord);
+							setEdit(false);
+							setIsView(false);
+							setVisibleForm(true);
+						}}
+						icon={<PlusCircleOutlined />}
+						type='primary'
+						notHideText
+						tooltip='Biên mục sơ lược'
+					>
+						Biên mục sơ lược
+					</ButtonExtend>,
+				]}
+				hideCard
+			/>
+		</Card>
 	);
 };
 
