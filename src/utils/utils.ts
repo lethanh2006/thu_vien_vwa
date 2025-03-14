@@ -1,3 +1,4 @@
+import { EDinhDangFile } from '@/services/base/constant';
 import { message, type FormInstance } from 'antd';
 import { type AxiosResponse } from 'axios';
 import type { Moment } from 'moment';
@@ -164,6 +165,76 @@ export function renderFileListUrl(url: string) {
 	};
 }
 
+/**
+ * Get file type
+ * @param mimeType Mime type or extension of file
+ * @returns
+ */
+export function getFileType(mimeType: string) {
+	if (!mimeType) return EDinhDangFile.UNKNOWN;
+
+	const mimeGroups: Record<string, string[]> = {
+		[EDinhDangFile.WORD]: [
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+			'application/vnd.ms-word.document.macroEnabled.12',
+			'application/vnd.ms-word.template.macroEnabled.12',
+			'application/msword',
+
+			'doc',
+			'docx',
+		],
+		[EDinhDangFile.EXCEL]: [
+			'application/vnd.ms-excel',
+			'application/vnd.ms-excel',
+			'application/vnd.ms-excel',
+
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+			'application/vnd.ms-excel.sheet.macroEnabled.12',
+			'application/vnd.ms-excel.template.macroEnabled.12',
+			'application/vnd.ms-excel.addin.macroEnabled.12',
+			'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+			'application/vnd.ms-excel',
+
+			'xls',
+			'xlsx',
+		],
+		[EDinhDangFile.POWERPOINT]: [
+			'application/vnd.ms-powerpoint',
+			'application/vnd.ms-powerpoint',
+			'application/vnd.ms-powerpoint',
+			'application/vnd.ms-powerpoint',
+
+			'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+			'application/vnd.openxmlformats-officedocument.presentationml.template',
+			'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+			'application/vnd.ms-powerpoint.addin.macroEnabled.12',
+			'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+			'application/vnd.ms-powerpoint.template.macroEnabled.12',
+			'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
+
+			'ppt',
+			'pptx',
+		],
+		[EDinhDangFile.PDF]: ['application/pdf'],
+		[EDinhDangFile.IMAGE]: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'],
+		[EDinhDangFile.VIDEO]: ['video/mp4', 'video/avi', 'video/mpeg'],
+		[EDinhDangFile.AUDIO]: ['audio/mpeg', 'audio/wav', 'audio/ogg'],
+		[EDinhDangFile.TEXT]: ['text/plain', 'text/csv', 'text/html'],
+	};
+
+	let result: EDinhDangFile = EDinhDangFile.UNKNOWN;
+	for (const [fileType, mimeList] of Object.entries(mimeGroups)) {
+		if (mimeList.some((mime) => mime.includes(mimeType))) {
+			result = fileType as EDinhDangFile;
+			break;
+		}
+	}
+
+	return result;
+}
+
 export function renderFileListUrlWithName(url: string, fileName?: string) {
 	if (!url) return { fileList: [] };
 	return {
@@ -285,7 +356,7 @@ export const disabledRangeTime = (current: Moment, type: 'start' | 'end', hour: 
 				disabledHours: () => range(0, Number(hour)),
 				disabledMinutes: () => range(0, hour === current.format('HH') ? Number(minute) : 0),
 				disabledSeconds: () => [55, 56],
-		  }
+			}
 		: {};
 };
 
@@ -522,12 +593,66 @@ export const copyToClipboard = (text: string, callBack?: () => void) => {
  * @param targetBlank
  * @returns HTML contains a tag
  */
-export const createTextLinks = (text: string, targetBlank: boolean = true) => {
-	return removeHtmlTags(text || '').replace(
+export const createTextLinks = (text: string, targetBlank: boolean = true, breakLines = true) => {
+	let html = removeHtmlTags(text || '').replace(
 		/((https?:\/\/(www\.)?)|(www\.))(\S+)/gi,
 		function (match, temp, protocol, www1, www2, url) {
 			const hyperlink = (protocol ?? 'https://') + url;
 			return `<a href="${hyperlink}"${targetBlank ? 'target="_blank" rel="noreferrer"' : ''}>${url}</a>`;
 		},
 	);
+	if (breakLines) html = html.replace('\n', '<br />');
+
+	return html;
+};
+
+/**
+ * Hiển thị số bằng chữ
+ * @param num
+ * @returns
+ */
+export const numberToVietnameseWords = (num: number, capitalizeFirst?: boolean): string => {
+	const units = ['', 'nghìn', 'triệu', 'tỷ', 'nghìn tỷ'];
+	const digits = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+
+	const readThreeDigits = (n: number): string => {
+		let str = '';
+		const hundred = Math.floor(n / 100);
+		const ten = Math.floor((n % 100) / 10);
+		const unit = n % 10;
+
+		if (hundred) str += `${digits[hundred]} trăm `;
+		if (ten > 1) str += `${digits[ten]} mươi `;
+		else if (ten === 1) str += 'mười ';
+
+		if (unit > 0) {
+			if (ten === 0 && hundred > 0) str += 'lẻ ';
+			if (unit === 1 && ten > 1) str += 'mốt';
+			else if (unit === 5 && ten > 0) str += 'lăm';
+			else str += digits[unit];
+		}
+
+		return str.trim();
+	};
+
+	if (num === 0) return 'Không';
+	let result = '';
+	let i = 0;
+
+	while (num > 0) {
+		const chunk = num % 1000;
+		if (chunk > 0) {
+			result = `${readThreeDigits(chunk)} ${units[i]} ` + result;
+		}
+		// eslint-disable-next-line no-param-reassign
+		num = Math.floor(num / 1000);
+		i++;
+	}
+
+	// Viết hoa chữ cái đầu
+	let finalResult = result.trim();
+	finalResult = capitalizeFirst
+		? finalResult.replace(/^\w/, (c) => c.toUpperCase())
+		: finalResult.charAt(0).toUpperCase() + finalResult.slice(1);
+	return finalResult;
 };
