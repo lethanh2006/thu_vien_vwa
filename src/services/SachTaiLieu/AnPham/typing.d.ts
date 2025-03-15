@@ -44,8 +44,8 @@ declare module AnPham {
 		dpsaceId: string;
 		collectionId: string;
 		communityId: string;
-		urlFileUpload: any;
-		idTaiLieu: string;
+
+		thongTinAnPhamTrucTuyen: TDanhSachTaiLieuTrucTuyen[];
 
 		createdAt?: Date;
 		updatedAt?: Date;
@@ -53,6 +53,14 @@ declare module AnPham {
 		//fake
 		soDangKyCaBiet?: string;
 	}
+
+	export type TDanhSachTaiLieuTrucTuyen = {
+		_id: string;
+		index: number;
+		ten: string;
+		moTa: string;
+		url: string | null;
+	};
 
 	export interface IThongTinAnPham {
 		_id: string;
