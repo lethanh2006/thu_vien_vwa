@@ -34,6 +34,8 @@ const FormItemTaiLieuSo = (props: {
 			data.splice(record.index - 1, 1, rec);
 		}
 
+		console.log(data);
+
 		if (onChange) onChange(data);
 		setVisibleForm(false);
 	};
@@ -115,7 +117,7 @@ const FormItemTaiLieuSo = (props: {
 			<Modal
 				title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} hồ sơ lưu`}
 				visible={visibleForm}
-				width={isView ? 900 : 600}
+				width={isView ? 1000 : 600}
 				footer={null}
 				onCancel={() => setVisibleForm(false)}
 			>

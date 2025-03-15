@@ -9,14 +9,7 @@ import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
-import {
-	DeleteOutlined,
-	DollarOutlined,
-	EditOutlined,
-	EyeOutlined,
-	LinkOutlined,
-	MenuOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, DollarOutlined, EditOutlined, EyeOutlined, MenuOutlined } from '@ant-design/icons';
 import { Button, Card, Popconfirm, Popover, Tabs, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -163,7 +156,6 @@ const CardAnPham = () => {
 							>
 								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
 							</Popconfirm>
-							{rec?.online && <ButtonExtend tooltip='Đường dẫn ấn phẩm số' type='link' icon={<LinkOutlined />} />}
 						</>
 					}
 				>

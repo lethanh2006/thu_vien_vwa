@@ -5,6 +5,7 @@ import ChiTietBienMuc from '../../BienMuc/components/ChiTiet';
 import LichSuThueMuonPage from '../../MuonTraSach/LichSu';
 import DanhSachDKCB from '../DanhSachDKCB';
 import ChiTietAnPham from './ChiTiet';
+import FormItemTaiLieuSo from '../../BienMuc/DanhSachTaiLieu/FormItem';
 
 const ModalAnPham = () => {
 	const intl = useIntl();
@@ -27,6 +28,7 @@ const ModalAnPham = () => {
 				<Tabs.TabPane tab='Thông tin chi tiết' key='2' />
 				<Tabs.TabPane tab='Danh sách đăng ký cá biệt' key='3' />
 				<Tabs.TabPane tab='Lịch sử mượn trả' key='4' />
+				{recAnPham?.online ? <Tabs.TabPane tab='File ấn phẩm số' key='5' /> : null}
 			</Tabs>
 
 			{tabActive === '1' ? (
@@ -35,8 +37,10 @@ const ModalAnPham = () => {
 				<ChiTietAnPham />
 			) : tabActive === '3' ? (
 				<DanhSachDKCB />
-			) : (
+			) : tabActive === '4' ? (
 				<LichSuThueMuonPage condition={{ anPhamId: recAnPham?._id }} hideModal />
+			) : (
+				<FormItemTaiLieuSo disabled value={recAnPham?.thongTinAnPhamTrucTuyen} />
 			)}
 
 			<div className='form-footer'>
