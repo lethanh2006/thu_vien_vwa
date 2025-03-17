@@ -2,10 +2,10 @@ import { Button, Card, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ChiTietBienMuc from '../../BienMuc/components/ChiTiet';
+import FormItemTaiLieuSo from '../../BienMuc/DanhSachTaiLieu/FormItem';
 import LichSuThueMuonPage from '../../MuonTraSach/LichSu';
 import DanhSachDKCB from '../DanhSachDKCB';
 import ChiTietAnPham from './ChiTiet';
-import FormItemTaiLieuSo from '../../BienMuc/DanhSachTaiLieu/FormItem';
 
 const ModalAnPham = () => {
 	const intl = useIntl();
@@ -27,8 +27,11 @@ const ModalAnPham = () => {
 				<Tabs.TabPane tab='Thông tin chung' key='1' />
 				<Tabs.TabPane tab='Thông tin chi tiết' key='2' />
 				<Tabs.TabPane tab='Danh sách đăng ký cá biệt' key='3' />
-				<Tabs.TabPane tab='Lịch sử mượn trả' key='4' />
-				{recAnPham?.online ? <Tabs.TabPane tab='File ấn phẩm số' key='5' /> : null}
+				{recAnPham?.online ? (
+					<Tabs.TabPane tab='File ấn phẩm số' key='5' />
+				) : (
+					<Tabs.TabPane tab='Lịch sử mượn trả' key='4' />
+				)}
 			</Tabs>
 
 			{tabActive === '1' ? (

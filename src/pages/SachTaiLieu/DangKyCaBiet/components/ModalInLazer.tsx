@@ -1,8 +1,9 @@
 import SelectDinhDangMaVach from '@/pages/DanhMuc/MauDinhDang/components/Select';
+import { inMaBarCode } from '@/services/SachTaiLieu/AnPham';
 import rules from '@/utils/rules';
+import { getFilenameHeader } from '@/utils/utils';
 import { Button, Form, Modal } from 'antd';
-import { useRef, useState } from 'react';
-import { useReactToPrint } from 'react-to-print';
+import fileDownload from 'js-file-download';
 import { useIntl, useModel } from 'umi';
 
 const ModalInLazer = (props: { visible: boolean; setVisible: (val: boolean) => void }) => {
@@ -10,27 +11,8 @@ const ModalInLazer = (props: { visible: boolean; setVisible: (val: boolean) => v
 	const { visible, setVisible } = props;
 	const [form] = Form.useForm();
 	const { selectedIds } = useModel('sachtailieu.anpham.anphamxepgia');
-	const { danhSach } = useModel('danhmuc.maudinhdang');
+	const { danhSach, formSubmiting, setFormSubmiting } = useModel('danhmuc.maudinhdang');
 
-	const [barcodeImages, setBarcodeImages] = useState<string[]>([]);
-	const printRef = useRef<HTMLDivElement>(null);
-
-	// Hàm gửi ZPL đến Labelary API và nhận ảnh
-	const fetchBarcodeImage = async (zpl: string): Promise<string> => {
-		const url = 'https://cors-anywhere.herokuapp.com/http://api.labelary.com/v1/printers/8dpmm/labels/4x6/0/';
-		const response = await fetch(url, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/zpl' },
-			body: zpl,
-		});
-
-		if (!response.ok) throw new Error('Lỗi khi tạo mã vạch');
-
-		const blob = await response.blob();
-		return URL.createObjectURL(blob);
-	};
-
-	// Hàm xử lý khi nhấn "In"
 	const onFinish = async (values: any) => {
 		const selectedTemplate = danhSach?.find((item) => item?.ma === values.maMau);
 		if (!selectedTemplate?.noiDungMau) {
@@ -38,21 +20,21 @@ const ModalInLazer = (props: { visible: boolean; setVisible: (val: boolean) => v
 			return;
 		}
 
-		// Thay thế `<$copynumber0$>` bằng ID thực tế
 		const zplList = selectedIds?.map((id) => selectedTemplate.noiDungMau.replace(/\<\$copynumber0\$\>/g, id)) ?? [];
 
+		setFormSubmiting(true);
 		try {
-			const images = await Promise.all(zplList.map(fetchBarcodeImage));
-			setBarcodeImages(images);
+			inMaBarCode({ zpl: zplList?.[0] }).then((res) => {
+				if (res?.data) {
+					fileDownload(res?.data, getFilenameHeader(res));
+				}
+			});
 		} catch (error) {
 			console.error('Lỗi khi tạo ảnh mã vạch:', error);
+		} finally {
+			setFormSubmiting(false);
 		}
 	};
-
-	// Xử lý in bằng react-to-print
-	const handlePrint = useReactToPrint({
-		content: () => printRef.current,
-	});
 
 	return (
 		<Modal title='In ra máy in Lazer' visible={visible} onCancel={() => setVisible(false)} footer={null}>
@@ -62,27 +44,12 @@ const ModalInLazer = (props: { visible: boolean; setVisible: (val: boolean) => v
 				</Form.Item>
 
 				<div className='form-footer'>
-					<Button htmlType='submit' type='primary'>
+					<Button htmlType='submit' type='primary' loading={formSubmiting}>
 						Tạo mã vạch
 					</Button>
 					<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
-
-			{/* Khu vực hiển thị mã vạch */}
-			{barcodeImages.length > 0 && (
-				<div>
-					<div ref={printRef} style={{ textAlign: 'center', marginTop: 20 }}>
-						{barcodeImages.map((src, index) => (
-							<img key={index} src={src} alt={`Barcode ${index}`} style={{ marginBottom: 10 }} />
-						))}
-					</div>
-
-					<Button type='primary' onClick={handlePrint} style={{ marginTop: 20 }}>
-						In mã vạch
-					</Button>
-				</div>
-			)}
 		</Modal>
 	);
 };
