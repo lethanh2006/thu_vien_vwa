@@ -30,7 +30,7 @@ const ModalBienMucTaiLieu = (props: any) => {
 	return (
 		<Card
 			title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()} ${
-				tabActive === '1' ? 'ấn phẩm vật lý' : 'ấn phẩm số'
+				tabActiveExternal === '1' ? 'ấn phẩm vật lý' : 'ấn phẩm số'
 			}`}
 			loading={loading}
 		>
