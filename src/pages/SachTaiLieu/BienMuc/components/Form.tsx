@@ -83,6 +83,10 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				...record,
 				...formValues,
 			});
+		} else {
+			form.setFieldsValue({
+				online: tabActive === '1' ? false : true,
+			});
 		}
 	}, [record?._id, visibleForm]);
 

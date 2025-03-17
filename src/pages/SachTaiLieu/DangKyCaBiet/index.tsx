@@ -1,28 +1,42 @@
 import ExpandText from '@/components/ExpandText';
+import PrintTemplate from '@/components/PrintTemplate';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
-import { colorTrangThaiDangKyCaBiet, ETrangThaiDangKyCaBiet } from '@/services/SachTaiLieu/constant';
+import { colorTrangThaiDangKyCaBiet, type ETrangThaiDangKyCaBiet } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
-import { HistoryOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { HistoryOutlined } from '@ant-design/icons';
 import { Card, Tag } from 'antd';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Barcode from 'react-barcode';
+import ReactToPrint from 'react-to-print';
 import { useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
 import FormDangKyCaBiet from './components/Form';
 import StatDanhSachDKCB from './components/Stat';
-import ModalInLazer from './components/ModalInLazer';
 
 const DangKyCaBietPage = () => {
 	const { getSettingModel, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
-	const { page, limit, handleEdit, record, setRecord, selectedIds, setSelectedIds } = useModel(
-		'sachtailieu.anpham.anphamxepgia',
-	);
+	const { page, limit, record, setRecord, selectedIds, setSelectedIds } = useModel('sachtailieu.anpham.anphamxepgia');
+
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
-	const [visibleIn, setVisibleIn] = useState<boolean>(false);
+	// const [visibleIn, setVisibleIn] = useState<boolean>(false);
 	// const [activeKey, setActiveKey] = useState<string>('1');
+
+	const componentRef = useRef(null);
+
+	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
+
+	const reactToPrintTrigger = useCallback(
+		() => (
+			<ButtonExtend key='print' disabled={!selectedIds?.length}>
+				In ra máy in Lazer {(selectedIds?.length ?? 0) > 0 ? `(${selectedIds?.length})` : ''}
+			</ButtonExtend>
+		),
+		[selectedIds?.length],
+	);
 
 	useEffect(() => {
 		if (!settingMuonTra) getSettingModel();
@@ -101,13 +115,6 @@ const DangKyCaBietPage = () => {
 						type='link'
 						icon={<HistoryOutlined />}
 					/>
-					{/* <ButtonExtend
-						disabled={rec?.trangThai === ETrangThaiDangKyCaBiet.BAN}
-						tooltip={rec?.trangThai === ETrangThaiDangKyCaBiet.BAN ? 'Đăng ký cá biệt bận' : 'Thuê mượn'}
-						onClick={() => handleEdit(rec)}
-						type='link'
-						icon={<PlusCircleOutlined />}
-					/> */}
 				</>
 			),
 		},
@@ -125,30 +132,24 @@ const DangKyCaBietPage = () => {
 				hideCard
 				Form={FormDangKyCaBiet}
 				widthDrawer={800}
-				// otherProps={{
-				// 	rowKey: (rec: AnPham.IAnPhamXepGia) => rec.soDangKyCaBiet,
-				// 	rowSelection: {
-				// 		type: 'checkbox',
-				// 		selectedRowKeys: selectedIds ?? [],
-				// 		onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
-				// 		columnWidth: 40,
-				// 	},
-				// }}
-				// otherButtons={[
-				// 	// <Segmented
-				// 	// 	key={'1'}
-				// 	// 	value={activeKey}
-				// 	// 	onChange={(value) => setActiveKey(value.toString())}
-				// 	// 	options={[
-				// 	// 		{ value: '1', label: 'Tất cả' },
-				// 	// 		{ value: '2', label: 'Rảnh' },
-				// 	// 		{ value: '3', label: 'Bận' },
-				// 	// 	]}
-				// 	// />,
-				// 	<ButtonExtend key='print' disabled={!selectedIds?.length} onClick={() => setVisibleIn(true)}>
-				// 		In ra máy in Lazer {(selectedIds?.length ?? 0) > 0 ? `(${selectedIds?.length})` : ''}
-				// 	</ButtonExtend>,
-				// ]}
+				otherProps={{
+					rowKey: (rec: AnPham.IAnPhamXepGia) => rec.soDangKyCaBiet,
+					rowSelection: {
+						type: 'checkbox',
+						selectedRowKeys: selectedIds ?? [],
+						onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
+						columnWidth: 40,
+					},
+				}}
+				otherButtons={[
+					<ReactToPrint
+						key={'prin'}
+						content={reactToPrintContent}
+						documentTitle='In'
+						trigger={reactToPrintTrigger}
+						removeAfterPrint
+					/>,
+				]}
 			/>
 
 			<LichSuThueMuonPage
@@ -159,7 +160,18 @@ const DangKyCaBietPage = () => {
 				condition={{ soDangKyCaBiet: record?.soDangKyCaBiet }}
 			/>
 
-			<ModalInLazer visible={visibleIn} setVisible={setVisibleIn} />
+			{/* <ModalInLazer visible={visibleIn} setVisible={setVisibleIn} /> */}
+
+			<PrintTemplate ref={componentRef} hideTieuNgu footer={<></>}>
+				<div className='to-print'>
+					<div style={{ display: 'flex', flexDirection: 'column', gap: 12, justifyContent: 'left' }}>
+						{selectedIds?.map((item) => (
+							// eslint-disable-next-line react/jsx-key
+							<Barcode value={item} />
+						))}
+					</div>
+				</div>
+			</PrintTemplate>
 		</Card>
 	);
 };

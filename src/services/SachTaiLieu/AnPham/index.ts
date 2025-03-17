@@ -28,3 +28,7 @@ export async function chinhSuaBienMucSoLuoc(idBienMuc: string, payLoad: any) {
 export async function bienMucChiTiet(idBienMuc: string, payLoad: any) {
 	return axios.put(`${ip3}/an-pham/${idBienMuc}/bien-muc-chi-tiet`, payLoad);
 }
+
+export async function inMaBarCode(payLoad: any) {
+	return axios.post(`${ip3}/an-pham/in-barcode`, payLoad);
+}

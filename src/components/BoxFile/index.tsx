@@ -52,12 +52,7 @@ const BoxFile = (props: { url: string }) => {
 
 	return (
 		<BoxFileWrapper>
-			<div
-				className='box-file item-center shadow'
-				onClick={() => {
-					window.open(props?.url);
-				}}
-			>
+			<div className='box-file item-center shadow'>
 				<div style={{ marginRight: 4 }}>{renderIconWithFile(getFileNameExtention(fileName ?? '') ?? '')}</div>
 				<div className={'name-file'}>{getNameFile(props?.url)}</div>
 			</div>
