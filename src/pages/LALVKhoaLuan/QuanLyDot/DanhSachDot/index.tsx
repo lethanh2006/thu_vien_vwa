@@ -108,6 +108,7 @@ const DanhSachDot = () => {
 			<TableBase
 				getData={getData}
 				columns={columns}
+				params={{ idDot: recDot?._id }}
 				dependencies={[page, limit]}
 				modelName='quanlythuvien.danhsachdot'
 				hideCard
@@ -118,8 +119,8 @@ const DanhSachDot = () => {
 				widthDrawer={900}
 				buttons={{
 					create: isNgoaiThoiGian ? false : true,
-					// import: isNgoaiThoiGian ? false : true,
-					// export: isNgoaiThoiGian ? false : true,
+					import: isNgoaiThoiGian ? false : true,
+					export: isNgoaiThoiGian ? false : true,
 				}}
 			/>
 		</>
