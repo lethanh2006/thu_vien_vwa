@@ -115,7 +115,7 @@ const FormItemTaiLieuSo = (props: {
 			</TableStaticData>
 
 			<Modal
-				title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} hồ sơ lưu`}
+				title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} tài liệu ấn phẩm số`}
 				visible={visibleForm}
 				width={isView ? 1000 : 600}
 				footer={null}
