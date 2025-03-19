@@ -159,6 +159,22 @@ const BienMucSachTaiLieuPage = () => {
 
 	return (
 		<Card title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}>
+			<div style={{ marginBottom: 12 }}>
+				<ButtonExtend
+					onClick={() => {
+						setRecord({} as AnPham.IRecord);
+						setEdit(false);
+						setIsView(false);
+						setVisibleForm(true);
+					}}
+					icon={<PlusCircleOutlined />}
+					type='primary'
+					notHideText
+					tooltip='Biên mục sơ lược'
+				>
+					Biên mục sơ lược
+				</ButtonExtend>
+			</div>
 			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
 				<Tabs.TabPane tab='Ấn phẩm vật lý' key='1' />
 				<Tabs.TabPane tab='Ấn phẩm số' key='2' />
@@ -174,23 +190,6 @@ const BienMucSachTaiLieuPage = () => {
 				formProps={{ getData, tabActive }}
 				widthDrawer={1000}
 				buttons={{ create: false }}
-				otherButtons={[
-					<ButtonExtend
-						key={'1'}
-						onClick={() => {
-							setRecord({} as AnPham.IRecord);
-							setEdit(false);
-							setIsView(false);
-							setVisibleForm(true);
-						}}
-						icon={<PlusCircleOutlined />}
-						type='primary'
-						notHideText
-						tooltip='Biên mục sơ lược'
-					>
-						Biên mục sơ lược
-					</ButtonExtend>,
-				]}
 				hideCard
 			/>
 		</Card>
