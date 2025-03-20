@@ -7,6 +7,9 @@ const ChiTietBienMuc = () => {
 
 	return (
 		<Descriptions column={{ xs: 1, md: 2 }} bordered>
+			<Descriptions.Item label='Đợt nhập sách' span={24}>
+				{record?.dotNhapSach?.ten ?? '--'}
+			</Descriptions.Item>
 			<Descriptions.Item label='Nhan đề chính [245$a]'>
 				{danhSach?.find((item) => item?.tagCode === '245')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??
 					'--'}

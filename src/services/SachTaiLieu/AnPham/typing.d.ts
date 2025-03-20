@@ -2,6 +2,16 @@ import type { GiaSach } from '@/services/DanhMuc/GiaSach/typing';
 import type { ETrangThaiBienMuc, ETrangThaiDangKyCaBiet } from '../constant';
 
 declare module AnPham {
+	export interface IDotNhapSach {
+		_id: string;
+		ten: string;
+		maNamHoc: string;
+		maHocKy: string;
+		thoiGianBatDau: Date | string;
+		thoiGianKetThuc: Date | string;
+		moTa: string;
+	}
+
 	export interface IRecord {
 		_id: string;
 		maTaiLieu: string;
@@ -46,6 +56,10 @@ declare module AnPham {
 		communityId: string;
 
 		thongTinAnPhamTrucTuyen: TDanhSachTaiLieuTrucTuyen[];
+
+		dotNhapSachId: string;
+		dotNhapSach: IDotNhapSach;
+		isSachHay: boolean;
 
 		createdAt?: Date;
 		updatedAt?: Date;
@@ -107,14 +121,16 @@ declare module AnPham {
 		donGia: number;
 		thuVienId: string;
 		thuVien: ThuVien.IRecord;
-		khoSachId: string;
+		maKhoSach: string;
 		khoSach: KhoSach.IRecord;
 		giaSachId: string;
 		giaSach: GiaSach.IRecord;
-		soDangKyCaBien: string;
+		soDangKyCaBiet: string;
 		soLuong: number;
 		daXepGia: boolean;
 		ghiChu: string;
+
+		dotNhapSachId: string;
 	}
 
 	export interface IAnPhamXepGia {

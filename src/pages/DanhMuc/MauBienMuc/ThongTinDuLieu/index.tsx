@@ -18,9 +18,12 @@ const ThongTinDuLieuBienMucPage = () => {
 	const columns: IColumn<MauBienMuc.IThongTinKhaiBao>[] = [
 		{
 			title: 'Mã',
+			dataIndex: 'tag',
 			align: 'center',
 			width: 100,
 			render: (val, rec) => rec?.thongTinTag?.ma,
+			filterType: 'number',
+			sortable: true,
 		},
 		{
 			title: 'Nội dung',

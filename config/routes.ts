@@ -74,6 +74,11 @@
 		icon: 'BookOutlined',
 		routes: [
 			{
+				name: 'DotNhapSach',
+				path: 'dot-nhap-sach',
+				component: './SachTaiLieu/DotNhapSach',
+			},
+			{
 				name: 'BienMuc',
 				path: 'bien-muc',
 				component: './SachTaiLieu/BienMuc',

@@ -51,6 +51,7 @@ const KhoSachPage = () => {
 			modelName='danhmuc.nguonbosung'
 			title={intl.formatMessage({ id: 'danhmuc.nguonbosung.title' })}
 			Form={Form}
+			buttons={{ import: true, export: true }}
 		/>
 	);
 };

@@ -15,12 +15,18 @@ import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import FormLichSuXepGia from '../AnPham/LichSuXepGia/components/Form';
+import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ChiTietXepGia from './components/ChiTiet';
 
 const XepGiaPage = () => {
+	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('sachtailieu.anpham.dotnhapsach');
 	const { getModel, page, limit, handleEdit, setRecord, visibleForm, setVisibleForm, deleteModel } =
 		useModel('sachtailieu.anpham.xepgia');
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
+
+	const getData = () => {
+		getModel({ dotNhapSachId: recDot?._id });
+	};
 
 	const onCell = (rec: AnPham.IXepGia) => ({
 		onClick: () => {
@@ -72,11 +78,11 @@ const XepGiaPage = () => {
 		},
 		{
 			title: 'Kho',
-			dataIndex: 'khoSachId',
+			dataIndex: 'maKhoSach',
 			width: 130,
 			render: (val, rec) => rec?.khoSach?.ten,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectKhoSach multiple />,
+			filterCustomSelect: <SelectKhoSach multiple selectMa />,
 			onCell,
 		},
 		{
@@ -176,11 +182,22 @@ const XepGiaPage = () => {
 	return (
 		<>
 			<TableBase
+				getData={getData}
 				columns={columns}
-				dependencies={[page, limit]}
+				dependencies={[page, limit, recDot?._id]}
 				modelName='sachtailieu.anpham.xepgia'
 				title='Thông tin xếp giá'
 				buttons={{ create: false }}
+				otherButtons={[
+					<SelectDotNhapSach
+						key={'1'}
+						isSetRecord
+						style={{ width: 250 }}
+						value={recDot?._id}
+						onChange={(val) => setRecDot(danhSachDot?.find((item) => item?._id === val))}
+						allowClear
+					/>,
+				]}
 			/>
 
 			<ChiTietXepGia visible={visibleChiTiet} setVisible={setVisibleChiTiet} />
@@ -195,7 +212,7 @@ const XepGiaPage = () => {
 				<FormLichSuXepGia
 					onCancel={() => setVisibleForm(false)}
 					onOk={() => {
-						getModel();
+						getData();
 						setVisibleForm(false);
 					}}
 				/>

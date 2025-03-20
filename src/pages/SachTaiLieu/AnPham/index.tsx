@@ -9,24 +9,38 @@ import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
-import { DeleteOutlined, DollarOutlined, EditOutlined, EyeOutlined, MenuOutlined } from '@ant-design/icons';
-import { Button, Card, Popconfirm, Popover, Tabs, Tag } from 'antd';
+import {
+	CheckOutlined,
+	CloseOutlined,
+	DeleteOutlined,
+	DollarOutlined,
+	EditOutlined,
+	EyeOutlined,
+	MenuOutlined,
+} from '@ant-design/icons';
+import { Button, Card, Checkbox, Popconfirm, Popover, Segmented, Select, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ModalBienMucTaiLieu from '../BienMuc/components/Modal';
+import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ModalAnPham from './components/Modal';
 import StatAnPham from './components/Stat';
 import ModalXepGia from './components/XepGia';
 
 const CardAnPham = () => {
 	const intl = useIntl();
-	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit } =
+	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('sachtailieu.anpham.dotnhapsach');
+	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit, putModel } =
 		useModel('sachtailieu.anpham.anpham');
 	const { setVisibleForm } = useModel('sachtailieu.anpham.xepgia');
 	const [tabActive, setTabActive] = useState<string>('1');
 
 	const getData = () => {
-		getModel({ trangThai: ETrangThaiBienMuc.DA_BIEN_MUC, online: tabActive === '1' ? false : true });
+		getModel({
+			dotNhapSachId: recDot?._id,
+			trangThai: ETrangThaiBienMuc.DA_BIEN_MUC,
+			online: tabActive === '1' ? false : true,
+		});
 	};
 
 	const onCell = (rec: AnPham.IRecord) => ({
@@ -36,6 +50,10 @@ const CardAnPham = () => {
 		},
 	});
 
+	const handleSachHay = (rec: AnPham.IRecord, isSachHay: boolean) => {
+		putModel(rec?._id ?? '', { ...rec, isSachHay }, getData);
+	};
+
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
 			title: 'Mã tài liệu',
@@ -44,6 +62,7 @@ const CardAnPham = () => {
 			filterType: 'string',
 			onCell,
 		},
+
 		{
 			title: 'Nhan đề',
 			dataIndex: 'nhanDeConverse',
@@ -57,6 +76,26 @@ const CardAnPham = () => {
 			dataIndex: 'tacGiaConverse',
 			width: 150,
 			filterType: 'string',
+			onCell,
+		},
+		{
+			title: 'Sách hay',
+			dataIndex: 'isSachHay',
+			align: 'center',
+			width: 90,
+			render: (val, rec) => <Checkbox checked={!!val} />,
+			filterType: 'customselect',
+			filterCustomSelect: (
+				<Select
+					mode='multiple'
+					placeholder='Sách hay'
+					options={[
+						{ label: 'Có', value: true },
+						{ label: 'Không', value: false },
+					]}
+					allowClear
+				/>
+			),
 			onCell,
 		},
 		{
@@ -131,36 +170,55 @@ const CardAnPham = () => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 60,
+			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
-				<Popover
-					placement='topRight'
-					content={
-						<>
-							<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
-							<ButtonExtend
-								tooltip='Xếp giá'
-								onClick={() => {
-									setRecord(rec);
-									setVisibleForm(true);
-								}}
-								type='link'
-								icon={<DollarOutlined />}
-							/>
-							<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
-							<Popconfirm
-								onConfirm={() => deleteModel(rec._id, getData)}
-								title='Bạn có chắc chắn muốn xóa thông tin này?'
-								placement='topRight'
-							>
-								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
-							</Popconfirm>
-						</>
-					}
-				>
-					<Button type='link' icon={<MenuOutlined />} />
-				</Popover>
+				<>
+					{!rec?.isSachHay ? (
+						<Popconfirm
+							onConfirm={() => handleSachHay(rec, true)}
+							title='Xác nhận đây là sách hay này?'
+							placement='topRight'
+						>
+							<ButtonExtend tooltip='Sách hay' type='link' className='text-success' icon={<CheckOutlined />} />
+						</Popconfirm>
+					) : (
+						<Popconfirm
+							onConfirm={() => handleSachHay(rec, false)}
+							title='Xác nhận đây bỏ sách hay này?'
+							placement='topRight'
+						>
+							<ButtonExtend tooltip='Bỏ sách hay' type='link' danger icon={<CloseOutlined />} />
+						</Popconfirm>
+					)}
+					<Popover
+						placement='topRight'
+						content={
+							<>
+								<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
+								<ButtonExtend
+									tooltip='Xếp giá'
+									onClick={() => {
+										setRecord(rec);
+										setVisibleForm(true);
+									}}
+									type='link'
+									icon={<DollarOutlined />}
+								/>
+								<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+								<Popconfirm
+									onConfirm={() => deleteModel(rec._id, getData)}
+									title='Bạn có chắc chắn muốn xóa thông tin này?'
+									placement='topRight'
+								>
+									<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+								</Popconfirm>
+							</>
+						}
+					>
+						<Button type='link' icon={<MenuOutlined />} />
+					</Popover>
+				</>
 			),
 		},
 	];
@@ -169,21 +227,35 @@ const CardAnPham = () => {
 		<Card title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}>
 			<StatAnPham />
 
-			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
-				<Tabs.TabPane tab='Ấn phẩm vật lý' key='1' />
-				<Tabs.TabPane tab='Ấn phẩm số' key='2' />
-			</Tabs>
-
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, tabActive]}
+				dependencies={[page, limit, tabActive, recDot?._id]}
 				modelName='sachtailieu.anpham.anpham'
 				title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
 				Form={isView ? ModalAnPham : ModalBienMucTaiLieu}
 				widthDrawer={1100}
 				buttons={{ create: false }}
 				hideCard
+				otherButtons={[
+					<SelectDotNhapSach
+						key={'1'}
+						isSetRecord
+						style={{ width: 250 }}
+						value={recDot?._id}
+						onChange={(val) => setRecDot(danhSachDot?.find((item) => item?._id === val))}
+						allowClear
+					/>,
+					<Segmented
+						key={'2'}
+						value={tabActive}
+						onChange={(value) => setTabActive(value.toString())}
+						options={[
+							{ value: '1', label: 'Ấn phẩm vật lý' },
+							{ value: '2', label: 'Ấn phẩm số' },
+						]}
+					/>,
+				]}
 			/>
 
 			<ModalXepGia />
