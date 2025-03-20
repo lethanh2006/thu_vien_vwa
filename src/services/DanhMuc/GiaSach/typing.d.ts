@@ -4,7 +4,7 @@ declare module GiaSach {
 	export interface IRecord {
 		_id: string;
 		ten: string;
-		khoSachId: string;
+		maKhoSach: string;
 		khoSach: KhoSach.IRecord;
 		chieuDai: number;
 		chieuRong: number;

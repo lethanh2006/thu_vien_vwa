@@ -41,8 +41,8 @@ const ModalXepGia = () => {
 		loadingThongKe,
 		datathongKeXepGia,
 	} = useModel('sachtailieu.anpham.xepgia');
-	const { danhSach: danhSachKieuTuLieu } = useModel('danhmuc.kieutulieu');
-	const khoSachId: string = Form.useWatch('khoSachId', form);
+	const { danhSach: danhSachKhoSach } = useModel('danhmuc.khosach');
+	const maKhoSach: string = Form.useWatch('maKhoSach', form);
 	const [actionType, setActionType] = useState<string>();
 	const [tabActive, setTabActive] = useState<string>('1');
 
@@ -60,6 +60,7 @@ const ModalXepGia = () => {
 				...values,
 				daXepGia: actionType === 'luu_lai' ? false : true,
 				anPhamId: record?._id,
+				dotNhapSachId: record?.dotNhapSachId,
 			},
 			() => {
 				thongKeXepGiaModel({ anPhamId: record?._id });
@@ -127,15 +128,7 @@ const ModalXepGia = () => {
 						</Col>
 						<Col xs={24} md={12}>
 							<Form.Item name='maKieuTuLieu' label='Kiểu tư liệu (lưu thông)' rules={[...rules.required]}>
-								<SelectKieuTuLieu
-									selectMa
-									onChange={(val) => {
-										const index = danhSachKieuTuLieu?.find((item) => item?.ma === val);
-										form.setFieldsValue({
-											soDangKyCaBien: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
-										});
-									}}
-								/>
+								<SelectKieuTuLieu selectMa />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
@@ -144,7 +137,7 @@ const ModalXepGia = () => {
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='donGia' label='Đơn giá (đ/bản)' rules={[...rules.required]}>
+							<Form.Item name='donGia' label='Đơn giá (đ/bản)'>
 								<InputNumber
 									formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 									style={{ width: '100%' }}
@@ -163,21 +156,30 @@ const ModalXepGia = () => {
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='khoSachId' label='Kho' rules={[...rules.required]}>
+							<Form.Item name='maKhoSach' label='Kho' rules={[...rules.required]}>
 								<SelectKhoSach
-									onChange={() => {
+									selectMa
+									onChange={(val) => {
 										form.resetFields(['giaSachId']);
+
+										const index = danhSachKhoSach?.find((item) => item?.ma === val);
+										form.setFieldsValue({
+											soDangKyCaBiet: `${index?.ma}/${String((index?.soLuongAnPhamDaXepGia ?? 0) + 1).padStart(
+												6,
+												'0',
+											)}`,
+										});
 									}}
 								/>
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='giaSachId' label='Giá sách' rules={[...rules.required]}>
-								<SelectGiaSach condition={{ khoSachId: khoSachId }} />
+							<Form.Item name='giaSachId' label='Giá sách'>
+								<SelectGiaSach condition={{ maKhoSach: maKhoSach }} />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='soDangKyCaBien' label='Đăng ký cá biệt' rules={[...rules.required]}>
+							<Form.Item name='soDangKyCaBiet' label='Đăng ký cá biệt' rules={[...rules.required]}>
 								<Input placeholder='Đăng ký cá biệt' disabled />
 							</Form.Item>
 						</Col>

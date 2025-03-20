@@ -10,6 +10,7 @@ import { resetFieldsForm } from '@/utils/utils';
 import { Button, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+import SelectDotNhapSach from '../../DotNhapSach/components/Select';
 import FormItemTaiLieuSo from '../DanhSachTaiLieu/FormItem';
 
 const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; tabActive: string }) => {
@@ -28,6 +29,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		getModel,
 	} = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
+	const { record: recDot } = useModel('sachtailieu.anpham.dotnhapsach');
 	const { afterAddNew, tabActive } = props;
 	const online: boolean = Form.useWatch('online', form);
 
@@ -86,6 +88,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		} else {
 			form.setFieldsValue({
 				online: tabActive === '1' ? false : true,
+				dotNhapSachId: recDot?._id,
 			});
 		}
 	}, [record?._id, visibleForm]);
@@ -116,6 +119,11 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
+				<Col xs={24} md={12}>
+					<Form.Item name='dotNhapSachId' label='Đợt nhập sách' rules={[...rules.required]}>
+						<SelectDotNhapSach />
+					</Form.Item>
+				</Col>
 				<Col xs={24} md={12}>
 					<Form.Item name='maKieuBanGhi' label='Kiểu bản ghi' rules={[...rules.required]}>
 						<SelectKieuBanGhi selectMa />
@@ -187,7 +195,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 						<Input placeholder='Nhập phụ đề' />
 					</Form.Item>
 				</Col>
-				<Col xs={24} md={12}>
+				<Col xs={24}>
 					<Form.Item name='thongTinTrachNhiem' label='Thông tin trách nhiệm [245$c]'>
 						<Input placeholder='Nhập thông tin trách nhiệm' />
 					</Form.Item>

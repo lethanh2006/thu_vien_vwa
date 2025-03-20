@@ -5,6 +5,7 @@ declare module KhoSach {
 		ten: string;
 		maPhongDoc: string;
 		phongDoc: PhongDoc.IRecord;
+		soLuongAnPhamDaXepGia: number;
 		createdAt?: string;
 		updatedAt?: string;
 	}

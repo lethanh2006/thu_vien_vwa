@@ -93,11 +93,11 @@ const LichSuXepGia = () => {
 		},
 		{
 			title: 'Kho',
-			dataIndex: 'khoSachId',
+			dataIndex: 'maKhoSach',
 			width: 130,
 			render: (val, rec) => rec?.khoSach?.ten,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectKhoSach multiple />,
+			filterCustomSelect: <SelectKhoSach multiple selectMa />,
 			onCell,
 		},
 		{

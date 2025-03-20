@@ -18,7 +18,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 	const [form] = Form.useForm();
 	const { formSubmiting, putModel, record, visibleForm } = useModel('sachtailieu.anpham.xepgia');
 	const { danhSach: danhSachKieuTuLieu } = useModel('danhmuc.kieutulieu');
-	const khoSachId: string = Form.useWatch('khoSachId', form);
+	const maKhoSach: string = Form.useWatch('maKhoSach', form);
 	const [actionType, setActionType] = useState<string>();
 
 	useEffect(() => {
@@ -28,7 +28,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 			const index = danhSachKieuTuLieu?.find((item) => item?.ma === record?.maKieuTuLieu);
 			form.setFieldsValue({
 				...record,
-				soDangKyCaBien: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
+				soDangKyCaBiet: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
 			});
 		}
 	}, [visibleForm, record?._id]);
@@ -87,15 +87,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='maKieuTuLieu' label='Kiểu tư liệu (lưu thông)' rules={[...rules.required]}>
-							<SelectKieuTuLieu
-								selectMa
-								onChange={(val) => {
-									const index = danhSachKieuTuLieu?.find((item) => item?.ma === val);
-									form.setFieldsValue({
-										soDangKyCaBien: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
-									});
-								}}
-							/>
+							<SelectKieuTuLieu selectMa />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
@@ -104,7 +96,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='donGia' label='Đơn giá (đ/bản)' rules={[...rules.required]}>
+						<Form.Item name='donGia' label='Đơn giá (đ/bản)'>
 							<InputNumber
 								formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 								style={{ width: '100%' }}
@@ -123,21 +115,26 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='khoSachId' label='Kho' rules={[...rules.required]}>
+						<Form.Item name='maKhoSach' label='Kho' rules={[...rules.required]}>
 							<SelectKhoSach
-								onChange={() => {
+								selectMa
+								onChange={(val) => {
+									const index = danhSachKieuTuLieu?.find((item) => item?.ma === val);
+									form.setFieldsValue({
+										soDangKyCaBiet: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
+									});
 									form.resetFields(['giaSachId']);
 								}}
 							/>
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='giaSachId' label='Giá sách' rules={[...rules.required]}>
-							<SelectGiaSach condition={{ khoSachId: khoSachId }} />
+						<Form.Item name='giaSachId' label='Giá sách'>
+							<SelectGiaSach condition={{ maKhoSach: maKhoSach }} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='soDangKyCaBien' label='Đăng ký cá biệt' rules={[...rules.required]}>
+						<Form.Item name='soDangKyCaBiet' label='Đăng ký cá biệt' rules={[...rules.required]}>
 							<Input placeholder='Đăng ký cá biệt' disabled />
 						</Form.Item>
 					</Col>

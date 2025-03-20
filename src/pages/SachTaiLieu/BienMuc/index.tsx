@@ -9,19 +9,25 @@ import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Popconfirm, Popover, Tabs, Tag } from 'antd';
+import { Button, Card, Popconfirm, Popover, Segmented, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ModalBienMucTaiLieu from './components/Modal';
 
 const BienMucSachTaiLieuPage = () => {
 	const intl = useIntl();
+	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('sachtailieu.anpham.dotnhapsach');
 	const { getModel, page, limit, handleEdit, handleView, setRecord, setEdit, setIsView, setVisibleForm, deleteModel } =
 		useModel('sachtailieu.anpham.anpham');
 	const [tabActive, setTabActive] = useState<string>('1');
 
 	const getData = () => {
-		getModel({ trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC, online: tabActive === '1' ? false : true });
+		getModel({
+			dotNhapSachId: recDot?._id,
+			trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC,
+			online: tabActive === '1' ? false : true,
+		});
 	};
 
 	const onCell = (rec: AnPham.IRecord) => ({
@@ -160,30 +166,19 @@ const BienMucSachTaiLieuPage = () => {
 	return (
 		<Card title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}>
 			<div style={{ marginBottom: 12 }}>
-				<ButtonExtend
-					onClick={() => {
-						setRecord({} as AnPham.IRecord);
-						setEdit(false);
-						setIsView(false);
-						setVisibleForm(true);
-					}}
-					icon={<PlusCircleOutlined />}
-					type='primary'
-					notHideText
-					tooltip='Biên mục sơ lược'
-				>
-					Biên mục sơ lược
-				</ButtonExtend>
+				<SelectDotNhapSach
+					isSetRecord
+					style={{ width: 250 }}
+					value={recDot?._id}
+					onChange={(val) => setRecDot(danhSachDot?.find((item) => item?._id === val))}
+					allowClear
+				/>
 			</div>
-			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
-				<Tabs.TabPane tab='Ấn phẩm vật lý' key='1' />
-				<Tabs.TabPane tab='Ấn phẩm số' key='2' />
-			</Tabs>
 
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, tabActive]}
+				dependencies={[page, limit, tabActive, recDot?._id]}
 				modelName='sachtailieu.anpham.anpham'
 				title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}
 				Form={ModalBienMucTaiLieu}
@@ -191,6 +186,32 @@ const BienMucSachTaiLieuPage = () => {
 				widthDrawer={1000}
 				buttons={{ create: false }}
 				hideCard
+				otherButtons={[
+					<ButtonExtend
+						key={'1'}
+						onClick={() => {
+							setRecord({} as AnPham.IRecord);
+							setEdit(false);
+							setIsView(false);
+							setVisibleForm(true);
+						}}
+						icon={<PlusCircleOutlined />}
+						type='primary'
+						notHideText
+						tooltip='Biên mục sơ lược'
+					>
+						Biên mục sơ lược
+					</ButtonExtend>,
+					<Segmented
+						key={'2'}
+						value={tabActive}
+						onChange={(value) => setTabActive(value.toString())}
+						options={[
+							{ value: '1', label: 'Ấn phẩm vật lý' },
+							{ value: '2', label: 'Ấn phẩm số' },
+						]}
+					/>,
+				]}
 			/>
 		</Card>
 	);

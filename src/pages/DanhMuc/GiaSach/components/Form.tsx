@@ -35,8 +35,8 @@ const FormGiaSach = (props: any) => {
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={12}>
-						<Form.Item label='Kho sách' name='khoSachId' rules={[...rules.required]}>
-							<SelectKhoSach />
+						<Form.Item label='Kho sách' name='maKhoSach' rules={[...rules.required]}>
+							<SelectKhoSach selectMa />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={12}>

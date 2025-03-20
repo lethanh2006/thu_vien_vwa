@@ -57,6 +57,7 @@ const KhoSachPage = () => {
 			modelName='danhmuc.phongdoc'
 			title={intl.formatMessage({ id: 'danhmuc.phongdoc.title' })}
 			Form={Form}
+			buttons={{ import: true, export: true }}
 		/>
 	);
 };

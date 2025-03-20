@@ -21,11 +21,11 @@ const GiaSachPage = () => {
 		},
 		{
 			title: 'Kho sách',
-			dataIndex: 'khoSachId',
+			dataIndex: 'maKhoSach',
 			width: 120,
 			render: (val, rec) => rec?.khoSach?.ten ?? val,
 			filterType: 'customselect',
-			filterCustomSelect: <SelectKhoSach multiple />,
+			filterCustomSelect: <SelectKhoSach multiple selectMa />,
 		},
 		{
 			title: 'Chiều dài (m)',
@@ -90,6 +90,7 @@ const GiaSachPage = () => {
 			title={intl.formatMessage({ id: 'danhmuc.giasach.title' })}
 			Form={Form}
 			widthDrawer={800}
+			buttons={{ import: true, export: true }}
 		/>
 	);
 };
