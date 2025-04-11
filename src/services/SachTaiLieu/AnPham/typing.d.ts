@@ -60,6 +60,7 @@ declare module AnPham {
 		dotNhapSachId: string;
 		dotNhapSach: IDotNhapSach;
 		isSachHay: boolean;
+		moTa: string;
 
 		createdAt?: Date;
 		updatedAt?: Date;
