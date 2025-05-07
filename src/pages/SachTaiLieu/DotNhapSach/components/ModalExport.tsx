@@ -3,7 +3,8 @@ import { thongKeDangKyTongQuat } from '@/services/SachTaiLieu/AnPham';
 import rules from '@/utils/rules';
 import { Button, Form, message, Modal } from 'antd';
 import fileDownload from 'js-file-download';
-import React from 'react';
+import moment from 'moment';
+import React, { useEffect } from 'react';
 
 type TProps = {
 	visible: boolean;
@@ -13,6 +14,10 @@ type TProps = {
 const ModalExportDangKyTongQuat: React.FC<TProps> = ({ visible, setVisible }) => {
 	const [loading, setLoading] = React.useState(false);
 	const [form] = Form.useForm();
+
+	useEffect(() => {
+		form.setFieldsValue({ thoiGian: [moment().startOf('month'), moment().endOf('month')] });
+	}, []);
 
 	const handleCancel = () => {
 		setVisible(false);

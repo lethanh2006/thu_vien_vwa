@@ -5,7 +5,7 @@ import { type IColumn } from '@/components/Table/typing';
 import SelectHocKy from '@/pages/DaoTao/HocKy/SelectHocKy';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
-import { Popconfirm } from 'antd';
+import { Popconfirm, Space } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -98,7 +98,7 @@ const DotNhapSachPage = () => {
 			Form={Form}
 			widthDrawer={800}
 		>
-			<div style={{ marginBottom: 12 }}>
+			<Space style={{ marginBottom: 12 }}>
 				<SelectHocKy
 					style={{ width: 250 }}
 					value={recHocKy?.ma}
@@ -108,7 +108,7 @@ const DotNhapSachPage = () => {
 				<ButtonExtend onClick={() => setVisibleThongKe(true)} icon={<ExportOutlined />}>
 					Thống kê đăng ký tổng quát
 				</ButtonExtend>
-			</div>
+			</Space>
 
 			<ModalExportDangKyTongQuat visible={visibleThongKe} setVisible={setVisibleThongKe} />
 		</TableBase>
