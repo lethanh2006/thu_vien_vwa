@@ -32,3 +32,8 @@ export async function bienMucChiTiet(idBienMuc: string, payLoad: any) {
 export async function inMaBarCode(payLoad: any) {
 	return axios.post(`${ip3}/an-pham/in-barcode`, payLoad);
 }
+
+/** Xuất thống kê đăng ký tổng quát */
+export async function thongKeDangKyTongQuat(params?: { thoiGianBatDau?: string; thoiGianKetThuc?: string }) {
+	return axios.get(`${ip3}/dot-nhap-sach/export-mau-so-dang-ky-tong-quat`, { params, responseType: 'arraybuffer' });
+}

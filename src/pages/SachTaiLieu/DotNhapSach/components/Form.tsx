@@ -46,8 +46,8 @@ const FormDotNhapSach = (props: any) => {
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Tên đợt' name='ten' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
-							<Input placeholder='Nhập mã kho' />
+						<Form.Item label='Tên đợt' name='ten' rules={[...rules.required, ...rules.text, ...rules.length(100)]}>
+							<Input placeholder='Nhập tên đợt' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
@@ -68,9 +68,20 @@ const FormDotNhapSach = (props: any) => {
 							<MyDatePicker disabledDate={(cur) => moment(cur).isBefore(thoiGianBatDau)} />
 						</Form.Item>
 					</Col>
+
+					<Col xs={24} md={12}>
+						<Form.Item name='soChungTu' label='Số chứng từ' rules={[...rules.text, ...rules.length(100)]}>
+							<Input placeholder='Nhập số chứng từ' />
+						</Form.Item>
+					</Col>
+					<Col xs={24} md={12}>
+						<Form.Item name='ngayChungTu' label='Ngày chứng từ'>
+							<MyDatePicker />
+						</Form.Item>
+					</Col>
 					<Col span={24}>
 						<Form.Item label='Mô tả' name='mota'>
-							<Input.TextArea rows={3} placeholder='Nhập mô tả' />
+							<Input.TextArea rows={2} placeholder='Nhập mô tả' />
 						</Form.Item>
 					</Col>
 				</Row>

@@ -4,16 +4,19 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import SelectHocKy from '@/pages/DaoTao/HocKy/SelectHocKy';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import moment from 'moment';
+import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
+import ModalExportDangKyTongQuat from './components/ModalExport';
 
 const DotNhapSachPage = () => {
 	const intl = useIntl();
 	const { danhSach: danhSachHocKy, record: recHocKy, setRecord: setRecHocKy } = useModel('daotao.hocky');
 	const { getModel, page, limit, handleEdit, deleteModel } = useModel('sachtailieu.anpham.dotnhapsach');
+	const [visibleThongKe, setVisibleThongKe] = useState(false);
 
 	const getData = () => {
 		if (recHocKy?.ma) getModel({ maHocKy: recHocKy?.ma });
@@ -23,21 +26,38 @@ const DotNhapSachPage = () => {
 		{
 			title: 'Tên đợt',
 			dataIndex: 'ten',
-			width: 150,
+			width: 160,
 			filterType: 'string',
 		},
 		{
-			title: 'Thời gian bắt đầu',
+			title: 'Bắt đầu',
 			dataIndex: 'thoiGianBatDau',
-			width: 130,
+			width: 100,
+			align: 'center',
 			render: (val) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
 		{
-			title: 'Thời gian kết thúc',
+			title: 'Kết thúc',
 			dataIndex: 'thoiGianKetThuc',
-			width: 130,
+			width: 100,
+			align: 'center',
+			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			filterType: 'date',
+			sortable: true,
+		},
+		{
+			title: 'Số chứng từ',
+			dataIndex: 'soChungTu',
+			width: 120,
+			filterType: 'string',
+		},
+		{
+			title: 'Ngày chứng từ',
+			dataIndex: 'ngayChungTu',
+			width: 100,
+			align: 'center',
 			render: (val) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
@@ -45,7 +65,7 @@ const DotNhapSachPage = () => {
 		{
 			title: 'Mô tả',
 			dataIndex: 'moTa',
-			width: 220,
+			width: 200,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 		},
 		{
@@ -85,7 +105,12 @@ const DotNhapSachPage = () => {
 					onChange={(val) => setRecHocKy(danhSachHocKy?.find((item) => item?.ma === val))}
 					selectMa
 				/>
+				<ButtonExtend onClick={() => setVisibleThongKe(true)} icon={<ExportOutlined />}>
+					Thống kê đăng ký tổng quát
+				</ButtonExtend>
 			</div>
+
+			<ModalExportDangKyTongQuat visible={visibleThongKe} setVisible={setVisibleThongKe} />
 		</TableBase>
 	);
 };

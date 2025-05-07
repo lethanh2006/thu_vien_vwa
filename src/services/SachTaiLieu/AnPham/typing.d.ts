@@ -10,6 +10,11 @@ declare module AnPham {
 		thoiGianBatDau: Date | string;
 		thoiGianKetThuc: Date | string;
 		moTa: string;
+
+		soChungTu?: string;
+		ngayChungTu?: Date | string;
+		nguonBoSungId?: string;
+		nguonXuatNhap?: NguonBoSung.IRecord;
 	}
 
 	export interface IRecord {
