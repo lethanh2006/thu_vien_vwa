@@ -15,7 +15,7 @@ export default {
 	'menu.LALVKhoaLuan.DanhSachSinhVien': 'Danh sách sinh viên',
 
 	'menu.SachTaiLieu': 'Tài nguyên thư viện',
-	'menu.SachTaiLieu.DotNhapSach': 'Số đăng ký tổng quát',
+	'menu.SachTaiLieu.DotNhapSach': 'Sổ đăng ký tổng quát',
 	'menu.SachTaiLieu.BienMuc': 'Biên mục',
 	'menu.SachTaiLieu.AnPham': 'Ấn phẩm',
 	'menu.SachTaiLieu.XepGia': 'Xếp giá',

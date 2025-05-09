@@ -281,7 +281,7 @@ const CardAnPham = () => {
 						icon={<ExportOutlined />}
 						onClick={() => handleExport()}
 					>
-						Mẫu số đăng ký cá biệt {(selectedIds?.length ?? 0) > 0 ? `(${selectedIds?.length})` : ''}
+						Thống kê số ĐKCB {(selectedIds?.length ?? 0) > 0 ? `(${selectedIds?.length})` : ''}
 					</ButtonExtend>,
 				]}
 			/>

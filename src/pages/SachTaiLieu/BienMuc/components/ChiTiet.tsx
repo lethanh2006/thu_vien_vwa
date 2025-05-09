@@ -7,7 +7,7 @@ const ChiTietBienMuc = () => {
 
 	return (
 		<Descriptions column={{ xs: 1, md: 2 }} bordered>
-			<Descriptions.Item label='Số đăng ký tổng quát' span={24}>
+			<Descriptions.Item label='Sổ đăng ký tổng quát' span={24}>
 				{record?.dotNhapSach?.ten ?? '--'}
 			</Descriptions.Item>
 			<Descriptions.Item label='Nhan đề chính [245$a]'>
