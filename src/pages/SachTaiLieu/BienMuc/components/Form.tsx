@@ -130,7 +130,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 					</ButtonExtend>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='dotNhapSachId' label='Đợt nhập sách' rules={[...rules.required]}>
+					<Form.Item name='dotNhapSachId' label='Số đăng ký tổng quát' rules={[...rules.required]}>
 						<SelectDotNhapSach />
 					</Form.Item>
 				</Col>

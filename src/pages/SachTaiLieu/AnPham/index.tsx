@@ -15,6 +15,7 @@ import {
 	DeleteOutlined,
 	DollarOutlined,
 	EditOutlined,
+	ExportOutlined,
 	EyeOutlined,
 	MenuOutlined,
 } from '@ant-design/icons';
@@ -26,14 +27,17 @@ import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ModalAnPham from './components/Modal';
 import StatAnPham from './components/Stat';
 import ModalXepGia from './components/XepGia';
+import { thongKeMauSoDKCB } from '@/services/SachTaiLieu/AnPham';
+import fileDownload from 'js-file-download';
 
 const CardAnPham = () => {
 	const intl = useIntl();
 	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('sachtailieu.anpham.dotnhapsach');
-	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit, putModel } =
+	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit, putModel, selectedIds } =
 		useModel('sachtailieu.anpham.anpham');
 	const { setVisibleForm } = useModel('sachtailieu.anpham.xepgia');
 	const [tabActive, setTabActive] = useState<string>('1');
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const getData = () => {
 		getModel({
@@ -52,6 +56,19 @@ const CardAnPham = () => {
 
 	const handleSachHay = (rec: AnPham.IRecord, isSachHay: boolean) => {
 		putModel(rec?._id ?? '', { ...rec, isSachHay }, getData);
+	};
+
+	const handleExport = () => {
+		setLoading(true);
+		if (selectedIds?.length)
+			thongKeMauSoDKCB({ anPhamIdList: selectedIds })
+				.then((res) => {
+					fileDownload(res.data, 'Mẫu số đăng ký cá biệt.xlsx');
+				})
+				.catch((error) => console.error('Export failed:', error))
+				.finally(() => {
+					setLoading(false);
+				});
 	};
 
 	const columns: IColumn<AnPham.IRecord>[] = [
@@ -237,6 +254,7 @@ const CardAnPham = () => {
 				widthDrawer={1100}
 				buttons={{ create: false }}
 				hideCard
+				rowSelection
 				otherButtons={[
 					<SelectDotNhapSach
 						key={'1'}
@@ -255,6 +273,16 @@ const CardAnPham = () => {
 							{ value: '2', label: 'Ấn phẩm số' },
 						]}
 					/>,
+
+					<ButtonExtend
+						disabled={!selectedIds?.length}
+						loading={loading}
+						key='3'
+						icon={<ExportOutlined />}
+						onClick={() => handleExport()}
+					>
+						Mẫu số đăng ký cá biệt {(selectedIds?.length ?? 0) > 0 ? `(${selectedIds?.length})` : ''}
+					</ButtonExtend>,
 				]}
 			/>
 

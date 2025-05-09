@@ -106,7 +106,7 @@ const DotNhapSachPage = () => {
 					selectMa
 				/>
 				<ButtonExtend onClick={() => setVisibleThongKe(true)} icon={<ExportOutlined />}>
-					Thống kê đăng ký tổng quát
+					Tổng hợp thông tin chung
 				</ButtonExtend>
 			</Space>
 
