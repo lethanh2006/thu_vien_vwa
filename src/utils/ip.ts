@@ -11,6 +11,7 @@ const ipSlink = ipRoot + 'slink'; // ip dev
 const ipDaoTao = ipRoot + 'qldt'; // ip dev
 const ipNhanSu = ipRoot + 'tcns'; // ip dev
 const ipCore = ipRoot + 'core'; // ip dev
+const ipZ39050 = ipRoot + 'thu-vien-qt'; // ip dev
 
 const currentRole = EModuleKey.THU_VIEN;
 const oneSignalRole = EModuleKey.THU_VIEN;
@@ -32,6 +33,7 @@ export {
 	ipSlink,
 	ipDaoTao,
 	ipNhanSu,
+	ipZ39050,
 	currentRole,
 	keycloakAuthEndpoint,
 	keycloakAuthority,

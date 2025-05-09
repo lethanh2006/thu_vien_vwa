@@ -37,3 +37,8 @@ export async function inMaBarCode(payLoad: any) {
 export async function thongKeDangKyTongQuat(params?: { thoiGianBatDau?: string; thoiGianKetThuc?: string }) {
 	return axios.get(`${ip3}/dot-nhap-sach/export-mau-so-dang-ky-tong-quat`, { params, responseType: 'arraybuffer' });
 }
+
+/** Xuất thống kê mẫu số đăng ký cá biệt */
+export async function thongKeMauSoDKCB(params: { anPhamIdList: string[] }) {
+	return axios.get(`${ip3}/thong-tin-an-pham/export-mau-dang-ky-ca-biet`, { params, responseType: 'arraybuffer' });
+}

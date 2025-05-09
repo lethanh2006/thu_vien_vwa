@@ -1,3 +1,5 @@
+import ButtonExtend from '@/components/Table/ButtonExtend';
+import TinyEditor from '@/components/TinyEditor';
 import SelectCapThuMuc from '@/pages/DanhMuc/CapThuMuc/components/Select';
 import SelectDangTaiLieu from '@/pages/DanhMuc/DangTaiLieu/components/Select';
 import SelectKieuBanGhi from '@/pages/DanhMuc/KieuBanGhi/components/Select';
@@ -8,10 +10,11 @@ import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectDotNhapSach from '../../DotNhapSach/components/Select';
 import FormItemTaiLieuSo from '../DanhSachTaiLieu/FormItem';
+import Z3950Page from '../Z2950';
 
 const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; tabActive: string }) => {
 	const intl = useIntl();
@@ -32,6 +35,8 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 	const { record: recDot } = useModel('sachtailieu.anpham.dotnhapsach');
 	const { afterAddNew, tabActive } = props;
 	const online: boolean = Form.useWatch('online', form);
+	const isSachHay: boolean = Form.useWatch('isSachHay', form);
+	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 
 	const getData = async (): Promise<AnPham.IRecord[]> => {
 		const response = await getModel({
@@ -119,8 +124,13 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
+				<Col xs={24}>
+					<ButtonExtend size='small' type='primary' onClick={() => setVisibleModal(true)}>
+						Tải về qua Z39.50
+					</ButtonExtend>
+				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='dotNhapSachId' label='Đợt nhập sách' rules={[...rules.required]}>
+					<Form.Item name='dotNhapSachId' label='Sổ đăng ký tổng quát' rules={[...rules.required]}>
 						<SelectDotNhapSach />
 					</Form.Item>
 				</Col>
@@ -241,15 +251,32 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 					</Form.Item>
 				</Col>
 				<Col xs={24}>
-					<Form.Item name='online' valuePropName='checked' initialValue={false}>
-						<Checkbox>Ấn phẩm số</Checkbox>
-					</Form.Item>
+					<Row gutter={[12, 0]}>
+						<Col xs={24} md={12}>
+							<Form.Item name='online' valuePropName='checked' initialValue={false}>
+								<Checkbox>Ấn phẩm số</Checkbox>
+							</Form.Item>
+						</Col>
+						<Col xs={24} md={12}>
+							<Form.Item name='isSachHay' valuePropName='checked' initialValue={false}>
+								<Checkbox>Sách hay</Checkbox>
+							</Form.Item>
+						</Col>
+					</Row>
 				</Col>
 
 				{online ? (
 					<Col xs={24}>
 						<Form.Item name='thongTinAnPhamTrucTuyen' label='Danh sách tài liệu ấn phẩm số' rules={[...rules.required]}>
 							<FormItemTaiLieuSo />
+						</Form.Item>
+					</Col>
+				) : null}
+
+				{isSachHay ? (
+					<Col xs={24}>
+						<Form.Item name='moTa' label='Nội dung sách hay' rules={[...rules.text]}>
+							<TinyEditor height={300} hideMenubar miniToolbar />
 						</Form.Item>
 					</Col>
 				) : null}
@@ -261,6 +288,8 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				</Button>
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
+
+			<Z3950Page visible={visibleModal} setVisible={setVisibleModal} form={form} />
 		</Form>
 	);
 };

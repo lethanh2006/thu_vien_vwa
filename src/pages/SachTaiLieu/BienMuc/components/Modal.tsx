@@ -1,11 +1,13 @@
 import { Button, Card, Steps, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { useIntl, useModel } from 'umi';
 import ChiTietAnPham from '../../AnPham/components/ChiTiet';
 import FormItemTaiLieuSo from '../DanhSachTaiLieu/FormItem';
 import ChiTietBienMuc from './ChiTiet';
 import Form from './Form';
 import FormBienMucChiTiet from './FormBienMucChiTiet';
+import NoiDungSachHay from './NoiDungSachHay';
 
 const ModalBienMucTaiLieu = (props: any) => {
 	const { title, getData, tabActive: tabActiveExternal } = props;
@@ -13,7 +15,7 @@ const ModalBienMucTaiLieu = (props: any) => {
 	const { record, edit, isView, setVisibleForm, visibleForm } = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel, loading } = useModel('sachtailieu.anpham.thongtinanpham');
 	const [currentStep, setCurrentStep] = useState(0);
-	const [tabActive, setTabActive] = useState<string>('1');
+	const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1200px)' });
 
 	useEffect(() => {
 		if (record?._id && visibleForm) getAllModel(undefined, undefined, { anPhamId: record?._id });
@@ -36,18 +38,24 @@ const ModalBienMucTaiLieu = (props: any) => {
 		>
 			{isView ? (
 				<>
-					<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
-						<Tabs.TabPane tab='Thông tin chung' key='1' />
-						<Tabs.TabPane tab='Biên mục chi tiết' key='2' />
-						{record?.online ? <Tabs.TabPane tab='File ấn phẩm số' key='3' /> : null}
+					<Tabs tabPosition={isTabletOrMobile ? 'top' : 'left'}>
+						<Tabs.TabPane tab='Thông tin chung' key='1'>
+							<ChiTietBienMuc />
+						</Tabs.TabPane>
+						<Tabs.TabPane tab='Biên mục chi tiết' key='2'>
+							<ChiTietAnPham />
+						</Tabs.TabPane>
+						{record?.online ? (
+							<Tabs.TabPane tab='File ấn phẩm số' key='3'>
+								<FormItemTaiLieuSo disabled value={record?.thongTinAnPhamTrucTuyen} />
+							</Tabs.TabPane>
+						) : null}
+						{record?.isSachHay ? (
+							<Tabs.TabPane tab='Nội dung sách hay' key='4'>
+								<NoiDungSachHay />
+							</Tabs.TabPane>
+						) : null}
 					</Tabs>
-					{tabActive === '1' ? (
-						<ChiTietBienMuc />
-					) : tabActive === '2' ? (
-						<ChiTietAnPham />
-					) : (
-						<FormItemTaiLieuSo disabled value={record?.thongTinAnPhamTrucTuyen} />
-					)}
 
 					<div className='form-footer'>
 						<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>

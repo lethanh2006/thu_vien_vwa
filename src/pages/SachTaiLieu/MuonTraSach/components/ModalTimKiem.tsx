@@ -63,6 +63,13 @@ const ModalTimKiem = (props: {
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
+			title: 'Mã tài liệu',
+			dataIndex: 'maTaiLieu',
+			width: 120,
+			filterType: 'string',
+			onCell,
+		},
+		{
 			title: 'Nhan đề',
 			dataIndex: 'nhanDe',
 			width: 180,
@@ -145,7 +152,7 @@ const ModalTimKiem = (props: {
 			title='Thông tin ấn phẩm tìm kiếm'
 			visible={visibleForm}
 			onCancel={() => setVisibleForm(false)}
-			width={900}
+			width={1000}
 			footer={null}
 			destroyOnClose
 		>
