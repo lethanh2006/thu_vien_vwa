@@ -8,7 +8,7 @@ import {
 	getThongKeAnPham,
 } from '@/services/SachTaiLieu/AnPham';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
-import { getMayChuZ3950, timKiemAnPhamZ3950 } from '@/services/SachTaiLieu/Z3950';
+import { timKiemAnPhamZ3950 } from '@/services/SachTaiLieu/Z3950';
 import { message } from 'antd';
 import type { AxiosResponse } from 'axios';
 import _ from 'lodash';
@@ -20,7 +20,6 @@ export default () => {
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [danhSachTag, setDanhSachTag] = useState<AnPham.IThongTinAnPham[]>([]);
 	const [recBienMucChiTiet, setRecBienMucChiTiet] = useState<MauBienMuc.IThongTinKhaiBao>();
-	const [dsMayChuZ3950, setDSMayChuZ3950] = useState<Z3950.IMayChu[]>([]);
 	const [dsAnPhamZ3950, setDSAnPhamZ3950] = useState<Z3950.IRecord[]>([]);
 
 	const { setLoading, getService, setDanhSach, formSubmiting, setFormSubmiting } = objInit;
@@ -142,18 +141,6 @@ export default () => {
 		}
 	};
 
-	const getMayChiZ3950Model = async (): Promise<any> => {
-		try {
-			const res = await getMayChuZ3950();
-
-			setDSMayChuZ3950(res?.data?.servers);
-			return res?.data?.servers;
-		} catch (err) {
-			return Promise.reject(err);
-		} finally {
-		}
-	};
-
 	const timKiemZ3950Model = async (
 		query: string,
 		host: string,
@@ -187,7 +174,6 @@ export default () => {
 		danhSachTag,
 		loadingThongKe,
 		recBienMucChiTiet,
-		dsMayChuZ3950,
 		dsAnPhamZ3950,
 		setDSAnPhamZ3950,
 		setRecBienMucChiTiet,
@@ -197,7 +183,6 @@ export default () => {
 		postBienMucSoLuocModel,
 		putBienMucChiTietModel,
 		putBienMucSoLuocModel,
-		getMayChiZ3950Model,
 		timKiemZ3950Model,
 	};
 };

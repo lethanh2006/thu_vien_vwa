@@ -42,12 +42,12 @@ const FormDangKyCaBiet = () => {
 
 	const onFinish = async (values: MuonSach.IRecord) => {
 		values.trangThai = ETrangThaiMuonSach.DANG_THUE_MUON;
-		values.trangThaiDuyet = ETrangThaiDuyetMuonSach.DA_DUYET;
+		// values.trangThaiDuyet = ETrangThaiDuyetMuonSach.DA_DUYET;
 
-		const sinhVien = danhSachSinhVien?.find((item) => item?.ssoId === values?.ssoIdNguoiMuon);
-		values.maDinhDanhNguoiMuon = sinhVien?.ma ?? '';
-		values.hotenNguoiMuon = sinhVien?.ten ?? '';
-		values.thoiGianDangKy = moment().toISOString();
+		// const sinhVien = danhSachSinhVien?.find((item) => item?.ssoId === values?.ssoIdNguoiMuon);
+		// values.maDinhDanhNguoiMuon = sinhVien?.ma ?? '';
+		// values.hotenNguoiMuon = sinhVien?.ten ?? '';
+		// values.thoiGianDangKy = moment().toISOString();
 
 		values.anPhamId = recDKCB?.anPhamId ?? '';
 		values.soDangKyCaBiet = recDKCB?.soDangKyCaBiet ?? '';

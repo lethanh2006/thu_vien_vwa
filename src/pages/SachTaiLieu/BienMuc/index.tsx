@@ -9,7 +9,7 @@ import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Popconfirm, Popover, Segmented, Tag } from 'antd';
+import { Button, Card, Checkbox, Popconfirm, Popover, Segmented, Select, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectDotNhapSach from '../DotNhapSach/components/Select';
@@ -50,6 +50,26 @@ const BienMucSachTaiLieuPage = () => {
 			dataIndex: 'tacGia',
 			width: 150,
 			filterType: 'string',
+			onCell,
+		},
+		{
+			title: 'Sách hay',
+			dataIndex: 'isSachHay',
+			align: 'center',
+			width: 90,
+			render: (val, rec) => <Checkbox checked={!!val} />,
+			filterType: 'customselect',
+			filterCustomSelect: (
+				<Select
+					mode='multiple'
+					placeholder='Sách hay'
+					options={[
+						{ label: 'Có', value: true },
+						{ label: 'Không', value: false },
+					]}
+					allowClear
+				/>
+			),
 			onCell,
 		},
 		{

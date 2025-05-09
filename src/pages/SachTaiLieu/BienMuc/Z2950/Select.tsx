@@ -14,10 +14,10 @@ const SelectMayChu = (props: {
 	disabled?: boolean;
 }) => {
 	const { value, onChange, multiple, allowClear, style, disabled } = props;
-	const { dsMayChuZ3950, getMayChiZ3950Model } = useModel('sachtailieu.anpham.anpham');
+	const { danhSach, getAllModel } = useModel('danhmuc.thuvienquocte');
 
 	useEffect(() => {
-		getMayChiZ3950Model();
+		getAllModel();
 	}, []);
 
 	return (
@@ -27,7 +27,7 @@ const SelectMayChu = (props: {
 			allowClear={allowClear}
 			value={value}
 			onChange={onChange}
-			options={dsMayChuZ3950?.map((item) => ({
+			options={danhSach?.map((item) => ({
 				key: item.host,
 				value: item.host,
 				label: item.name,

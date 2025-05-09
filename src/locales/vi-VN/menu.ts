@@ -27,6 +27,7 @@ export default {
 	'menu.SachTaiLieu.ThongKe.ThongKeBanDoc': 'Thống kê bạn đọc',
 	'menu.SachTaiLieu.ThongKe.ThongKeMuonTra': 'Thống kê mượn trả',
 	'menu.SachTaiLieu.ThongKe.DanhSachBanDoc': 'Danh sách bạn đọc',
+	'menu.SachTaiLieu.InMaVach': 'In mã vạch, mã gáy',
 
 	'menu.DanhMuc': 'Danh mục',
 	'menu.DanhMuc.ChucVu': 'Chức vụ',
@@ -44,4 +45,5 @@ export default {
 	'menu.DanhMuc.DonViSo': 'Đơn vị số',
 	'menu.DanhMuc.TruongBienMuc': 'Trường biên mục',
 	'menu.DanhMuc.MauDinhDang': 'Mẫu định dạng',
+	'menu.DanhMuc.ThuVienQuocTe': 'Thư viện quốc tế',
 };

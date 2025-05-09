@@ -134,6 +134,11 @@
 					},
 				],
 			},
+			{
+				name: 'InMaVach',
+				path: 'in-ma-vach',
+				component: './SachTaiLieu/InMaVach',
+			},
 		],
 	},
 
@@ -147,6 +152,11 @@
 				name: 'ThuVien',
 				path: 'thu-vien',
 				component: './DanhMuc/ThuVien',
+			},
+			{
+				name: 'ThuVienQuocTe',
+				path: 'thu-vien-quoc-te',
+				component: './DanhMuc/ThuVienQuocTe',
 			},
 			{
 				name: 'KhoSach',

@@ -1,5 +1,5 @@
 import ExpandText from '@/components/ExpandText';
-import PrintTemplate from '@/components/PrintTemplate';
+import PrintBarcode from '@/components/PrintTemplate/Barcode';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
@@ -10,7 +10,6 @@ import { HistoryOutlined } from '@ant-design/icons';
 import { Card, Tag } from 'antd';
 import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Barcode from 'react-barcode';
 import ReactToPrint from 'react-to-print';
 import { useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
@@ -32,7 +31,7 @@ const DangKyCaBietPage = () => {
 	const reactToPrintTrigger = useCallback(
 		() => (
 			<ButtonExtend key='print' disabled={!selectedIds?.length}>
-				In ra máy in Lazer {(selectedIds?.length ?? 0) > 0 ? `(${selectedIds?.length})` : ''}
+				In Barcode {(selectedIds?.length ?? 0) > 0 ? `(${selectedIds?.length})` : ''}
 			</ButtonExtend>
 		),
 		[selectedIds?.length],
@@ -160,18 +159,7 @@ const DangKyCaBietPage = () => {
 				condition={{ soDangKyCaBiet: record?.soDangKyCaBiet }}
 			/>
 
-			{/* <ModalInLazer visible={visibleIn} setVisible={setVisibleIn} /> */}
-
-			<PrintTemplate ref={componentRef} hideTieuNgu footer={<></>}>
-				<div className='to-print'>
-					<div style={{ display: 'flex', flexDirection: 'column', gap: 12, justifyContent: 'left' }}>
-						{selectedIds?.map((item) => (
-							// eslint-disable-next-line react/jsx-key
-							<Barcode value={item} />
-						))}
-					</div>
-				</div>
-			</PrintTemplate>
+			<PrintBarcode ref={componentRef} listBarcodes={selectedIds?.map((item) => item) ?? []} />
 		</Card>
 	);
 };

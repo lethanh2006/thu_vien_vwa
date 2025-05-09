@@ -14,8 +14,8 @@ const { Option } = Select;
 const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void; form: FormInstance }) => {
 	const [form] = Form.useForm();
 	const { visible, setVisible, form: formExternal } = props;
-	const { dsMayChuZ3950, timKiemZ3950Model, dsAnPhamZ3950, setDSAnPhamZ3950, loading } =
-		useModel('sachtailieu.anpham.anpham');
+	const { timKiemZ3950Model, dsAnPhamZ3950, setDSAnPhamZ3950, loading } = useModel('sachtailieu.anpham.anpham');
+	const { danhSach } = useModel('danhmuc.thuvienquocte');
 
 	useEffect(() => {
 		if (!visible) {
@@ -29,7 +29,7 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 	}, [visible]);
 
 	const onFinish = async (values: any) => {
-		const mayChu = dsMayChuZ3950?.find((item) => item?.port === values.mayChu);
+		const mayChu = danhSach?.find((item) => item?.port === values.mayChu);
 
 		timKiemZ3950Model(values.query, mayChu?.host ?? '', mayChu?.port ?? 0, mayChu?.database ?? '', values.field)
 			.then()
