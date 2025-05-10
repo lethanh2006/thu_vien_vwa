@@ -39,6 +39,8 @@ export async function thongKeDangKyTongQuat(params?: { thoiGianBatDau?: string; 
 }
 
 /** Xuất thống kê mẫu số đăng ký cá biệt */
-export async function thongKeMauSoDKCB(params: { anPhamIdList: string[] }) {
-	return axios.get(`${ip3}/thong-tin-an-pham/export-mau-dang-ky-ca-biet`, { params, responseType: 'arraybuffer' });
+export async function thongKeMauSoDKCB(dotNhapSachId: string) {
+	return axios.get(`${ip3}/thong-tin-an-pham/export-mau-dang-ky-ca-biet/${dotNhapSachId}`, {
+		responseType: 'arraybuffer',
+	});
 }

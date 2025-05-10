@@ -33,7 +33,7 @@ import fileDownload from 'js-file-download';
 const CardAnPham = () => {
 	const intl = useIntl();
 	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('sachtailieu.anpham.dotnhapsach');
-	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit, putModel, selectedIds } =
+	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit, putModel } =
 		useModel('sachtailieu.anpham.anpham');
 	const { setVisibleForm } = useModel('sachtailieu.anpham.xepgia');
 	const [tabActive, setTabActive] = useState<string>('1');
@@ -60,8 +60,8 @@ const CardAnPham = () => {
 
 	const handleExport = () => {
 		setLoading(true);
-		if (selectedIds?.length)
-			thongKeMauSoDKCB({ anPhamIdList: selectedIds })
+		if (recDot?._id)
+			thongKeMauSoDKCB(recDot?._id)
 				.then((res) => {
 					fileDownload(res.data, 'Mẫu số đăng ký cá biệt.xlsx');
 				})
@@ -254,7 +254,6 @@ const CardAnPham = () => {
 				widthDrawer={1100}
 				buttons={{ create: false }}
 				hideCard
-				rowSelection
 				otherButtons={[
 					<SelectDotNhapSach
 						key={'1'}
@@ -275,13 +274,13 @@ const CardAnPham = () => {
 					/>,
 
 					<ButtonExtend
-						disabled={!selectedIds?.length}
+						disabled={!recDot?._id}
 						loading={loading}
 						key='3'
 						icon={<ExportOutlined />}
 						onClick={() => handleExport()}
 					>
-						Thống kê số ĐKCB {(selectedIds?.length ?? 0) > 0 ? `(${selectedIds?.length})` : ''}
+						Thống kê số ĐKCB
 					</ButtonExtend>,
 				]}
 			/>
