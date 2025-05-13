@@ -5,6 +5,7 @@ import SelectKhoSach from '@/pages/DanhMuc/KhoSach/components/Select';
 import SelectKieuTuLieu from '@/pages/DanhMuc/KieuTuLieu/components/Select';
 import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import SelectThuVien from '@/pages/DanhMuc/ThuVien/components/Select';
+import SelectDotNhapSach from '@/pages/SachTaiLieu/DotNhapSach/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
@@ -79,6 +80,11 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
 						<Divider>Thông tin xếp giá bổ sung</Divider>
+					</Col>
+					<Col xs={24}>
+						<Form.Item name='dotNhapSachId' label='Sổ đăng ký tổng quát' rules={[...rules.required]}>
+							<SelectDotNhapSach />
+						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='maNguonBoSung' label='Nguồn bổ sung' rules={[...rules.required]}>

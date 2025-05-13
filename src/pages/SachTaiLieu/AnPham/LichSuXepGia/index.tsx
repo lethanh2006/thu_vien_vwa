@@ -53,6 +53,13 @@ const LichSuXepGia = () => {
 
 	const columns: IColumn<AnPham.IXepGia>[] = [
 		{
+			title: 'Sổ đăng ký tổng quát',
+			dataIndex: 'dotNhapSachId',
+			width: 120,
+			render: (val, rec) => rec?.dotNhapSach?.ten,
+			onCell,
+		},
+		{
 			title: 'Nhan đề',
 			width: 180,
 			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
