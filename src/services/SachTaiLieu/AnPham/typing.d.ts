@@ -15,6 +15,14 @@ declare module AnPham {
 		ngayChungTu?: Date | string;
 		nguonBoSungId?: string;
 		nguonXuatNhap?: NguonBoSung.IRecord;
+
+		maNguonBoSung: string;
+		nguonBoSungId: string;
+		nguonXuatNhap: {
+			_id: string;
+			ma: string;
+			ten: string;
+		};
 	}
 
 	export interface IRecord {
@@ -137,6 +145,7 @@ declare module AnPham {
 		ghiChu: string;
 
 		dotNhapSachId: string;
+		dotNhapSach?: IDotNhapSach;
 	}
 
 	export interface IAnPhamXepGia {

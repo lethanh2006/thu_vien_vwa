@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
 import ModalExportDangKyTongQuat from './components/ModalExport';
+import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 
 const DotNhapSachPage = () => {
 	const intl = useIntl();
@@ -28,6 +29,14 @@ const DotNhapSachPage = () => {
 			dataIndex: 'ten',
 			width: 160,
 			filterType: 'string',
+		},
+		{
+			title: 'Nguồn bổ sung',
+			dataIndex: 'nguonBoSungId',
+			width: 120,
+			render: (val, rec) => rec?.nguonXuatNhap?.ten,
+			filterType: 'customselect',
+			filterCustomSelect: <SelectNguonBoSung multiple />,
 		},
 		{
 			title: 'Bắt đầu',

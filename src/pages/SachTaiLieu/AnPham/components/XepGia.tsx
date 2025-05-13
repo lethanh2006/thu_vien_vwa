@@ -25,6 +25,7 @@ import {
 } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import SelectDotNhapSach from '../../DotNhapSach/components/Select';
 import LichSuXepGia from '../LichSuXepGia';
 
 const ModalXepGia = () => {
@@ -51,6 +52,9 @@ const ModalXepGia = () => {
 			resetFieldsForm(form);
 		} else if (record?._id) {
 			thongKeXepGiaModel({ anPhamId: record?._id });
+			form.setFieldsValue({
+				dotNhapSachId: record?.dotNhapSachId,
+			});
 		}
 	}, [visibleForm, record?._id]);
 
@@ -120,6 +124,11 @@ const ModalXepGia = () => {
 						</Col>
 						<Col span={24}>
 							<Divider>Thông tin xếp giá bổ sung</Divider>
+						</Col>
+						<Col xs={24}>
+							<Form.Item name='dotNhapSachId' label='Sổ đăng ký tổng quát' rules={[...rules.required]}>
+								<SelectDotNhapSach />
+							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
 							<Form.Item name='maNguonBoSung' label='Nguồn bổ sung' rules={[...rules.required]}>

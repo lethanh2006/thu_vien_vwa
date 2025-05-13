@@ -1,4 +1,5 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
@@ -23,6 +24,8 @@ const FormDotNhapSach = (props: any) => {
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: AnPham.IDotNhapSach) => {
+		values.maHocKy = recHocKy?.ma ?? '';
+		values.maNamHoc = recHocKy?.namHoc?.ma ?? '';
 		values.thoiGianBatDau = moment(values.thoiGianBatDau).startOf('day').toISOString();
 		values.thoiGianKetThuc = moment(values.thoiGianKetThuc).endOf('day').toISOString();
 		if (edit) {
@@ -48,6 +51,11 @@ const FormDotNhapSach = (props: any) => {
 					<Col span={24}>
 						<Form.Item label='Tên đợt' name='ten' rules={[...rules.required, ...rules.text, ...rules.length(100)]}>
 							<Input placeholder='Nhập tên đợt' />
+						</Form.Item>
+					</Col>
+					<Col span={24}>
+						<Form.Item label='Nguồn bổ sung' name='nguonBoSungId' rules={[...rules.required]}>
+							<SelectNguonBoSung />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
