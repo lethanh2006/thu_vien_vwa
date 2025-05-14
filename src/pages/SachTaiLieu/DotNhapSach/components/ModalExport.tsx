@@ -30,10 +30,7 @@ const ModalExportDangKyTongQuat: React.FC<TProps> = ({ visible, setVisible }) =>
 		}
 		setLoading(true);
 
-		thongKeDangKyTongQuat({
-			thoiGianBatDau: moment(values.thoiGian[0]).format('YYYY-MM-DD'),
-			thoiGianKetThuc: moment(values.thoiGian[1]).format('YYYY-MM-DD'),
-		})
+		thongKeDangKyTongQuat({ thoiGianBatDau: values.thoiGian[0], thoiGianKetThuc: values.thoiGian[1] })
 			.then((res) => {
 				fileDownload(res.data, 'Thống kê đăng ký tổng quát.xlsx');
 			})
