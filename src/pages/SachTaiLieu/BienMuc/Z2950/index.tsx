@@ -4,10 +4,11 @@ import type { IColumn } from '@/components/Table/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { CheckOutlined } from '@ant-design/icons';
-import { Button, Col, Empty, Form, type FormInstance, Input, Modal, Row, Select } from 'antd';
+import { Button, Col, Empty, Form, type FormInstance, Input, InputNumber, Modal, Row, Select } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import SelectMayChu from './Select';
+import ExpandText from '@/components/ExpandText';
 
 const { Option } = Select;
 
@@ -31,7 +32,14 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 	const onFinish = async (values: any) => {
 		const mayChu = danhSach?.find((item) => item?.port === values.mayChu);
 
-		timKiemZ3950Model(values.query, mayChu?.host ?? '', mayChu?.port ?? 0, mayChu?.database ?? '', values.field)
+		timKiemZ3950Model(
+			values.query,
+			mayChu?.host ?? '',
+			mayChu?.port ?? 0,
+			mayChu?.database ?? '',
+			values.field,
+			values.max_records,
+		)
 			.then()
 			.catch((er) => console.log(er));
 	};
@@ -65,6 +73,7 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 			title: 'Nhà xuất bản',
 			dataIndex: 'publisher',
 			width: 120,
+			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},
 		{
@@ -87,8 +96,8 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 							nhanDe: rec?.title,
 							ISBN: rec?.isbn,
 							ISSN: rec?.issn,
-							namXuatBan: rec?.publisher,
-							nhaXuatBan: rec?.year,
+							namXuatBan: rec?.year,
+							nhaXuatBan: rec?.publisher,
 						});
 						setVisible(false);
 					}}
@@ -102,33 +111,48 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 	];
 
 	return (
-		<Modal title='Tải về qua Z39.50' visible={visible} onCancel={() => setVisible(false)} footer={null} width={900}>
+		<Modal
+			title='Tải dữ liệu qua giao thức Z39.50'
+			visible={visible}
+			onCancel={() => setVisible(false)}
+			footer={null}
+			width={900}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item name='mayChu' label='Máy chủ' rules={[...rules.required]}>
+						<Form.Item name='mayChu' label='Thư viện' rules={[...rules.required]}>
 							<SelectMayChu />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Từ khóa' required>
+						<Form.Item label='Tìm kiếm' required>
 							<Input.Group compact>
 								<Form.Item name='field' noStyle>
 									<Select style={{ width: '20%' }}>
-										<Option value='any'>Tất cả</Option>
+										<Option value='any'>Tất cả trường</Option>
 										<Option value='title'>Nhan đề</Option>
 										<Option value='author'>Tác giả</Option>
 										<Option value='subject'>Chủ đề</Option>
-										<Option value='isbn'>Mã ISBN</Option>
-										<Option value='issn'>Mã ISSN</Option>
+										<Option value='isbn'>ISBN</Option>
+										<Option value='issn'>ISSN</Option>
 										<Option value='publisher'>Nhà xuất bản</Option>
-										<Option value='date'>Ngày xuất bản</Option>
+										<Option value='date'>Năm xuất bản</Option>
 									</Select>
 								</Form.Item>
 								<Form.Item name='query' noStyle rules={[...rules.required]}>
-									<Input style={{ width: '80%' }} placeholder='Nhập từ khóa' />
+									<Input style={{ width: '80%' }} placeholder='Nhập từ khóa tìm kiếm' />
 								</Form.Item>
 							</Input.Group>
+						</Form.Item>
+					</Col>
+					<Col span={24}>
+						<Form.Item
+							name='max_records'
+							label='Số lượng kết quả tối đa'
+							rules={[...rules.required, ...rules.number(undefined, 0)]}
+						>
+							<InputNumber style={{ width: '100%' }} placeholder='Nhập số lượng bản ghi' min={1} />
 						</Form.Item>
 					</Col>
 				</Row>
@@ -139,7 +163,7 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 					</Button>
 				</div>
 
-				<div className='fw500'>Danh sách tìm kiếm</div>
+				<div className='fw500'>Kết quả tìm kiếm</div>
 				{dsAnPhamZ3950?.length ? (
 					<TableStaticData
 						columns={columns}
@@ -151,7 +175,7 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 						addStt
 					/>
 				) : (
-					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='Không có dữ liệu!' />
+					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='Không tìm thấy kết quả nào' />
 				)}
 			</Form>
 		</Modal>

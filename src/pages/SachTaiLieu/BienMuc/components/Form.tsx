@@ -41,6 +41,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 
 	const getData = async (): Promise<AnPham.IRecord[]> => {
 		const response = await getModel({
+			dotNhapSachId: recDot?._id,
 			trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC,
 			online: tabActive === '1' ? false : true,
 		});

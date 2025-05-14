@@ -1,10 +1,9 @@
 import PrintTemplate from '@/components/PrintTemplate';
 import PrintBarcode from '@/components/PrintTemplate/Barcode';
 import ButtonExtend from '@/components/Table/ButtonExtend';
-import { EOperatorType } from '@/components/Table/constant';
 import { resetFieldsForm } from '@/utils/utils';
 import { ReloadOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, Modal, Radio, Row, Space, message } from 'antd';
+import { Button, Card, Col, Form, Input, Modal, Radio, Row, Space } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
 import { useModel } from 'umi';
@@ -21,7 +20,7 @@ const InMaVachPage = () => {
 	const madkcb: string = Form.useWatch('madkcb', form);
 	const [visibleTimKiem, setVisibleTimKiem] = useState<boolean>(false);
 	const [field, setField] = useState<string>('');
-	const { getAllModel, danhSach } = useModel('sachtailieu.anpham.anpham');
+	const { timKiemAnPhamTuDenModel, danhSach } = useModel('sachtailieu.anpham.anpham');
 
 	const componentRef = useRef(null);
 	const componentRefMaGay = useRef(null);
@@ -195,21 +194,12 @@ const InMaVachPage = () => {
 						trigger={reactToPrintTriggerMaGay}
 						removeAfterPrint
 						onBeforeGetContent={async () => {
-							if (!listBarcodes || listBarcodes.length === 0) {
-								message.error('Vui lòng nhập đầy đủ thông tin!!');
-								throw new Error('Không có mã vạch để in');
-							}
-
-							const filters = [
-								{
-									active: true,
-									field: 'maTaiLieu',
-									values: listBarcodes?.map((item) => item),
-									operator: EOperatorType.INCLUDE,
-								},
-							];
-
-							await getAllModel(undefined, undefined, undefined, filters as any);
+							await timKiemAnPhamTuDenModel({
+								maTaiLieuFrom: tuMaTaiLieu,
+								maTaiLieuTo: denMaTaiLieu,
+								soDangKyCaBietFrom: tudkcb,
+								soDangKyCaBietTo: dendkcb,
+							});
 						}}
 					/>
 				</Space>
