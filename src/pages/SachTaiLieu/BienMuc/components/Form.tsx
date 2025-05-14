@@ -15,6 +15,7 @@ import { useIntl, useModel } from 'umi';
 import SelectDotNhapSach from '../../DotNhapSach/components/Select';
 import FormItemTaiLieuSo from '../DanhSachTaiLieu/FormItem';
 import Z3950Page from '../Z2950';
+import SelectNgonNgu from '@/pages/DanhMuc/DanhMucNgonNgu/components/Select';
 
 const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; tabActive: string }) => {
 	const intl = useIntl();
@@ -168,6 +169,11 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 								</Select.Option>
 							))}
 						</Select>
+					</Form.Item>
+				</Col>
+				<Col xs={24} md={12}>
+					<Form.Item name='maNgonNgu' label='Mã ngôn ngữ [041$a]' rules={[...rules.required]}>
+						<SelectNgonNgu selectMa />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>

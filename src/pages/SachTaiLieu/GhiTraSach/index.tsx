@@ -247,48 +247,49 @@ const GhiTraPage = () => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 60,
+			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
-				<Popover
-					placement='topRight'
-					content={
-						<>
-							<ButtonExtend
-								disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA}
-								onClick={() => {
-									setRecord(rec);
-									setVisibleGhiTra(true);
-								}}
-								tooltip='Ghi trả'
-								className='text-success'
-								type='link'
-								icon={<CheckOutlined />}
-							/>
+				<>
+					<ButtonExtend
+						disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA}
+						onClick={() => {
+							setRecord(rec);
+							setVisibleGhiTra(true);
+						}}
+						tooltip='Ghi trả'
+						className='text-success'
+						type='link'
+						icon={<CheckOutlined />}
+					/>
+					<Popover
+						placement='topRight'
+						content={
+							<>
+								<ButtonExtend
+									tooltip='Gia hạn'
+									type='link'
+									icon={<RetweetOutlined />}
+									onClick={() => {
+										setRecord(rec);
+										setVisibleGiaHan(true);
+									}}
+									disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA || moment().isBefore(moment(rec?.expired))}
+								/>
 
-							<ButtonExtend
-								tooltip='Gia hạn'
-								type='link'
-								icon={<RetweetOutlined />}
-								onClick={() => {
-									setRecord(rec);
-									setVisibleGiaHan(true);
-								}}
-								disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA || moment().isBefore(moment(rec?.expired))}
-							/>
-
-							<Popconfirm
-								onConfirm={() => deleteModel(rec._id, getData)}
-								title='Bạn có chắc chắn muốn xóa thông tin này?'
-								placement='topRight'
-							>
-								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
-							</Popconfirm>
-						</>
-					}
-				>
-					<ButtonExtend type='link' icon={<MenuOutlined />} />
-				</Popover>
+								<Popconfirm
+									onConfirm={() => deleteModel(rec._id, getData)}
+									title='Bạn có chắc chắn muốn xóa thông tin này?'
+									placement='topRight'
+								>
+									<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+								</Popconfirm>
+							</>
+						}
+					>
+						<ButtonExtend type='link' icon={<MenuOutlined />} />
+					</Popover>
+				</>
 			),
 		},
 	];

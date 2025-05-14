@@ -32,7 +32,7 @@ const InMaVachPage = () => {
 
 	const reactToPrintContentMaGay = useCallback(() => componentRefMaGay.current, [componentRefMaGay.current]);
 
-	const reactToPrintTriggerMaGay = useCallback(() => <ButtonExtend type='primary'>In mã gáy</ButtonExtend>, []);
+	const reactToPrintTriggerMaGay = useCallback(() => <ButtonExtend type='primary'>In nhãn gáy</ButtonExtend>, []);
 
 	useEffect(() => {
 		form.setFieldsValue({ kieuIn: 'maTaiLieu' });
@@ -224,7 +224,7 @@ const InMaVachPage = () => {
 							// eslint-disable-next-line react/no-array-index-key
 							<div className='label-box' key={index}>
 								<div style={{ position: 'absolute', top: 0, left: 1 }}>
-									<img src={`${APP_CONFIG_URL_THU_VIEN}logo.png`} width={13} height={15} />
+									<img src={`${APP_CONFIG_URL_THU_VIEN}logo.png`} width={15} height={18} />
 								</div>
 								<div className='label-section top'>
 									<div style={{ paddingLeft: 3 }}>HỌC VIỆN CNBCVT</div>
