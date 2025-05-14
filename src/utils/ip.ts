@@ -14,6 +14,7 @@ const ipCore = ipRoot + 'core'; // ip dev
 const ipZ39050 = ipRoot + 'thu-vien-qt'; // ip dev
 
 const currentRole = EModuleKey.THU_VIEN;
+const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
 const oneSignalRole = EModuleKey.THU_VIEN;
 
 // DO NOT TOUCH
@@ -27,6 +28,7 @@ const sentryDSN = APP_CONFIG_SENTRY_DSN;
 const oneSignalClient = APP_CONFIG_ONE_SIGNAL_ID;
 
 export {
+	replaceRole,
 	ip3,
 	ipCore,
 	ipNotif,
