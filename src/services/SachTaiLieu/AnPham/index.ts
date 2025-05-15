@@ -44,3 +44,15 @@ export async function thongKeMauSoDKCB(dotNhapSachId: string) {
 		responseType: 'arraybuffer',
 	});
 }
+
+/** Xuất thống kê mẫu số đăng ký cá biệt */
+export async function timKiemAnPhamTuDen(params: {
+	maTaiLieuFrom?: string;
+	maTaiLieuTo?: string;
+	soDangKyCaBietFrom?: string;
+	soDangKyCaBietTo?: string;
+}) {
+	return axios.get(`${ip3}/an-pham/ma-vach/many`, {
+		params,
+	});
+}

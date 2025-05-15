@@ -7,7 +7,7 @@ export async function timKiemAnPhamZ3950(params: {
 	port: number;
 	database: string;
 	field: string;
-	max_records: 100;
+	max_records: number;
 }) {
 	return axios.get(`${ipZ39050}/api/search`, { params: params });
 }

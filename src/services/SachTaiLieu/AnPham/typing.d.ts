@@ -42,6 +42,7 @@ declare module AnPham {
 		maVatMangTin: string;
 		vatMangTin?: VatMangTin.IRecord;
 		doMat: number;
+		maNgonNgu: string;
 		mauBienMucId: string;
 		mauBienMuc?: MauBienMuc.IRecord;
 		ISBN: string;

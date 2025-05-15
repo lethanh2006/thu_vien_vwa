@@ -6,6 +6,7 @@ import {
 	chinhSuaBienMucSoLuoc,
 	getChiTietAnPham,
 	getThongKeAnPham,
+	timKiemAnPhamTuDen,
 } from '@/services/SachTaiLieu/AnPham';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { timKiemAnPhamZ3950 } from '@/services/SachTaiLieu/Z3950';
@@ -147,6 +148,7 @@ export default () => {
 		port: number,
 		database: string,
 		field: string,
+		max_records: number,
 	): Promise<any> => {
 		setLoading(true);
 		try {
@@ -156,11 +158,31 @@ export default () => {
 				port: port,
 				database: database,
 				field: field,
-				max_records: 100,
+				max_records: max_records,
 			});
 
 			setDSAnPhamZ3950(res?.data?.results);
 			return res?.data?.results;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const timKiemAnPhamTuDenModel = async (params: {
+		maTaiLieuFrom?: string;
+		maTaiLieuTo?: string;
+		soDangKyCaBietFrom?: string;
+		soDangKyCaBietTo?: string;
+	}): Promise<any> => {
+		setLoading(true);
+		try {
+			const res = await timKiemAnPhamTuDen(params);
+
+			setDanhSach(res?.data?.data);
+
+			return res.data?.data;
 		} catch (err) {
 			return Promise.reject(err);
 		} finally {
@@ -184,5 +206,6 @@ export default () => {
 		putBienMucChiTietModel,
 		putBienMucSoLuocModel,
 		timKiemZ3950Model,
+		timKiemAnPhamTuDenModel,
 	};
 };

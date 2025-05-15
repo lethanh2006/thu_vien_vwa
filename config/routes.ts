@@ -159,6 +159,11 @@
 				component: './DanhMuc/ThuVienQuocTe',
 			},
 			{
+				name: 'DanhMucNgonNgu',
+				path: 'ngon-ngu',
+				component: './DanhMuc/DanhMucNgonNgu',
+			},
+			{
 				name: 'KhoSach',
 				path: 'kho-sach',
 				component: './DanhMuc/KhoSach',
