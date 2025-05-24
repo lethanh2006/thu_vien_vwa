@@ -4,12 +4,11 @@ import './style.less';
 
 type PrintBarcodeProps = {
 	listBarcodes: string[];
-	isCompact?: boolean;
 };
 
-const PrintBarcode = React.forwardRef<HTMLDivElement, PrintBarcodeProps>(({ listBarcodes, isCompact }, ref) => {
+const PrintBarcode = React.forwardRef<HTMLDivElement, PrintBarcodeProps>(({ listBarcodes }, ref) => {
 	return (
-		<div className={`print-section ${isCompact ? 'compact' : ''}`} ref={ref} style={{ width: '100%' }}>
+		<div className='print-section' ref={ref} style={{ width: '100%' }}>
 			<div className='to-print'>
 				{listBarcodes.map((item, index) => (
 					// eslint-disable-next-line react/no-array-index-key
