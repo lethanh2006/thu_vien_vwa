@@ -12,6 +12,7 @@ import { DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined, PlusCircleOutl
 import { Button, Card, Checkbox, Popconfirm, Popover, Segmented, Select, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import news from '../../../assets/new6.gif';
 import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ModalBienMucTaiLieu from './components/Modal';
 
@@ -41,7 +42,13 @@ const BienMucSachTaiLieuPage = () => {
 		{
 			title: 'Mã tài liệu',
 			dataIndex: 'maTaiLieu',
-			width: 120,
+			width: 150,
+			render: (val, rec) =>
+				val && (
+					<>
+						{val} {rec?.dotNhapSach?.dotNhapSachMoi && <img style={{ width: 30, height: 20 }} src={news} />}
+					</>
+				),
 			filterType: 'string',
 			onCell,
 		},
@@ -147,6 +154,8 @@ const BienMucSachTaiLieuPage = () => {
 				</Tag>
 			),
 			onCell,
+			filterType: 'select',
+			filterData: Object.values(ETrangThaiBienMuc),
 			fixed: 'right',
 		},
 		{

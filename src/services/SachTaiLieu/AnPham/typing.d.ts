@@ -23,6 +23,8 @@ declare module AnPham {
 			ma: string;
 			ten: string;
 		};
+
+		dotNhapSachMoi?: boolean;
 	}
 
 	export interface IRecord {
@@ -55,7 +57,7 @@ declare module AnPham {
 		lanXuatBan: string;
 		noiXuatBan: string;
 		namXuatBan: number;
-		soTrang: number;
+		soTrang: string;
 		dacDiemVatLy: string;
 		khuonKho: string;
 		tuLieuDiKem: string;
@@ -75,6 +77,7 @@ declare module AnPham {
 		dotNhapSach: IDotNhapSach;
 		isSachHay: boolean;
 		moTa: string;
+		urlScanBia?: string;
 
 		createdAt?: Date;
 		updatedAt?: Date;

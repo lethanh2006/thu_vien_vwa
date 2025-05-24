@@ -7,6 +7,7 @@ import SelectDangTaiLieu from '@/pages/DanhMuc/DangTaiLieu/components/Select';
 import SelectKieuBanGhi from '@/pages/DanhMuc/KieuBanGhi/components/Select';
 import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
+import { thongKeMauSoDKCB } from '@/services/SachTaiLieu/AnPham';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import {
@@ -20,15 +21,15 @@ import {
 	MenuOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Checkbox, Popconfirm, Popover, Segmented, Select, Tag } from 'antd';
+import fileDownload from 'js-file-download';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import news from '../../../assets/new6.gif';
 import ModalBienMucTaiLieu from '../BienMuc/components/Modal';
 import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ModalAnPham from './components/Modal';
 import StatAnPham from './components/Stat';
 import ModalXepGia from './components/XepGia';
-import { thongKeMauSoDKCB } from '@/services/SachTaiLieu/AnPham';
-import fileDownload from 'js-file-download';
 
 const CardAnPham = () => {
 	const intl = useIntl();
@@ -75,11 +76,16 @@ const CardAnPham = () => {
 		{
 			title: 'Mã tài liệu',
 			dataIndex: 'maTaiLieu',
-			width: 120,
+			width: 150,
+			render: (val, rec) =>
+				val && (
+					<>
+						{val} {rec?.dotNhapSach?.dotNhapSachMoi && <img style={{ width: 30, height: 20 }} src={news} />}
+					</>
+				),
 			filterType: 'string',
 			onCell,
 		},
-
 		{
 			title: 'Nhan đề',
 			dataIndex: 'nhanDeConverse',
@@ -182,6 +188,8 @@ const CardAnPham = () => {
 					{val}
 				</Tag>
 			),
+			filterType: 'select',
+			filterData: Object.values(ETrangThaiBienMuc),
 			fixed: 'right',
 		},
 		{
