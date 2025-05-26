@@ -26,6 +26,7 @@ import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import news from '../../../assets/new6.gif';
 import ModalBienMucTaiLieu from '../BienMuc/components/Modal';
+import ModalSachHay from '../BienMuc/components/ModalSachHay';
 import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ModalAnPham from './components/Modal';
 import StatAnPham from './components/Stat';
@@ -34,11 +35,12 @@ import ModalXepGia from './components/XepGia';
 const CardAnPham = () => {
 	const intl = useIntl();
 	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('sachtailieu.anpham.dotnhapsach');
-	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit, putModel } =
+	const { getModel, page, limit, handleView, setRecord, deleteModel, isView, handleEdit, putBienMucSoLuocModel } =
 		useModel('sachtailieu.anpham.anpham');
 	const { setVisibleForm } = useModel('sachtailieu.anpham.xepgia');
 	const [tabActive, setTabActive] = useState<string>('1');
 	const [loading, setLoading] = useState<boolean>(false);
+	const [visibleSachHay, setVisibleSachHay] = useState<boolean>(false);
 
 	const getData = () => {
 		getModel({
@@ -56,7 +58,7 @@ const CardAnPham = () => {
 	});
 
 	const handleSachHay = (rec: AnPham.IRecord, isSachHay: boolean) => {
-		putModel(rec?._id ?? '', { ...rec, isSachHay }, getData);
+		putBienMucSoLuocModel(rec?._id ?? '', { ...rec, isSachHay }, getData);
 	};
 
 	const handleExport = () => {
@@ -200,13 +202,16 @@ const CardAnPham = () => {
 			render: (val, rec) => (
 				<>
 					{!rec?.isSachHay ? (
-						<Popconfirm
-							onConfirm={() => handleSachHay(rec, true)}
-							title='Xác nhận đây là sách hay này?'
-							placement='topRight'
-						>
-							<ButtonExtend tooltip='Sách hay' type='link' className='text-success' icon={<CheckOutlined />} />
-						</Popconfirm>
+						<ButtonExtend
+							tooltip='Sách hay'
+							type='link'
+							className='text-success'
+							icon={<CheckOutlined />}
+							onClick={() => {
+								setRecord(rec);
+								setVisibleSachHay(true);
+							}}
+						/>
 					) : (
 						<Popconfirm
 							onConfirm={() => handleSachHay(rec, false)}
@@ -294,6 +299,8 @@ const CardAnPham = () => {
 			/>
 
 			<ModalXepGia />
+
+			<ModalSachHay visible={visibleSachHay} setVisible={setVisibleSachHay} getData={getData} />
 		</Card>
 	);
 };

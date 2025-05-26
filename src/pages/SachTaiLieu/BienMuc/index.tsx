@@ -8,20 +8,41 @@ import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
-import { DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import {
+	CheckOutlined,
+	CloseOutlined,
+	DeleteOutlined,
+	EditOutlined,
+	EyeOutlined,
+	MenuOutlined,
+	PlusCircleOutlined,
+} from '@ant-design/icons';
 import { Button, Card, Checkbox, Popconfirm, Popover, Segmented, Select, Tag } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import news from '../../../assets/new6.gif';
 import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ModalBienMucTaiLieu from './components/Modal';
+import ModalSachHay from './components/ModalSachHay';
 
 const BienMucSachTaiLieuPage = () => {
 	const intl = useIntl();
 	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('sachtailieu.anpham.dotnhapsach');
-	const { getModel, page, limit, handleEdit, handleView, setRecord, setEdit, setIsView, setVisibleForm, deleteModel } =
-		useModel('sachtailieu.anpham.anpham');
+	const {
+		getModel,
+		page,
+		limit,
+		handleEdit,
+		handleView,
+		setRecord,
+		setEdit,
+		setIsView,
+		setVisibleForm,
+		deleteModel,
+		putBienMucSoLuocModel,
+	} = useModel('sachtailieu.anpham.anpham');
 	const [tabActive, setTabActive] = useState<string>('1');
+	const [visibleSachHay, setVisibleSachHay] = useState<boolean>(false);
 
 	const getData = () => {
 		getModel({
@@ -37,6 +58,10 @@ const BienMucSachTaiLieuPage = () => {
 			cursor: 'pointer',
 		},
 	});
+
+	const handleSachHay = (rec: AnPham.IRecord, isSachHay: boolean) => {
+		putBienMucSoLuocModel(rec?._id ?? '', { ...rec, isSachHay }, getData);
+	};
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
@@ -161,33 +186,55 @@ const BienMucSachTaiLieuPage = () => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 60,
+			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
-				<Popover
-					placement='topRight'
-					content={
-						<>
-							<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
-							<ButtonExtend
-								tooltip='Biên mục chi tiết'
-								onClick={() => handleEdit(rec)}
-								type='link'
-								icon={<EditOutlined />}
-							/>
+				<>
+					{!rec?.isSachHay ? (
+						<ButtonExtend
+							tooltip='Sách hay'
+							type='link'
+							className='text-success'
+							icon={<CheckOutlined />}
+							onClick={() => {
+								setRecord(rec);
+								setVisibleSachHay(true);
+							}}
+						/>
+					) : (
+						<Popconfirm
+							onConfirm={() => handleSachHay(rec, false)}
+							title='Xác nhận đây bỏ sách hay này?'
+							placement='topRight'
+						>
+							<ButtonExtend tooltip='Bỏ sách hay' type='link' danger icon={<CloseOutlined />} />
+						</Popconfirm>
+					)}
+					<Popover
+						placement='topRight'
+						content={
+							<>
+								<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
+								<ButtonExtend
+									tooltip='Biên mục chi tiết'
+									onClick={() => handleEdit(rec)}
+									type='link'
+									icon={<EditOutlined />}
+								/>
 
-							<Popconfirm
-								onConfirm={() => deleteModel(rec._id, getData)}
-								title='Bạn có chắc chắn muốn xóa thông tin này?'
-								placement='topRight'
-							>
-								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
-							</Popconfirm>
-						</>
-					}
-				>
-					<Button type='link' icon={<MenuOutlined />} />
-				</Popover>
+								<Popconfirm
+									onConfirm={() => deleteModel(rec._id, getData)}
+									title='Bạn có chắc chắn muốn xóa thông tin này?'
+									placement='topRight'
+								>
+									<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+								</Popconfirm>
+							</>
+						}
+					>
+						<Button type='link' icon={<MenuOutlined />} />
+					</Popover>
+				</>
 			),
 		},
 	];
@@ -242,6 +289,8 @@ const BienMucSachTaiLieuPage = () => {
 					/>,
 				]}
 			/>
+
+			<ModalSachHay visible={visibleSachHay} setVisible={setVisibleSachHay} getData={getData} />
 		</Card>
 	);
 };

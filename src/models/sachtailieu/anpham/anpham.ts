@@ -161,8 +161,8 @@ export default () => {
 				max_records: max_records,
 			});
 
-			setDSAnPhamZ3950(res?.data?.results);
-			return res?.data?.results;
+			setDSAnPhamZ3950(res?.data?.records);
+			return res?.data?.records;
 		} catch (err) {
 			return Promise.reject(err);
 		} finally {
@@ -170,15 +170,13 @@ export default () => {
 		}
 	};
 
-	const timKiemAnPhamTuDenModel = async (params: {
-		maTaiLieuFrom?: string;
-		maTaiLieuTo?: string;
-		soDangKyCaBietFrom?: string;
-		soDangKyCaBietTo?: string;
+	const timKiemAnPhamTuDenModel = async (payLoad?: {
+		danhSachMaTaiLieu?: string[];
+		danhSachSoDangKyCaBiet?: string[];
 	}): Promise<any> => {
 		setLoading(true);
 		try {
-			const res = await timKiemAnPhamTuDen(params);
+			const res = await timKiemAnPhamTuDen(payLoad);
 
 			setDanhSach(res?.data?.data);
 

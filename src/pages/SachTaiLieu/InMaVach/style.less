@@ -10,10 +10,13 @@
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	padding: 5px;
+	padding: 5px 10px 5px 10px;
 	font-size: 10px;
 	text-align: center;
+
+	page-break-inside: avoid;
 	border: 1px solid black;
+	break-inside: avoid;
 }
 
 .label-section {
@@ -36,13 +39,15 @@
 }
 
 .middle {
+	padding-top: 5px;
+	padding-bottom: 5px;
 	font-weight: bold;
-	font-size: 16px;
+	font-size: 22px;
 	line-height: 1.4;
 }
 
 .bottom {
 	font-weight: bold;
-	font-size: 15px;
+	font-size: 22px;
 	line-height: 1.4;
 }

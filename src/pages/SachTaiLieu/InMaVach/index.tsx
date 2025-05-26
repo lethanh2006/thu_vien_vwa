@@ -1,9 +1,10 @@
 import PrintTemplate from '@/components/PrintTemplate';
 import PrintBarcode from '@/components/PrintTemplate/Barcode';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { resetFieldsForm } from '@/utils/utils';
 import { ReloadOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, Modal, Radio, Row, Space } from 'antd';
+import { Button, Card, Col, Form, Input, Modal, Radio, Row, Space, Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
 import { useModel } from 'umi';
@@ -20,7 +21,7 @@ const InMaVachPage = () => {
 	const madkcb: string = Form.useWatch('madkcb', form);
 	const [visibleTimKiem, setVisibleTimKiem] = useState<boolean>(false);
 	const [field, setField] = useState<string>('');
-	const { timKiemAnPhamTuDenModel, danhSach } = useModel('sachtailieu.anpham.anpham');
+	const { timKiemAnPhamTuDenModel, danhSach, loading } = useModel('sachtailieu.anpham.anpham');
 
 	const componentRef = useRef(null);
 	const componentRefMaGay = useRef(null);
@@ -189,19 +190,25 @@ const InMaVachPage = () => {
 
 					<ReactToPrint content={reactToPrintContent} trigger={reactToPrintTrigger} removeAfterPrint />
 
-					<ReactToPrint
-						content={reactToPrintContentMaGay}
-						trigger={reactToPrintTriggerMaGay}
-						removeAfterPrint
-						onBeforeGetContent={async () => {
-							await timKiemAnPhamTuDenModel({
-								maTaiLieuFrom: tuMaTaiLieu,
-								maTaiLieuTo: denMaTaiLieu,
-								soDangKyCaBietFrom: tudkcb,
-								soDangKyCaBietTo: dendkcb,
-							});
-						}}
-					/>
+					<Spin spinning={loading}>
+						<ReactToPrint
+							content={reactToPrintContentMaGay}
+							trigger={reactToPrintTriggerMaGay}
+							removeAfterPrint
+							onBeforeGetContent={async () => {
+								if (listBarcodes.length === 0) {
+									return Promise.reject('Không có mã vạch để in');
+								}
+								{
+									await timKiemAnPhamTuDenModel(
+										kieuIn === 'maTaiLieu'
+											? { danhSachMaTaiLieu: listBarcodes, danhSachSoDangKyCaBiet: [] }
+											: { danhSachSoDangKyCaBiet: listBarcodes, danhSachMaTaiLieu: [] },
+									);
+								}
+							}}
+						/>
+					</Spin>
 				</Space>
 			</Form>
 
@@ -210,27 +217,45 @@ const InMaVachPage = () => {
 			<PrintTemplate ref={componentRefMaGay} hideTieuNgu footer={<></>}>
 				<div className='to-print'>
 					<div className='label-grid'>
-						{danhSach?.map((item, index) => (
-							// eslint-disable-next-line react/no-array-index-key
-							<div className='label-box' key={index}>
-								<div style={{ position: 'absolute', top: 0, left: 1 }}>
-									<img src={`${APP_CONFIG_URL_THU_VIEN}logo.png`} width={15} height={18} />
-								</div>
-								<div className='label-section top'>
-									<div style={{ paddingLeft: 3 }}>HỌC VIỆN CNBCVT</div>
-									<div style={{ fontWeight: 'bold' }}>TRUNG TÂM TT-TV</div>
-								</div>
-								<div className='label-section middle'>
-									<div>{'621.382'}</div>
-									<div>{'HO-M'}</div>
-									<div>{'2009'}</div>
-								</div>
-								<div className='label-section bottom'>
-									<div>VM/</div>
-									<div>{String(index + 1).padStart(5, '0')}</div>
-								</div>
-							</div>
-						))}
+						{danhSach
+							?.filter((item) => item?.trangThai === ETrangThaiBienMuc.DA_BIEN_MUC)
+							?.map((item, index) =>
+								item?.danhSachAnPhamVatLy?.map((anPham, subIndex) => (
+									// eslint-disable-next-line react/no-array-index-key
+									<div className='label-box' key={`${index}-${subIndex}`}>
+										<div style={{ position: 'absolute', top: 0, left: 1 }}>
+											<img src={`${APP_CONFIG_URL_THU_VIEN}logo.png`} width={15} height={18} />
+										</div>
+
+										<div className='label-section top'>
+											<div style={{ paddingLeft: 3 }}>HỌC VIỆN CNBCVT</div>
+											<div style={{ fontWeight: 'bold' }}>TRUNG TÂM TT-TV</div>
+										</div>
+
+										<div className='label-section middle'>
+											<div>
+												{item?.danhSachThongTin
+													?.find((item1) => item1.tagCode === '090')
+													?.thuocTinhAnPham?.find((item2) => item2?.code === '$a')?.value || '621.382'}
+											</div>
+											<div>
+												{item?.danhSachThongTin
+													?.find((item1) => item1.tagCode === '090')
+													?.thuocTinhAnPham?.find((item2) => item2?.code === '$b')?.value || 'HO-M'}
+											</div>
+											<div>
+												{item?.danhSachThongTin
+													?.find((item1) => item1.tagCode === '260')
+													?.thuocTinhAnPham?.find((item2) => item2?.code === '$c')?.value || '2009'}
+											</div>
+										</div>
+
+										<div className='label-section bottom' style={{ whiteSpace: 'pre-line' }}>
+											{anPham.soDangKyCaBiet?.replace('/', '/\n')}
+										</div>
+									</div>
+								)),
+							)}
 					</div>
 				</div>
 			</PrintTemplate>

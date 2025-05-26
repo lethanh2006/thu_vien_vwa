@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
 const FormTruongCon = (props: any) => {
-	const { title } = props;
+	const { title, getData } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record: recTag } = useModel('danhmuc.truongbienmuc');
@@ -27,11 +27,11 @@ const FormTruongCon = (props: any) => {
 
 	const onFinish = async (values: TruongCon.IRecord) => {
 		if (edit) {
-			putModel(record?._id ?? '', values)
+			putModel(record?._id ?? '', values, getData)
 				.then()
 				.catch((er) => console.log(er));
 		} else
-			postModel({ ...values, tag: recTag?._id })
+			postModel({ ...values, tag: recTag?.ma }, getData)
 				.then()
 				.catch((er) => console.log(er));
 	};

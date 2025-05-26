@@ -52,7 +52,7 @@ const DanhSachTruongCon = () => {
 				<>
 					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
 					<Popconfirm
-						onConfirm={() => deleteModel(record._id)}
+						onConfirm={() => deleteModel(record._id, getData)}
 						title='Bạn có chắc chắn muốn xóa thông tin này?'
 						placement='topRight'
 					>
@@ -71,6 +71,7 @@ const DanhSachTruongCon = () => {
 			modelName='danhmuc.truongcon'
 			title={intl.formatMessage({ id: 'danhmuc.truongcon.title' })}
 			Form={Form}
+			formProps={{ getData }}
 			buttons={{ import: true, export: true }}
 			hideCard
 		/>

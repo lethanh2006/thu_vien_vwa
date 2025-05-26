@@ -79,6 +79,9 @@ declare module AnPham {
 		moTa: string;
 		urlScanBia?: string;
 
+		danhSachAnPhamVatLy?: IAnPhamXepGia[];
+		danhSachThongTin?: IThongTinAnPham[];
+
 		createdAt?: Date;
 		updatedAt?: Date;
 

@@ -30,7 +30,7 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 	}, [visible]);
 
 	const onFinish = async (values: any) => {
-		const mayChu = danhSach?.find((item) => item?.port === values.mayChu);
+		const mayChu = danhSach?.find((item) => item?.host === values.mayChu);
 
 		timKiemZ3950Model(
 			values.query,
@@ -78,7 +78,7 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 		},
 		{
 			title: 'Năm xuất bản',
-			dataIndex: 'year',
+			dataIndex: 'publication_year',
 			align: 'center',
 			width: 90,
 			filterType: 'string',
@@ -96,7 +96,7 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 							nhanDe: rec?.title,
 							ISBN: rec?.isbn,
 							ISSN: rec?.issn,
-							namXuatBan: rec?.year,
+							namXuatBan: rec?.publication_year,
 							nhaXuatBan: rec?.publisher,
 						});
 						setVisible(false);

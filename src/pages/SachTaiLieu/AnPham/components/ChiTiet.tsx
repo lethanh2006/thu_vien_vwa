@@ -2,6 +2,7 @@ import ExpandText from '@/components/ExpandText';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import _ from 'lodash';
 import { useModel } from 'umi';
 
 const ChiTietAnPham = () => {
@@ -36,7 +37,7 @@ const ChiTietAnPham = () => {
 	return (
 		<TableStaticData
 			columns={columns}
-			data={danhSach ?? []}
+			data={_.sortBy(danhSach ?? [], ['tagCode'])}
 			otherProps={{ pagination: false, scroll: { y: 500 }, showHeader: false }}
 		/>
 	);
