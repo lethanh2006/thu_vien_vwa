@@ -264,6 +264,7 @@ const CardAnPham = () => {
 				modelName='sachtailieu.anpham.anpham'
 				title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
 				Form={isView ? ModalAnPham : ModalBienMucTaiLieu}
+				formProps={{ getData, tabActive, isBienMuc: false }}
 				widthDrawer={1100}
 				buttons={{ create: false }}
 				hideCard

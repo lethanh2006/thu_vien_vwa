@@ -1,4 +1,5 @@
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import SelectNgonNgu from '@/pages/DanhMuc/DanhMucNgonNgu/components/Select';
 import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { resetFieldsForm } from '@/utils/utils';
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
@@ -8,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
 
 const FormBienMucChiTiet = (props: any) => {
-	const { getData } = props;
+	const { getData, isBienMuc } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record, setVisibleForm, putBienMucChiTietModel, formSubmiting, visibleForm } =
@@ -146,19 +147,27 @@ const FormBienMucChiTiet = (props: any) => {
 													<Row gutter={[12, 0]}>
 														{form
 															.getFieldValue('danhSachBienMucChiTiet')
-															?.[index]?.thuocTinhAnPham?.map((item: any, i: number) => (
-																// eslint-disable-next-line react/no-array-index-key
-																<Col md={12} key={`${field.name}-thuocTinh-${i}`}>
-																	<Form.Item
-																		label={`${item.ten ?? ''} [${
-																			form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.tagCode
-																		}${item?.code}]`}
-																		name={[field.name, 'thuocTinhAnPham', i, 'value']}
-																	>
-																		<Input placeholder={`Nhập ${item.ten}`} />
-																	</Form.Item>
-																</Col>
-															))}
+															?.[index]?.thuocTinhAnPham?.map((item: any, i: number) => {
+																const fieldCode = `${form.getFieldValue('danhSachBienMucChiTiet')?.[index]?.tagCode}${
+																	item?.code
+																}`;
+
+																return (
+																	// eslint-disable-next-line react/no-array-index-key
+																	<Col md={12} key={`${field.name}-thuocTinh-${i}`}>
+																		<Form.Item
+																			label={`${item.ten ?? ''} [${fieldCode}]`}
+																			name={[field.name, 'thuocTinhAnPham', i, 'value']}
+																		>
+																			{fieldCode === '041$a' ? (
+																				<SelectNgonNgu selectMa />
+																			) : (
+																				<Input placeholder={`Nhập ${item.ten}`} />
+																			)}
+																		</Form.Item>
+																	</Col>
+																);
+															})}
 													</Row>
 												</Col>
 
@@ -193,16 +202,18 @@ const FormBienMucChiTiet = (props: any) => {
 				</Form.List>
 
 				<div className='form-footer'>
-					<ButtonExtend
-						loading={formSubmiting}
-						type='primary'
-						onClick={() => {
-							setActionType(ETrangThaiBienMuc.CHO_BIEN_MUC);
-							form.submit();
-						}}
-					>
-						Lưu lại
-					</ButtonExtend>
+					{isBienMuc === true && (
+						<ButtonExtend
+							loading={formSubmiting}
+							type='primary'
+							onClick={() => {
+								setActionType(ETrangThaiBienMuc.CHO_BIEN_MUC);
+								form.submit();
+							}}
+						>
+							Lưu lại
+						</ButtonExtend>
+					)}
 
 					<ButtonExtend
 						loading={formSubmiting}

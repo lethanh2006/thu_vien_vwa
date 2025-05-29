@@ -10,7 +10,7 @@ import FormBienMucChiTiet from './FormBienMucChiTiet';
 import NoiDungSachHay from './NoiDungSachHay';
 
 const ModalBienMucTaiLieu = (props: any) => {
-	const { title, getData, tabActive: tabActiveExternal } = props;
+	const { title, getData, tabActive: tabActiveExternal, isBienMuc } = props;
 	const intl = useIntl();
 	const { record, edit, isView, setVisibleForm, visibleForm } = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel, loading } = useModel('sachtailieu.anpham.thongtinanpham');
@@ -76,7 +76,7 @@ const ModalBienMucTaiLieu = (props: any) => {
 					{currentStep === 0 ? (
 						<Form afterAddNew={() => setCurrentStep(1)} tabActive={tabActiveExternal} />
 					) : (
-						<FormBienMucChiTiet getData={getData} />
+						<FormBienMucChiTiet getData={getData} isBienMuc={isBienMuc} />
 					)}
 				</>
 			)}

@@ -1,4 +1,3 @@
-import ButtonExtend from '@/components/Table/ButtonExtend';
 import TinyEditor from '@/components/TinyEditor';
 import UploadFile from '@/components/Upload/UploadFile';
 import SelectCapThuMuc from '@/pages/DanhMuc/CapThuMuc/components/Select';
@@ -13,11 +12,10 @@ import { buildUpLoadFile } from '@/services/uploadFile';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Checkbox, Col, Form, Input, InputNumber, Row, Select } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectDotNhapSach from '../../DotNhapSach/components/Select';
 import FormItemTaiLieuSo from '../DanhSachTaiLieu/FormItem';
-import Z3950Page from '../Z2950';
 
 const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; tabActive: string }) => {
 	const intl = useIntl();
@@ -40,7 +38,6 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 	const { afterAddNew, tabActive } = props;
 	const online: boolean = Form.useWatch('online', form);
 	const isSachHay: boolean = Form.useWatch('isSachHay', form);
-	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 
 	const getData = async (): Promise<AnPham.IRecord[]> => {
 		const response = await getModel({
@@ -132,12 +129,6 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 	return (
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[16, 16]}>
-				<Col span={24}>
-					<ButtonExtend size='small' type='primary' onClick={() => setVisibleModal(true)}>
-						Tải về qua Z39.50
-					</ButtonExtend>
-				</Col>
-
 				{/* Phần thông tin cơ bản */}
 				<Col span={24}>
 					<Card title='Thông tin cơ bản' size='small'>
@@ -351,8 +342,6 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 					</div>
 				</Col>
 			</Row>
-
-			<Z3950Page visible={visibleModal} setVisible={setVisibleModal} form={form} />
 		</Form>
 	);
 };

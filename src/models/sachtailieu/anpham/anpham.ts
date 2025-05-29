@@ -22,6 +22,7 @@ export default () => {
 	const [danhSachTag, setDanhSachTag] = useState<AnPham.IThongTinAnPham[]>([]);
 	const [recBienMucChiTiet, setRecBienMucChiTiet] = useState<MauBienMuc.IThongTinKhaiBao>();
 	const [dsAnPhamZ3950, setDSAnPhamZ3950] = useState<Z3950.IRecord[]>([]);
+	const [visibleZ3950, setVisibleZ3950] = useState<boolean>(false);
 
 	const { setLoading, getService, setDanhSach, formSubmiting, setFormSubmiting } = objInit;
 
@@ -195,6 +196,8 @@ export default () => {
 		loadingThongKe,
 		recBienMucChiTiet,
 		dsAnPhamZ3950,
+		visibleZ3950,
+		setVisibleZ3950,
 		setDSAnPhamZ3950,
 		setRecBienMucChiTiet,
 		searchAnPhamModel,

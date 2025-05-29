@@ -1,33 +1,43 @@
+import ExpandText from '@/components/ExpandText';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { CheckOutlined } from '@ant-design/icons';
-import { Button, Col, Empty, Form, type FormInstance, Input, InputNumber, Modal, Row, Select } from 'antd';
+import { Button, Col, Empty, Form, Input, InputNumber, Modal, Row, Select } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import SelectMayChu from './Select';
-import ExpandText from '@/components/ExpandText';
 
 const { Option } = Select;
 
-const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void; form: FormInstance }) => {
+const Z3950Page = () => {
 	const [form] = Form.useForm();
-	const { visible, setVisible, form: formExternal } = props;
-	const { timKiemZ3950Model, dsAnPhamZ3950, setDSAnPhamZ3950, loading } = useModel('sachtailieu.anpham.anpham');
+	const {
+		timKiemZ3950Model,
+		dsAnPhamZ3950,
+		setDSAnPhamZ3950,
+		loading,
+		visibleZ3950,
+		setVisibleZ3950,
+		setRecord,
+		setVisibleForm,
+		setIsView,
+		setEdit,
+	} = useModel('sachtailieu.anpham.anpham');
 	const { danhSach } = useModel('danhmuc.thuvienquocte');
 
 	useEffect(() => {
-		if (!visible) {
+		if (!visibleZ3950) {
 			resetFieldsForm(form);
 			setDSAnPhamZ3950([]);
 		} else {
 			form.setFieldsValue({
-				field: 'any',
+				field: 'title',
 			});
 		}
-	}, [visible]);
+	}, [visibleZ3950]);
 
 	const onFinish = async (values: any) => {
 		const mayChu = danhSach?.find((item) => item?.host === values.mayChu);
@@ -91,15 +101,10 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 			render: (val, rec) => (
 				<ButtonExtend
 					onClick={() => {
-						formExternal.setFieldsValue({
-							tacGia: rec?.author,
-							nhanDe: rec?.title,
-							ISBN: rec?.isbn,
-							ISSN: rec?.issn,
-							namXuatBan: rec?.publication_year,
-							nhaXuatBan: rec?.publisher,
-						});
-						setVisible(false);
+						setIsView(false);
+						setEdit(false);
+						setRecord(rec as any);
+						setVisibleForm(true);
 					}}
 					tooltip='Xác nhận'
 					className='text-success'
@@ -113,8 +118,8 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 	return (
 		<Modal
 			title='Tải dữ liệu qua giao thức Z39.50'
-			visible={visible}
-			onCancel={() => setVisible(false)}
+			visible={visibleZ3950}
+			onCancel={() => setVisibleZ3950(false)}
 			footer={null}
 			width={900}
 		>
@@ -130,12 +135,12 @@ const Z3950Page = (props: { visible: boolean; setVisible: (val: boolean) => void
 							<Input.Group compact>
 								<Form.Item name='field' noStyle>
 									<Select style={{ width: '20%' }}>
-										<Option value='any'>Tất cả trường</Option>
+										{/* <Option value='any'>Tất cả trường</Option> */}
 										<Option value='title'>Nhan đề</Option>
 										<Option value='author'>Tác giả</Option>
 										<Option value='subject'>Chủ đề</Option>
 										<Option value='isbn'>ISBN</Option>
-										<Option value='issn'>ISSN</Option>
+										{/* <Option value='issn'>ISSN</Option> */}
 										<Option value='publisher'>Nhà xuất bản</Option>
 										<Option value='date'>Năm xuất bản</Option>
 									</Select>

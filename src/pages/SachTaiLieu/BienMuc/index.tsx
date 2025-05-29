@@ -24,6 +24,7 @@ import news from '../../../assets/new6.gif';
 import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ModalBienMucTaiLieu from './components/Modal';
 import ModalSachHay from './components/ModalSachHay';
+import Z3950Page from './Z2950';
 
 const BienMucSachTaiLieuPage = () => {
 	const intl = useIntl();
@@ -40,6 +41,7 @@ const BienMucSachTaiLieuPage = () => {
 		setVisibleForm,
 		deleteModel,
 		putBienMucSoLuocModel,
+		setVisibleZ3950,
 	} = useModel('sachtailieu.anpham.anpham');
 	const [tabActive, setTabActive] = useState<string>('1');
 	const [visibleSachHay, setVisibleSachHay] = useState<boolean>(false);
@@ -258,7 +260,7 @@ const BienMucSachTaiLieuPage = () => {
 				modelName='sachtailieu.anpham.anpham'
 				title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}
 				Form={ModalBienMucTaiLieu}
-				formProps={{ getData, tabActive }}
+				formProps={{ getData, tabActive, isBienMuc: true }}
 				widthDrawer={1000}
 				buttons={{ create: false }}
 				hideCard
@@ -278,6 +280,10 @@ const BienMucSachTaiLieuPage = () => {
 					>
 						Biên mục sơ lược
 					</ButtonExtend>,
+
+					<ButtonExtend key='3' tooltip='Biên mục qua Z39.50' onClick={() => setVisibleZ3950(true)}>
+						Biên mục qua Z39.50
+					</ButtonExtend>,
 					<Segmented
 						key={'2'}
 						value={tabActive}
@@ -291,6 +297,8 @@ const BienMucSachTaiLieuPage = () => {
 			/>
 
 			<ModalSachHay visible={visibleSachHay} setVisible={setVisibleSachHay} getData={getData} />
+
+			<Z3950Page />
 		</Card>
 	);
 };
