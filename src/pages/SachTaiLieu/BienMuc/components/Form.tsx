@@ -17,7 +17,11 @@ import { useIntl, useModel } from 'umi';
 import SelectDotNhapSach from '../../DotNhapSach/components/Select';
 import FormItemTaiLieuSo from '../DanhSachTaiLieu/FormItem';
 
-const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; tabActive: string }) => {
+const FormBienMucSachTaiLieu = (props: {
+	afterAddNew: (rec: AnPham.IRecord) => void;
+	tabActive: string;
+	getData: () => void;
+}) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const {
@@ -30,23 +34,13 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		setRecord,
 		setEdit,
 		visibleForm,
-		getModel,
 		setFormSubmiting,
 	} = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
 	const { record: recDot } = useModel('sachtailieu.anpham.dotnhapsach');
-	const { afterAddNew, tabActive } = props;
+	const { afterAddNew, tabActive, getData } = props;
 	const online: boolean = Form.useWatch('online', form);
 	const isSachHay: boolean = Form.useWatch('isSachHay', form);
-
-	const getData = async (): Promise<AnPham.IRecord[]> => {
-		const response = await getModel({
-			dotNhapSachId: recDot?._id,
-			trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC,
-			online: tabActive === '1' ? false : true,
-		});
-		return response;
-	};
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -106,22 +100,17 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		const urlScanBia = await buildUpLoadFile(values, 'urlScanBia').finally(() => setFormSubmiting(false));
 		values.urlScanBia = urlScanBia ?? '';
 		values.namXuatBan = Number(values.namXuatBan);
-
 		if (edit) {
 			putBienMucSoLuocModel(record?._id ?? '', values, getData)
 				.then((rec) => setVisibleForm(false))
 				.catch((er) => console.log(er));
 		} else
-			postBienMucSoLuocModel({ ...values, trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC })
-				.then(async (res) => {
-					const updatedList = await getData();
-
-					const index = updatedList?.find((item) => item?._id === res?._id);
-					setRecord(index);
+			postBienMucSoLuocModel({ ...values, trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC }, getData)
+				.then((rec) => {
+					setRecord({ ...record, ...rec });
 					setEdit(true);
-					if (index && afterAddNew) afterAddNew(index);
-
-					getAllModel(undefined, undefined, { anPhamId: res?._id });
+					if (afterAddNew) afterAddNew(rec);
+					getAllModel(undefined, undefined, { anPhamId: rec?._id });
 				})
 				.catch((er) => console.log(er));
 	};

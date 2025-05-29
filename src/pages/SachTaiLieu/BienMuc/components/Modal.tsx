@@ -74,7 +74,7 @@ const ModalBienMucTaiLieu = (props: any) => {
 					</Steps>
 
 					{currentStep === 0 ? (
-						<Form afterAddNew={() => setCurrentStep(1)} tabActive={tabActiveExternal} />
+						<Form afterAddNew={() => setCurrentStep(1)} tabActive={tabActiveExternal} getData={getData} />
 					) : (
 						<FormBienMucChiTiet getData={getData} isBienMuc={isBienMuc} />
 					)}
