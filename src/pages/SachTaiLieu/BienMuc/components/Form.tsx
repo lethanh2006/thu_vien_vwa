@@ -123,7 +123,11 @@ const FormBienMucSachTaiLieu = (props: {
 					<Card title='Thông tin cơ bản' size='small'>
 						<Row gutter={[16, 8]}>
 							<Col xs={24} md={12}>
-								<Form.Item name='dotNhapSachId' label='Sổ đăng ký tổng quát' rules={[...rules.required]}>
+								<Form.Item
+									name='dotNhapSachId'
+									label='Sổ đăng ký tổng quát'
+									// rules={[...rules.required]}
+								>
 									<SelectDotNhapSach />
 								</Form.Item>
 							</Col>
