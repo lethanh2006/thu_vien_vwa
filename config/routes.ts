@@ -105,7 +105,7 @@
 			},
 			{
 				name: 'GhiTraSach',
-				path: 'muon-tra-sach',
+				path: 'ghi-tra-sach',
 				component: './SachTaiLieu/GhiTraSach',
 			},
 			{

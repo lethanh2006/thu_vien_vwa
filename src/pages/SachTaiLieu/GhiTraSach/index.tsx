@@ -301,7 +301,7 @@ const GhiTraPage = () => {
 				columns={columns}
 				dependencies={[page, limit, activeKey]}
 				modelName='sachtailieu.muontra.muontra'
-				widthDrawer={1100}
+				widthDrawer={isView ? 1000 : 'full'}
 				formProps={{ getData, setVisibleGhiTra }}
 				Form={isView ? ChiTietMuonTraSach : FormGhiTra}
 				title='Ghi trả sách'

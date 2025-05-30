@@ -6,12 +6,10 @@ import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Descriptions, Form, Input, message, Row, Segmented, Space, Spin, Tag } from 'antd';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import LichSuThueMuonPage from '../../MuonTraSach/LichSu';
 import GhiTraAnPham from '../../MuonTraSach/components/GhiTraSach';
-import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
-import SelectNhanSuDebounce from '@/pages/ToChucNhanSu/NhanSu/Select';
 
 const FormGhiTraSach = (props: any) => {
 	const { getData } = props;
@@ -25,14 +23,22 @@ const FormGhiTraSach = (props: any) => {
 	const dkcb: string = Form.useWatch('dkcb', form);
 	const soThe: string = Form.useWatch('soThe', form);
 	const vaiTro: EVaiTroMuonTra = Form.useWatch('vaiTro', form);
+	const soTheInputRef = useRef<any>(null);
+	const dkcbInputRef = useRef<any>(null);
 
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
-			setRecSinhVien({} as SinhVien.IRecord);
-			setRecCanBo({} as ToChucNhanSu.INhanSu);
+			setRecSinhVien(undefined);
+			setRecCanBo(undefined);
 		} else {
 			form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
+
+			setTimeout(() => {
+				if (soTheInputRef.current) {
+					soTheInputRef.current.focus();
+				}
+			}, 100);
 		}
 	}, [visibleForm]);
 
@@ -81,11 +87,16 @@ const FormGhiTraSach = (props: any) => {
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		vaiTro === EVaiTroMuonTra.SINHVIEN ? setRecSinhVien(nguoiMuon?.[0] as any) : setRecCanBo(nguoiMuon?.[0] as any);
+
+		// Focus vào input đăng ký cá biệt sau khi tìm thấy người mượn
+		if (dkcbInputRef.current) {
+			dkcbInputRef.current.focus();
+		}
 	};
 
-	useEffect(() => {
-		if (soThe) handleLuuSinhVien();
-	}, [soThe]);
+	if (dkcbInputRef.current) {
+		dkcbInputRef.current.focus();
+	}
 
 	return (
 		<Card title='Ghi trả sinh viên mượn sách'>
@@ -100,27 +111,41 @@ const FormGhiTraSach = (props: any) => {
 											value: item,
 											label: item,
 										}))}
-										onChange={() => form.resetFields(['soThe'])}
+										onChange={() => {
+											form.resetFields(['soThe']);
+
+											setTimeout(() => {
+												if (soTheInputRef.current) {
+													soTheInputRef.current.focus();
+												}
+											}, 100);
+										}}
 									/>
 								</Form.Item>
 							</Col>
 							<Col span={24}>
 								<Form.Item name='soThe' label={vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}>
-									{vaiTro === EVaiTroMuonTra.SINHVIEN ? (
-										<SelectSinhVienDebounce selectMa />
-									) : (
-										<SelectNhanSuDebounce selectMa />
-									)}
+									<Input
+										ref={soTheInputRef}
+										placeholder='Nhập mã định danh'
+										onPressEnter={(e) => {
+											e.preventDefault();
+											handleLuuSinhVien();
+										}}
+										allowClear
+									/>
 								</Form.Item>
 							</Col>
 							<Col span={24}>
 								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
 									<Input
+										ref={dkcbInputRef}
 										placeholder='Nhập đăng ký cá biệt'
 										onPressEnter={(e) => {
 											e.preventDefault();
 											handleLuuDKCB();
 										}}
+										allowClear
 									/>
 								</Form.Item>
 								<Space>
@@ -136,12 +161,7 @@ const FormGhiTraSach = (props: any) => {
 						<Row gutter={[12, 0]}>
 							<Col span={24}>
 								<Spin spinning={loading}>
-									<Descriptions
-										column={{ xs: 1, sm: 1, md: 2 }}
-										bordered
-										style={{ marginBottom: 18 }}
-										title='Thông tin người mượn'
-									>
+									<Descriptions column={{ xs: 1, sm: 1, md: 4 }} title='Thông tin người mượn'>
 										{vaiTro === EVaiTroMuonTra.SINHVIEN ? (
 											<>
 												<Descriptions.Item label='Mã SV'>{recSinhVien?.ma ?? '--'}</Descriptions.Item>

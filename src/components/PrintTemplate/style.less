@@ -1,14 +1,6 @@
 .print-section {
 	.to-print {
 		display: none;
-
-		.barcode-item {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: center;
-			page-break-inside: avoid;
-		}
 	}
 
 	@media print {
@@ -125,32 +117,32 @@
 	}
 }
 
-// &.compact {
-// 	.to-print {
-// 		font-size: 12px;
+&.compact {
+	.to-print {
+		font-size: 12px;
 
-// 		.title {
-// 			margin-top: 8px;
-// 			margin-bottom: 2px;
-// 			font-size: 14px;
-// 		}
+		.title {
+			margin-top: 8px;
+			margin-bottom: 2px;
+			font-size: 14px;
+		}
 
-// 		.sub-title {
-// 			margin-bottom: 4px;
-// 			font-size: 12px;
-// 		}
-// 	}
+		.sub-title {
+			margin-bottom: 4px;
+			font-size: 12px;
+		}
+	}
 
-// 	.ant-table .ant-table-thead th,
-// 	.ant-table .ant-table-tbody td {
-// 		height: auto;
-// 		padding: 2px 4px !important;
-// 		font-size: 12px !important;
-// 	}
+	.ant-table .ant-table-thead th,
+	.ant-table .ant-table-tbody td {
+		height: auto;
+		padding: 2px 4px !important;
+		font-size: 12px !important;
+	}
 
-// 	@media print {
-// 		@page {
-// 			margin: 10mm 10mm 10mm 15mm;
-// 		}
-// 	}
-// }
+	@media print {
+		@page {
+			margin: 10mm 10mm 10mm 15mm;
+		}
+	}
+}

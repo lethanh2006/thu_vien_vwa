@@ -3,8 +3,6 @@ import PrintTemplate from '@/components/PrintTemplate';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
-import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
-import SelectNhanSuDebounce from '@/pages/ToChucNhanSu/NhanSu/Select';
 import { ETrangThaiDangKyCaBiet, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
@@ -63,6 +61,8 @@ const FormMuonTraSach = (props: any) => {
 	const isCanBo = vaiTro === EVaiTroMuonTra.CANBO;
 
 	const componentRef = useRef(null);
+	const soTheInputRef = useRef<any>(null);
+	const dkcbInputRef = useRef<any>(null);
 
 	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
 
@@ -86,11 +86,17 @@ const FormMuonTraSach = (props: any) => {
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
-			setRecSinhVien({} as SinhVien.IRecord);
-			setRecCanBo({} as ToChucNhanSu.INhanSu);
+			setRecSinhVien(undefined);
+			setRecCanBo(undefined);
 			setDanhSach([]);
 		} else {
 			form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
+
+			setTimeout(() => {
+				if (soTheInputRef.current) {
+					soTheInputRef.current.focus();
+				}
+			}, 100);
 		}
 	}, [record?._id, visibleForm]);
 
@@ -145,7 +151,10 @@ const FormMuonTraSach = (props: any) => {
 			getData();
 		})
 			.then(() => {
-				setVisibleForm(false);
+				resetFieldsForm(form);
+				setRecSinhVien(undefined);
+				setRecCanBo(undefined);
+				setDanhSach([]);
 			})
 			.catch((err) => console.log(err));
 	};
@@ -237,17 +246,12 @@ const FormMuonTraSach = (props: any) => {
 			false,
 		);
 
-		if (!anPhamData?.length) {
-			message.error('Không tìm thấy ấn phẩm!');
-			return;
-		}
-
 		if (anPhamData?.[0]?.trangThai === ETrangThaiDangKyCaBiet.BAN) {
 			message.error('Ấn phẩm đang được mượn!');
 			return;
 		}
 
-		if (danhSach?.find((i) => i?._id === anPhamData?.[0]?._id)) {
+		if (danhSach?.find((i) => i?.soDangKyCaBiet === anPhamData?.[0]?.soDangKyCaBiet)) {
 			message.error('Ấn phẩm đã tồn tại trong danh sách!');
 			return;
 		}
@@ -258,17 +262,22 @@ const FormMuonTraSach = (props: any) => {
 					...prev,
 					{
 						...anPhamData?.[0],
+						soDangKyCaBiet: dkcb,
 						thoiGianMuon: moment(),
 						expired: moment().add(
 							isSinhVien ? settingMuonTra?.thoiHanMuonTraSach ?? 150 : settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7,
 							'd',
 						),
-						// daLay: true,
 					},
 				] as any,
 		);
 
 		form.resetFields(['dkcb']);
+
+		// Giữ focus ở input đăng ký cá biệt sau khi thêm
+		if (dkcbInputRef.current) {
+			dkcbInputRef.current.focus();
+		}
 	};
 
 	const handleLuuSinhVien = async () => {
@@ -290,11 +299,12 @@ const FormMuonTraSach = (props: any) => {
 
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		isSinhVien ? setRecSinhVien(nguoiMuon?.[0] as any) : setRecCanBo(nguoiMuon?.[0] as any);
-	};
 
-	useEffect(() => {
-		if (soThe) handleLuuSinhVien();
-	}, [soThe]);
+		// Focus vào input đăng ký cá biệt sau khi tìm thấy người mượn
+		if (dkcbInputRef.current) {
+			dkcbInputRef.current.focus();
+		}
+	};
 
 	return (
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} sinh viên mượn sách`}>
@@ -309,23 +319,41 @@ const FormMuonTraSach = (props: any) => {
 											value: item,
 											label: item,
 										}))}
-										onChange={() => form.resetFields(['soThe'])}
+										onChange={() => {
+											form.resetFields(['soThe']);
+											// Focus lại vào input mã định danh khi thay đổi vai trò
+											setTimeout(() => {
+												if (soTheInputRef.current) {
+													soTheInputRef.current.focus();
+												}
+											}, 100);
+										}}
 									/>
 								</Form.Item>
 							</Col>
 							<Col span={24}>
 								<Form.Item name='soThe' label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}>
-									{isSinhVien ? <SelectSinhVienDebounce selectMa /> : <SelectNhanSuDebounce selectMa />}
+									<Input
+										ref={soTheInputRef}
+										placeholder='Nhập mã định danh'
+										onPressEnter={(e) => {
+											e.preventDefault();
+											handleLuuSinhVien();
+										}}
+										allowClear
+									/>
 								</Form.Item>
 							</Col>
 							<Col span={24}>
 								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
 									<Input
+										ref={dkcbInputRef}
 										placeholder='Nhập đăng ký cá biệt'
 										onPressEnter={(e) => {
 											e.preventDefault();
 											handleLuuDKCB();
 										}}
+										allowClear
 									/>
 								</Form.Item>
 								<Space>
@@ -345,12 +373,7 @@ const FormMuonTraSach = (props: any) => {
 						<Row gutter={[12, 0]}>
 							<Col span={24}>
 								<Spin spinning={loading}>
-									<Descriptions
-										column={{ xs: 1, sm: 1, md: 2 }}
-										bordered
-										style={{ marginBottom: 18 }}
-										title='Thông tin người mượn'
-									>
+									<Descriptions column={{ xs: 1, sm: 1, md: 4 }} title='Thông tin người mượn'>
 										{isSinhVien ? (
 											<>
 												<Descriptions.Item label='Mã SV'>{recSinhVien?.ma ?? '--'}</Descriptions.Item>

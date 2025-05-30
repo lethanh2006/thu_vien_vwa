@@ -170,7 +170,7 @@ const PhieuMuonTraSachPage = () => {
 					columns={columns}
 					dependencies={[page, limit]}
 					modelName='sachtailieu.muontra.phieumuontra'
-					widthDrawer={1100}
+					widthDrawer={isView ? 1000 : 'full'}
 					Form={isView ? MuonTraSachPage : Form}
 					hideCard
 					buttons={{ create: false }}
