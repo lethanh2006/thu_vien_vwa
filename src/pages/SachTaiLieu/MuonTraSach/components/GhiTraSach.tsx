@@ -25,6 +25,18 @@ const GhiTraAnPham = (props: {
 		if (!visible) {
 			resetFieldsForm(form);
 		}
+
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'Enter') {
+				form.submit();
+			}
+		};
+
+		window.addEventListener('keydown', handleKeyDown);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+		};
 	}, [visible]);
 
 	const onFinish = async (values: any) => {

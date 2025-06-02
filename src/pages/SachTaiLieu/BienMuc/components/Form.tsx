@@ -121,33 +121,47 @@ const FormBienMucSachTaiLieu = (props: {
 				{/* Phần thông tin cơ bản */}
 				<Col span={24}>
 					<Card title='Thông tin cơ bản' size='small'>
-						<Row gutter={[16, 8]}>
-							<Col xs={24} md={12}>
-								<Form.Item
-									name='dotNhapSachId'
-									label='Sổ đăng ký tổng quát'
-									// rules={[...rules.required]}
-								>
-									<SelectDotNhapSach />
-								</Form.Item>
+						<Row gutter={[12, 0]}>
+							<Col span={24}>
+								<Row gutter={[12, 0]}>
+									<Col xs={24} md={6}>
+										<Form.Item name='urlScanBia' label=''>
+											<UploadFile isPortraitAvatar buttonDescription='Thêm ảnh bìa' />
+										</Form.Item>
+									</Col>
+									<Col xs={24} md={18}>
+										<Row gutter={[12, 0]}>
+											<Col xs={24} md={12}>
+												<Form.Item
+													name='dotNhapSachId'
+													label='Sổ đăng ký tổng quát'
+													// rules={[...rules.required]}
+												>
+													<SelectDotNhapSach />
+												</Form.Item>
+											</Col>
+											<Col xs={24} md={12}>
+												<Form.Item name='maKieuBanGhi' label='Kiểu bản ghi' rules={[...rules.required]}>
+													<SelectKieuBanGhi selectMa />
+												</Form.Item>
+											</Col>
+											<Col xs={24} md={12}>
+												<Form.Item name='maDangTaiLieu' label='Dạng tài liệu(937)' rules={[...rules.required]}>
+													<SelectDangTaiLieu selectMa />
+												</Form.Item>
+											</Col>
+											<Col xs={24} md={12}>
+												<Form.Item name='maCapThuMuc' label='Cấp thư mục' rules={[...rules.required]}>
+													<SelectCapThuMuc selectMa />
+												</Form.Item>
+											</Col>
+										</Row>
+									</Col>
+								</Row>
 							</Col>
+
 							<Col xs={24} md={12}>
-								<Form.Item name='maKieuBanGhi' label='Kiểu bản ghi' rules={[...rules.required]}>
-									<SelectKieuBanGhi selectMa />
-								</Form.Item>
-							</Col>
-							<Col xs={24} md={12}>
-								<Form.Item name='maDangTaiLieu' label='Dạng tài liệu' rules={[...rules.required]}>
-									<SelectDangTaiLieu selectMa />
-								</Form.Item>
-							</Col>
-							<Col xs={24} md={12}>
-								<Form.Item name='maCapThuMuc' label='Cấp thư mục' rules={[...rules.required]}>
-									<SelectCapThuMuc selectMa />
-								</Form.Item>
-							</Col>
-							<Col xs={24} md={12}>
-								<Form.Item name='maVatMangTin' label='Vật mang tin' rules={[...rules.required]}>
+								<Form.Item name='maVatMangTin' label='Vật mang tin(925)' rules={[...rules.required]}>
 									<SelectVatMangTin selectMa />
 								</Form.Item>
 							</Col>
@@ -157,7 +171,7 @@ const FormBienMucSachTaiLieu = (props: {
 								</Form.Item>
 							</Col>
 							<Col xs={24} md={12}>
-								<Form.Item name='doMat' label='Độ mật' rules={[...rules.required]}>
+								<Form.Item name='doMat' label='Độ mật(926)' rules={[...rules.required]}>
 									<Select placeholder='Chọn độ mật' style={{ width: '100%' }}>
 										{Array.from({ length: 11 }, (_, i) => (
 											<Select.Option key={i} value={i}>
@@ -179,7 +193,7 @@ const FormBienMucSachTaiLieu = (props: {
 				{/* Phần thông tin xuất bản */}
 				<Col span={24}>
 					<Card title='Thông tin xuất bản' size='small'>
-						<Row gutter={[16, 8]}>
+						<Row gutter={[12, 0]}>
 							<Col xs={24} md={12}>
 								<Form.Item name='ISBN' label='ISBN [020$a]'>
 									<Input placeholder='Nhập ISBN' />
@@ -247,7 +261,7 @@ const FormBienMucSachTaiLieu = (props: {
 				{/* Phần mô tả vật lý */}
 				<Col span={24}>
 					<Card title='Mô tả vật lý' size='small'>
-						<Row gutter={[16, 8]}>
+						<Row gutter={[12, 0]}>
 							<Col xs={24} md={12}>
 								<Form.Item name='soTrang' label='Số trang [300$a]'>
 									<Input placeholder='Nhập số trang' />
@@ -275,7 +289,7 @@ const FormBienMucSachTaiLieu = (props: {
 				{/* Phần tùy chọn */}
 				<Col span={24}>
 					<Card title='Tùy chọn' size='small'>
-						<Row gutter={[16, 8]}>
+						<Row gutter={[12, 0]}>
 							<Col xs={24} md={12}>
 								<Form.Item name='online' valuePropName='checked' initialValue={false}>
 									<Checkbox>Ấn phẩm số</Checkbox>
@@ -307,21 +321,10 @@ const FormBienMucSachTaiLieu = (props: {
 
 				{/* Phần sách hay (hiển thị khi chọn) */}
 				{isSachHay && (
-					<Col span={24}>
-						<Card title='Sách hay' size='small'>
-							<Row gutter={[16, 16]}>
-								<Col xs={24} md={6}>
-									<Form.Item name='urlScanBia' label=''>
-										<UploadFile isPortraitAvatar buttonDescription='Thêm ảnh bìa' />
-									</Form.Item>
-								</Col>
-								<Col xs={24} md={18}>
-									<Form.Item name='moTa' label='Nội dung sách hay' rules={[...rules.text]}>
-										<TinyEditor height={300} hideMenubar miniToolbar />
-									</Form.Item>
-								</Col>
-							</Row>
-						</Card>
+					<Col xs={24}>
+						<Form.Item name='moTa' label='Nội dung sách hay' rules={[...rules.text]}>
+							<TinyEditor height={300} hideMenubar miniToolbar />
+						</Form.Item>
 					</Col>
 				)}
 

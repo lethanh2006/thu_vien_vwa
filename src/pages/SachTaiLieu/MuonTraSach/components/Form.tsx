@@ -19,6 +19,7 @@ import ConfirmMuonQuaHan from './ConfirmQuaHan';
 import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
 import TitlePrintMuonTra from './TitlePrintMuonTra';
+import { EOperatorType } from '@/components/Table/constant';
 
 const FormMuonTraSach = () => {
 	const intl = useIntl();
@@ -282,9 +283,18 @@ const FormMuonTraSach = () => {
 	};
 
 	const handleLuuSinhVien = async () => {
+		const filter = [
+			{
+				active: true,
+				field: isSinhVien ? 'ma' : 'maCanBo',
+				values: [soThe],
+				operator: EOperatorType.CONTAIN,
+			},
+		];
+
 		const nguoiMuon = await getModel(
-			isSinhVien ? ({ ma: soThe } as any) : ({ maCanBo: soThe } as any),
 			undefined,
+			filter as any,
 			undefined,
 			undefined,
 			undefined,

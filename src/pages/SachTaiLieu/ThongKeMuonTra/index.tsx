@@ -1,6 +1,7 @@
 import ExpandText from '@/components/ExpandText';
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import TableBase from '@/components/Table';
+import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 import { ETrangThaiMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
@@ -8,24 +9,24 @@ import { Card, Space, Tabs } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
+import RenderHanTra from '../MuonTraSach/components/RenderHanTra';
 import StatMuonTraSach from '../MuonTraSach/components/Stat';
-import { EOperatorType } from '@/components/Table/constant';
 
 const ThongKeMuonTraPage = () => {
 	const [datePicker, setDatePicker] = useState<any>();
 	const [tabActive, setTabActive] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.DANG_THUE_MUON);
 	const { getModel, page, limit } = useModel('sachtailieu.muontra.muontra');
 
-	const getData = () => {
-		const filter = [
-			{
-				active: true,
-				field: 'thoiGianMuon',
-				values: [moment(datePicker?.[0]).startOf('date'), moment(datePicker?.[1]).endOf('date')],
-				operator: EOperatorType.BETWEEN,
-			},
-		];
+	const filter = [
+		{
+			active: true,
+			field: 'thoiGianMuon',
+			values: [moment(datePicker?.[0]).startOf('date'), moment(datePicker?.[1]).endOf('date')],
+			operator: EOperatorType.BETWEEN,
+		},
+	];
 
+	const getData = () => {
 		getModel({ trangThai: tabActive }, datePicker ? filter : (undefined as any));
 	};
 
@@ -93,16 +94,6 @@ const ThongKeMuonTraPage = () => {
 			filterType: 'date',
 			sortable: true,
 		},
-
-		{
-			title: 'Hạn trả',
-			align: 'center',
-			dataIndex: 'expired',
-			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-		},
 		{
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
@@ -131,6 +122,14 @@ const ThongKeMuonTraPage = () => {
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 		},
+		{
+			title: 'Trạng thái',
+			align: 'center',
+			width: 140,
+			render: (_, rec) => <RenderHanTra rec={rec} />,
+
+			fixed: 'right',
+		},
 	];
 
 	return (
@@ -155,9 +154,10 @@ const ThongKeMuonTraPage = () => {
 			<TableBase
 				getData={getData}
 				columns={columns}
+				params={filter}
 				dependencies={[page, limit, tabActive, datePicker]}
 				modelName='sachtailieu.muontra.muontra'
-				buttons={{ create: false }}
+				buttons={{ create: false, export: true }}
 				hideCard
 			/>
 		</Card>

@@ -3,7 +3,12 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
-import { ETrangThaiMuonSach, EVaiTroMuonTra, mapNameTrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
+import {
+	colorTrangThaiMuonSach,
+	ETrangThaiMuonSach,
+	EVaiTroMuonTra,
+	mapNameTrangThaiMuonSach,
+} from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import { CheckOutlined, DeleteOutlined, InfoCircleOutlined, MenuOutlined, RetweetOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Descriptions, Modal, Popconfirm, Popover, Row, Segmented, Tabs, Tag } from 'antd';
@@ -15,7 +20,8 @@ import ChiTietMuonTraSach from './components/ChiTiet';
 import GhiTraAnPham from './components/GhiTraSach';
 import ConfirmGiaHan from './components/ModalGiaHan';
 
-const MuonTraSachPage = () => {
+const MuonTraSachPage = (props: any) => {
+	const { tatCaLichSu } = props;
 	const intl = useIntl();
 	const { record: recPhieu, setVisibleForm, visibleForm: visiblePhieu } = useModel('sachtailieu.muontra.phieumuontra');
 	const { thongKeMuonTraSachModel, getModel, page, limit, handleView, setRecord, deleteModel } =
@@ -31,25 +37,25 @@ const MuonTraSachPage = () => {
 		setTrangThai(ETrangThaiMuonSach.DANG_THUE_MUON);
 	}, [visiblePhieu]);
 
-	const getData = () => {
-		const filter: any[] =
-			activeKey === '2'
-				? [
-						{
-							active: true,
-							field: 'expired',
-							values: [moment().toISOString(), moment().add(7, 'day').toISOString()],
-							operator: EOperatorType.BETWEEN,
-						},
-				  ]
-				: activeKey === '3'
-				? [{ active: true, field: 'expired', values: [moment().toISOString()], operator: EOperatorType.LESS_THAN }]
-				: activeKey === '4'
-				? [{ active: true, field: 'daLaySach', values: [false], operator: EOperatorType.EQUAL }]
-				: [];
+	const filter: any[] =
+		activeKey === '2'
+			? [
+					{
+						active: true,
+						field: 'expired',
+						values: [moment().toISOString(), moment().add(7, 'day').toISOString()],
+						operator: EOperatorType.BETWEEN,
+					},
+			  ]
+			: activeKey === '3'
+			? [{ active: true, field: 'expired', values: [moment().toISOString()], operator: EOperatorType.LESS_THAN }]
+			: activeKey === '4'
+			? [{ active: true, field: 'daLaySach', values: [false], operator: EOperatorType.EQUAL }]
+			: [];
 
+	const getData = () => {
 		getModel(
-			{ phieuMuonTraId: recPhieu?._id, trangThai },
+			!tatCaLichSu && recPhieu?._id ? { phieuMuonTraId: recPhieu?._id, trangThai } : undefined,
 			activeKey !== '1' && trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? filter : undefined,
 		);
 	};
@@ -66,6 +72,36 @@ const MuonTraSachPage = () => {
 	});
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
+		{
+			title: 'Vai trò',
+			dataIndex: ['phieuMuonTra', 'vaiTro'],
+			align: 'center',
+			width: 90,
+			render: (val, rec) => rec?.phieuMuonTra?.vaiTro,
+			onCell,
+			filterType: 'select',
+			filterData: Object.values(EVaiTroMuonTra),
+			hide: !tatCaLichSu,
+		},
+		{
+			title: 'Mã định danh',
+			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
+			align: 'center',
+			width: 120,
+			render: (val, rec) => rec?.phieuMuonTra?.maDinhDanhNguoiMuon,
+			filterType: 'string',
+			onCell,
+			hide: !tatCaLichSu,
+		},
+		{
+			title: 'Họ tên',
+			dataIndex: ['phieuMuonTra', 'hoTenNguoiMuon'],
+			width: 180,
+			render: (val, rec) => rec?.phieuMuonTra?.hoTenNguoiMuon,
+			onCell,
+			filterType: 'string',
+			hide: !tatCaLichSu,
+		},
 		{
 			title: 'Nhan đề',
 			dataIndex: ['anPham', 'nhanDe'],
@@ -191,7 +227,7 @@ const MuonTraSachPage = () => {
 			},
 			filterType: 'date',
 			sortable: true,
-			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
+			hide: trangThai !== ETrangThaiMuonSach.DA_TRA && !tatCaLichSu,
 			onCell,
 		},
 		// {
@@ -259,6 +295,18 @@ const MuonTraSachPage = () => {
 				return <span>-</span>;
 			},
 			onCell,
+			fixed: 'right',
+		},
+		{
+			title: 'Trạng thái',
+			dataIndex: 'trangThai',
+			align: 'center',
+			width: 120,
+			render: (val, rec) => <Tag color={colorTrangThaiMuonSach[val as ETrangThaiMuonSach]}>{val}</Tag>,
+			filterType: 'select',
+			filterData: Object.values(ETrangThaiMuonSach),
+			onCell,
+			hide: !tatCaLichSu,
 			fixed: 'right',
 		},
 		{
@@ -342,13 +390,14 @@ const MuonTraSachPage = () => {
 				<TableBase
 					getData={getData}
 					columns={columns}
-					dependencies={[page, limit, trangThai, activeKey, recPhieu?._id]}
+					params={filter}
+					dependencies={[page, limit, trangThai, activeKey, recPhieu?._id, tatCaLichSu]}
 					modelName='sachtailieu.muontra.muontra'
 					widthDrawer={900}
 					formProps={{ getData, trangThai, setTrangThai, setVisibleGhiTra }}
 					Form={ChiTietMuonTraSach}
 					hideCard
-					buttons={{ create: false }}
+					buttons={{ create: false, export: tatCaLichSu ? true : false }}
 					otherButtons={[
 						trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
 							<Segmented
@@ -404,6 +453,8 @@ const MuonTraSachPage = () => {
 			</>
 		);
 	};
+
+	if (tatCaLichSu) return content();
 
 	return (
 		<Card title='Chi tiết phiếu mượn'>

@@ -1,6 +1,7 @@
 import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 import {
 	colorTrangThaiMuonSach,
@@ -15,8 +16,8 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import GhiTraAnPham from '../components/GhiTraSach';
+import RenderHanTra from '../components/RenderHanTra';
 import ChiTietLichSu from './ChiTiet';
-import { EOperatorType } from '@/components/Table/constant';
 
 const LichSuThueMuonPage = (props: {
 	visible?: boolean;
@@ -169,16 +170,6 @@ const LichSuThueMuonPage = (props: {
 		// 	sortable: true,
 		// 	onCell,
 		// },
-		{
-			title: 'Hạn trả',
-			align: 'center',
-			dataIndex: 'expired',
-			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-			onCell,
-		},
 		// {
 		// 	title: 'Trạng thái',
 		// 	align: 'center',
@@ -240,46 +231,10 @@ const LichSuThueMuonPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Tình trạng hạn trả',
+			title: 'Hạn trả',
 			align: 'center',
 			width: 140,
-			render: (_, rec) => {
-				// Trường hợp không có thông tin hạn trả
-				if (!rec?.expired) {
-					return <span>-</span>;
-				}
-
-				// Xác định các thời điểm quan trọng
-				const hanTra = moment(rec.expired).startOf('day');
-				const ngayTra = rec?.thoiGianTra ? moment(rec.thoiGianTra).startOf('day') : null;
-				const now = moment().startOf('day');
-
-				// 1. Trường hợp đã trả sách
-				if (rec.trangThai === ETrangThaiMuonSach.DA_TRA && ngayTra) {
-					const soNgayQuaHan = ngayTra.diff(hanTra, 'days');
-
-					if (soNgayQuaHan > 0) {
-						return <Tag color='red'>Đã trả muộn {soNgayQuaHan} ngày</Tag>;
-					} else {
-						return <Tag color='green'>Đã trả đúng hạn</Tag>;
-					}
-				}
-				// 2. Trường hợp đang mượn
-				else if (rec.trangThai === ETrangThaiMuonSach.DANG_THUE_MUON) {
-					const soNgayQuaHan = now.diff(hanTra, 'days');
-					const soNgayConLai = hanTra.diff(now, 'days');
-
-					if (soNgayQuaHan > 0) {
-						return <Tag color='red'>Quá hạn {soNgayQuaHan} ngày</Tag>;
-					} else if (soNgayConLai <= 7) {
-						return <Tag color='orange'>Sắp đến hạn</Tag>;
-					} else {
-						return <Tag color='green'>Còn {soNgayConLai} ngày</Tag>;
-					}
-				}
-				// 3. Các trạng thái khác
-				return <span>-</span>;
-			},
+			render: (_, rec) => <RenderHanTra rec={rec} />,
 			onCell,
 			fixed: 'right',
 		},

@@ -19,6 +19,7 @@ import { useIntl, useModel } from 'umi';
 import GhiTraAnPham from '../../components/GhiTraSach';
 import InforNguoiMuon from './Infor';
 import StatNguoiDungAnPham from './Stat';
+import RenderHanTra from '../../components/RenderHanTra';
 
 const FormGhiTraSach = (props: any) => {
 	const { getData } = props;
@@ -77,16 +78,22 @@ const FormGhiTraSach = (props: any) => {
 	};
 
 	const getBorrower = async () => {
-		const query = isSinhVien ? { ma: soThe } : { maCanBo: soThe };
-		const endpoint = `thong-ke/${isSinhVien ? 'sinh-vien' : 'can-bo'}`;
+		const filter = [
+			{
+				active: true,
+				field: isSinhVien ? 'ma' : 'maCanBo',
+				values: [soThe],
+				operator: EOperatorType.CONTAIN,
+			},
+		];
 
 		const nguoiMuon = await getModel(
-			query as any,
+			undefined,
+			filter as any,
 			undefined,
 			undefined,
 			undefined,
-			undefined,
-			endpoint,
+			`thong-ke/${isSinhVien ? 'sinh-vien' : 'can-bo'}`,
 			undefined,
 			false,
 		);
@@ -186,15 +193,6 @@ const FormGhiTraSach = (props: any) => {
 			sortable: true,
 		},
 		{
-			title: 'Hạn trả',
-			align: 'center',
-			dataIndex: 'expired',
-			width: 130,
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-		},
-		{
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
 			width: 150,
@@ -225,42 +223,10 @@ const FormGhiTraSach = (props: any) => {
 			render: (val) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Tình trạng hạn trả',
+			title: 'Hạn trả',
 			align: 'center',
 			width: 140,
-			render: (_, rec) => {
-				if (!rec?.expired) {
-					return <span>-</span>;
-				}
-
-				const hanTra = moment(rec.expired).startOf('day');
-				const ngayTra = rec?.thoiGianTra ? moment(rec.thoiGianTra).startOf('day') : null;
-				const now = moment().startOf('day');
-
-				if (rec.trangThai === ETrangThaiMuonSach.DA_TRA && ngayTra) {
-					const soNgayQuaHan = ngayTra.diff(hanTra, 'days');
-
-					if (soNgayQuaHan > 0) {
-						return <Tag color='red'>Đã trả muộn {soNgayQuaHan} ngày</Tag>;
-					} else {
-						return <Tag color='green'>Đã trả đúng hạn</Tag>;
-					}
-				} else if (rec.trangThai === ETrangThaiMuonSach.DANG_THUE_MUON) {
-					const soNgayQuaHan = now.diff(hanTra, 'days');
-					const soNgayConLai = hanTra.diff(now, 'days');
-
-					if (soNgayQuaHan > 0) {
-						return <Tag color='red'>Quá hạn {soNgayQuaHan} ngày</Tag>;
-					} else if (soNgayConLai <= 7) {
-						return <Tag color='orange'>Sắp đến hạn</Tag>;
-					} else {
-						return <Tag color='green'>Còn {soNgayConLai} ngày</Tag>;
-					}
-				}
-
-				return <span>-</span>;
-			},
-
+			render: (_, rec) => <RenderHanTra rec={rec} />,
 			fixed: 'right',
 		},
 		{

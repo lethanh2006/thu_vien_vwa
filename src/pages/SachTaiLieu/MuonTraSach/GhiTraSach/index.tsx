@@ -2,6 +2,7 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
+import ModalExport from '@/components/Table/Export';
 import ModalImport from '@/components/Table/Import';
 import type { IColumn } from '@/components/Table/typing';
 import {
@@ -14,6 +15,7 @@ import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import {
 	CheckOutlined,
 	DeleteOutlined,
+	ExportOutlined,
 	ImportOutlined,
 	InfoCircleOutlined,
 	MenuOutlined,
@@ -28,6 +30,7 @@ import ChiTietAnPham from '../../AnPham/components/ChiTiet';
 import ChiTietMuonTraSach from '../components/ChiTiet';
 import GhiTraAnPham from '../components/GhiTraSach';
 import ConfirmGiaHan from '../components/ModalGiaHan';
+import RenderHanTra from '../components/RenderHanTra';
 import FormGhiTra from './components/Form';
 
 const GhiTraPage = () => {
@@ -52,6 +55,7 @@ const GhiTraPage = () => {
 	const [visibleGhiTra, setVisibleGhiTra] = useState<boolean>(false);
 	const [activeKey, setActiveKey] = useState<string>('1');
 	const [visibleImport, setVisibleImport] = useState(false);
+	const [visibleExport, setVisibleExport] = useState(false);
 
 	// useEffect(() => {
 	// 	if (ngoaiThoiGian) {
@@ -86,44 +90,58 @@ const GhiTraPage = () => {
 	// 	}
 	// }, [ngoaiThoiGian]);
 
-	const getData = () => {
-		const filter: any[] =
-			activeKey === '2'
-				? [
-						{
-							active: true,
-							field: 'expired',
-							values: [moment().toISOString(), moment().add(7, 'day').toISOString()],
-							operator: EOperatorType.BETWEEN,
-						},
-				  ]
-				: activeKey === '3'
-				? [{ active: true, field: 'expired', values: [moment().toISOString()], operator: EOperatorType.LESS_THAN }]
-				: activeKey === '4'
-				? [{ active: true, field: 'daLaySach', values: [false], operator: EOperatorType.EQUAL }]
-				: [];
+	const buildFilter = (): any[] => {
+		const baseFilter = [
+			{
+				active: true,
+				field: 'trangThai',
+				operator: EOperatorType.INCLUDE,
+				values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+			},
+		];
 
-		getModel(
-			undefined,
-			activeKey !== '1'
-				? [
-						...filter,
-						{
-							active: true,
-							field: 'trangThai',
-							operator: EOperatorType.INCLUDE,
-							values: [ETrangThaiMuonSach.DANG_THUE_MUON],
-						},
-				  ]
-				: [
-						{
-							active: true,
-							field: 'trangThai',
-							operator: EOperatorType.INCLUDE,
-							values: [ETrangThaiMuonSach.DANG_THUE_MUON],
-						},
-				  ],
-		);
+		let extraFilter: any[] = [];
+
+		switch (activeKey) {
+			case '2':
+				extraFilter = [
+					{
+						active: true,
+						field: 'expired',
+						values: [moment().toISOString(), moment().add(7, 'days').toISOString()],
+						operator: EOperatorType.BETWEEN,
+					},
+				];
+				break;
+			case '3':
+				extraFilter = [
+					{
+						active: true,
+						field: 'expired',
+						values: [moment().toISOString()],
+						operator: EOperatorType.LESS_THAN,
+					},
+				];
+				break;
+			case '4':
+				extraFilter = [
+					{
+						active: true,
+						field: 'daLaySach',
+						values: [false],
+						operator: EOperatorType.EQUAL,
+					},
+				];
+				break;
+			default:
+				break;
+		}
+
+		return activeKey !== '1' ? [...baseFilter, ...extraFilter] : baseFilter;
+	};
+
+	const getData = () => {
+		getModel(undefined, buildFilter());
 	};
 
 	const onCell = (rec: MuonSach.IRecord) => ({
@@ -217,16 +235,6 @@ const GhiTraPage = () => {
 			onCell,
 		},
 		{
-			title: 'Hạn trả',
-			align: 'center',
-			dataIndex: 'expired',
-			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-			onCell,
-		},
-		{
 			title: 'Thời gian trả',
 			align: 'center',
 			dataIndex: 'thoiGianTra',
@@ -251,46 +259,10 @@ const GhiTraPage = () => {
 			onCell,
 		},
 		{
-			title: 'Tình trạng hạn trả',
+			title: 'Hạn trả',
 			align: 'center',
 			width: 140,
-			render: (_, rec) => {
-				// Trường hợp không có thông tin hạn trả
-				if (!rec?.expired) {
-					return <span>-</span>;
-				}
-
-				// Xác định các thời điểm quan trọng
-				const hanTra = moment(rec.expired).startOf('day');
-				const ngayTra = rec?.thoiGianTra ? moment(rec.thoiGianTra).startOf('day') : null;
-				const now = moment().startOf('day');
-
-				// 1. Trường hợp đã trả sách
-				if (rec.trangThai === ETrangThaiMuonSach.DA_TRA && ngayTra) {
-					const soNgayQuaHan = ngayTra.diff(hanTra, 'days');
-
-					if (soNgayQuaHan > 0) {
-						return <Tag color='red'>Đã trả muộn {soNgayQuaHan} ngày</Tag>;
-					} else {
-						return <Tag color='green'>Đã trả đúng hạn</Tag>;
-					}
-				}
-				// 2. Trường hợp đang mượn
-				else if (rec.trangThai === ETrangThaiMuonSach.DANG_THUE_MUON) {
-					const soNgayQuaHan = now.diff(hanTra, 'days');
-					const soNgayConLai = hanTra.diff(now, 'days');
-
-					if (soNgayQuaHan > 0) {
-						return <Tag color='red'>Quá hạn {soNgayQuaHan} ngày</Tag>;
-					} else if (soNgayConLai <= 7) {
-						return <Tag color='orange'>Sắp đến hạn</Tag>;
-					} else {
-						return <Tag color='green'>Còn {soNgayConLai} ngày</Tag>;
-					}
-				}
-				// 3. Các trạng thái khác
-				return <span>-</span>;
-			},
+			render: (_, rec) => <RenderHanTra rec={rec} />,
 			onCell,
 			fixed: 'right',
 		},
@@ -386,10 +358,6 @@ const GhiTraPage = () => {
 						Ghi trả
 					</ButtonExtend>,
 
-					<ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
-						Nhập dữ liệu
-					</ButtonExtend>,
-
 					<Segmented
 						key={'2'}
 						value={activeKey}
@@ -400,6 +368,14 @@ const GhiTraPage = () => {
 							{ value: '3', label: 'Quá hạn' },
 						]}
 					/>,
+
+					<ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
+						Nhập dữ liệu
+					</ButtonExtend>,
+
+					<ButtonExtend key={'export'} icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
+						Xuất dữ liệu
+					</ButtonExtend>,
 				]}
 			/>
 
@@ -441,6 +417,14 @@ const GhiTraPage = () => {
 				onCancel={() => setVisibleImport(false)}
 				titleTemplate={'Biểu mẫu phiếu mượn.xlsx'}
 				onOk={() => getModel()}
+			/>
+
+			<ModalExport
+				visible={visibleExport}
+				modelName='sachtailieu.muontra.phieumuontra'
+				onCancel={() => setVisibleExport(false)}
+				fileName='Danh sách sinh viên.xlsx'
+				filters={buildFilter()}
 			/>
 		</>
 	);
