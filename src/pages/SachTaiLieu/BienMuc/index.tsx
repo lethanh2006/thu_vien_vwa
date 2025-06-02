@@ -261,7 +261,7 @@ const BienMucSachTaiLieuPage = () => {
 				title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}
 				Form={ModalBienMucTaiLieu}
 				formProps={{ getData, tabActive, isBienMuc: true }}
-				widthDrawer={1000}
+				widthDrawer={1200}
 				buttons={{ create: false }}
 				hideCard
 				otherButtons={[
