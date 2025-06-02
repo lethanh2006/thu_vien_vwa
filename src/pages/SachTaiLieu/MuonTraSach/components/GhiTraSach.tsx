@@ -1,7 +1,6 @@
 import { EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import { colorTrangThaiHocSv, type ETrangThaiHocSv } from '@/services/SinhVien/constant';
 import { type ETrangThaiNhanSu, MapColorETrangThaiNhanSu } from '@/services/ToChucNhanSu/constant';
-import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Descriptions, Form, Input, Modal, Row, Tag } from 'antd';
 import moment from 'moment';
@@ -19,6 +18,8 @@ const GhiTraAnPham = (props: {
 	const [form] = Form.useForm();
 
 	const { record, ghiTraThueMuonAnPhamModel, formSubmiting } = useModel('sachtailieu.muontra.muontra');
+	const { record: recSinhVien } = useModel('sinhvien.sinhvien');
+	const { record: recCanBo } = useModel('tochucnhansu.nhansu');
 
 	useEffect(() => {
 		if (!visible) {
@@ -68,8 +69,14 @@ const GhiTraAnPham = (props: {
 											{record?.phieuMuonTra?.tenNganhNguoiMuon ?? '--'}
 										</Descriptions.Item>
 										<Descriptions.Item label='Trạng thái học'>
-											<Tag color={colorTrangThaiHocSv[record?.phieuMuonTra?.trangThaiHoc as ETrangThaiHocSv]}>
-												{record?.phieuMuonTra?.trangThaiHoc ?? '--'}
+											<Tag
+												color={
+													colorTrangThaiHocSv[
+														(record?.phieuMuonTra?.trangThaiHoc ?? recSinhVien?.trangThaiHoc) as ETrangThaiHocSv
+													]
+												}
+											>
+												{record?.phieuMuonTra?.trangThaiHoc ?? recSinhVien?.trangThaiHoc}
 											</Tag>
 										</Descriptions.Item>
 									</>
@@ -88,8 +95,14 @@ const GhiTraAnPham = (props: {
 											{record?.phieuMuonTra?.tenDonViNguoiMuon ?? '--'}
 										</Descriptions.Item>
 										<Descriptions.Item label='Trạng thái'>
-											<Tag color={MapColorETrangThaiNhanSu[record?.phieuMuonTra?.trangThaiLamViec as ETrangThaiNhanSu]}>
-												{record?.phieuMuonTra?.trangThaiLamViec ?? '--'}
+											<Tag
+												color={
+													MapColorETrangThaiNhanSu[
+														(record?.phieuMuonTra?.trangThaiLamViec ?? recCanBo?.trangThai) as ETrangThaiNhanSu
+													]
+												}
+											>
+												{record?.phieuMuonTra?.trangThaiLamViec ?? recCanBo?.trangThai}
 											</Tag>
 										</Descriptions.Item>
 									</>
@@ -118,8 +131,8 @@ const GhiTraAnPham = (props: {
 						</Col>
 					) : null}
 					<Col xs={24}>
-						<Form.Item name='ghiChuTra' label='Ghi chú trả' rules={[...rules.text]}>
-							<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
+						<Form.Item name='ghiChuTra' label='Ghi chú trả'>
+							<Input placeholder='Nhập ghi chú' />
 						</Form.Item>
 					</Col>
 				</Row>

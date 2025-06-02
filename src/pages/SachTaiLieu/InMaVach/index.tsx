@@ -1,4 +1,3 @@
-import PrintTemplate from '@/components/PrintTemplate';
 import PrintBarcode from '@/components/PrintTemplate/Barcode';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
@@ -214,7 +213,7 @@ const InMaVachPage = () => {
 
 			<PrintBarcode ref={componentRef} listBarcodes={listBarcodes?.map((item) => item)} />
 
-			<PrintTemplate ref={componentRefMaGay} hideTieuNgu footer={<></>}>
+			<div className='print-section' ref={componentRefMaGay}>
 				<div className='to-print'>
 					<div className='label-grid'>
 						{danhSach
@@ -258,7 +257,7 @@ const InMaVachPage = () => {
 							)}
 					</div>
 				</div>
-			</PrintTemplate>
+			</div>
 
 			<Modal
 				title={`Thông tin ${kieuIn === 'maTaiLieu' ? 'mã tài liệu' : 'đăng ký cá biệt'}`}

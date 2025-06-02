@@ -1,6 +1,7 @@
 import {
 	colorTrangThaiDuyeMuonSach,
 	colorTrangThaiMuonSach,
+	mapNameTrangThaiMuonSach,
 	type ETrangThaiDuyetMuonSach,
 	type ETrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
@@ -61,7 +62,9 @@ const ChiTietLichSu = () => {
 						<Descriptions.Item label='Ghi chú trả'>{record?.ghiChuTra ?? '--'}</Descriptions.Item>
 
 						<Descriptions.Item label='Trạng thái'>
-							<Tag color={colorTrangThaiMuonSach[record?.trangThai as ETrangThaiMuonSach]}>{record?.trangThai}</Tag>
+							<Tag color={colorTrangThaiMuonSach[record?.trangThai as ETrangThaiMuonSach]}>
+								{mapNameTrangThaiMuonSach[record?.trangThai as ETrangThaiMuonSach]}
+							</Tag>
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Trạng thái duyệt'>

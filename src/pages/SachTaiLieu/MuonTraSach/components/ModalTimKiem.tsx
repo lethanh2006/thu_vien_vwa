@@ -18,9 +18,10 @@ const ModalTimKiem = (props: {
 	visibleForm: boolean;
 	setVisibleForm: (val: boolean) => void;
 	vaiTro: EVaiTroMuonTra;
+	slConMuonDuoc: number;
 }) => {
 	const intl = useIntl();
-	const { visibleForm, setVisibleForm, vaiTro } = props;
+	const { visibleForm, setVisibleForm, vaiTro, slConMuonDuoc } = props;
 	const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 	const [paneSize, setPaneSize] = useState('40%');
 	const handlePaneSizeChange = (size: any) => {
@@ -133,6 +134,7 @@ const ModalTimKiem = (props: {
 												: settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7,
 											'd',
 										),
+										ghiChu: danhSach?.length >= slConMuonDuoc ? 'Mượn vượt quá hạn ngạch cho phép' : '',
 									},
 								] as any,
 						);

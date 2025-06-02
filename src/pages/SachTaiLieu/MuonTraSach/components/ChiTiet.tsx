@@ -1,10 +1,9 @@
-import { colorTrangThaiMuonSach, ETrangThaiDuyetMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
+import { colorTrangThaiMuonSach, ETrangThaiMuonSach, mapNameTrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Descriptions, Form, message, Popconfirm, Row, Tag } from 'antd';
+import { Button, Card, Col, Descriptions, Form, Row, Tag } from 'antd';
 import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
-import FormDuyet from './FormDuyet';
 
 const ChiTietMuonTraSach = (props: any) => {
 	const { getData: getDataExternal, trangThai, setVisibleGhiTra } = props;
@@ -100,7 +99,9 @@ const ChiTietMuonTraSach = (props: any) => {
 						{/* )} */}
 
 						<Descriptions.Item label='Trạng thái'>
-							<Tag color={colorTrangThaiMuonSach[record?.trangThai as ETrangThaiMuonSach]}>{record?.trangThai}</Tag>
+							<Tag color={colorTrangThaiMuonSach[record?.trangThai as ETrangThaiMuonSach]}>
+								{mapNameTrangThaiMuonSach[record?.trangThai as ETrangThaiMuonSach]}
+							</Tag>
 						</Descriptions.Item>
 					</Descriptions>
 				</Col>

@@ -14,13 +14,15 @@ const FormMuonTra = () => {
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
-		} else if (record?._id) {
+		} else if (record?.soDangKyCaBiet) {
 			form.setFieldsValue(record);
 		}
-	}, [record?._id, visibleForm]);
+	}, [record?.soDangKyCaBiet, visibleForm]);
 
 	const onFinish = async (values: MuonSach.IRecord) => {
-		const newData = danhSach.map((item) => (item._id === record?._id ? { ...item, ...values } : item));
+		const newData = danhSach.map((item) =>
+			item.soDangKyCaBiet === record?.soDangKyCaBiet ? { ...item, ...values } : item,
+		);
 
 		setDanhSach(newData as any);
 		setVisibleForm(false);

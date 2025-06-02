@@ -82,7 +82,7 @@ export default () => {
 
 	const ghiTraThueMuonAnPhamModel = async (
 		idThueMuon: string,
-		payLoad: {
+		payLoad?: {
 			ghiChuTra: string;
 		},
 		getData?: () => void,

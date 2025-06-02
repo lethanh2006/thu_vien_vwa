@@ -2,15 +2,21 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
-import { colorTrangThaiMuonSach, ETrangThaiMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
+import {
+	colorTrangThaiMuonSach,
+	ETrangThaiMuonSach,
+	EVaiTroMuonTra,
+	mapNameTrangThaiMuonSach,
+} from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import { CheckOutlined } from '@ant-design/icons';
-import { Button, Modal, Tag } from 'antd';
+import { Button, Modal, Segmented, Tag } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import GhiTraAnPham from '../components/GhiTraSach';
 import ChiTietLichSu from './ChiTiet';
+import { EOperatorType } from '@/components/Table/constant';
 
 const LichSuThueMuonPage = (props: {
 	visible?: boolean;
@@ -28,6 +34,7 @@ const LichSuThueMuonPage = (props: {
 	const { getModel, page, limit, handleView, setDanhSach } = useModel('sachtailieu.muontra.lichsumuontra');
 	const { setRecord } = useModel('sachtailieu.muontra.muontra');
 	const [visibleGhiTra, setVisibleGhiTra] = useState<boolean>(false);
+	const [activeKey, setActiveKey] = useState<string>('1');
 
 	useEffect(() => {
 		if (!visible) {
@@ -36,10 +43,26 @@ const LichSuThueMuonPage = (props: {
 	}, [visible]);
 
 	const getData = () => {
+		const filter: any[] =
+			activeKey === '2'
+				? [
+						{
+							active: true,
+							field: 'expired',
+							values: [moment().toISOString(), moment().add(7, 'day').toISOString()],
+							operator: EOperatorType.BETWEEN,
+						},
+				  ]
+				: activeKey === '3'
+				? [{ active: true, field: 'expired', values: [moment().toISOString()], operator: EOperatorType.LESS_THAN }]
+				: activeKey === '4'
+				? [{ active: true, field: 'daLaySach', values: [false], operator: EOperatorType.EQUAL }]
+				: [];
+
 		if (ssoId) {
-			getModel(undefined, undefined, undefined, undefined, undefined, `nguoi-muon/${ssoId}/page`);
+			getModel(undefined, filter, undefined, undefined, undefined, `nguoi-muon/${ssoId}/page`);
 		} else if (condition) {
-			getModel(condition);
+			getModel(condition, filter);
 		}
 	};
 
@@ -217,13 +240,64 @@ const LichSuThueMuonPage = (props: {
 			onCell,
 		},
 		{
+			title: 'Tình trạng hạn trả',
+			align: 'center',
+			width: 140,
+			render: (_, rec) => {
+				// Trường hợp không có thông tin hạn trả
+				if (!rec?.expired) {
+					return <span>-</span>;
+				}
+
+				// Xác định các thời điểm quan trọng
+				const hanTra = moment(rec.expired).startOf('day');
+				const ngayTra = rec?.thoiGianTra ? moment(rec.thoiGianTra).startOf('day') : null;
+				const now = moment().startOf('day');
+
+				// 1. Trường hợp đã trả sách
+				if (rec.trangThai === ETrangThaiMuonSach.DA_TRA && ngayTra) {
+					const soNgayQuaHan = ngayTra.diff(hanTra, 'days');
+
+					if (soNgayQuaHan > 0) {
+						return <Tag color='red'>Đã trả muộn {soNgayQuaHan} ngày</Tag>;
+					} else {
+						return <Tag color='green'>Đã trả đúng hạn</Tag>;
+					}
+				}
+				// 2. Trường hợp đang mượn
+				else if (rec.trangThai === ETrangThaiMuonSach.DANG_THUE_MUON) {
+					const soNgayQuaHan = now.diff(hanTra, 'days');
+					const soNgayConLai = hanTra.diff(now, 'days');
+
+					if (soNgayQuaHan > 0) {
+						return <Tag color='red'>Quá hạn {soNgayQuaHan} ngày</Tag>;
+					} else if (soNgayConLai <= 7) {
+						return <Tag color='orange'>Sắp đến hạn</Tag>;
+					} else {
+						return <Tag color='green'>Còn {soNgayConLai} ngày</Tag>;
+					}
+				}
+				// 3. Các trạng thái khác
+				return <span>-</span>;
+			},
+			onCell,
+			fixed: 'right',
+		},
+		{
 			title: 'Trạng thái',
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 130,
-			render: (val, rec) => <Tag color={colorTrangThaiMuonSach[val as ETrangThaiMuonSach]}>{val}</Tag>,
+			render: (val, rec) => (
+				<Tag color={colorTrangThaiMuonSach[val as ETrangThaiMuonSach]}>
+					{mapNameTrangThaiMuonSach[val as ETrangThaiMuonSach]}
+				</Tag>
+			),
 			filterType: 'select',
-			filterData: Object.values(ETrangThaiMuonSach),
+			filterData: Object.values(ETrangThaiMuonSach).map((item) => ({
+				value: item,
+				label: mapNameTrangThaiMuonSach[item],
+			})),
 			fixed: 'right',
 			onCell,
 		},
@@ -254,12 +328,24 @@ const LichSuThueMuonPage = (props: {
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, JSON.stringify(condition), ssoId]}
+				dependencies={[page, limit, JSON.stringify(condition), ssoId, activeKey]}
 				modelName='sachtailieu.muontra.lichsumuontra'
 				Form={ChiTietLichSu}
 				widthDrawer={800}
 				hideCard
 				buttons={{ create: false }}
+				otherButtons={[
+					<Segmented
+						key={'1'}
+						value={activeKey}
+						onChange={(value) => setActiveKey(value.toString())}
+						options={[
+							{ value: '1', label: 'Tất cả' },
+							{ value: '2', label: 'Sắp đến hạn' },
+							{ value: '3', label: 'Quá hạn' },
+						]}
+					/>,
+				]}
 			/>
 
 			<GhiTraAnPham

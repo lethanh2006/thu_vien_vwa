@@ -106,7 +106,7 @@
 			{
 				name: 'GhiTraSach',
 				path: 'ghi-tra-sach',
-				component: './SachTaiLieu/GhiTraSach',
+				component: './SachTaiLieu/MuonTraSach/GhiTraSach',
 			},
 			{
 				name: 'ThongKe',

@@ -26,6 +26,9 @@ declare module MuonSach {
 
 		ghiChuDangKy: string;
 		ghiChu: string;
+
+		//fake
+		ssoId?: string;
 	}
 
 	export type TSetting = {

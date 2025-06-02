@@ -204,7 +204,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 			{!isBanDoc && (
 				<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
 					<Tabs.TabPane tab='Ấn phẩm đang mượn' key='1' />
-					<Tabs.TabPane tab='Ấn phẩm đã mượn' key='2' />
+					<Tabs.TabPane tab='Ấn phẩm đã trả' key='2' />
 				</Tabs>
 			)}
 
@@ -228,7 +228,31 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 									yaxis: {
 										labels: { formatter: (val) => `${inputFormat(val)}` },
 									},
-									plotOptions: { bar: { columnWidth: '20%' } },
+									plotOptions: {
+										bar: {
+											columnWidth: '20%',
+											dataLabels: {
+												position: 'top', // 👈 Hiển thị trên đỉnh cột
+											},
+										},
+									},
+									dataLabels: {
+										enabled: true,
+										formatter: function (val: any) {
+											return inputFormat(val);
+										},
+										offsetY: -20,
+										style: {
+											fontSize: '15px',
+											fontWeight: 600,
+											colors: ['#333'],
+										},
+									},
+									tooltip: {
+										shared: true,
+										intersect: false,
+										y: { formatter: (val) => `${inputFormat(val)}` },
+									},
 									responsive: [
 										{
 											options: {
@@ -237,14 +261,16 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 														columnWidth: '40%',
 													},
 												},
+												dataLabels: {
+													enabled: true,
+													formatter: function (val: any) {
+														return `${inputFormat(val)}`;
+													},
+													offsetY: -10,
+												},
 											},
 										},
 									],
-									tooltip: {
-										shared: true,
-										intersect: false,
-										y: { formatter: (val) => `${inputFormat(val)}` },
-									},
 								}}
 								onColumnClick={(value) => {
 									if (kieuHienThi === EKieuHienThi.NAM) {

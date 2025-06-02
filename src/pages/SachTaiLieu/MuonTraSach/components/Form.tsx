@@ -6,37 +6,21 @@ import type { IColumn } from '@/components/Table/typing';
 import { ETrangThaiDangKyCaBiet, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
-import { colorTrangThaiHocSv, type ETrangThaiHocSv } from '@/services/SinhVien/constant';
-import type { SinhVien } from '@/services/SinhVien/typings';
-import { type ETrangThaiNhanSu, MapColorETrangThaiNhanSu } from '@/services/ToChucNhanSu/constant';
-import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
 import { resetFieldsForm } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons';
-import {
-	Button,
-	Card,
-	Col,
-	Descriptions,
-	Form,
-	Input,
-	message,
-	Popconfirm,
-	Row,
-	Segmented,
-	Space,
-	Spin,
-	Tag,
-} from 'antd';
+import { Button, Card, Col, Form, Input, message, Popconfirm, Row, Segmented, Space, Spin } from 'antd';
 import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
 import { useIntl, useModel } from 'umi';
-import LichSuThueMuonPage from '../LichSu';
+import InforNguoiMuon from '../GhiTraSach/components/Infor';
+import StatNguoiDungAnPham from '../GhiTraSach/components/Stat';
+import ConfirmMuonQuaHan from './ConfirmQuaHan';
 import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
 import TitlePrintMuonTra from './TitlePrintMuonTra';
 
-const FormMuonTraSach = (props: any) => {
+const FormMuonTraSach = () => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const {
@@ -50,10 +34,10 @@ const FormMuonTraSach = (props: any) => {
 	} = useModel('sachtailieu.muontra.phieumuontra');
 	const { getModel, settingMuonTra, loading, thongKeMuonTraSachModel } = useModel('sachtailieu.muontra.muontra');
 	const { getModel: getAnPhamXepGia, danhSach, setDanhSach, handleEdit } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { record: recSinhVien, setRecord: setRecSinhVien } = useModel('sinhvien.sinhvien');
+	const { record: recCanBo, setRecord: setRecCanBo } = useModel('tochucnhansu.nhansu');
 	const [visibleTimKiem, setVisibleTimKiem] = useState<boolean>(false);
-	const [recSinhVien, setRecSinhVien] = useState<SinhVien.IRecord>();
-	const [recCanBo, setRecCanBo] = useState<ToChucNhanSu.INhanSu>();
-	const [visibleModal, setVisibleModal] = useState<boolean>(false);
+	const [visibleQuaHan, setVisibleQuaHan] = useState<boolean>(false);
 	const dkcb: string = Form.useWatch('dkcb', form);
 	const soThe: string = Form.useWatch('soThe', form);
 	const vaiTro: EVaiTroMuonTra = Form.useWatch('vaiTro', form);
@@ -82,6 +66,14 @@ const FormMuonTraSach = (props: any) => {
 	);
 
 	const isOverLimit = danhSach?.length > slConMuonDuoc;
+
+	const isOverQuota = useCallback(
+		(rec: MuonSach.IRecord) => {
+			const currentIndex = danhSach?.findIndex((item) => item.soDangKyCaBiet === rec.soDangKyCaBiet) ?? -1;
+			return currentIndex >= slConMuonDuoc;
+		},
+		[danhSach, slConMuonDuoc],
+	);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -151,7 +143,7 @@ const FormMuonTraSach = (props: any) => {
 			getData();
 		})
 			.then(() => {
-				resetFieldsForm(form);
+				resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
 				setRecSinhVien(undefined);
 				setRecCanBo(undefined);
 				setDanhSach([]);
@@ -159,9 +151,20 @@ const FormMuonTraSach = (props: any) => {
 			.catch((err) => console.log(err));
 	};
 
-	const handleDeleteItem = (itemId: string) => {
-		const updatedList = danhSach.filter((item) => item._id !== itemId);
+	const handleDeleteItem = (sodkcb: string) => {
+		const updatedList = danhSach.filter((item) => item.soDangKyCaBiet !== sodkcb);
 		setDanhSach(updatedList);
+	};
+
+	const onCell = (rec: MuonSach.IRecord) => {
+		if (isOverQuota(rec)) {
+			return {
+				style: {
+					backgroundColor: '#ff8080',
+				},
+			};
+		}
+		return {};
 	};
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
@@ -197,9 +200,9 @@ const FormMuonTraSach = (props: any) => {
 		},
 		{
 			title: 'Ghi chú',
-			dataIndex: 'ghiChu' as any,
+			dataIndex: 'ghiChu',
 			width: 220,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			onCell,
 		},
 		{
 			title: 'Thao tác',
@@ -216,7 +219,7 @@ const FormMuonTraSach = (props: any) => {
 					/>
 
 					<Popconfirm
-						onConfirm={() => handleDeleteItem(rec?._id)}
+						onConfirm={() => handleDeleteItem(rec?.soDangKyCaBiet)}
 						title='Bạn có chắc chắn muốn xóa ấn phẩm này?'
 						placement='topRight'
 					>
@@ -256,21 +259,19 @@ const FormMuonTraSach = (props: any) => {
 			return;
 		}
 
-		setDanhSach(
-			(prev) =>
-				[
-					...prev,
-					{
-						...anPhamData?.[0],
-						soDangKyCaBiet: dkcb,
-						thoiGianMuon: moment(),
-						expired: moment().add(
-							isSinhVien ? settingMuonTra?.thoiHanMuonTraSach ?? 150 : settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7,
-							'd',
-						),
-					},
-				] as any,
-		);
+		const newItem = {
+			...anPhamData?.[0],
+			soDangKyCaBiet: dkcb,
+			thoiGianMuon: moment(),
+			expired: moment().add(
+				isSinhVien ? settingMuonTra?.thoiHanMuonTraSach ?? 150 : settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7,
+				'd',
+			),
+
+			ghiChu: danhSach?.length >= slConMuonDuoc ? 'Mượn vượt quá hạn ngạch cho phép' : '',
+		};
+
+		setDanhSach((prev) => [...prev, newItem] as any);
 
 		form.resetFields(['dkcb']);
 
@@ -373,101 +374,13 @@ const FormMuonTraSach = (props: any) => {
 						<Row gutter={[12, 0]}>
 							<Col span={24}>
 								<Spin spinning={loading}>
-									<Descriptions column={{ xs: 1, sm: 1, md: 4 }} title='Thông tin người mượn'>
-										{isSinhVien ? (
-											<>
-												<Descriptions.Item label='Mã SV'>{recSinhVien?.ma ?? '--'}</Descriptions.Item>
-												<Descriptions.Item label='Họ tên'>{recSinhVien?.ten ?? '--'}</Descriptions.Item>
-												<Descriptions.Item label='Ngày sinh'>
-													{recSinhVien?.ngaySinh ? moment(recSinhVien?.ngaySinh).format('DD/MM/YYYY') : '--'}
-												</Descriptions.Item>
-												<Descriptions.Item label='Lớp'>{recSinhVien?.tenLopHanhChinhVirtual ?? '--'}</Descriptions.Item>
-												<Descriptions.Item label='Khóa sinh viên'>
-													{recSinhVien?.khoaSinhVien?.ten ?? '--'}
-												</Descriptions.Item>
-												<Descriptions.Item label='Khóa ngành'>{recSinhVien?.khoaNganh?.ten ?? '--'}</Descriptions.Item>
-												<Descriptions.Item label='Trạng thái học'>
-													<Tag color={colorTrangThaiHocSv[recSinhVien?.trangThaiHoc as ETrangThaiHocSv]}>
-														{recSinhVien?.trangThaiHoc ?? '--'}
-													</Tag>
-												</Descriptions.Item>
-											</>
-										) : (
-											<>
-												<Descriptions.Item label='Mã cán bộ'>{recCanBo?.maCanBo ?? '--'}</Descriptions.Item>
-												<Descriptions.Item label='Họ tên'>
-													{[recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' ')}
-												</Descriptions.Item>
-												<Descriptions.Item label='Ngày sinh'>
-													{recCanBo?.ngaySinh ? moment(recCanBo?.ngaySinh).format('DD/MM/YYYY') : '--'}
-												</Descriptions.Item>
-												<Descriptions.Item label='Đơn vị'>{recCanBo?.donViChinh?.ten ?? '--'}</Descriptions.Item>
-												<Descriptions.Item label='Trạng thái'>
-													<Tag color={MapColorETrangThaiNhanSu[recCanBo?.trangThai as ETrangThaiNhanSu]}>
-														{recCanBo?.trangThai ?? '--'}
-													</Tag>
-												</Descriptions.Item>
-											</>
-										)}
-									</Descriptions>
+									<InforNguoiMuon isSinhVien={isSinhVien} />
 								</Spin>
 							</Col>
-							{(recSinhVien?.ma || recCanBo?.maCanBo) && (
-								<Col xs={24}>
-									<Row gutter={[12, 0]}>
-										<Col span={24} md={6}>
-											<Card
-												className='card-stat-small'
-												style={{ cursor: 'pointer' }}
-												onClick={() => setVisibleModal(true)}
-											>
-												<span className='num' style={{ color: 'blue' }}>
-													{isSinhVien
-														? settingMuonTra?.soLuongMuonToiDa ?? 7
-														: settingMuonTra?.soLuongMuonToiDaCanBo ?? 5}
-												</span>
-												<span>Hạn ngạch mượn</span>
-											</Card>
-										</Col>
-										<Col span={24} md={6}>
-											<Card
-												className='card-stat-small'
-												style={{ cursor: 'pointer' }}
-												onClick={() => setVisibleModal(true)}
-											>
-												<span className='num' style={{ color: 'orange' }}>
-													{(isSinhVien ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ?? 0}
-												</span>
-												<span>Đang mượn</span>
-											</Card>
-										</Col>
-										<Col span={24} md={6}>
-											<Card
-												className='card-stat-small'
-												style={{ cursor: 'pointer' }}
-												onClick={() => setVisibleModal(true)}
-											>
-												<span className='num' style={{ color: 'rec' }}>
-													{(isSinhVien ? recSinhVien : recCanBo)?.thongKe?.quaHan ?? 0}
-												</span>
-												<span>Quá hạn mượn</span>
-											</Card>
-										</Col>
-										<Col span={24} md={6}>
-											<Card
-												className='card-stat-small'
-												style={{ cursor: 'pointer' }}
-												onClick={() => setVisibleModal(true)}
-											>
-												<span className='num' style={{ color: 'green' }}>
-													{slConMuonDuoc}
-												</span>
-												<span>Còn mượn được</span>
-											</Card>
-										</Col>
-									</Row>
-								</Col>
-							)}
+
+							<Col xs={24}>
+								<StatNguoiDungAnPham isSinhVien={isSinhVien} />
+							</Col>
 							<Col span={24}>
 								<div className='fw500' style={{ marginTop: 12 }}>
 									Danh sách ấn phẩm ghi mượn
@@ -488,11 +401,9 @@ const FormMuonTraSach = (props: any) => {
 
 				<div className='form-footer'>
 					{isOverLimit ? (
-						<Popconfirm title='Đã quá hạn ngạch mượn. Bạn có chắc chắn muốn ghi mượn?' onConfirm={() => form.submit()}>
-							<Button type='primary' loading={formSubmiting}>
-								Ghi mượn
-							</Button>
-						</Popconfirm>
+						<Button type='primary' onClick={() => setVisibleQuaHan(true)}>
+							Ghi mượn
+						</Button>
 					) : (
 						<Button loading={formSubmiting} onClick={() => form.submit()} type='primary'>
 							Ghi mượn
@@ -530,19 +441,16 @@ const FormMuonTraSach = (props: any) => {
 				</div>
 			</PrintTemplate>
 
-			<ModalTimKiem visibleForm={visibleTimKiem} setVisibleForm={setVisibleTimKiem} vaiTro={vaiTro} />
+			<ModalTimKiem
+				visibleForm={visibleTimKiem}
+				setVisibleForm={setVisibleTimKiem}
+				vaiTro={vaiTro}
+				slConMuonDuoc={slConMuonDuoc}
+			/>
 
 			<FormMuonTra />
 
-			<LichSuThueMuonPage
-				visible={visibleModal}
-				setVisible={setVisibleModal}
-				title={`Danh sách lịch sử mượn trả sách người mượn ${
-					isSinhVien ? recSinhVien?.ten : [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' ')
-				}`}
-				width={1000}
-				ssoId={isSinhVien ? recSinhVien?.ssoId : recCanBo?.ssoId}
-			/>
+			<ConfirmMuonQuaHan visible={visibleQuaHan} setVisible={setVisibleQuaHan} onOk={() => form.submit()} />
 		</Card>
 	);
 };

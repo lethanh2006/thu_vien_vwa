@@ -2,8 +2,14 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
+import ModalImport from '@/components/Table/Import';
 import type { IColumn } from '@/components/Table/typing';
-import { colorTrangThaiMuonSach, ETrangThaiMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
+import {
+	colorTrangThaiMuonSach,
+	ETrangThaiMuonSach,
+	EVaiTroMuonTra,
+	mapNameTrangThaiMuonSach,
+} from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import {
 	CheckOutlined,
@@ -16,18 +22,17 @@ import {
 } from '@ant-design/icons';
 import { Button, Modal, Popconfirm, Popover, Segmented, Tag } from 'antd';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
-import { history, useIntl, useModel } from 'umi';
-import ChiTietAnPham from '../AnPham/components/ChiTiet';
-import ChiTietMuonTraSach from '../MuonTraSach/components/ChiTiet';
-import GhiTraAnPham from '../MuonTraSach/components/GhiTraSach';
-import ConfirmGiaHan from '../MuonTraSach/components/ModalGiaHan';
+import { useState } from 'react';
+import { useIntl, useModel } from 'umi';
+import ChiTietAnPham from '../../AnPham/components/ChiTiet';
+import ChiTietMuonTraSach from '../components/ChiTiet';
+import GhiTraAnPham from '../components/GhiTraSach';
+import ConfirmGiaHan from '../components/ModalGiaHan';
 import FormGhiTra from './components/Form';
-import ModalImport from '@/components/Table/Import';
 
 const GhiTraPage = () => {
 	const intl = useIntl();
-	const { ngoaiThoiGian } = useModel('sachtailieu.muontra.phieumuontra');
+	// const { ngoaiThoiGian } = useModel('sachtailieu.muontra.phieumuontra');
 	const {
 		thongKeMuonTraSachModel,
 		getModel,
@@ -98,7 +103,27 @@ const GhiTraPage = () => {
 				? [{ active: true, field: 'daLaySach', values: [false], operator: EOperatorType.EQUAL }]
 				: [];
 
-		getModel(undefined, activeKey !== '1' ? filter : undefined);
+		getModel(
+			undefined,
+			activeKey !== '1'
+				? [
+						...filter,
+						{
+							active: true,
+							field: 'trangThai',
+							operator: EOperatorType.INCLUDE,
+							values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+						},
+				  ]
+				: [
+						{
+							active: true,
+							field: 'trangThai',
+							operator: EOperatorType.INCLUDE,
+							values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+						},
+				  ],
+		);
 	};
 
 	const onCell = (rec: MuonSach.IRecord) => ({
@@ -191,7 +216,6 @@ const GhiTraPage = () => {
 			sortable: true,
 			onCell,
 		},
-
 		{
 			title: 'Hạn trả',
 			align: 'center',
@@ -204,17 +228,10 @@ const GhiTraPage = () => {
 		},
 		{
 			title: 'Thời gian trả',
+			align: 'center',
 			dataIndex: 'thoiGianTra',
-			width: 150,
-			render: (val, rec) => {
-				if (!val) return null;
-				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
-				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
-				const isOverdue = moment().startOf('day').isAfter(expirationTime);
-				return (
-					<span style={{ color: isOverdue ? 'red' : 'inherit', fontWeight: isOverdue ? 600 : 0 }}>{formattedTime}</span>
-				);
-			},
+			width: 130,
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -234,13 +251,59 @@ const GhiTraPage = () => {
 			onCell,
 		},
 		{
+			title: 'Tình trạng hạn trả',
+			align: 'center',
+			width: 140,
+			render: (_, rec) => {
+				// Trường hợp không có thông tin hạn trả
+				if (!rec?.expired) {
+					return <span>-</span>;
+				}
+
+				// Xác định các thời điểm quan trọng
+				const hanTra = moment(rec.expired).startOf('day');
+				const ngayTra = rec?.thoiGianTra ? moment(rec.thoiGianTra).startOf('day') : null;
+				const now = moment().startOf('day');
+
+				// 1. Trường hợp đã trả sách
+				if (rec.trangThai === ETrangThaiMuonSach.DA_TRA && ngayTra) {
+					const soNgayQuaHan = ngayTra.diff(hanTra, 'days');
+
+					if (soNgayQuaHan > 0) {
+						return <Tag color='red'>Đã trả muộn {soNgayQuaHan} ngày</Tag>;
+					} else {
+						return <Tag color='green'>Đã trả đúng hạn</Tag>;
+					}
+				}
+				// 2. Trường hợp đang mượn
+				else if (rec.trangThai === ETrangThaiMuonSach.DANG_THUE_MUON) {
+					const soNgayQuaHan = now.diff(hanTra, 'days');
+					const soNgayConLai = hanTra.diff(now, 'days');
+
+					if (soNgayQuaHan > 0) {
+						return <Tag color='red'>Quá hạn {soNgayQuaHan} ngày</Tag>;
+					} else if (soNgayConLai <= 7) {
+						return <Tag color='orange'>Sắp đến hạn</Tag>;
+					} else {
+						return <Tag color='green'>Còn {soNgayConLai} ngày</Tag>;
+					}
+				}
+				// 3. Các trạng thái khác
+				return <span>-</span>;
+			},
+			onCell,
+			fixed: 'right',
+		},
+		{
 			title: 'Trạng thái',
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => <Tag color={colorTrangThaiMuonSach[val as ETrangThaiMuonSach]}>{val}</Tag>,
-			filterType: 'select',
-			filterData: Object.values(ETrangThaiMuonSach),
+			render: (val, rec) => (
+				<Tag color={colorTrangThaiMuonSach[val as ETrangThaiMuonSach]}>
+					{mapNameTrangThaiMuonSach[val as ETrangThaiMuonSach]}
+				</Tag>
+			),
 			onCell,
 			fixed: 'right',
 		},
@@ -301,7 +364,7 @@ const GhiTraPage = () => {
 				columns={columns}
 				dependencies={[page, limit, activeKey]}
 				modelName='sachtailieu.muontra.muontra'
-				widthDrawer={isView ? 1000 : 'full'}
+				widthDrawer={isView ? 600 : 'full'}
 				formProps={{ getData, setVisibleGhiTra }}
 				Form={isView ? ChiTietMuonTraSach : FormGhiTra}
 				title='Ghi trả sách'

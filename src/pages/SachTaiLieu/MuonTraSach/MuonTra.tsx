@@ -3,12 +3,7 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
-import {
-	colorTrangThaiMuonSach,
-	ETrangThaiMuonSach,
-	EVaiTroMuonTra,
-	mapNameTrangThaiMuonSach,
-} from '@/services/SachTaiLieu/constant';
+import { ETrangThaiMuonSach, EVaiTroMuonTra, mapNameTrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import { CheckOutlined, DeleteOutlined, InfoCircleOutlined, MenuOutlined, RetweetOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Descriptions, Modal, Popconfirm, Popover, Row, Segmented, Tabs, Tag } from 'antd';
@@ -20,11 +15,10 @@ import ChiTietMuonTraSach from './components/ChiTiet';
 import GhiTraAnPham from './components/GhiTraSach';
 import ConfirmGiaHan from './components/ModalGiaHan';
 
-const MuonTraSachPage = (props: any) => {
-	const { tatCaLichSu } = props;
+const MuonTraSachPage = () => {
 	const intl = useIntl();
 	const { record: recPhieu, setVisibleForm, visibleForm: visiblePhieu } = useModel('sachtailieu.muontra.phieumuontra');
-	const { thongKeMuonTraSachModel, getModel, page, limit, handleView, setRecord, deleteModel, putModel } =
+	const { thongKeMuonTraSachModel, getModel, page, limit, handleView, setRecord, deleteModel } =
 		useModel('sachtailieu.muontra.muontra');
 	const { visibleForm, setVisibleForm: setVisibleAnPham } = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel } = useModel('sachtailieu.anpham.thongtinanpham');
@@ -55,16 +49,16 @@ const MuonTraSachPage = (props: any) => {
 				: [];
 
 		getModel(
-			!tatCaLichSu && recPhieu?._id ? { phieuMuonTraId: recPhieu?._id, trangThai } : undefined,
+			{ phieuMuonTraId: recPhieu?._id, trangThai },
 			activeKey !== '1' && trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? filter : undefined,
 		);
 	};
 
-	const handleLaySach = (rec: MuonSach.IRecord) => {
-		putModel(rec?._id, { daLaySach: true }, getData)
-			.then()
-			.catch((err) => console.log(err));
-	};
+	// const handleLaySach = (rec: MuonSach.IRecord) => {
+	// 	putModel(rec?._id, { daLaySach: true }, getData)
+	// 		.then()
+	// 		.catch((err) => console.log(err));
+	// };
 
 	const onCell = (rec: MuonSach.IRecord) => ({
 		onClick: () => handleView(rec),
@@ -72,36 +66,6 @@ const MuonTraSachPage = (props: any) => {
 	});
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
-		{
-			title: 'Vai trò',
-			dataIndex: ['phieuMuonTra', 'vaiTro'],
-			align: 'center',
-			width: 90,
-			render: (val, rec) => rec?.phieuMuonTra?.vaiTro,
-			onCell,
-			filterType: 'select',
-			filterData: Object.values(EVaiTroMuonTra),
-			hide: !tatCaLichSu,
-		},
-		{
-			title: 'Mã định danh',
-			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
-			align: 'center',
-			width: 120,
-			render: (val, rec) => rec?.phieuMuonTra?.maDinhDanhNguoiMuon,
-			filterType: 'string',
-			onCell,
-			hide: !tatCaLichSu,
-		},
-		{
-			title: 'Họ tên',
-			dataIndex: ['phieuMuonTra', 'hoTenNguoiMuon'],
-			width: 180,
-			render: (val, rec) => rec?.phieuMuonTra?.hoTenNguoiMuon,
-			onCell,
-			filterType: 'string',
-			hide: !tatCaLichSu,
-		},
 		{
 			title: 'Nhan đề',
 			dataIndex: ['anPham', 'nhanDe'],
@@ -227,7 +191,7 @@ const MuonTraSachPage = (props: any) => {
 			},
 			filterType: 'date',
 			sortable: true,
-			hide: trangThai !== ETrangThaiMuonSach.DA_TRA && !tatCaLichSu,
+			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
 			onCell,
 		},
 		// {
@@ -251,18 +215,50 @@ const MuonTraSachPage = (props: any) => {
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			onCell,
-			hide: trangThai !== ETrangThaiMuonSach.DA_TRA && !tatCaLichSu,
+			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
 		},
 		{
-			title: 'Trạng thái',
-			dataIndex: 'trangThai',
+			title: 'Tình trạng hạn trả',
 			align: 'center',
-			width: 120,
-			render: (val, rec) => <Tag color={colorTrangThaiMuonSach[val as ETrangThaiMuonSach]}>{val}</Tag>,
-			filterType: 'select',
-			filterData: Object.values(ETrangThaiMuonSach),
+			width: 140,
+			render: (_, rec) => {
+				// Trường hợp không có thông tin hạn trả
+				if (!rec?.expired) {
+					return <span>-</span>;
+				}
+
+				// Xác định các thời điểm quan trọng
+				const hanTra = moment(rec.expired).startOf('day');
+				const ngayTra = rec?.thoiGianTra ? moment(rec.thoiGianTra).startOf('day') : null;
+				const now = moment().startOf('day');
+
+				// 1. Trường hợp đã trả sách
+				if (rec.trangThai === ETrangThaiMuonSach.DA_TRA && ngayTra) {
+					const soNgayQuaHan = ngayTra.diff(hanTra, 'days');
+
+					if (soNgayQuaHan > 0) {
+						return <Tag color='red'>Đã trả muộn {soNgayQuaHan} ngày</Tag>;
+					} else {
+						return <Tag color='green'>Đã trả đúng hạn</Tag>;
+					}
+				}
+				// 2. Trường hợp đang mượn
+				else if (rec.trangThai === ETrangThaiMuonSach.DANG_THUE_MUON) {
+					const soNgayQuaHan = now.diff(hanTra, 'days');
+					const soNgayConLai = hanTra.diff(now, 'days');
+
+					if (soNgayQuaHan > 0) {
+						return <Tag color='red'>Quá hạn {soNgayQuaHan} ngày</Tag>;
+					} else if (soNgayConLai <= 7) {
+						return <Tag color='orange'>Sắp đến hạn</Tag>;
+					} else {
+						return <Tag color='green'>Còn {soNgayConLai} ngày</Tag>;
+					}
+				}
+				// 3. Các trạng thái khác
+				return <span>-</span>;
+			},
 			onCell,
-			hide: !tatCaLichSu,
 			fixed: 'right',
 		},
 		{
@@ -346,7 +342,7 @@ const MuonTraSachPage = (props: any) => {
 				<TableBase
 					getData={getData}
 					columns={columns}
-					dependencies={[page, limit, trangThai, activeKey, recPhieu?._id, tatCaLichSu]}
+					dependencies={[page, limit, trangThai, activeKey, recPhieu?._id]}
 					modelName='sachtailieu.muontra.muontra'
 					widthDrawer={900}
 					formProps={{ getData, trangThai, setTrangThai, setVisibleGhiTra }}
@@ -409,7 +405,6 @@ const MuonTraSachPage = (props: any) => {
 		);
 	};
 
-	if (tatCaLichSu) return content();
 	return (
 		<Card title='Chi tiết phiếu mượn'>
 			<Row gutter={[12, 0]}>
