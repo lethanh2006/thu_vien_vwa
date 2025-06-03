@@ -26,7 +26,7 @@ const InforNguoiMuon = (props: { isSinhVien: boolean }) => {
 
 			{/* Cột thông tin */}
 			<Col xs={24} sm={18} md={20}>
-				<Descriptions column={{ xs: 1, sm: 1, md: 4 }} title='Thông tin người mượn'>
+				<Descriptions column={{ xs: 1, sm: 1, md: 3 }} title='Thông tin người mượn'>
 					{isSinhVien ? (
 						<>
 							<Descriptions.Item label='Họ tên'>
@@ -44,15 +44,15 @@ const InforNguoiMuon = (props: { isSinhVien: boolean }) => {
 							<Descriptions.Item label='Khóa sinh viên'>
 								<b>{recSinhVien?.khoaSinhVien?.ten ?? '--'}</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Ngành'>
-								<b>{recSinhVien?.nganh?.ten ?? '--'}</b>
-							</Descriptions.Item>
 							<Descriptions.Item label='Trạng thái học'>
 								<b>
 									<Tag color={colorTrangThaiHocSv[recSinhVien?.trangThaiHoc as ETrangThaiHocSv]}>
 										{recSinhVien?.trangThaiHoc ?? '--'}
 									</Tag>
 								</b>
+							</Descriptions.Item>
+							<Descriptions.Item label='Ngành'>
+								<b>{recSinhVien?.nganh?.ten ?? '--'}</b>
 							</Descriptions.Item>
 						</>
 					) : (
