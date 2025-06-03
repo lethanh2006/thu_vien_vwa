@@ -19,6 +19,7 @@ import ChiTietAnPham from '../AnPham/components/ChiTiet';
 import ChiTietMuonTraSach from './components/ChiTiet';
 import GhiTraAnPham from './components/GhiTraSach';
 import ConfirmGiaHan from './components/ModalGiaHan';
+import RenderHanTra from './components/RenderHanTra';
 
 const MuonTraSachPage = (props: any) => {
 	const { tatCaLichSu } = props;
@@ -145,17 +146,7 @@ const MuonTraSachPage = (props: any) => {
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
-			render: (val, rec) => {
-				if (!val) return null;
-				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
-				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
-				const now = moment().startOf('day');
-				const isOverdue = now.isAfter(expirationTime);
-				const isApproachingDeadline = !isOverdue && expirationTime.diff(now, 'days') <= 7;
-				const color = isOverdue ? 'red' : isApproachingDeadline ? 'orange' : 'inherit';
-				const fontWeight = isOverdue || isApproachingDeadline ? 600 : 'normal';
-				return <span style={{ color, fontWeight }}>{formattedTime}</span>;
-			},
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -181,17 +172,6 @@ const MuonTraSachPage = (props: any) => {
 		// 	onCell,
 		// 	hide: trangThai !== ETrangThaiMuonSach.CHO_XU_LY,
 		// },
-		{
-			title: 'Hạn trả',
-			align: 'center',
-			dataIndex: 'expired',
-			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
-			filterType: 'date',
-			sortable: true,
-			onCell,
-			// hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
-		},
 		// {
 		// 	title: 'Trạng thái',
 		// 	align: 'center',
@@ -216,15 +196,7 @@ const MuonTraSachPage = (props: any) => {
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
 			width: 150,
-			render: (val, rec) => {
-				if (!val) return null;
-				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
-				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
-				const isOverdue = moment().startOf('day').isAfter(expirationTime);
-				return (
-					<span style={{ color: isOverdue ? 'red' : 'inherit', fontWeight: isOverdue ? 600 : 0 }}>{formattedTime}</span>
-				);
-			},
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			hide: trangThai !== ETrangThaiMuonSach.DA_TRA && !tatCaLichSu,
@@ -254,46 +226,10 @@ const MuonTraSachPage = (props: any) => {
 			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
 		},
 		{
-			title: 'Tình trạng hạn trả',
+			title: 'Hạn trả',
 			align: 'center',
 			width: 140,
-			render: (_, rec) => {
-				// Trường hợp không có thông tin hạn trả
-				if (!rec?.expired) {
-					return <span>-</span>;
-				}
-
-				// Xác định các thời điểm quan trọng
-				const hanTra = moment(rec.expired).startOf('day');
-				const ngayTra = rec?.thoiGianTra ? moment(rec.thoiGianTra).startOf('day') : null;
-				const now = moment().startOf('day');
-
-				// 1. Trường hợp đã trả sách
-				if (rec.trangThai === ETrangThaiMuonSach.DA_TRA && ngayTra) {
-					const soNgayQuaHan = ngayTra.diff(hanTra, 'days');
-
-					if (soNgayQuaHan > 0) {
-						return <Tag color='red'>Đã trả muộn {soNgayQuaHan} ngày</Tag>;
-					} else {
-						return <Tag color='green'>Đã trả đúng hạn</Tag>;
-					}
-				}
-				// 2. Trường hợp đang mượn
-				else if (rec.trangThai === ETrangThaiMuonSach.DANG_THUE_MUON) {
-					const soNgayQuaHan = now.diff(hanTra, 'days');
-					const soNgayConLai = hanTra.diff(now, 'days');
-
-					if (soNgayQuaHan > 0) {
-						return <Tag color='red'>Quá hạn {soNgayQuaHan} ngày</Tag>;
-					} else if (soNgayConLai <= 7) {
-						return <Tag color='orange'>Sắp đến hạn</Tag>;
-					} else {
-						return <Tag color='green'>Còn {soNgayConLai} ngày</Tag>;
-					}
-				}
-				// 3. Các trạng thái khác
-				return <span>-</span>;
-			},
+			render: (_, rec) => <RenderHanTra rec={rec} />,
 			onCell,
 			fixed: 'right',
 		},
@@ -302,9 +238,16 @@ const MuonTraSachPage = (props: any) => {
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => <Tag color={colorTrangThaiMuonSach[val as ETrangThaiMuonSach]}>{val}</Tag>,
+			render: (val, rec) => (
+				<Tag color={colorTrangThaiMuonSach[val as ETrangThaiMuonSach]}>
+					{mapNameTrangThaiMuonSach[val as ETrangThaiMuonSach]}
+				</Tag>
+			),
 			filterType: 'select',
-			filterData: Object.values(ETrangThaiMuonSach),
+			filterData: Object.values(ETrangThaiMuonSach).map((item) => ({
+				value: item,
+				label: mapNameTrangThaiMuonSach[item],
+			})),
 			onCell,
 			hide: !tatCaLichSu,
 			fixed: 'right',
