@@ -1,40 +1,46 @@
-@media print {
+.print-section {
 	.to-print {
-		display: flex;
-		flex-direction: column;
-		gap: 0;
-		margin: 0;
-		padding: 0;
+		display: none;
 	}
 
-	.barcode-item {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		box-sizing: border-box;
-		width: 70mm;
-		min-height: auto;
-		page-break-inside: avoid;
-		background: white;
-		border: none;
-	}
+	@media print {
+		.to-print {
+			display: flex;
+			flex-direction: column;
+			gap: 0;
+			margin: 0;
+			padding: 0;
+		}
 
-	.barcode-header {
-		margin: 0;
-		padding: 0;
-		font-size: 10px;
-		line-height: 1;
-	}
+		.barcode-item {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			box-sizing: border-box;
+			width: 70mm;
+			min-height: auto;
+			page-break-inside: avoid;
+			background: white;
+			border: none;
+		}
 
-	svg {
-		display: block;
-		margin: 0 !important;
-		padding: 0 !important;
-	}
+		.barcode-header {
+			margin: 0;
+			padding: 0;
+			font-size: 10px;
+			line-height: 1;
+		}
 
-	@page {
-		margin: 0;
-		size: auto;
+		svg {
+			display: block;
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+
+		@page {
+			margin: 0;
+			size: auto;
+		}
 	}
 }

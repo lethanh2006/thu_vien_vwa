@@ -46,6 +46,8 @@ export async function thongKeMauSoDKCB(dotNhapSachId: string) {
 }
 
 /** Xuất thống kê mẫu số đăng ký cá biệt */
-export async function timKiemAnPhamTuDen(payLoad: any) {
-	return axios.post(`${ip3}/an-pham/ma-vach/many`, payLoad);
+export async function exportNhanMaGay(payLoad: any) {
+	return axios.post(`${ip3}/an-pham/ma-vach/many/export`, payLoad, {
+		responseType: 'arraybuffer',
+	});
 }

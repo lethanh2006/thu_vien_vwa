@@ -6,7 +6,6 @@ import {
 	chinhSuaBienMucSoLuoc,
 	getChiTietAnPham,
 	getThongKeAnPham,
-	timKiemAnPhamTuDen,
 } from '@/services/SachTaiLieu/AnPham';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { timKiemAnPhamZ3950 } from '@/services/SachTaiLieu/Z3950';
@@ -171,24 +170,6 @@ export default () => {
 		}
 	};
 
-	const timKiemAnPhamTuDenModel = async (payLoad?: {
-		danhSachMaTaiLieu?: string[];
-		danhSachSoDangKyCaBiet?: string[];
-	}): Promise<any> => {
-		setLoading(true);
-		try {
-			const res = await timKiemAnPhamTuDen(payLoad);
-
-			setDanhSach(res?.data?.data);
-
-			return res.data?.data;
-		} catch (err) {
-			return Promise.reject(err);
-		} finally {
-			setLoading(false);
-		}
-	};
-
 	return {
 		...objInit,
 		loadingChiTiet,
@@ -207,6 +188,5 @@ export default () => {
 		putBienMucChiTietModel,
 		putBienMucSoLuocModel,
 		timKiemZ3950Model,
-		timKiemAnPhamTuDenModel,
 	};
 };
