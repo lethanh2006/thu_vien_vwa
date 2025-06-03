@@ -125,7 +125,7 @@ const FormBienMucChiTiet = (props: any) => {
 		removeOperation: (index: number | number[]) => void,
 	) => [
 		{
-			title: 'Tag - Tên trường',
+			title: 'Tên trường',
 			key: 'tag',
 			width: 200,
 			render: (val: any, field: any, index: number) => {
@@ -156,7 +156,7 @@ const FormBienMucChiTiet = (props: any) => {
 			),
 		},
 		{
-			title: 'Nhập liệu',
+			title: 'Trường con',
 			key: 'data',
 			width: 300,
 			render: (val: any, field: any, rowIndex: number) => {

@@ -43,6 +43,7 @@ declare module ToChucNhanSu {
 		maCanBo: string;
 		hoDem: string;
 		ten: string;
+		urlAnhDaiDien?: string;
 		hoTen?: string;
 		// tenGoiKhac: string;
 		// biDanh: string;
