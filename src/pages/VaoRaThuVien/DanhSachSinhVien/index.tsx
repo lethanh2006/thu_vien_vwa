@@ -40,14 +40,20 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 						},
 						{
 							field: 'thoiGianCheckIn',
-							values: [dateRange[0], dateRange[1]],
+							values: [
+								moment(dateRange[0]).startOf('date').toISOString(),
+								moment(dateRange[1]).endOf('date').toISOString(),
+							],
 							operator: EOperatorType.BETWEEN,
 						},
 				  ]
 				: [
 						{
 							field: 'thoiGianCheckIn',
-							values: [dateRange[0], dateRange[1]],
+							values: [
+								moment(dateRange[0]).startOf('date').toISOString(),
+								moment(dateRange[1]).endOf('date').toISOString(),
+							],
 							operator: EOperatorType.BETWEEN,
 						},
 				  ],
