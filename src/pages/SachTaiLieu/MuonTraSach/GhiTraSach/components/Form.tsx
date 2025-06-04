@@ -117,13 +117,13 @@ const FormGhiTraSach = (props: any) => {
 				active: true,
 				field: 'soDangKyCaBiet',
 				values: [dkcb],
-				operator: EOperatorType.CONTAIN,
+				operator: EOperatorType.INCLUDE,
 			},
 			{
 				active: true,
 				field: 'trangThai',
 				values: [ETrangThaiMuonSach.DANG_THUE_MUON],
-				operator: EOperatorType.CONTAIN,
+				operator: EOperatorType.INCLUDE,
 			},
 		];
 
