@@ -24,7 +24,7 @@ import news from '../../../assets/new6.gif';
 import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ModalBienMucTaiLieu from './components/Modal';
 import ModalSachHay from './components/ModalSachHay';
-import Z3950Page from './Z2950';
+import Z3950Page from './Z3950';
 
 const BienMucSachTaiLieuPage = () => {
 	const intl = useIntl();

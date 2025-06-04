@@ -35,6 +35,7 @@ declare module AnPham {
 		tacGiaConverse: string;
 		nhanDeConverse: string;
 
+		canBoBienMuc: string;
 		maKieuBanGhi: string;
 		kieuBanGhi?: KieuBanGhi.IRecord;
 		maCapThuMuc: string;
@@ -98,15 +99,15 @@ declare module AnPham {
 	};
 
 	export interface IThongTinAnPham {
-		_id: string;
-		anPhamId: string;
-		anPham: IRecord;
-		tagCode: string;
-		tag: TruongBienMuc.IRecord;
-		ind1: string;
-		ind2: string;
-		value: string;
-		thuocTinhAnPham: TThuocTinhAnPham[];
+		_id?: string;
+		anPhamId?: string;
+		anPham?: IRecord;
+		tagCode?: string;
+		tag?: TruongBienMuc.IRecord;
+		ind1?: string;
+		ind2?: string;
+		value?: string;
+		thuocTinhAnPham?: TThuocTinhAnPham[];
 
 		total?: number;
 

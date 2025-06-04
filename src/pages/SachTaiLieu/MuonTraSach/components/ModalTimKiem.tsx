@@ -169,7 +169,7 @@ const ModalTimKiem = (props: {
 						<TableBase
 							getData={getDataExternal}
 							columns={columns}
-							dependencies={[page, limit]}
+							dependencies={[page, limit, visibleForm]}
 							modelName='sachtailieu.anpham.anpham'
 							buttons={{ create: false }}
 							hideCard
@@ -189,7 +189,7 @@ const ModalTimKiem = (props: {
 							<TableBase
 								getData={getData}
 								columns={columnsĐKCB}
-								dependencies={[pageDKCB, limitDKCB, record?._id]}
+								dependencies={[pageDKCB, limitDKCB, record?._id, visibleForm]}
 								modelName='sachtailieu.anpham.anphamkhadung'
 								buttons={{ create: false }}
 								hideCard

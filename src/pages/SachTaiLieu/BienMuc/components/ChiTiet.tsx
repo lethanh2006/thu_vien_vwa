@@ -8,6 +8,7 @@ const ChiTietBienMuc = () => {
 	return (
 		<Descriptions column={{ xs: 1, md: 2 }} bordered>
 			<Descriptions.Item label='Sổ đăng ký tổng quát'>{record?.dotNhapSach?.ten ?? '--'}</Descriptions.Item>
+			<Descriptions.Item label='Cán bộ biên mục'>{record?.canBoBienMuc ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='Mã tài liệu'>{record?.maTaiLieu ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='Nhan đề chính [245$a]'>
 				{danhSach?.find((item) => item?.tagCode === '245')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??
@@ -18,11 +19,11 @@ const ChiTietBienMuc = () => {
 					'--'}
 			</Descriptions.Item>
 			<Descriptions.Item label='Kiểu bản ghi'>{record?.kieuBanGhi?.ten ?? '--'}</Descriptions.Item>
-			<Descriptions.Item label='Dạng tài liệu'>{record?.dangTaiLieu?.ten ?? '--'}</Descriptions.Item>
+			<Descriptions.Item label='Dạng tài liệu [927]'>{record?.dangTaiLieu?.ten ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='Cấp thư mục'>{record?.capThuMuc?.ten ?? '--'}</Descriptions.Item>
-			<Descriptions.Item label='Vật mang tin'>{record?.vatMangTin?.ten ?? '--'}</Descriptions.Item>
+			<Descriptions.Item label='Vật mang tin [025]'>{record?.vatMangTin?.ten ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='Mẫu biên mục'>{record?.mauBienMuc?.ten ?? '--'}</Descriptions.Item>
-			<Descriptions.Item label='Độ mât'>{record?.doMat ?? '--'}</Descriptions.Item>
+			<Descriptions.Item label='Độ mât [926]'>{record?.doMat ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='ISBN [020$a]'>
 				{danhSach?.find((item) => item?.tagCode === '020')?.thuocTinhAnPham?.find((i) => i.code === '$a')?.value ??
 					'--'}

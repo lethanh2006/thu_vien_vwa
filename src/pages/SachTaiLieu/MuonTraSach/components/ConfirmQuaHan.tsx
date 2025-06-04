@@ -17,7 +17,7 @@ const ConfirmMuonQuaHan = (props: { visible: boolean; setVisible: (val: boolean)
 			onCancel={() => setVisible(false)}
 			width={600}
 			footer={null}
-			title='Xác nhận thuê mượn'
+			title='Xác nhận ghi mượn'
 			maskClosable={false}
 		>
 			<div
@@ -32,7 +32,7 @@ const ConfirmMuonQuaHan = (props: { visible: boolean; setVisible: (val: boolean)
 				<div style={{ color: 'orange', fontSize: 48 }}>
 					<ExclamationCircleFilled />
 				</div>
-				<div>Đã quá hạn ngạch mượn. Bạn có chắc chắn muốn ghi mượn?</div>
+				<div style={{ fontSize: 18, fontWeight: 600 }}>Đã quá hạn ngạch mượn. Bạn có chắc chắn muốn ghi mượn?</div>
 			</div>
 
 			<div className='form-footer'>

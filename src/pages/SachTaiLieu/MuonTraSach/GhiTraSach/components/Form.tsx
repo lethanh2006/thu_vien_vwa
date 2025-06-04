@@ -112,9 +112,24 @@ const FormGhiTraSach = (props: any) => {
 			return;
 		}
 
+		const filter = [
+			{
+				active: true,
+				field: 'soDangKyCaBiet',
+				values: [dkcb],
+				operator: EOperatorType.CONTAIN,
+			},
+			{
+				active: true,
+				field: 'trangThai',
+				values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+				operator: EOperatorType.CONTAIN,
+			},
+		];
+
 		const anPhamData = await getModel(
-			{ soDangKyCaBiet: dkcb, trangThai: ETrangThaiMuonSach.DANG_THUE_MUON },
 			undefined,
+			filter as any,
 			undefined,
 			undefined,
 			undefined,
@@ -174,21 +189,7 @@ const FormGhiTraSach = (props: any) => {
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
-			render: (val, rec) => {
-				if (!val) return null;
-
-				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
-				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
-				const now = moment().startOf('day');
-
-				const isOverdue = now.isAfter(expirationTime);
-				const isApproachingDeadline = !isOverdue && expirationTime.diff(now, 'days') <= 7;
-
-				const color = isOverdue ? 'red' : isApproachingDeadline ? 'orange' : 'inherit';
-				const fontWeight = isOverdue || isApproachingDeadline ? 600 : 'normal';
-
-				return <span style={{ color, fontWeight }}>{formattedTime}</span>;
-			},
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
@@ -196,17 +197,7 @@ const FormGhiTraSach = (props: any) => {
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
 			width: 150,
-			render: (val, rec) => {
-				if (!val) return null;
-
-				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
-				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
-				const isOverdue = moment().startOf('day').isAfter(expirationTime);
-
-				return (
-					<span style={{ color: isOverdue ? 'red' : 'inherit', fontWeight: isOverdue ? 600 : 0 }}>{formattedTime}</span>
-				);
-			},
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},

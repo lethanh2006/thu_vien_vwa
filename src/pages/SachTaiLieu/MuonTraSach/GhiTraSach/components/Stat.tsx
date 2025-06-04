@@ -28,7 +28,7 @@ const StatNguoiDungAnPham = (props: { isSinhVien: boolean }) => {
 		<>
 			<Row gutter={[12, 0]}>
 				<Col span={24} md={4}>
-					<Card className='card-stat-small' style={{ cursor: 'pointer' }} onClick={() => setVisibleModal(true)}>
+					<Card className='card-stat-small pointer' onClick={() => setVisibleModal(true)}>
 						<span className='num' style={{ color: 'purple' }}>
 							{isSinhVien
 								? _.sum(Object.values(recSinhVien?.thongKe ?? {}).map(Number))
@@ -38,7 +38,7 @@ const StatNguoiDungAnPham = (props: { isSinhVien: boolean }) => {
 					</Card>
 				</Col>
 				<Col span={24} md={5}>
-					<Card className='card-stat-small' style={{ cursor: 'pointer' }} onClick={() => setVisibleModal(true)}>
+					<Card className='card-stat-small pointer' onClick={() => setVisibleModal(true)}>
 						<span className='num' style={{ color: 'blue' }}>
 							{isSinhVien ? settingMuonTra?.soLuongMuonToiDa ?? 7 : settingMuonTra?.soLuongMuonToiDaCanBo ?? 5}
 						</span>
@@ -46,7 +46,7 @@ const StatNguoiDungAnPham = (props: { isSinhVien: boolean }) => {
 					</Card>
 				</Col>
 				<Col span={24} md={5}>
-					<Card className='card-stat-small' style={{ cursor: 'pointer' }} onClick={() => setVisibleModal(true)}>
+					<Card className='card-stat-small pointer' onClick={() => setVisibleModal(true)}>
 						<span className='num' style={{ color: 'orange' }}>
 							{(isSinhVien ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ?? 0}
 						</span>
@@ -54,19 +54,19 @@ const StatNguoiDungAnPham = (props: { isSinhVien: boolean }) => {
 					</Card>
 				</Col>
 				<Col span={24} md={5}>
-					<Card className='card-stat-small' style={{ cursor: 'pointer' }} onClick={() => setVisibleModal(true)}>
-						<span className='num' style={{ color: 'rec' }}>
-							{(isSinhVien ? recSinhVien : recCanBo)?.thongKe?.quaHan ?? 0}
-						</span>
-						<span>Quá hạn mượn</span>
-					</Card>
-				</Col>
-				<Col span={24} md={5}>
-					<Card className='card-stat-small' style={{ cursor: 'pointer' }} onClick={() => setVisibleModal(true)}>
+					<Card className='card-stat-small pointer' onClick={() => setVisibleModal(true)}>
 						<span className='num' style={{ color: 'green' }}>
 							{slConMuonDuoc}
 						</span>
 						<span>Còn mượn được</span>
+					</Card>
+				</Col>
+				<Col span={24} md={5}>
+					<Card className='card-stat-small pointer' onClick={() => setVisibleModal(true)}>
+						<span className='num' style={{ color: 'red' }}>
+							{(isSinhVien ? recSinhVien : recCanBo)?.thongKe?.quaHan ?? 0}
+						</span>
+						<span>Quá hạn mượn</span>
 					</Card>
 				</Col>
 			</Row>

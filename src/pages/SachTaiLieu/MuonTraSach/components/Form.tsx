@@ -1,6 +1,7 @@
 import ExpandText from '@/components/ExpandText';
 import PrintTemplate from '@/components/PrintTemplate';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { EOperatorType } from '@/components/Table/constant';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
 import { ETrangThaiDangKyCaBiet, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
@@ -19,7 +20,6 @@ import ConfirmMuonQuaHan from './ConfirmQuaHan';
 import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
 import TitlePrintMuonTra from './TitlePrintMuonTra';
-import { EOperatorType } from '@/components/Table/constant';
 
 const FormMuonTraSach = () => {
 	const intl = useIntl();
@@ -44,6 +44,7 @@ const FormMuonTraSach = () => {
 	const vaiTro: EVaiTroMuonTra = Form.useWatch('vaiTro', form);
 	const isSinhVien = vaiTro === EVaiTroMuonTra.SINHVIEN;
 	const isCanBo = vaiTro === EVaiTroMuonTra.CANBO;
+	const setBorrowerInfo = isSinhVien ? setRecSinhVien : setRecCanBo;
 
 	const componentRef = useRef(null);
 	const soTheInputRef = useRef<any>(null);
@@ -239,9 +240,18 @@ const FormMuonTraSach = () => {
 			return;
 		}
 
+		const filter = [
+			{
+				active: true,
+				field: 'soDangKyCaBiet',
+				values: [dkcb],
+				operator: EOperatorType.CONTAIN,
+			},
+		];
+
 		const anPhamData = await getAnPhamXepGia(
-			{ soDangKyCaBiet: dkcb },
 			undefined,
+			filter as any,
 			undefined,
 			undefined,
 			undefined,
@@ -255,14 +265,20 @@ const FormMuonTraSach = () => {
 			return;
 		}
 
-		if (danhSach?.find((i) => i?.soDangKyCaBiet === anPhamData?.[0]?.soDangKyCaBiet)) {
+		if (
+			danhSach?.find(
+				(i) =>
+					i?.soDangKyCaBiet.toLocaleUpperCase().trim() ===
+					(anPhamData?.[0]?.soDangKyCaBiet ?? dkcb).toLocaleUpperCase().trim(),
+			)
+		) {
 			message.error('Ấn phẩm đã tồn tại trong danh sách!');
 			return;
 		}
 
 		const newItem = {
 			...anPhamData?.[0],
-			soDangKyCaBiet: dkcb,
+			soDangKyCaBiet: (anPhamData?.[0]?.soDangKyCaBiet ?? dkcb).trim(),
 			thoiGianMuon: moment(),
 			expired: moment().add(
 				isSinhVien ? settingMuonTra?.thoiHanMuonTraSach ?? 150 : settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7,
@@ -347,11 +363,17 @@ const FormMuonTraSach = () => {
 									<Input
 										ref={soTheInputRef}
 										placeholder='Nhập mã định danh'
+										allowClear
 										onPressEnter={(e) => {
 											e.preventDefault();
 											handleLuuSinhVien();
 										}}
-										allowClear
+										onChange={(e) => {
+											if (e.target.value === '') {
+												setBorrowerInfo(undefined);
+												setDanhSach([]);
+											}
+										}}
 									/>
 								</Form.Item>
 							</Col>

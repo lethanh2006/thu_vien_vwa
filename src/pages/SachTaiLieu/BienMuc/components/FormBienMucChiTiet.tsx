@@ -1,13 +1,11 @@
 import ButtonExtend from '@/components/Table/ButtonExtend';
-import SelectNgonNgu from '@/pages/DanhMuc/DanhMucNgonNgu/components/Select';
-import SelectHocPhan from '@/pages/DaoTao/HocPhan/Select';
 import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { resetFieldsForm } from '@/utils/utils';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Space, Spin, Table } from 'antd';
+import { Button, Form, Spin } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
+import BienMucChiTiet from './BienMucChiTiet';
 
 const FormBienMucChiTiet = (props: any) => {
 	const { getData, isBienMuc } = props;
@@ -97,165 +95,15 @@ const FormBienMucChiTiet = (props: any) => {
 			.catch((er) => console.log(er));
 	};
 
-	const handleAddRepeatableTag = (
-		addOperation: (defaultValue?: any, insertIndex?: number) => void,
-		fieldIndex: number,
-	) => {
-		const allValues = form.getFieldValue('danhSachBienMucChiTiet');
-		const originalTagData = allValues[fieldIndex];
-
-		if (originalTagData) {
-			const newTag = {
-				...originalTagData,
-				isNewTag: true,
-				_id: null,
-				thuocTinhAnPham: (originalTagData.thuocTinhAnPham || []).map((tp: any) => ({
-					...tp,
-					value: null,
-				})),
-				value: originalTagData.thuocTinhAnPham?.length ? undefined : '',
-			};
-			addOperation(newTag, fieldIndex + 1);
-		}
-	};
-
-	const columns = (
-		fields: unknown,
-		addOperation: (defaultValue?: any, insertIndex?: number) => void,
-		removeOperation: (index: number | number[]) => void,
-	) => [
-		{
-			title: 'Tên trường',
-			key: 'tag',
-			width: 200,
-			render: (val: any, field: any, index: number) => {
-				const tagItem = form.getFieldValue(['danhSachBienMucChiTiet', field.name]);
-				return `${tagItem?.tagCode ?? ''} - ${tagItem?.ten ?? ''}`;
-			},
-		},
-		{
-			title: 'Chỉ mục 1',
-			dataIndex: 'ind1',
-			key: 'ind1',
-			width: 90,
-			render: (val: any, field: any) => (
-				<Form.Item name={[field.name, 'ind1']} noStyle>
-					<Input placeholder='Nhập chỉ mục 1' />
-				</Form.Item>
-			),
-		},
-		{
-			title: 'Chỉ mục 2',
-			dataIndex: 'ind2',
-			key: 'ind2',
-			width: 90,
-			render: (val: any, field: any) => (
-				<Form.Item name={[field.name, 'ind2']} noStyle>
-					<Input placeholder='Nhập chỉ mục 2' />
-				</Form.Item>
-			),
-		},
-		{
-			title: 'Trường con',
-			key: 'data',
-			width: 300,
-			render: (val: any, field: any, rowIndex: number) => {
-				const currentTagData = form.getFieldValue(['danhSachBienMucChiTiet', field.name]);
-
-				if (currentTagData?.thuocTinhAnPham?.length) {
-					return (
-						<div style={{ width: '100%' }}>
-							{currentTagData.thuocTinhAnPham.map((item: any, i: number) => {
-								const fieldCode = `${currentTagData.tagCode}${item?.code}`;
-								return (
-									<Form.Item
-										// eslint-disable-next-line react/no-array-index-key
-										key={`${field.name}-thuocTinh-${i}`}
-										label={`${item.ten ?? ''} [${item.code}]`}
-										name={[field.name, 'thuocTinhAnPham', i, 'value']}
-										labelCol={{ span: 24 }}
-										wrapperCol={{ span: 24 }}
-										style={{ marginBottom: 8 }}
-									>
-										{fieldCode === '041$a' ? (
-											<SelectNgonNgu selectMa allowClear />
-										) : fieldCode === '913$a' ? (
-											<SelectHocPhan selectMa allowClear />
-										) : (
-											<Input placeholder={`Nhập ${item.ten || ''}`} />
-										)}
-									</Form.Item>
-								);
-							})}
-						</div>
-					);
-				}
-				return (
-					<Form.Item name={[field.name, 'value']} noStyle>
-						<Input.TextArea placeholder='Nhập thông tin' autoSize={{ minRows: 1, maxRows: 3 }} />
-					</Form.Item>
-				);
-			},
-		},
-		{
-			title: 'Thao tác',
-			key: 'action',
-			width: 60,
-			align: 'center' as const,
-			render: (val: any, field: any, rowIndex: number) => {
-				const currentTagData = form.getFieldValue(['danhSachBienMucChiTiet', field.name]);
-				const canRepeat = currentTagData?.thuocTinhAnPham?.length > 0;
-				return (
-					<Space>
-						{canRepeat && (
-							<ButtonExtend
-								type='link'
-								tooltip={`Bổ sung trường "${currentTagData?.ten}"`}
-								icon={<PlusOutlined />}
-								size='small'
-								onClick={() => handleAddRepeatableTag(addOperation, field.name)}
-							/>
-						)}
-						{currentTagData?.isNewTag && (
-							<ButtonExtend
-								type='link'
-								tooltip='Xóa trường lặp'
-								danger
-								icon={<DeleteOutlined />}
-								size='small'
-								onClick={() => removeOperation(field.name)}
-							/>
-						)}
-					</Space>
-				);
-			},
-		},
-	];
-
 	return (
 		<Spin spinning={loading}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
-				<Form.List name='danhSachBienMucChiTiet'>
-					{(fields, { add, remove }, { errors }) => {
-						return (
-							<Table
-								columns={columns(fields, add, remove)}
-								dataSource={fields}
-								rowKey='key'
-								pagination={false}
-								bordered
-								size='small'
-								locale={{
-									emptyText: 'Không có dữ liệu trường biên mục',
-								}}
-							/>
-						);
-					}}
-				</Form.List>
+				<BienMucChiTiet form={form} />
 
 				<div className='form-footer'>
 					{isBienMuc === true && (
 						<ButtonExtend
+							tooltip='Nếu lưu lại ấn phẩm sẽ ở vẫn trạng thái chờ biên mục chi tiết'
 							loading={formSubmiting}
 							type='primary'
 							onClick={() => {
@@ -268,6 +116,7 @@ const FormBienMucChiTiet = (props: any) => {
 					)}
 
 					<ButtonExtend
+						tooltip='Nếu hoàn thành ấn phẩm sẽ chuyển trạng thái đã biên mục chi tiết'
 						loading={formSubmiting}
 						type='primary'
 						onClick={() => {

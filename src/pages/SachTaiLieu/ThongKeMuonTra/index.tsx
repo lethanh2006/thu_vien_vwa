@@ -80,17 +80,7 @@ const ThongKeMuonTraPage = () => {
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
-			render: (val, rec) => {
-				if (!val) return null;
-				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
-				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
-				const now = moment().startOf('day');
-				const isOverdue = now.isAfter(expirationTime);
-				const isApproachingDeadline = !isOverdue && expirationTime.diff(now, 'days') <= 7;
-				const color = isOverdue ? 'red' : isApproachingDeadline ? 'orange' : 'inherit';
-				const fontWeight = isOverdue || isApproachingDeadline ? 600 : 'normal';
-				return <span style={{ color, fontWeight }}>{formattedTime}</span>;
-			},
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
@@ -98,15 +88,7 @@ const ThongKeMuonTraPage = () => {
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
 			width: 150,
-			render: (val, rec) => {
-				if (!val) return null;
-				const formattedTime = moment(val).startOf('day').format('DD/MM/YYYY');
-				const expirationTime = rec?.expired ? moment(rec.expired).startOf('day') : moment().startOf('day');
-				const isOverdue = moment().startOf('day').isAfter(expirationTime);
-				return (
-					<span style={{ color: isOverdue ? 'red' : 'inherit', fontWeight: isOverdue ? 600 : 0 }}>{formattedTime}</span>
-				);
-			},
+			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},

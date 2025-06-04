@@ -6,6 +6,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useModel } from 'umi';
 import FormMauBienMuc from './Form';
+import _ from 'lodash';
 
 const ThongTinDuLieuBienMucPage = () => {
 	const { record: recMauBienMuc } = useModel('danhmuc.maubienmuc');
@@ -34,7 +35,11 @@ const ThongTinDuLieuBienMucPage = () => {
 			title: 'DS trường con',
 			width: 220,
 			render: (val, rec) => (
-				<ExpandText>{rec?.thuocTinhDuLieu?.map((item) => `${item?.code}${item?.ten}`).join(', ')}</ExpandText>
+				<ExpandText>
+					{_.orderBy(rec?.thuocTinhDuLieu, 'code')
+						?.map((item) => `${item?.code}${item?.ten}`)
+						.join(', ')}
+				</ExpandText>
 			),
 		},
 		{
