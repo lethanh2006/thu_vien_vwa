@@ -140,6 +140,7 @@ const FormGhiTraSach = (props: any) => {
 
 		if (!anPhamData?.length) {
 			message.error('Không tìm thấy ấn phẩm!');
+			form.resetFields(['dkcb']);
 			return;
 		}
 

@@ -265,11 +265,16 @@ const FormMuonTraSach = () => {
 			return;
 		}
 
+		if (!anPhamData?.length) {
+			message.error('Không tồn tại ấn phẩm!');
+			form.resetFields(['dkcb']);
+			return;
+		}
+
 		if (
 			danhSach?.find(
 				(i) =>
-					i?.soDangKyCaBiet.toLocaleUpperCase().trim() ===
-					(anPhamData?.[0]?.soDangKyCaBiet ?? dkcb).toLocaleUpperCase().trim(),
+					i?.soDangKyCaBiet.toLocaleUpperCase().trim() === (anPhamData?.[0]?.soDangKyCaBiet).toLocaleUpperCase().trim(),
 			)
 		) {
 			message.error('Ấn phẩm đã tồn tại trong danh sách!');
@@ -278,7 +283,7 @@ const FormMuonTraSach = () => {
 
 		const newItem = {
 			...anPhamData?.[0],
-			soDangKyCaBiet: (anPhamData?.[0]?.soDangKyCaBiet ?? dkcb).trim(),
+			soDangKyCaBiet: anPhamData?.[0]?.soDangKyCaBiet.trim(),
 			thoiGianMuon: moment(),
 			expired: moment().add(
 				isSinhVien ? settingMuonTra?.thoiHanMuonTraSach ?? 150 : settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7,
