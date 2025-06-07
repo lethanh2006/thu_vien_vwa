@@ -11,7 +11,7 @@ const ipSlink = ipRoot + 'slink'; // ip dev
 const ipDaoTao = ipRoot + 'qldt'; // ip dev
 const ipNhanSu = ipRoot + 'tcns'; // ip dev
 const ipCore = ipRoot + 'core'; // ip dev
-const ipZ39050 = ipRoot + 'thu-vien-qt'; // ip dev
+const ipZ39050 = 'https://ais.aisenote.com/ript/thu-vien-qt'; // ip dev
 
 const currentRole = EModuleKey.THU_VIEN;
 const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
