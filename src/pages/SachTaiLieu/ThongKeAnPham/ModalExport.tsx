@@ -1,18 +1,22 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import { EOperatorType } from '@/components/Table/constant';
-import { EKieuHienThi } from '@/services/SachTaiLieu/constant';
+import { EKieuHienThi, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import { exportThongKeTheMuon } from '@/services/SachTaiLieu/MuonSach';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Col, Form, Modal, Radio, Row, Segmented } from 'antd';
+import { Button, Checkbox, Col, Form, Modal, Radio, Row } from 'antd';
 import fileDownload from 'js-file-download';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 
-const ModalExportAnPham = (props: { visible: boolean; setVisible: (val: boolean) => void }) => {
-	const { visible, setVisible } = props;
+const ModalExportAnPham = (props: {
+	visible: boolean;
+	setVisible: (val: boolean) => void;
+	trangThai: ETrangThaiMuonSach;
+}) => {
+	const { visible, setVisible, trangThai } = props;
 	const [form] = Form.useForm();
 	const intl = useIntl();
 	const [loadingExport, setLoadingExport] = useState<boolean>(false);
@@ -24,7 +28,6 @@ const ModalExportAnPham = (props: { visible: boolean; setVisible: (val: boolean)
 		} else {
 			form.setFieldsValue({
 				kieuXuatDuLieu: EKieuHienThi.NAM,
-				loaiThoiGian: 'muon',
 			});
 		}
 	}, [visible]);
@@ -46,7 +49,7 @@ const ModalExportAnPham = (props: { visible: boolean; setVisible: (val: boolean)
 		const filter = [
 			{
 				active: true,
-				field: value.loaiThoiGian === 'muon' ? 'thoiGianMuon' : 'thoiGianTra',
+				field: trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'thoiGianMuon' : 'thoiGianTra',
 				operator: EOperatorType.BETWEEN,
 				values: [dateRangeFrom, dateRangeTo],
 			},
@@ -54,6 +57,7 @@ const ModalExportAnPham = (props: { visible: boolean; setVisible: (val: boolean)
 
 		setLoadingExport(true);
 		exportThongKeTheMuon({
+			condition: { quaHan: value.quaHan },
 			filters: filter,
 		})
 			.then((res) => {
@@ -91,16 +95,14 @@ const ModalExportAnPham = (props: { visible: boolean; setVisible: (val: boolean)
 							)}
 						</Form.Item>
 					</Col>
-					<Col xs={24}>
-						<Form.Item name='loaiThoiGian' label='Xuất theo thời gian' rules={[...rules.required]}>
-							<Segmented
-								options={[
-									{ value: 'muon', label: 'Thời gian mượn' },
-									{ value: 'tra', label: 'Thời gian trả' },
-								]}
-							/>
-						</Form.Item>
-					</Col>
+
+					{trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
+						<Col xs={24}>
+							<Form.Item name='quaHan' valuePropName='checked' initialValue={false}>
+								<Checkbox>Chỉ xuất dữ liệu ấn phẩm quá hạn</Checkbox>
+							</Form.Item>
+						</Col>
+					) : null}
 				</Row>
 
 				<div className='form-footer'>

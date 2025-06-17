@@ -5,20 +5,31 @@ import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 import { ETrangThaiMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
-import { Card, Space, Tabs } from 'antd';
+import { Card, Select, Space, Tabs } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import RenderHanTra from '../MuonTraSach/components/RenderHanTra';
-import StatMuonTraSach from '../MuonTraSach/components/Stat';
+import StatThongKeMuonTra from './Stat';
+import ButtonExtend from '@/components/Table/ButtonExtend';
+import { ExportOutlined } from '@ant-design/icons';
+import ModalExportAnPham from '../ThongKeAnPham/ModalExport';
 
 const ThongKeMuonTraPage = () => {
-	const [datePicker, setDatePicker] = useState<any>();
-	const [tabActive, setTabActive] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.DANG_THUE_MUON);
 	const { getModel, page, limit } = useModel('sachtailieu.muontra.muontra');
+	const [trangThai, setTrangThai] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.DANG_THUE_MUON);
+	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
+	const [datePicker, setDatePicker] = useState<any>();
+	const [modalExport, setModalExport] = useState<boolean>(false);
 
 	const filter = [
 		{
+			active: true,
+			field: ['phieuMuonTra', 'vaiTro'],
+			values: [vaiTro],
+			operator: EOperatorType.INCLUDE,
+		},
+		datePicker && {
 			active: true,
 			field: 'thoiGianMuon',
 			values: [moment(datePicker?.[0]).startOf('date'), moment(datePicker?.[1]).endOf('date')],
@@ -27,19 +38,10 @@ const ThongKeMuonTraPage = () => {
 	];
 
 	const getData = () => {
-		getModel({ trangThai: tabActive }, datePicker ? filter : (undefined as any));
+		getModel({ trangThai: trangThai }, filter?.filter(Boolean)?.length ? filter?.filter(Boolean) : undefined);
 	};
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
-		{
-			title: 'Vai trò',
-			dataIndex: ['phieuMuonTra', 'vaiTro'],
-			align: 'center',
-			width: 90,
-			render: (val, rec) => rec?.phieuMuonTra?.vaiTro,
-			filterType: 'select',
-			filterData: Object.values(EVaiTroMuonTra),
-		},
 		{
 			title: 'Mã định danh',
 			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
@@ -116,32 +118,56 @@ const ThongKeMuonTraPage = () => {
 
 	return (
 		<Card title='Thống kê mượn trả'>
-			<div style={{ marginBottom: 12 }}>
-				<StatMuonTraSach />
-			</div>
+			<Tabs onChange={(tab) => setTrangThai(tab as ETrangThaiMuonSach)} activeKey={trangThai}>
+				<Tabs.TabPane tab='Lịch sử đang mượn' key={ETrangThaiMuonSach.DANG_THUE_MUON} />
+				<Tabs.TabPane tab='Lịch sử đã mượn' key={ETrangThaiMuonSach.DA_TRA} />
+			</Tabs>
 
 			<Space style={{ marginBottom: 12 }}>
+				<Select
+					style={{ width: 250 }}
+					value={vaiTro}
+					placeholder='Chọn đối tượng'
+					options={Object.values(EVaiTroMuonTra).map((item) => ({
+						value: item,
+						label: item,
+					}))}
+					onChange={(val) => setVaiTro(val)}
+				/>
 				<MyDateRangePicker
 					value={datePicker}
 					onChange={(val) => setDatePicker(val)}
 					allowClear
 					style={{ width: 300 }}
+					ranges={{
+						'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
+						'Tuần này': [moment().startOf('week'), moment().endOf('week')],
+						'Tháng này': [moment().startOf('M'), moment().endOf('M')],
+					}}
 				/>
 			</Space>
-			<Tabs onChange={(tab) => setTabActive(tab as ETrangThaiMuonSach)} activeKey={tabActive}>
-				<Tabs.TabPane tab='Lịch sử đang mượn' key={ETrangThaiMuonSach.DANG_THUE_MUON} />
-				<Tabs.TabPane tab='Lịch sử đã mượn' key={ETrangThaiMuonSach.DA_TRA} />
-			</Tabs>
+
+			<div style={{ marginBottom: 12 }}>
+				{/* <StatMuonTraSach /> */}
+				<StatThongKeMuonTra />
+			</div>
 
 			<TableBase
 				getData={getData}
 				columns={columns}
 				params={filter}
-				dependencies={[page, limit, tabActive, datePicker]}
+				dependencies={[page, limit, trangThai, datePicker, vaiTro]}
 				modelName='sachtailieu.muontra.muontra'
-				buttons={{ create: false, export: true }}
+				buttons={{ create: false }}
 				hideCard
+				otherButtons={[
+					<ButtonExtend key={'1'} icon={<ExportOutlined />} onClick={() => setModalExport(true)}>
+						Xuất dữ liệu
+					</ButtonExtend>,
+				]}
 			/>
+
+			<ModalExportAnPham visible={modalExport} setVisible={setModalExport} trangThai={trangThai} />
 		</Card>
 	);
 };

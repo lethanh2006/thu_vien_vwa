@@ -22,7 +22,7 @@ import {
 	PlusCircleOutlined,
 	RetweetOutlined,
 } from '@ant-design/icons';
-import { Button, Modal, Popconfirm, Popover, Segmented, Tag } from 'antd';
+import { Button, Card, Modal, Popconfirm, Popover, Segmented, Select, Tag } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -53,6 +53,7 @@ const GhiTraPage = () => {
 	const { getAllModel } = useModel('sachtailieu.anpham.thongtinanpham');
 	const [visibleGiaHan, setVisibleGiaHan] = useState<boolean>(false);
 	const [visibleGhiTra, setVisibleGhiTra] = useState<boolean>(false);
+	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
 	const [activeKey, setActiveKey] = useState<string>('1');
 	const [visibleImport, setVisibleImport] = useState(false);
 	const [visibleExport, setVisibleExport] = useState(false);
@@ -97,6 +98,12 @@ const GhiTraPage = () => {
 				field: 'trangThai',
 				operator: EOperatorType.INCLUDE,
 				values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+			},
+			{
+				active: true,
+				field: ['phieuMuonTra', 'vaiTro'],
+				values: [vaiTro],
+				operator: EOperatorType.INCLUDE,
 			},
 		];
 
@@ -150,16 +157,6 @@ const GhiTraPage = () => {
 	});
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
-		{
-			title: 'Vai trò',
-			dataIndex: ['phieuMuonTra', 'vaiTro'],
-			align: 'center',
-			width: 90,
-			render: (val, rec) => rec?.phieuMuonTra?.vaiTro,
-			onCell,
-			filterType: 'select',
-			filterData: Object.values(EVaiTroMuonTra),
-		},
 		{
 			title: 'Mã định danh',
 			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
@@ -320,11 +317,22 @@ const GhiTraPage = () => {
 	];
 
 	return (
-		<>
+		<Card title='Ghi trả sách'>
+			<Select
+				style={{ width: 250, marginBottom: 12 }}
+				value={vaiTro}
+				placeholder='Chọn đối tượng'
+				options={Object.values(EVaiTroMuonTra).map((item) => ({
+					value: item,
+					label: item,
+				}))}
+				onChange={(val) => setVaiTro(val)}
+			/>
+
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, activeKey]}
+				dependencies={[page, limit, activeKey, vaiTro]}
 				modelName='sachtailieu.muontra.muontra'
 				widthDrawer={isView ? 600 : 'full'}
 				formProps={{ getData, setVisibleGhiTra }}
@@ -348,6 +356,14 @@ const GhiTraPage = () => {
 						Ghi trả
 					</ButtonExtend>,
 
+					<ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
+						Nhập dữ liệu
+					</ButtonExtend>,
+
+					<ButtonExtend key={'export'} icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
+						Xuất dữ liệu
+					</ButtonExtend>,
+
 					<Segmented
 						key={'2'}
 						value={activeKey}
@@ -358,17 +374,9 @@ const GhiTraPage = () => {
 							{ value: '3', label: 'Quá hạn' },
 						]}
 					/>,
-
-					<ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
-						Nhập dữ liệu
-					</ButtonExtend>,
-
-					<ButtonExtend key={'export'} icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
-						Xuất dữ liệu
-					</ButtonExtend>,
 				]}
+				hideCard
 			/>
-
 			<Modal
 				title='Chi tiết ấn phẩm'
 				visible={visibleForm}
@@ -382,7 +390,6 @@ const GhiTraPage = () => {
 			>
 				<ChiTietAnPham />
 			</Modal>
-
 			<ConfirmGiaHan
 				visible={visibleGiaHan}
 				setVisible={setVisibleGiaHan}
@@ -391,7 +398,6 @@ const GhiTraPage = () => {
 					getData();
 				}}
 			/>
-
 			<GhiTraAnPham
 				visible={visibleGhiTra}
 				setVisible={setVisibleGhiTra}
@@ -400,7 +406,6 @@ const GhiTraPage = () => {
 					getData();
 				}}
 			/>
-
 			<ModalImport
 				visible={visibleImport}
 				modelName='sachtailieu.muontra.phieumuontra'
@@ -408,7 +413,6 @@ const GhiTraPage = () => {
 				titleTemplate={'Biểu mẫu phiếu mượn.xlsx'}
 				onOk={() => getModel()}
 			/>
-
 			<ModalExport
 				visible={visibleExport}
 				modelName='sachtailieu.muontra.phieumuontra'
@@ -416,7 +420,7 @@ const GhiTraPage = () => {
 				fileName='Danh sách sinh viên.xlsx'
 				filters={buildFilter()}
 			/>
-		</>
+		</Card>
 	);
 };
 

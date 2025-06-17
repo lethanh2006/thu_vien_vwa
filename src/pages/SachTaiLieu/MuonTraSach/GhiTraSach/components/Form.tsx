@@ -17,9 +17,9 @@ import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import GhiTraAnPham from '../../components/GhiTraSach';
+import RenderHanTra from '../../components/RenderHanTra';
 import InforNguoiMuon from './Infor';
 import StatNguoiDungAnPham from './Stat';
-import RenderHanTra from '../../components/RenderHanTra';
 
 const FormGhiTraSach = (props: any) => {
 	const { getData } = props;
@@ -269,7 +269,7 @@ const FormGhiTraSach = (props: any) => {
 	}, [visibleForm]);
 
 	return (
-		<Card title='Ghi trả sinh viên mượn sách'>
+		<Card title='Ghi trả sách'>
 			<Form form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={6}>

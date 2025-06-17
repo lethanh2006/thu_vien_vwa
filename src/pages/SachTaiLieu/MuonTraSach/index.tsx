@@ -1,18 +1,19 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { EOperatorType } from '@/components/Table/constant';
 import ModalImport from '@/components/Table/Import';
 import type { IColumn } from '@/components/Table/typing';
 import { colorTrangThaiDuyeMuonSach, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
 import { DeleteOutlined, ImportOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
-import { Card, Popconfirm, Tabs, Tag } from 'antd';
+import { Card, Popconfirm, Select, Tabs, Tag } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import CauHinhThoiHanMuonTra from './components/CauHinh';
 import Form from './components/Form';
-import MuonTraSachPage from './MuonTra';
 import StatMuonTraSach from './components/Stat';
+import MuonTraSachPage from './MuonTra';
 
 const PhieuMuonTraSachPage = () => {
 	const {
@@ -33,6 +34,7 @@ const PhieuMuonTraSachPage = () => {
 	const [visibleCauHinh, setVisibleCauHinh] = useState<boolean>(false);
 	const [visibleImport, setVisibleImport] = useState(false);
 	const [tabActive, setTabActive] = useState<string>('1');
+	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
 
 	// useEffect(() => {
 	// 	if (ngoaiThoiGian) {
@@ -71,21 +73,25 @@ const PhieuMuonTraSachPage = () => {
 		if (!settingMuonTra) getSettingModel();
 	}, []);
 
+	const filter = [
+		{
+			active: true,
+			field: 'vaiTro',
+			values: [vaiTro],
+			operator: EOperatorType.INCLUDE,
+		},
+	];
+
+	const getData = () => {
+		getModel(undefined, filter as any);
+	};
+
 	const onCell = (rec: PhieuMuonTra.IRecord) => ({
 		onClick: () => handleView(rec),
 		style: { cursor: 'pointer' },
 	});
 
 	const columns: IColumn<PhieuMuonTra.IRecord>[] = [
-		{
-			title: 'Vai trò',
-			dataIndex: 'vaiTro',
-			align: 'center',
-			width: 90,
-			filterType: 'select',
-			filterData: Object.values(EVaiTroMuonTra),
-			onCell,
-		},
 		{
 			title: 'Mã định danh',
 			dataIndex: 'maDinhDanhNguoiMuon',
@@ -154,52 +160,67 @@ const PhieuMuonTraSachPage = () => {
 				/>
 			}
 		>
-			{tabActive === '2' ? (
-				<div style={{ marginBottom: 12 }}>
-					<StatMuonTraSach />
-				</div>
-			) : null}
-
 			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
 				<Tabs.TabPane tab='Phiếu mượn' key='1' />
 				<Tabs.TabPane tab='Lịch sử mượn' key='2' />
 			</Tabs>
 
-			{tabActive === '1' ? (
-				<TableBase
-					columns={columns}
-					dependencies={[page, limit]}
-					modelName='sachtailieu.muontra.phieumuontra'
-					widthDrawer={isView ? 1000 : 'full'}
-					Form={isView ? MuonTraSachPage : Form}
-					hideCard
-					buttons={{ create: false }}
-					otherButtons={[
-						<ButtonExtend
-							key={'1'}
-							onClick={() => {
-								setRecord({} as PhieuMuonTra.IRecord);
-								setEdit(false);
-								setIsView(false);
-								setVisibleForm(true);
-
-								//Set danhSach đăng ký cá biệt rỗng
-								setDanhSach([]);
-							}}
-							icon={<PlusCircleOutlined />}
-							type='primary'
-							notHideText
-							tooltip='Ghi mượn'
-						>
-							Ghi mượn
-						</ButtonExtend>,
-						<ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
-							Nhập dữ liệu
-						</ButtonExtend>,
-					]}
+			<div style={{ marginBottom: 12 }}>
+				<Select
+					style={{ width: 250 }}
+					value={vaiTro}
+					placeholder='Chọn đối tượng'
+					options={Object.values(EVaiTroMuonTra).map((item) => ({
+						value: item,
+						label: item,
+					}))}
+					onChange={(val) => setVaiTro(val)}
 				/>
+			</div>
+
+			{tabActive === '1' ? (
+				<>
+					<TableBase
+						getData={getData}
+						columns={columns}
+						dependencies={[page, limit, vaiTro]}
+						modelName='sachtailieu.muontra.phieumuontra'
+						widthDrawer={isView ? 1000 : 'full'}
+						Form={isView ? MuonTraSachPage : Form}
+						hideCard
+						buttons={{ create: false }}
+						otherButtons={[
+							<ButtonExtend
+								key={'1'}
+								onClick={() => {
+									setRecord({} as PhieuMuonTra.IRecord);
+									setEdit(false);
+									setIsView(false);
+									setVisibleForm(true);
+
+									//Set danhSach đăng ký cá biệt rỗng
+									setDanhSach([]);
+								}}
+								icon={<PlusCircleOutlined />}
+								type='primary'
+								notHideText
+								tooltip='Ghi mượn'
+							>
+								Ghi mượn
+							</ButtonExtend>,
+							<ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
+								Nhập dữ liệu
+							</ButtonExtend>,
+						]}
+					/>
+				</>
 			) : (
-				<MuonTraSachPage tatCaLichSu />
+				<>
+					<div style={{ marginBottom: 12 }}>
+						<StatMuonTraSach />
+					</div>
+					<MuonTraSachPage tatCaLichSu vaiTro={vaiTro} />
+				</>
 			)}
 
 			<CauHinhThoiHanMuonTra visible={visibleCauHinh} setVisible={setVisibleCauHinh} />
@@ -209,7 +230,7 @@ const PhieuMuonTraSachPage = () => {
 				modelName='sachtailieu.muontra.phieumuontra'
 				onCancel={() => setVisibleImport(false)}
 				titleTemplate={'Biểu mẫu phiếu mượn.xlsx'}
-				onOk={() => getModel()}
+				onOk={() => getData()}
 			/>
 		</Card>
 	);

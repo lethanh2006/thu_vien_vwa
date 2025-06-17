@@ -37,7 +37,14 @@ export async function thongKeAnPhamMuonTra(
 }
 
 export async function exportThongKeTheMuon(params?: { condition?: any; filters?: any[] }) {
-	return axios.get(`${ip3}/thue-muon-an-pham/muon-qua-han/export`, {
+	return axios.get(`${ip3}/thue-muon-an-pham/muon-tra/export`, {
+		responseType: 'arraybuffer',
+		params,
+	});
+}
+
+export async function thongKeTongSoMuonTraAnPham(params?: { condition?: any; filters?: any[] }) {
+	return axios.get(`${ip3}/thue-muon-an-pham/thong-ke/dashboard/an-pham-thue-muon`, {
 		responseType: 'arraybuffer',
 		params,
 	});

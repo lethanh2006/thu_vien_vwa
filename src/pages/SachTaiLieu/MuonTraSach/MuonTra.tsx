@@ -22,7 +22,7 @@ import ConfirmGiaHan from './components/ModalGiaHan';
 import RenderHanTra from './components/RenderHanTra';
 
 const MuonTraSachPage = (props: any) => {
-	const { tatCaLichSu } = props;
+	const { tatCaLichSu, vaiTro } = props;
 	const intl = useIntl();
 	const { record: recPhieu, setVisibleForm, visibleForm: visiblePhieu } = useModel('sachtailieu.muontra.phieumuontra');
 	const { thongKeMuonTraSachModel, getModel, page, limit, handleView, setRecord, deleteModel } =
@@ -38,26 +38,50 @@ const MuonTraSachPage = (props: any) => {
 		setTrangThai(ETrangThaiMuonSach.DANG_THUE_MUON);
 	}, [visiblePhieu]);
 
-	const filter: any[] =
-		activeKey === '2'
-			? [
-					{
-						active: true,
-						field: 'expired',
-						values: [moment().toISOString(), moment().add(7, 'day').toISOString()],
-						operator: EOperatorType.BETWEEN,
-					},
-			  ]
-			: activeKey === '3'
-			? [{ active: true, field: 'expired', values: [moment().toISOString()], operator: EOperatorType.LESS_THAN }]
-			: activeKey === '4'
-			? [{ active: true, field: 'daLaySach', values: [false], operator: EOperatorType.EQUAL }]
-			: [];
+	let filter: any[] = [];
+
+	if (activeKey === '2') {
+		filter = [
+			{
+				active: true,
+				field: 'expired',
+				values: [moment().toISOString(), moment().add(7, 'day').toISOString()],
+				operator: EOperatorType.BETWEEN,
+			},
+		];
+	} else if (activeKey === '3') {
+		filter = [
+			{
+				active: true,
+				field: 'expired',
+				values: [moment().toISOString()],
+				operator: EOperatorType.LESS_THAN,
+			},
+		];
+	} else if (activeKey === '4') {
+		filter = [
+			{
+				active: true,
+				field: 'daLaySach',
+				values: [false],
+				operator: EOperatorType.EQUAL,
+			},
+		];
+	}
+
+	if (vaiTro) {
+		filter.push({
+			active: true,
+			field: ['phieuMuonTra', 'vaiTro'],
+			values: [vaiTro],
+			operator: EOperatorType.INCLUDE,
+		});
+	}
 
 	const getData = () => {
 		getModel(
 			!tatCaLichSu && recPhieu?._id ? { phieuMuonTraId: recPhieu?._id, trangThai } : undefined,
-			activeKey !== '1' && trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? filter : undefined,
+			(activeKey !== '1' && trangThai === ETrangThaiMuonSach.DANG_THUE_MUON) || vaiTro ? filter : undefined,
 		);
 	};
 
@@ -73,17 +97,6 @@ const MuonTraSachPage = (props: any) => {
 	});
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
-		{
-			title: 'Vai trò',
-			dataIndex: ['phieuMuonTra', 'vaiTro'],
-			align: 'center',
-			width: 90,
-			render: (val, rec) => rec?.phieuMuonTra?.vaiTro,
-			onCell,
-			filterType: 'select',
-			filterData: Object.values(EVaiTroMuonTra),
-			hide: !tatCaLichSu,
-		},
 		{
 			title: 'Mã định danh',
 			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
@@ -334,7 +347,7 @@ const MuonTraSachPage = (props: any) => {
 					getData={getData}
 					columns={columns}
 					params={filter}
-					dependencies={[page, limit, trangThai, activeKey, recPhieu?._id, tatCaLichSu]}
+					dependencies={[page, limit, trangThai, activeKey, recPhieu?._id, tatCaLichSu, vaiTro]}
 					modelName='sachtailieu.muontra.muontra'
 					widthDrawer={900}
 					formProps={{ getData, trangThai, setTrangThai, setVisibleGhiTra }}

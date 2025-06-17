@@ -21,18 +21,13 @@ import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
 import TitlePrintMuonTra from './TitlePrintMuonTra';
 
-const FormMuonTraSach = () => {
+const FormMuonTraSach = (props: any) => {
+	const { getData } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const {
-		getModel: getData,
-		visibleForm,
-		setVisibleForm,
-		formSubmiting,
-		edit,
-		postPhieuMuonTraSachModel,
-		record,
-	} = useModel('sachtailieu.muontra.phieumuontra');
+	const { visibleForm, setVisibleForm, formSubmiting, edit, postPhieuMuonTraSachModel, record } = useModel(
+		'sachtailieu.muontra.phieumuontra',
+	);
 	const { getModel, settingMuonTra, loading, thongKeMuonTraSachModel } = useModel('sachtailieu.muontra.muontra');
 	const { getModel: getAnPhamXepGia, danhSach, setDanhSach, handleEdit } = useModel('sachtailieu.anpham.anphamxepgia');
 	const { record: recSinhVien, setRecord: setRecSinhVien } = useModel('sinhvien.sinhvien');

@@ -6,6 +6,7 @@ import {
 	giaHanThueMuonAnPham,
 	thongKeAnPhamMuonTra,
 	thongKeMuonTraSach,
+	thongKeTongSoMuonTraAnPham,
 	updateSetting,
 	xuLyThueMuonAnPham,
 } from '@/services/SachTaiLieu/MuonSach';
@@ -161,6 +162,22 @@ export default () => {
 		}
 	};
 
+	const thongKeTongSoMuonTraAnPhamModel = async (
+		condition?: any,
+		filters?: any[],
+	): Promise<MuonSach.IThongKeAnPhamMuonTra> => {
+		setLoadingThongKe(true);
+		try {
+			const res = await thongKeTongSoMuonTraAnPham({ condition, filters });
+			setDataThongKeAnPhamMuonTra(res.data?.data);
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setLoadingThongKe(false);
+		}
+	};
+
 	return {
 		...objInit,
 		dataThongKe,
@@ -175,5 +192,6 @@ export default () => {
 		giaHanThueMuonAnPhamModel,
 		thongKeMuonTraSachModel,
 		thongKeAnPhamMuonTraModel,
+		thongKeTongSoMuonTraAnPhamModel,
 	};
 };

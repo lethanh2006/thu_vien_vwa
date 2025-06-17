@@ -1,8 +1,10 @@
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import SelectDangTaiLieu from '@/pages/DanhMuc/DangTaiLieu/components/Select';
 import SelectNgonNgu from '@/pages/DanhMuc/DanhMucNgonNgu/components/Select';
+import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import SelectHocPhan from '@/pages/DaoTao/HocPhan/Select';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { Col, Form, type FormInstance, Input, Row, Space, Table } from 'antd';
+import { Col, Form, type FormInstance, Input, Row, Select, Space, Table } from 'antd';
 import _ from 'lodash';
 
 const BienMucChiTiet = (props: { form: FormInstance }) => {
@@ -72,14 +74,22 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 			width: 320,
 			render: (val: any, field: any, rowIndex: number) => {
 				const currentTagData = form.getFieldValue(['danhSachBienMucChiTiet', field.name]);
+				const tagCode = currentTagData.tagCode;
 
 				if (currentTagData?.thuocTinhAnPham?.length) {
 					const isMultiple = currentTagData.thuocTinhAnPham.length > 1;
 
+					const sortedSubFields = _.orderBy(currentTagData.thuocTinhAnPham, 'code');
+
 					return (
 						<Row gutter={[12, 0]} style={{ width: '100%' }}>
-							{_.orderBy(currentTagData.thuocTinhAnPham, 'code').map((item: any, i: number) => {
+							{sortedSubFields.map((item: any, i: number) => {
 								const fieldCode = `${currentTagData.tagCode}${item?.code}`;
+
+								const originalIndex = currentTagData.thuocTinhAnPham.findIndex(
+									(subField: any) => subField.code === item.code,
+								);
+
 								return (
 									<Col
 										// eslint-disable-next-line react/no-array-index-key
@@ -88,18 +98,48 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 									>
 										<Form.Item
 											label={`${item.ten ?? ''} [${item.code}]`}
-											name={[field.name, 'thuocTinhAnPham', i, 'value']}
+											name={[field.name, 'thuocTinhAnPham', originalIndex, 'value']}
 											labelCol={{ span: 24 }}
 											wrapperCol={{ span: 24 }}
 											style={{ marginBottom: 8 }}
 										>
-											{fieldCode === '041$a' ? (
-												<SelectNgonNgu selectMa allowClear />
-											) : fieldCode === '913$a' ? (
-												<SelectHocPhan selectMa allowClear />
-											) : (
-												<Input placeholder={`Nhập ${item.ten || ''}`} />
-											)}
+											{(() => {
+												if (fieldCode === '041$a') {
+													return <SelectNgonNgu selectMa allowClear />;
+												}
+
+												if (fieldCode === '913$a') {
+													return (
+														<SelectHocPhan
+															selectMa
+															allowClear
+															onChange={(value, option) => {
+																const bSubFieldOriginalIndex = currentTagData.thuocTinhAnPham.findIndex(
+																	(tp: any) => tp.code === '$b',
+																);
+
+																if (bSubFieldOriginalIndex > -1) {
+																	const tenHocPhan = option?.record?.ten ?? null;
+																	const allValues = form.getFieldValue('danhSachBienMucChiTiet');
+																	const newValues = _.cloneDeep(allValues);
+
+																	newValues[rowIndex].thuocTinhAnPham[bSubFieldOriginalIndex].value = tenHocPhan;
+
+																	form.setFieldsValue({
+																		danhSachBienMucChiTiet: newValues,
+																	});
+																}
+															}}
+														/>
+													);
+												}
+
+												if (fieldCode === '913$b') {
+													return <Input placeholder='Tên học phần (tự động)' disabled />;
+												}
+
+												return <Input placeholder={`Nhập ${item.ten || ''}`} />;
+											})()}
 										</Form.Item>
 									</Col>
 								);
@@ -110,7 +150,21 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 
 				return (
 					<Form.Item name={[field.name, 'value']} noStyle>
-						<Input.TextArea placeholder='Nhập thông tin' autoSize={{ minRows: 1, maxRows: 3 }} />
+						{tagCode === '925' ? (
+							<SelectVatMangTin selectMa />
+						) : tagCode === '926' ? (
+							<Select placeholder='Chọn độ mật' style={{ width: '100%' }}>
+								{Array.from({ length: 11 }, (__, i) => (
+									<Select.Option key={i} value={i}>
+										{i}
+									</Select.Option>
+								))}
+							</Select>
+						) : tagCode === '927' ? (
+							<SelectDangTaiLieu selectMa />
+						) : (
+							<Input placeholder='Nhập thông tin' />
+						)}
 					</Form.Item>
 				);
 			},

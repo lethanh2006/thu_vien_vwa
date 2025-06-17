@@ -4,7 +4,7 @@ import { useModel } from 'umi';
 
 const SelectHocPhan = (props: {
 	value?: string;
-	onChange?: (val?: string) => void;
+	onChange?: (val?: string, option?: any) => void;
 	multiple?: boolean;
 	allowClear?: boolean;
 	style?: React.CSSProperties;
@@ -30,7 +30,8 @@ const SelectHocPhan = (props: {
 			options={danhSach.map((item) => ({
 				key: item._id,
 				value: selectMa ? item.ma : item._id,
-				label: `${item.ten} (${item.ma} - ${item.soTinChi} tín)`,
+				label: `(${item.ma} - ${item.soTinChi} tín) ${item.ten}`,
+				record: item,
 			}))}
 			showSearch
 			optionFilterProp='label'

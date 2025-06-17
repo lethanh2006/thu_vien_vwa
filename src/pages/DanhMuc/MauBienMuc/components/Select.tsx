@@ -17,10 +17,15 @@ const SelectMauBienMuc = (props: {
 	disabled?: boolean;
 }) => {
 	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, selectMa, disabled } = props;
-	const { danhSach, getAllModel } = useModel('danhmuc.maubienmuc');
+	const { danhSach, getAllModel, getModel } = useModel('danhmuc.maubienmuc');
 
+	// useEffect(() => {
+	// 	if (!danhSach?.length) getAllModel(!!isSetRecord, undefined, condition);
+	// }, []);
+
+	//Get page để lấy thongTinKhaiBao vì getMany không có dữ liệu
 	useEffect(() => {
-		if (!danhSach?.length) getAllModel(!!isSetRecord, undefined, condition);
+		if (!danhSach?.length) getModel(undefined, undefined, undefined, 1, 200);
 	}, []);
 
 	return (

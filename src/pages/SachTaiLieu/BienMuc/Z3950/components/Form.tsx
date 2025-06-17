@@ -1,3 +1,4 @@
+import ButtonExtend from '@/components/Table/ButtonExtend';
 import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import { resetFieldsForm } from '@/utils/utils';
@@ -7,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
 import BienMucChiTietZ3950 from '../../components/BienMucChiTiet';
 import BienMucSoLuocZ3950 from '../../components/BienMucSoLuoc';
-import ButtonExtend from '@/components/Table/ButtonExtend';
 
 const FormZ3950 = (props: { visibleForm: boolean; setVisibleForm: (val: boolean) => void }) => {
 	const { setVisibleForm, visibleForm } = props;
@@ -16,8 +16,13 @@ const FormZ3950 = (props: { visibleForm: boolean; setVisibleForm: (val: boolean)
 	const { record, formSubmiting, setFormSubmiting, postBienMucSoLuocModel, putBienMucChiTietModel, setVisibleZ3950 } =
 		useModel('sachtailieu.anpham.anpham');
 	const { danhSach, getAllModel } = useModel('danhmuc.truongbienmuc');
+	const { danhSach: dsMauBienMuc } = useModel('danhmuc.maubienmuc');
 	const [currentStep, setCurrentStep] = useState<number>(0);
 	const [actionType, setActionType] = useState<ETrangThaiBienMuc>(ETrangThaiBienMuc.CHO_BIEN_MUC);
+
+	const mauBienMucId: string = Form.useWatch('mauBienMucId', form);
+
+	const mauBienMuc = dsMauBienMuc?.find((item) => item?._id === mauBienMucId);
 
 	useEffect(() => {
 		getAllModel(undefined, undefined, undefined, undefined, undefined, undefined, undefined, {
@@ -69,6 +74,19 @@ const FormZ3950 = (props: { visibleForm: boolean; setVisibleForm: (val: boolean)
 				}
 			});
 
+			const mergedDataMauBienMuc = mauBienMuc?.thongTinKhaiBao?.map((item) => ({
+				...item,
+				tagCode: item?.tag,
+				ten: item?.ten,
+				thuocTinhAnPham: [
+					...(item?.thuocTinhDuLieu || []).map((tp) => ({
+						...tp,
+						value: null,
+						ten: item?.ten,
+					})),
+				],
+			}));
+
 			const mergedData = record?.danhSachThongTin?.map((item) => ({
 				...item,
 				ten: danhSach?.find((i) => i?.ma === item?.tagCode)?.noiDung,
@@ -81,14 +99,27 @@ const FormZ3950 = (props: { visibleForm: boolean; setVisibleForm: (val: boolean)
 				],
 			}));
 
-			// Gán giá trị cho form
+			const mergedMap = new Map<string, any>();
+
+			(mergedData ?? []).forEach((item, index) => {
+				const key = item.tagCode ?? `__no_tagCode_${index}`;
+				mergedMap.set(key, item);
+			});
+
+			(mergedDataMauBienMuc ?? []).forEach((item, index) => {
+				const key = item.tagCode ?? `__no_tagCode_mau_${index}`;
+				mergedMap.set(key, item);
+			});
+
+			const uniqueDanhSachBienMucChiTiet = _.orderBy(Array.from(mergedMap.values()), 'tagCode');
+
 			form.setFieldsValue({
 				...record,
 				...formValues,
-				danhSachBienMucChiTiet: _.orderBy(mergedData, 'tagCode'),
+				danhSachBienMucChiTiet: uniqueDanhSachBienMucChiTiet,
 			});
 		}
-	}, [record, visibleForm]);
+	}, [record, visibleForm, mauBienMucId]);
 
 	const onFinish = async (values: any) => {
 		try {

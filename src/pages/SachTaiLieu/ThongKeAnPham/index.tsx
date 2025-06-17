@@ -3,7 +3,7 @@ import DonutChart from '@/components/Chart/DonutChart';
 import MyDatePicker from '@/components/MyDatePicker';
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import ButtonExtend from '@/components/Table/ButtonExtend';
-import { EKieuHienThi, ETrangThaiMuonSach, KieuHienThi } from '@/services/SachTaiLieu/constant';
+import { EKieuHienThi, ETrangThaiMuonSach, EVaiTroMuonTra, KieuHienThi } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
 import { ExportOutlined } from '@ant-design/icons';
 import { Card, Col, Empty, Row, Segmented, Select, Space, Spin, Tabs } from 'antd';
@@ -19,11 +19,12 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 		useModel('sachtailieu.muontra.muontra');
 
 	const [kieuHienThi, setKieuHienThi] = useState<EKieuHienThi>(EKieuHienThi.NAM);
-	const [tabActive, setTabActive] = useState<string>('1');
+	const [trangThai, setTrangThai] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.DANG_THUE_MUON);
 	const [yearSelect, setYearSelect] = useState(moment().year());
 	const [monthSelect, setMonthSelect] = useState(moment().month());
 	const [dateRange, setDateRange] = useState<string[] | null>(null);
 	const [modalExport, setModalExport] = useState<boolean>(false);
+	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
 
 	const filteredData = dataThongKeAnPhamMuonTra?.filter((item) => {
 		if (!dateRange || dateRange.length < 2 || kieuHienThi !== EKieuHienThi.NGAY) {
@@ -79,19 +80,31 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 
 	useEffect(() => {
 		const params = {
+			...{ vaiTro: vaiTro },
 			...(kieuHienThi === EKieuHienThi.THANG && { nam: yearSelect }),
 			...(kieuHienThi === EKieuHienThi.NGAY && { nam: yearSelect, thang: monthSelect }),
-			...(!isBanDoc && {
-				trangThai: tabActive === '1' ? ETrangThaiMuonSach.DANG_THUE_MUON : ETrangThaiMuonSach.DA_TRA,
-			}),
+			...{ trangThai: trangThai },
 		};
 
 		thongKeAnPhamMuonTraModel(kieuHienThi, isBanDoc, params);
-	}, [kieuHienThi, monthSelect, yearSelect, tabActive, isBanDoc]);
+	}, [kieuHienThi, monthSelect, yearSelect, trangThai, isBanDoc, vaiTro]);
 
 	return (
 		<Card title={isBanDoc ? 'Thống kê bạn đọc' : 'Thống kê mượn trả ấn phẩm'}>
-			<Space style={{ marginBottom: 12 }} wrap>
+			<div>
+				<Select
+					style={{ width: 250, marginBottom: 12 }}
+					value={vaiTro}
+					placeholder='Chọn đối tượng'
+					options={Object.values(EVaiTroMuonTra).map((item) => ({
+						value: item,
+						label: item,
+					}))}
+					onChange={(val) => setVaiTro(val)}
+				/>
+			</div>
+
+			<Space wrap>
 				<Segmented
 					value={kieuHienThi}
 					onChange={(val) => setKieuHienThi(val as EKieuHienThi)}
@@ -193,20 +206,16 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 				) : null}
 			</Space>
 
-			{!isBanDoc && (
-				<div>
-					<ButtonExtend icon={<ExportOutlined />} onClick={() => setModalExport(true)}>
-						Xuất dữ liệu
-					</ButtonExtend>
-				</div>
-			)}
+			<Tabs onChange={(tab) => setTrangThai(tab as ETrangThaiMuonSach)} activeKey={trangThai}>
+				<Tabs.TabPane tab='Ấn phẩm đang mượn' key='1' />
+				<Tabs.TabPane tab='Ấn phẩm đã trả' key='2' />
+			</Tabs>
 
-			{!isBanDoc && (
-				<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
-					<Tabs.TabPane tab='Ấn phẩm đang mượn' key='1' />
-					<Tabs.TabPane tab='Ấn phẩm đã trả' key='2' />
-				</Tabs>
-			)}
+			<div style={{ marginBottom: 12 }}>
+				<ButtonExtend icon={<ExportOutlined />} onClick={() => setModalExport(true)}>
+					Xuất dữ liệu
+				</ButtonExtend>
+			</div>
 
 			<Spin spinning={loadingThongKe}>
 				{filteredData?.length ? (
@@ -308,7 +317,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 				)}
 			</Spin>
 
-			<ModalExportAnPham visible={modalExport} setVisible={setModalExport} />
+			<ModalExportAnPham visible={modalExport} setVisible={setModalExport} trangThai={trangThai} />
 		</Card>
 	);
 };
