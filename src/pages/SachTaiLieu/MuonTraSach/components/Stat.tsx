@@ -16,9 +16,9 @@ const StatMuonTraSach = () => {
 				<Col span={24} md={6}>
 					<Card className='card-stat-small'>
 						<span className='num' style={{ color: 'blue' }}>
-							{inputFormat(dataThongKe?.choXuLy ?? 0)}
+							{inputFormat(Object.values(dataThongKe ?? {}).reduce((acc, val) => Number(acc) + Number(val), 0))}
 						</span>
-						<span>Chờ xử lý</span>
+						<span>Tổng số</span>
 					</Card>
 				</Col>
 				<Col span={24} md={6}>

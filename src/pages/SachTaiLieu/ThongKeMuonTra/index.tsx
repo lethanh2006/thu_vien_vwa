@@ -25,6 +25,12 @@ const ThongKeMuonTraPage = () => {
 	const filter = [
 		{
 			active: true,
+			field: 'trangThai',
+			values: [trangThai],
+			operator: EOperatorType.INCLUDE,
+		},
+		{
+			active: true,
 			field: ['phieuMuonTra', 'vaiTro'],
 			values: [vaiTro],
 			operator: EOperatorType.INCLUDE,
@@ -38,7 +44,7 @@ const ThongKeMuonTraPage = () => {
 	];
 
 	const getData = () => {
-		getModel({ trangThai: trangThai }, filter?.filter(Boolean)?.length ? filter?.filter(Boolean) : undefined);
+		getModel(undefined, filter?.filter(Boolean)?.length ? filter?.filter(Boolean) : undefined);
 	};
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
@@ -123,7 +129,7 @@ const ThongKeMuonTraPage = () => {
 				<Tabs.TabPane tab='Lịch sử đã mượn' key={ETrangThaiMuonSach.DA_TRA} />
 			</Tabs>
 
-			<Space style={{ marginBottom: 12 }}>
+			<Space style={{ marginBottom: 12 }} align='center'>
 				<Select
 					style={{ width: 250 }}
 					value={vaiTro}
@@ -134,22 +140,28 @@ const ThongKeMuonTraPage = () => {
 					}))}
 					onChange={(val) => setVaiTro(val)}
 				/>
-				<MyDateRangePicker
-					value={datePicker}
-					onChange={(val) => setDatePicker(val)}
-					allowClear
-					style={{ width: 300 }}
-					ranges={{
-						'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
-						'Tuần này': [moment().startOf('week'), moment().endOf('week')],
-						'Tháng này': [moment().startOf('M'), moment().endOf('M')],
-					}}
-				/>
+
+				<div style={{ display: 'flex', alignItems: 'center' }}>
+					<span style={{ marginRight: 8, whiteSpace: 'nowrap' }}>Thời gian mượn:</span>
+					<MyDateRangePicker
+						value={datePicker}
+						onChange={(val) => setDatePicker(val)}
+						allowClear
+						style={{ width: 300 }}
+						placeholder={['Từ ngày', 'Đến ngày']}
+						ranges={{
+							'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
+							'Tuần này': [moment().startOf('week'), moment().endOf('week')],
+							'Tháng này': [moment().startOf('M'), moment().endOf('M')],
+						}}
+						format='DD/MM/YYYY'
+					/>
+				</div>
 			</Space>
 
 			<div style={{ marginBottom: 12 }}>
 				{/* <StatMuonTraSach /> */}
-				<StatThongKeMuonTra />
+				<StatThongKeMuonTra filter={filter} />
 			</div>
 
 			<TableBase

@@ -54,4 +54,11 @@ declare module MuonSach {
 		soLuong: string;
 		title: string;
 	}
+
+	export interface IThongKeThueMuonAnPham {
+		theoBanDoc: number;
+		theoDauAnPham: number;
+		theoDkcb: number;
+		tongSoLuot: number;
+	}
 }

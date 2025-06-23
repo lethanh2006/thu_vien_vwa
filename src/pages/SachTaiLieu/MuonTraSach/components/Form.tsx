@@ -29,7 +29,13 @@ const FormMuonTraSach = (props: any) => {
 		'sachtailieu.muontra.phieumuontra',
 	);
 	const { getModel, settingMuonTra, loading, thongKeMuonTraSachModel } = useModel('sachtailieu.muontra.muontra');
-	const { getModel: getAnPhamXepGia, danhSach, setDanhSach, handleEdit } = useModel('sachtailieu.anpham.anphamxepgia');
+	const {
+		getModel: getAnPhamXepGia,
+		danhSach,
+		setDanhSach,
+		handleEdit,
+		loading: loadDKCB,
+	} = useModel('sachtailieu.anpham.anphamxepgia');
 	const { record: recSinhVien, setRecord: setRecSinhVien } = useModel('sinhvien.sinhvien');
 	const { record: recCanBo, setRecord: setRecCanBo } = useModel('tochucnhansu.nhansu');
 	const [visibleTimKiem, setVisibleTimKiem] = useState<boolean>(false);
@@ -149,7 +155,15 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	const handleDeleteItem = (sodkcb: string) => {
-		const updatedList = danhSach.filter((item) => item.soDangKyCaBiet !== sodkcb);
+		let updatedList = danhSach.filter((item) => item.soDangKyCaBiet !== sodkcb);
+
+		updatedList = updatedList.map((item, index) => {
+			if (index < slConMuonDuoc && item.ghiChu === 'Mượn vượt quá hạn ngạch cho phép') {
+				return { ...item, ghiChu: '' };
+			}
+			return item;
+		});
+
 		setDanhSach(updatedList);
 	};
 
@@ -419,6 +433,7 @@ const FormMuonTraSach = (props: any) => {
 								</div>
 
 								<TableStaticData
+									loading={loadDKCB}
 									columns={columns}
 									data={danhSach ?? []}
 									size='small'

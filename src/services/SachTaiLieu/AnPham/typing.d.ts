@@ -165,6 +165,9 @@ declare module AnPham {
 		thongTinXepGiaId: string;
 		thongTinXepGia: IXepGia;
 		trangThai: ETrangThaiDangKyCaBiet;
+
+		//fake
+		ghiChu?: string;
 	}
 
 	export interface IThongKeAnPhamXepGia {

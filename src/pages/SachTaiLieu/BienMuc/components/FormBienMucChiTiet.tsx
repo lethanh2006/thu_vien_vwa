@@ -13,10 +13,12 @@ const FormBienMucChiTiet = (props: any) => {
 	const [form] = Form.useForm();
 	const { record, setVisibleForm, putBienMucChiTietModel, formSubmiting, visibleForm } =
 		useModel('sachtailieu.anpham.anpham');
-
+	const { danhSach: dsMauBienMuc } = useModel('danhmuc.maubienmuc');
 	const { danhSach, loading } = useModel('sachtailieu.anpham.thongtinanpham');
 
 	const [actionType, setActionType] = useState<ETrangThaiBienMuc>(ETrangThaiBienMuc.CHO_BIEN_MUC);
+
+	const mauBienMuc = dsMauBienMuc?.find((item) => item?._id === record?.mauBienMucId);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -24,11 +26,11 @@ const FormBienMucChiTiet = (props: any) => {
 		} else if (record?._id) {
 			const danhSachTags = danhSach.map((dsItem) => dsItem.tagCode);
 
-			const khaiBaoMoi = (record?.mauBienMuc?.thongTinKhaiBao || []).filter((item) => !danhSachTags.includes(item.tag));
+			const khaiBaoMoi = (mauBienMuc?.thongTinKhaiBao || []).filter((item) => !danhSachTags.includes(item.tag));
 
 			const mergedData = [
 				...danhSach.map((item) => {
-					const thongTinKhaiBao = record?.mauBienMuc?.thongTinKhaiBao?.find((kb) => kb.tag === item.tagCode);
+					const thongTinKhaiBao = mauBienMuc?.thongTinKhaiBao?.find((kb) => kb.tag === item.tagCode);
 
 					const existingCodes = new Set(item?.thuocTinhAnPham?.map((tp) => tp.code));
 

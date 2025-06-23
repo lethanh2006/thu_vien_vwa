@@ -21,6 +21,7 @@ export default () => {
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [dataThongKe, setDataThongKe] = useState<MuonSach.IThongKe>();
 	const [dataThongKeAnPhamMuonTra, setDataThongKeAnPhamMuonTra] = useState<MuonSach.IThongKeAnPhamMuonTra[]>();
+	const [dataTheMuonAnPham, setDataThueMuonAnPham] = useState<MuonSach.IThongKeThueMuonAnPham>();
 
 	const getSettingModel = async (): Promise<MuonSach.TSetting> => {
 		setLoading(true);
@@ -165,11 +166,11 @@ export default () => {
 	const thongKeTongSoMuonTraAnPhamModel = async (
 		condition?: any,
 		filters?: any[],
-	): Promise<MuonSach.IThongKeAnPhamMuonTra> => {
+	): Promise<MuonSach.IThongKeThueMuonAnPham> => {
 		setLoadingThongKe(true);
 		try {
 			const res = await thongKeTongSoMuonTraAnPham({ condition, filters });
-			setDataThongKeAnPhamMuonTra(res.data?.data);
+			setDataThueMuonAnPham(res.data?.data);
 			return res.data?.data;
 		} catch (err) {
 			return Promise.reject(err);
@@ -192,6 +193,7 @@ export default () => {
 		giaHanThueMuonAnPhamModel,
 		thongKeMuonTraSachModel,
 		thongKeAnPhamMuonTraModel,
+		dataTheMuonAnPham,
 		thongKeTongSoMuonTraAnPhamModel,
 	};
 };

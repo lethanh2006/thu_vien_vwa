@@ -80,7 +80,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 
 	useEffect(() => {
 		const params = {
-			...{ vaiTro: vaiTro },
+			// ...{ vaiTro: vaiTro },
 			...(kieuHienThi === EKieuHienThi.THANG && { nam: yearSelect }),
 			...(kieuHienThi === EKieuHienThi.NGAY && { nam: yearSelect, thang: monthSelect }),
 			...{ trangThai: trangThai },
@@ -207,8 +207,8 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 			</Space>
 
 			<Tabs onChange={(tab) => setTrangThai(tab as ETrangThaiMuonSach)} activeKey={trangThai}>
-				<Tabs.TabPane tab='Ấn phẩm đang mượn' key='1' />
-				<Tabs.TabPane tab='Ấn phẩm đã trả' key='2' />
+				<Tabs.TabPane tab='Ấn phẩm đang mượn' key={ETrangThaiMuonSach.DANG_THUE_MUON} />
+				<Tabs.TabPane tab='Ấn phẩm đã trả' key={ETrangThaiMuonSach.DA_TRA} />
 			</Tabs>
 
 			<div style={{ marginBottom: 12 }}>
