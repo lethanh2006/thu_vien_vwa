@@ -26,44 +26,27 @@ const FormBienMucChiTiet = (props: any) => {
 		} else if (record?._id) {
 			const danhSachTags = danhSach.map((dsItem) => dsItem.tagCode);
 
-			const khaiBaoMoi = (mauBienMuc?.thongTinKhaiBao || []).filter((item) => !danhSachTags.includes(item.tag));
+			const khaiBaoMauBienMuc = (mauBienMuc?.thongTinKhaiBao || []).filter((item) => !danhSachTags.includes(item.tag));
 
 			const mergedData = [
-				...danhSach.map((item) => {
-					const thongTinKhaiBao = mauBienMuc?.thongTinKhaiBao?.find((kb) => kb.tag === item.tagCode);
-
-					const existingCodes = new Set(item?.thuocTinhAnPham?.map((tp) => tp.code));
-
-					const additionalAttributes = (thongTinKhaiBao?.thuocTinhDuLieu || [])
-						.filter((tp) => tp.code && !existingCodes.has(tp.code))
-						.map((tp) => ({
-							...tp,
-							value: null,
-							ten: tp.ten,
-						}));
-
-					return {
-						...item,
-						ten: item.tag?.noiDung,
-						thuocTinhAnPham: [
-							...(item?.thuocTinhAnPham || []).map((tp) => ({
-								...tp,
-								value: tp.value ?? null,
-								ten: item?.tag?.thuocTinh?.find((i) => i?.code === tp?.code)?.tieuDe,
-							})),
-							...additionalAttributes,
-						],
-					};
-				}),
-				...khaiBaoMoi.map((item) => ({
+				...(danhSach ?? []).map((item) => ({
+					...item,
+					ten: item.tag?.noiDung,
+					thuocTinhAnPham: item?.thuocTinhAnPham?.map((tp) => ({
+						...tp,
+						value: tp.value ?? null,
+						ten: item?.tag?.thuocTinh?.find((i) => i?.code === tp?.code)?.tieuDe,
+					})),
+				})),
+				...(khaiBaoMauBienMuc ?? []).map((item) => ({
+					_id: null,
+					tagCode: item.tag,
+					ten: item.ten,
 					thuocTinhAnPham: (item?.thuocTinhDuLieu || []).map((tp) => ({
 						...tp,
 						value: null,
 						ten: tp.ten,
 					})),
-					tagCode: item.tag,
-					ten: item.ten,
-					_id: null,
 				})),
 			];
 
@@ -74,11 +57,11 @@ const FormBienMucChiTiet = (props: any) => {
 	const onFinish = async (values: any) => {
 		const data = {
 			danhSachBienMucChiTiet: values.danhSachBienMucChiTiet.map((item: any) => ({
-				_id: item._id ?? null,
-				ind1: item.ind1 ?? null,
-				ind2: item.ind2 ?? null,
+				_id: item._id,
+				ind1: item.ind1,
+				ind2: item.ind2,
 				tagCode: item.tagCode,
-				value: item.value ?? null,
+				value: item.value,
 				thuocTinhAnPham: (item.thuocTinhAnPham || []).map((thuocTinh: any) => ({
 					code: thuocTinh.code,
 					value: thuocTinh.value ?? '',

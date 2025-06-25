@@ -2,7 +2,7 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Form, message, Modal, Steps } from 'antd';
+import { Alert, Button, Form, message, Modal, Steps } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
@@ -62,22 +62,26 @@ const FormZ3950 = (props: { visibleForm: boolean; setVisibleForm: (val: boolean)
 
 	useEffect(() => {
 		if (mauBienMuc) {
-			const mergedDataMauBienMuc = mauBienMuc?.thongTinKhaiBao?.map((item) => ({
-				...item,
-				tagCode: item?.tag,
-				ten: item?.ten,
-				thuocTinhAnPham: [
-					...(item?.thuocTinhDuLieu || []).map((tp) => ({
-						...tp,
-						value: null,
-						ten: item?.ten,
-					})),
-				],
-			}));
-
 			const currentList = form.getFieldValue('danhSachBienMucChiTiet') || [];
 
-			const combinedList = [...currentList, ...mergedDataMauBienMuc];
+			const currentTagCodes = currentList.map((item: any) => item.tagCode);
+
+			const mergedDataMauBienMuc = mauBienMuc?.thongTinKhaiBao
+				?.filter((item) => !currentTagCodes.includes(item?.tag))
+				.map((item) => ({
+					...item,
+					tagCode: item?.tag,
+					ten: item?.ten,
+					thuocTinhAnPham: [
+						...(item?.thuocTinhDuLieu || []).map((tp) => ({
+							...tp,
+							value: null,
+							ten: item?.ten,
+						})),
+					],
+				}));
+
+			const combinedList = [...currentList, ...(mergedDataMauBienMuc || [])];
 
 			form.setFieldsValue({
 				...record,
@@ -174,12 +178,7 @@ const FormZ3950 = (props: { visibleForm: boolean; setVisibleForm: (val: boolean)
 			footer={null}
 		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
-				<Steps
-					current={currentStep}
-					type='navigation'
-					style={{ marginBottom: 18, paddingTop: 0 }}
-					onChange={setCurrentStep}
-				>
+				<Steps current={currentStep} type='navigation' style={{ marginBottom: 18, paddingTop: 0 }}>
 					<Steps.Step title='Biên mục sơ lược' />
 					<Steps.Step title='Biên mục chi tiết' />
 				</Steps>
@@ -188,6 +187,17 @@ const FormZ3950 = (props: { visibleForm: boolean; setVisibleForm: (val: boolean)
 					<BienMucSoLuoc form={form} />
 				</div>
 				<div style={{ display: currentStep === 1 ? 'block' : 'none' }}>
+					{!record?._id ? (
+						<>
+							<Alert
+								style={{ marginBottom: 12 }}
+								type='warning'
+								showIcon
+								message='Vui lòng thực hiện biên mục sơ lược trước khi biên mục chi tiết!'
+							/>
+							<i>Danh sách</i>
+						</>
+					) : null}
 					<BienMucChiTiet form={form} />
 				</div>
 
@@ -203,6 +213,7 @@ const FormZ3950 = (props: { visibleForm: boolean; setVisibleForm: (val: boolean)
 						<>
 							<Button onClick={handlePrev}>Quay lại</Button>
 							<ButtonExtend
+								disabled={!record?._id}
 								tooltip='Nếu lưu lại ấn phẩm sẽ ở vẫn trạng thái chờ biên mục chi tiết'
 								loading={formSubmiting}
 								type='primary'
@@ -214,6 +225,7 @@ const FormZ3950 = (props: { visibleForm: boolean; setVisibleForm: (val: boolean)
 								Lưu lại
 							</ButtonExtend>
 							<ButtonExtend
+								disabled={!record?._id}
 								tooltip='Nếu hoàn thành ấn phẩm sẽ chuyển trạng thái đã biên mục chi tiết'
 								loading={formSubmiting}
 								type='primary'

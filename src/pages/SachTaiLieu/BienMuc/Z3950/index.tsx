@@ -34,6 +34,7 @@ const Z3950Page = () => {
 		} else {
 			form.setFieldsValue({
 				field: 'title',
+				max_records: 10,
 			});
 		}
 	}, [visibleZ3950]);
