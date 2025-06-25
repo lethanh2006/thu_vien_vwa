@@ -217,7 +217,7 @@ const PhieuMuonTraSachPage = () => {
 			) : (
 				<>
 					<div style={{ marginBottom: 12 }}>
-						<StatMuonTraSach />
+						<StatMuonTraSach vaiTro={vaiTro} />
 					</div>
 					<MuonTraSachPage tatCaLichSu vaiTro={vaiTro} />
 				</>

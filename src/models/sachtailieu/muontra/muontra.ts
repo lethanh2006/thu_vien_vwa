@@ -132,10 +132,10 @@ export default () => {
 		}
 	};
 
-	const thongKeMuonTraSachModel = async (): Promise<MuonSach.IThongKe> => {
+	const thongKeMuonTraSachModel = async (condition?: any, filters?: any[]): Promise<MuonSach.IThongKe> => {
 		setLoadingThongKe(true);
 		try {
-			const res = await thongKeMuonTraSach();
+			const res = await thongKeMuonTraSach({ condition, filters });
 			setDataThongKe(res.data?.data);
 			return res.data?.data;
 		} catch (err) {

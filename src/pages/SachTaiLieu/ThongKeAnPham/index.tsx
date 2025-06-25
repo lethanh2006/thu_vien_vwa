@@ -12,6 +12,7 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import ModalExportAnPham from './ModalExport';
+import { EOperatorType } from '@/components/Table/constant';
 
 const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	const { isBanDoc } = props;
@@ -79,14 +80,23 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	}, [yearSelect, monthSelect]);
 
 	useEffect(() => {
-		const params = {
+		const condition = {
 			// ...{ vaiTro: vaiTro },
 			...(kieuHienThi === EKieuHienThi.THANG && { nam: yearSelect }),
 			...(kieuHienThi === EKieuHienThi.NGAY && { nam: yearSelect, thang: monthSelect }),
 			...{ trangThai: trangThai },
 		};
 
-		thongKeAnPhamMuonTraModel(kieuHienThi, isBanDoc, params);
+		const filter = vaiTro && [
+			{
+				active: true,
+				field: ['phieuMuonTra', 'vaiTro'],
+				values: [vaiTro],
+				operator: EOperatorType.INCLUDE,
+			},
+		];
+
+		thongKeAnPhamMuonTraModel(kieuHienThi, isBanDoc, condition, filter);
 	}, [kieuHienThi, monthSelect, yearSelect, trangThai, isBanDoc, vaiTro]);
 
 	return (

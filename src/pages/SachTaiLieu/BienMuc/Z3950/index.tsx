@@ -9,7 +9,7 @@ import { CheckOutlined } from '@ant-design/icons';
 import { Button, Col, Empty, Form, Input, InputNumber, Modal, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import SelectMayChu from './Select';
+import SelectMayChu from '../../../DanhMuc/ThuVienQuocTe/components/Select';
 import FormZ3950 from './components/Form';
 
 const { Option } = Select;
@@ -19,7 +19,13 @@ const Z3950Page = () => {
 	const { timKiemZ3950Model, dsAnPhamZ3950, setDSAnPhamZ3950, loading, visibleZ3950, setVisibleZ3950, setRecord } =
 		useModel('sachtailieu.anpham.anpham');
 	const { danhSach } = useModel('danhmuc.thuvienquocte');
+	const { initialState } = useModel('@@initialState');
+	const { record: recDot } = useModel('sachtailieu.anpham.dotnhapsach');
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
+
+	const fullName = initialState?.currentUser?.family_name
+		? `${initialState?.currentUser.family_name} ${initialState?.currentUser?.given_name ?? ''}`
+		: initialState?.currentUser?.name ?? (initialState?.currentUser?.preferred_username || '');
 
 	useEffect(() => {
 		if (!visibleZ3950) {
@@ -49,70 +55,44 @@ const Z3950Page = () => {
 
 	const mapZ390ToAnPham = (z390Data: Z3950.IRecord): AnPham.IRecord => {
 		const anPhamRecord: Partial<AnPham.IRecord | any> = {
-			nhanDe: z390Data.title || '',
-			tacGia: z390Data.author || '',
-			ISBN: z390Data.isbn?.[0] || '',
-			namXuatBan: parseInt(z390Data.publication_year) || new Date().getFullYear(),
-			nhaXuatBan: z390Data.publisher || '',
+			nhanDe: z390Data.title || null,
+			tacGia: z390Data.author || null,
+			ISBN: z390Data.isbn?.map((item) => item).join('; ') || null,
+			namXuatBan: parseInt(z390Data.publication_year) || null,
+			nhaXuatBan: z390Data.publisher || null,
+			canBoBienMuc: fullName,
+			dotNhapSachId: recDot?._id,
+
+			ISSN: z390Data.data_fields?.find((item) => item?.tag === '022')?.subfields?.find((item) => item?.code === 'a')
+				?.value,
+			soThuTuCuaTap: z390Data.data_fields
+				?.find((item) => item?.tag === '245')
+				?.subfields?.find((item) => item?.code === 'n')?.value,
+			phuDe: z390Data.data_fields?.find((item) => item?.tag === '245')?.subfields?.find((item) => item?.code === 'b')
+				?.value,
+			thongTinTrachNhiem: z390Data.data_fields
+				?.find((item) => item?.tag === '245')
+				?.subfields?.find((item) => item?.code === 'c')?.value,
+			lanXuatBan: z390Data.data_fields
+				?.find((item) => item?.tag === '250')
+				?.subfields?.find((item) => item?.code === 'a')?.value,
+			noiXuatBan: z390Data.data_fields
+				?.find((item) => item?.tag === '260')
+				?.subfields?.find((item) => item?.code === 'a')?.value,
+			soTrang: z390Data.data_fields?.find((item) => item?.tag === '300')?.subfields?.find((item) => item?.code === 'a')
+				?.value,
+			dacDiemVatLy: z390Data.data_fields
+				?.find((item) => item?.tag === '300')
+				?.subfields?.find((item) => item?.code === 'b')?.value,
+			khuonKho: z390Data.data_fields?.find((item) => item?.tag === '300')?.subfields?.find((item) => item?.code === 'c')
+				?.value,
+			tuLieuDiKem: z390Data.data_fields
+				?.find((item) => item?.tag === '300')
+				?.subfields?.find((item) => item?.code === 'e')?.value,
+			maNgonNgu: z390Data.data_fields
+				?.find((item) => item?.tag === '401')
+				?.subfields?.find((item) => item?.code === 'a')?.value,
 		};
-
-		// Định nghĩa mapping các trường đặc biệt
-		const fieldMappings = {
-			ISBN: { tagCode: '020', subCode: 'a' },
-			ISSN: { tagCode: '022', subCode: 'a' },
-			tacGia: { tagCode: '100', subCode: 'a' },
-			nhanDe: { tagCode: '245', subCode: 'a' },
-			soThuTuCuaTap: { tagCode: '245', subCode: 'n' },
-			tenTap: { tagCode: '245', subCode: 'p' },
-			nhanDeSongSong: { tagCode: '245', subCode: 'b' },
-			phuDe: { tagCode: '245', subCode: 'b' },
-			thongTinTrachNhiem: { tagCode: '245', subCode: 'c' },
-			lanXuatBan: { tagCode: '250', subCode: 'a' },
-			noiXuatBan: { tagCode: '260', subCode: 'a' },
-			namXuatBan: { tagCode: '260', subCode: 'c' },
-			nhaXuatBan: { tagCode: '260', subCode: 'b' },
-			soTrang: { tagCode: '300', subCode: 'a' },
-			dacDiemVatLy: { tagCode: '300', subCode: 'b' },
-			khuonKho: { tagCode: '300', subCode: 'c' },
-			tuLieuDiKem: { tagCode: '300', subCode: 'e' },
-			maNgonNgu: { tagCode: '041', subCode: 'a' },
-		};
-
-		// Hàm helper để lấy giá trị từ data_fields
-		const getFieldValue = (tagCode: string, subCode: string): string => {
-			const field = z390Data.data_fields?.find((f: any) => f.tag === tagCode);
-			if (!field) return '';
-
-			const subfield = field.subfields?.find((sf: any) => sf.code === subCode);
-			return subfield?.value || '';
-		};
-
-		// Chỉ lấy từ fieldMappings nếu giá trị hiện tại là rỗng
-		Object.entries(fieldMappings).forEach(([fieldName, mapping]) => {
-			// Bỏ qua nếu đã có giá trị từ z390Data
-			if (anPhamRecord[fieldName as keyof AnPham.IRecord]) return;
-
-			const value = getFieldValue(mapping.tagCode, mapping.subCode);
-			if (value) {
-				// Xử lý đặc biệt cho trường namXuatBan (chuyển sang number)
-				if (fieldName === 'namXuatBan') {
-					anPhamRecord[fieldName as keyof AnPham.IRecord] = parseInt(value);
-				} else {
-					anPhamRecord[fieldName as keyof AnPham.IRecord] = value;
-				}
-			}
-		});
-
-		// Xử lý ISBN đặc biệt (chỉ lấy từ data_fields nếu chưa có ISBN)
-		if (!anPhamRecord.ISBN) {
-			const isbnField = z390Data.data_fields?.find((f: any) => f.tag === '020');
-			if (isbnField) {
-				const firstIsbn = isbnField.subfields?.find((sf: any) => sf.code === 'a')?.value;
-				if (firstIsbn) {
-					anPhamRecord.ISBN = firstIsbn;
-				}
-			}
-		}
 
 		// Xử lý danhSachThongTin từ tất cả data_fields
 		if (z390Data.data_fields && Array.isArray(z390Data.data_fields)) {
@@ -138,7 +118,7 @@ const Z3950Page = () => {
 		{
 			title: 'Tác giả',
 			dataIndex: 'author',
-			width: 150,
+			width: 120,
 			filterType: 'string',
 		},
 		{
@@ -150,14 +130,14 @@ const Z3950Page = () => {
 		{
 			title: 'Mã ISBN',
 			dataIndex: 'isbn',
-			width: 90,
-			filterType: 'string',
+			width: 120,
+			render: (val, rec) => rec?.isbn?.map((item) => item).join('; '),
 		},
 		{
 			title: 'Mã ISSN',
 			dataIndex: 'issn',
-			width: 90,
-			filterType: 'string',
+			width: 120,
+			render: (val, rec) => rec?.isbn?.map((item) => item).join('; '),
 		},
 		{
 			title: 'Nhà xuất bản',

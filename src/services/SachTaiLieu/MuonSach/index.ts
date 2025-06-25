@@ -21,8 +21,8 @@ export async function giaHanThueMuonAnPham(idThueMuon: string, payload: any) {
 	return axios.put(`${ip3}/thue-muon-an-pham/${idThueMuon}/gia-han`, payload);
 }
 
-export async function thongKeMuonTraSach() {
-	return axios.get(`${ip3}/thue-muon-an-pham/thong-ke`);
+export async function thongKeMuonTraSach(params?: { condition?: any; filters?: any[] }) {
+	return axios.get(`${ip3}/thue-muon-an-pham/thong-ke`, { params });
 }
 
 export async function thongKeAnPhamMuonTra(

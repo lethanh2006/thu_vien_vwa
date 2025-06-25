@@ -9,9 +9,8 @@ const StatThongKeMuonTra = (props: { filter?: any }) => {
 		useModel('sachtailieu.muontra.muontra');
 
 	useEffect(() => {
-		thongKeTongSoMuonTraAnPhamModel();
-		// undefined, filter?.filter(Boolean)?.length ? filter?.filter(Boolean) : undefined
-	}, []);
+		thongKeTongSoMuonTraAnPhamModel(undefined, filter?.filter(Boolean)?.length ? filter?.filter(Boolean) : undefined);
+	}, [JSON.stringify(filter)]);
 
 	const renderCard = (value: number, color: string, title: string, description: string) => (
 		<Tooltip title={description}>

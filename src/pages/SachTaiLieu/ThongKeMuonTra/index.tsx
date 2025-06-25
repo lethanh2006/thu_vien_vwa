@@ -37,7 +37,7 @@ const ThongKeMuonTraPage = () => {
 		},
 		datePicker && {
 			active: true,
-			field: 'thoiGianMuon',
+			field: trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'thoiGianMuon' : 'thoiGianTra',
 			values: [moment(datePicker?.[0]).startOf('date'), moment(datePicker?.[1]).endOf('date')],
 			operator: EOperatorType.BETWEEN,
 		},
@@ -142,7 +142,9 @@ const ThongKeMuonTraPage = () => {
 				/>
 
 				<div style={{ display: 'flex', alignItems: 'center' }}>
-					<span style={{ marginRight: 8, whiteSpace: 'nowrap' }}>Thời gian mượn:</span>
+					<span style={{ marginRight: 8, whiteSpace: 'nowrap' }}>
+						{trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'Thời gian mượn:' : 'Thời gian trả:'}
+					</span>
 					<MyDateRangePicker
 						value={datePicker}
 						onChange={(val) => setDatePicker(val)}

@@ -29,7 +29,9 @@ const ChiTietAnPham = () => {
 			width: 220,
 			render: (val, rec) =>
 				!!val?.length
-					? val?.map((i: any) => `${i.code ?? ''}${i.value?.replace(/\u00A0/g, ' ') ?? ''}`).join(' ')
+					? _.orderBy(val, 'code')
+							?.map((i: any) => `${i.code ?? ''}${i.value?.replace(/\u00A0/g, ' ') ?? ''}`)
+							.join(' ')
 					: rec?.value,
 		},
 	];

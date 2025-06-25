@@ -24,6 +24,7 @@ declare module Z3950 {
 		tag: string;
 	};
 	export interface IMayChu {
+		_id: string;
 		database: string;
 		description: string;
 		host: string;
