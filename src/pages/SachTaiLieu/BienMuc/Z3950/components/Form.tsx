@@ -74,6 +74,15 @@ const FormZ3950 = (props: { visibleForm: boolean; setVisibleForm: (val: boolean)
 					})),
 				],
 			}));
+
+			const currentList = form.getFieldValue('danhSachBienMucChiTiet') || [];
+
+			const combinedList = [...currentList, ...mergedDataMauBienMuc];
+
+			form.setFieldsValue({
+				...record,
+				danhSachBienMucChiTiet: _.orderBy(combinedList, 'tagCode'),
+			});
 		}
 	}, [mauBienMucId]);
 
