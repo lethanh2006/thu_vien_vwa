@@ -7,28 +7,36 @@ import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { CheckOutlined } from '@ant-design/icons';
 import { Button, Col, Empty, Form, Input, InputNumber, Modal, Row, Select } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useModel } from 'umi';
 import SelectMayChu from '../../../DanhMuc/ThuVienQuocTe/components/Select';
-import FormZ3950 from './components/Form';
+import ModalBienMucZ3950 from './components/Modal';
 
 const { Option } = Select;
 
-const Z3950Page = () => {
+const Z3950Page = (props: { getData: () => void }) => {
+	const { getData } = props;
 	const [form] = Form.useForm();
-	const { timKiemZ3950Model, dsAnPhamZ3950, setDSAnPhamZ3950, loading, visibleZ3950, setVisibleZ3950, setRecord } =
-		useModel('sachtailieu.anpham.anpham');
+	const {
+		timKiemZ3950Model,
+		dsAnPhamZ3950,
+		setDSAnPhamZ3950,
+		loading,
+		setRecord,
+		setVisibleZ3950,
+		visibleTimKiemZ3950,
+		setVisibleTimKiemZ3950,
+	} = useModel('sachtailieu.anpham.anpham');
 	const { danhSach } = useModel('danhmuc.thuvienquocte');
 	const { initialState } = useModel('@@initialState');
 	const { record: recDot } = useModel('sachtailieu.anpham.dotnhapsach');
-	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 
 	const fullName = initialState?.currentUser?.family_name
 		? `${initialState?.currentUser.family_name} ${initialState?.currentUser?.given_name ?? ''}`
 		: initialState?.currentUser?.name ?? (initialState?.currentUser?.preferred_username || '');
 
 	useEffect(() => {
-		if (!visibleZ3950) {
+		if (!visibleTimKiemZ3950) {
 			resetFieldsForm(form);
 			setDSAnPhamZ3950([]);
 		} else {
@@ -37,7 +45,7 @@ const Z3950Page = () => {
 				max_records: 10,
 			});
 		}
-	}, [visibleZ3950]);
+	}, [visibleTimKiemZ3950]);
 
 	const onFinish = async (values: any) => {
 		const mayChu = danhSach?.find((item) => item?.host === values.mayChu);
@@ -165,7 +173,7 @@ const Z3950Page = () => {
 						const anPhamRecord = mapZ390ToAnPham(rec);
 
 						setRecord(anPhamRecord);
-						setVisibleModal(true);
+						setVisibleZ3950(true);
 					}}
 					tooltip='Xác nhận'
 					className='text-success'
@@ -179,8 +187,8 @@ const Z3950Page = () => {
 	return (
 		<Modal
 			title='Tải dữ liệu qua giao thức Z39.50'
-			visible={visibleZ3950}
-			onCancel={() => setVisibleZ3950(false)}
+			visible={visibleTimKiemZ3950}
+			onCancel={() => setVisibleTimKiemZ3950(false)}
 			footer={null}
 			width={900}
 		>
@@ -245,7 +253,7 @@ const Z3950Page = () => {
 				)}
 			</Form>
 
-			<FormZ3950 visibleForm={visibleModal} setVisibleForm={setVisibleModal} />
+			<ModalBienMucZ3950 getData={getData} />
 		</Modal>
 	);
 };

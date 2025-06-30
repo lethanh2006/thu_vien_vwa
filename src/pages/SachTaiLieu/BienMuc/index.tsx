@@ -41,7 +41,7 @@ const BienMucSachTaiLieuPage = () => {
 		setVisibleForm,
 		deleteModel,
 		putBienMucSoLuocModel,
-		setVisibleZ3950,
+		setVisibleTimKiemZ3950,
 	} = useModel('sachtailieu.anpham.anpham');
 	const [tabActive, setTabActive] = useState<string>('1');
 	const [visibleSachHay, setVisibleSachHay] = useState<boolean>(false);
@@ -281,7 +281,7 @@ const BienMucSachTaiLieuPage = () => {
 						Biên mục sơ lược
 					</ButtonExtend>,
 
-					<ButtonExtend key='3' tooltip='Biên mục qua Z39.50' onClick={() => setVisibleZ3950(true)}>
+					<ButtonExtend key='3' tooltip='Biên mục qua Z39.50' onClick={() => setVisibleTimKiemZ3950(true)}>
 						Biên mục qua Z39.50
 					</ButtonExtend>,
 					<Segmented
@@ -298,7 +298,7 @@ const BienMucSachTaiLieuPage = () => {
 
 			<ModalSachHay visible={visibleSachHay} setVisible={setVisibleSachHay} getData={getData} />
 
-			<Z3950Page />
+			<Z3950Page getData={getData} />
 		</Card>
 	);
 };

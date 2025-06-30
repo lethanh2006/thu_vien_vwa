@@ -22,6 +22,7 @@ export default () => {
 	const [recBienMucChiTiet, setRecBienMucChiTiet] = useState<MauBienMuc.IThongTinKhaiBao>();
 	const [dsAnPhamZ3950, setDSAnPhamZ3950] = useState<Z3950.IRecord[]>([]);
 	const [visibleZ3950, setVisibleZ3950] = useState<boolean>(false);
+	const [visibleTimKiemZ3950, setVisibleTimKiemZ3950] = useState<boolean>(false);
 
 	const { setLoading, getService, setDanhSach, formSubmiting, setFormSubmiting } = objInit;
 
@@ -188,5 +189,7 @@ export default () => {
 		putBienMucChiTietModel,
 		putBienMucSoLuocModel,
 		timKiemZ3950Model,
+		visibleTimKiemZ3950,
+		setVisibleTimKiemZ3950,
 	};
 };
