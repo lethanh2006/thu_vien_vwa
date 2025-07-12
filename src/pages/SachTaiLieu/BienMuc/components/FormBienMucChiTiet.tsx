@@ -52,7 +52,7 @@ const FormBienMucChiTiet = (props: any) => {
 
 			form.setFieldsValue({ danhSachBienMucChiTiet: _.orderBy(mergedData, 'tagCode') });
 		}
-	}, [record?._id, visibleForm]);
+	}, [visibleForm, record?._id, record?.mauBienMucId]);
 
 	const onFinish = async (values: any) => {
 		const data = {

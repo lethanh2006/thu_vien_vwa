@@ -8,7 +8,7 @@ import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import SelectDotNhapSach from '@/pages/SachTaiLieu/DotNhapSach/components/Select';
 import rules from '@/utils/rules';
-import { Checkbox, Col, Form, type FormInstance, Input, InputNumber, Row, Select } from 'antd';
+import { Alert, Checkbox, Col, Form, type FormInstance, Input, InputNumber, Row, Select } from 'antd';
 import FormItemTaiLieuSo from '../DanhSachTaiLieu/FormItem';
 
 const BienMucSoLuoc = (props: { form: FormInstance }) => {
@@ -18,6 +18,14 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 
 	return (
 		<Row gutter={[12, 0]}>
+			<Col span={24}>
+				<Alert
+					style={{ marginBottom: 12 }}
+					type='info'
+					showIcon
+					message='Để tránh mất dữ liệu khi biên mục, lưu ý không tắt form hoặc tải lại trang trong khi chưa hoàn thành biên mục chi tiết!'
+				/>
+			</Col>
 			<Col span={24}>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
