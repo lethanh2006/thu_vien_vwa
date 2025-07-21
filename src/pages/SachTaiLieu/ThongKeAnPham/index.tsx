@@ -9,7 +9,7 @@ import { ExportOutlined } from '@ant-design/icons';
 import { Card, Col, Empty, Row, Segmented, Select, Space, Spin, Tabs } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useModel } from 'umi';
 import ModalExportAnPham from './ModalExport';
 import { EOperatorType } from '@/components/Table/constant';
@@ -26,38 +26,6 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	const [dateRange, setDateRange] = useState<string[] | null>(null);
 	const [modalExport, setModalExport] = useState<boolean>(false);
 	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
-
-	const filteredData = dataThongKeAnPhamMuonTra?.filter((item) => {
-		if (!dateRange || dateRange.length < 2 || kieuHienThi !== EKieuHienThi.NGAY) {
-			return true;
-		}
-
-		const itemDate = moment.utc(item.title, 'YYYY-MM-DD').startOf('day');
-		const startDate = moment.utc(dateRange[0]).startOf('day');
-		const endDate = moment.utc(dateRange[1]).startOf('day');
-
-		return itemDate.isBetween(startDate, endDate, 'day', '[]');
-	});
-
-	const total = filteredData?.reduce((sum, item) => sum + Number(item.soLuong), 0);
-
-	const chartData = (() => {
-		if (!filteredData?.length) return [];
-		const rawPercentages = filteredData.map((item) => ({
-			x: item.title ?? 'Không có thông tin',
-			y: (Number(item.soLuong) / (total ?? 1)) * 100,
-		}));
-		const roundedPercentages = rawPercentages.map((item) => ({
-			...item,
-			y: _.round(item.y, 2),
-		}));
-		const roundedTotal = _.sumBy(roundedPercentages, 'y');
-		if (roundedTotal !== 100 && roundedPercentages.length > 0) {
-			const difference = 100 - roundedTotal;
-			roundedPercentages[roundedPercentages.length - 1].y += difference;
-		}
-		return roundedPercentages;
-	})();
 
 	useEffect(() => {
 		let startOfMonth, endOfMonth;
@@ -81,7 +49,6 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 
 	useEffect(() => {
 		const condition = {
-			// ...{ vaiTro: vaiTro },
 			...(kieuHienThi === EKieuHienThi.THANG && { nam: yearSelect }),
 			...(kieuHienThi === EKieuHienThi.NGAY && { nam: yearSelect, thang: monthSelect }),
 			...{ trangThai: trangThai },
@@ -98,6 +65,48 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 
 		thongKeAnPhamMuonTraModel(kieuHienThi, isBanDoc, condition, filter);
 	}, [kieuHienThi, monthSelect, yearSelect, trangThai, isBanDoc, vaiTro]);
+
+	const filteredData = useMemo(() => {
+		if (!dataThongKeAnPhamMuonTra) return [];
+
+		if (!dateRange || dateRange.length < 2 || kieuHienThi !== EKieuHienThi.NGAY) {
+			return dataThongKeAnPhamMuonTra;
+		}
+
+		const startDate = moment.utc(dateRange[0]).startOf('day');
+		const endDate = moment.utc(dateRange[1]).startOf('day');
+
+		return dataThongKeAnPhamMuonTra.filter((item) => {
+			const itemDate = moment.utc(item.title, 'YYYY-MM-DD').startOf('day');
+			return itemDate.isBetween(startDate, endDate, 'day', '[]');
+		});
+	}, [dataThongKeAnPhamMuonTra, dateRange, kieuHienThi]);
+
+	const total = useMemo(() => {
+		return filteredData.reduce((sum, item) => sum + Number(item.soLuong), 0);
+	}, [filteredData]);
+
+	const chartData = useMemo(() => {
+		if (!filteredData.length) return [];
+
+		const rawPercentages = filteredData.map((item) => ({
+			x: item.title ?? 'Không có thông tin',
+			y: (Number(item.soLuong) / (total || 1)) * 100,
+		}));
+
+		const roundedPercentages = rawPercentages.map((item) => ({
+			...item,
+			y: _.round(item.y, 2),
+		}));
+
+		const roundedTotal = _.sumBy(roundedPercentages, 'y');
+		if (roundedTotal !== 100 && roundedPercentages.length > 0) {
+			const difference = 100 - roundedTotal;
+			roundedPercentages[roundedPercentages.length - 1].y += difference;
+		}
+
+		return roundedPercentages;
+	}, [filteredData, total]);
 
 	return (
 		<Card title={isBanDoc ? 'Thống kê bạn đọc' : 'Thống kê mượn trả ấn phẩm'}>
@@ -242,7 +251,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 								)}
 								yAxis={[filteredData?.map((item) => Number(item.soLuong) ?? 0)]}
 								showTotal
-								type={filteredData.length && filteredData.length >= 10 ? 'area' : 'bar'}
+								type={filteredData.length >= 10 ? 'area' : 'bar'}
 								otherOptions={{
 									yaxis: {
 										labels: { formatter: (val) => `${inputFormat(val)}` },
@@ -251,7 +260,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 										bar: {
 											columnWidth: '20%',
 											dataLabels: {
-												position: 'top', // 👈 Hiển thị trên đỉnh cột
+												position: 'top',
 											},
 										},
 									},
@@ -305,16 +314,14 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 						</Col>
 						<Col span={24} md={8}>
 							<DonutChart
-								xAxis={
-									chartData?.map((item) =>
-										kieuHienThi === EKieuHienThi.NGAY
-											? moment(item.x).format('DD/MM/YYYY')
-											: kieuHienThi === EKieuHienThi.THANG
-											? `Tháng ${item.x}`
-											: item.x,
-									) ?? []
-								}
-								yAxis={[chartData?.map((item) => item.y) ?? []]}
+								xAxis={chartData?.map((item) =>
+									kieuHienThi === EKieuHienThi.NGAY
+										? moment(item.x).format('DD/MM/YYYY')
+										: kieuHienThi === EKieuHienThi.THANG
+										? `Tháng ${item.x}`
+										: item.x,
+								)}
+								yAxis={[chartData?.map((item) => item.y)]}
 								yLabel={['Phần trăm (%)']}
 								showTotal
 								formatY={(val) => `${inputFormat(val)} %`}
