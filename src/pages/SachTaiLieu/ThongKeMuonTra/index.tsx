@@ -126,7 +126,7 @@ const ThongKeMuonTraPage = () => {
 		<Card title='Thống kê mượn trả'>
 			<Tabs onChange={(tab) => setTrangThai(tab as ETrangThaiMuonSach)} activeKey={trangThai}>
 				<Tabs.TabPane tab='Lịch sử đang mượn' key={ETrangThaiMuonSach.DANG_THUE_MUON} />
-				<Tabs.TabPane tab='Lịch sử đã mượn' key={ETrangThaiMuonSach.DA_TRA} />
+				<Tabs.TabPane tab='Lịch sử đã trả' key={ETrangThaiMuonSach.DA_TRA} />
 			</Tabs>
 
 			<Space style={{ marginBottom: 12 }} align='center'>
