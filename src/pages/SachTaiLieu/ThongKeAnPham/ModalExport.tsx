@@ -1,7 +1,7 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import { EOperatorType } from '@/components/Table/constant';
-import { EKieuHienThi, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
+import { EKieuHienThi, ETrangThaiMuonSach, type EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import { exportThongKeTheMuon } from '@/services/SachTaiLieu/MuonSach';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
@@ -15,8 +15,9 @@ const ModalExportAnPham = (props: {
 	visible: boolean;
 	setVisible: (val: boolean) => void;
 	trangThai: ETrangThaiMuonSach;
+	vaiTro?: EVaiTroMuonTra;
 }) => {
-	const { visible, setVisible, trangThai } = props;
+	const { visible, setVisible, trangThai, vaiTro } = props;
 	const [form] = Form.useForm();
 	const intl = useIntl();
 	const [loadingExport, setLoadingExport] = useState<boolean>(false);
@@ -57,7 +58,7 @@ const ModalExportAnPham = (props: {
 
 		setLoadingExport(true);
 		exportThongKeTheMuon({
-			condition: { quaHan: value.quaHan },
+			condition: { quaHan: value.quaHan, vaiTro },
 			filters: filter,
 		})
 			.then((res) => {

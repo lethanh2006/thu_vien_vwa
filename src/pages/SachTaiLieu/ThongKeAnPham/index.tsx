@@ -334,7 +334,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 				)}
 			</Spin>
 
-			<ModalExportAnPham visible={modalExport} setVisible={setModalExport} trangThai={trangThai} />
+			<ModalExportAnPham visible={modalExport} setVisible={setModalExport} trangThai={trangThai} vaiTro={vaiTro} />
 		</Card>
 	);
 };
