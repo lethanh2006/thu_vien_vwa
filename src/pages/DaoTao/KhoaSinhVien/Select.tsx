@@ -6,8 +6,8 @@ import { useModel } from 'umi';
  * Secect Căn cứ pháp lý để cho vào FormItem
  */
 const SelectKhoaSinhVien = (props: {
-	value?: string;
-	onChange?: (val: string) => void;
+	value?: string | string[];
+	onChange?: (val: string | string[] | null) => void;
 	multiple?: boolean;
 	condition?: Partial<KhoaSinhVien.IRecord>;
 	allowClear?: boolean;
@@ -15,14 +15,32 @@ const SelectKhoaSinhVien = (props: {
 	style?: React.CSSProperties;
 	isSetRecord?: boolean;
 	selectMa?: boolean;
-	readOnly?: boolean;
+	loadData?: boolean;
+	placeholder?: string;
 }) => {
-	const { value, onChange, multiple, condition, allowClear, disabled, style, isSetRecord, selectMa, readOnly } = props;
-	const { danhSach, getAllModel, visibleForm } = useModel('daotao.khoasinhvien');
+	const {
+		value,
+		onChange,
+		multiple,
+		condition,
+		allowClear,
+		disabled,
+		style,
+		isSetRecord,
+		selectMa,
+		loadData,
+		placeholder,
+	} = props;
+	const { danhSach, getAllModel, loading, record, setRecord } = useModel('daotao.khoasinhvien');
 
 	useEffect(() => {
-		if (!visibleForm) getAllModel(isSetRecord, { namHocBatDau: -1 }, condition);
-	}, [visibleForm, JSON.stringify(condition)]);
+		if (loadData !== false)
+			getAllModel(undefined, { namHocBatDau: -1 }, condition).then((res) => {
+				const khoa = res.find((i) => i.ma === record?.ma);
+				if (isSetRecord) setRecord(khoa ?? res?.[0]);
+				else if (onChange) setRecord(khoa);
+			});
+	}, [JSON.stringify(condition)]);
 
 	return (
 		<Select
@@ -31,16 +49,17 @@ const SelectKhoaSinhVien = (props: {
 			onChange={onChange}
 			disabled={disabled}
 			options={danhSach.map((item) => ({
-				key: item._id,
+				key: item.ma ?? item._id,
 				value: selectMa ? item.ma : item._id,
 				label: item.ten,
 			}))}
-			removeIcon={readOnly ? null : undefined}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn khóa sinh viên'
+			placeholder={placeholder ?? 'Chọn khóa sinh viên'}
 			allowClear={allowClear ?? false}
-			style={{ width: '100%', pointerEvents: readOnly ? 'none' : undefined, ...style }}
+			style={{ width: '100%', ...style }}
+			showArrow
+			loading={loading}
 		/>
 	);
 };

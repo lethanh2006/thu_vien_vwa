@@ -1,7 +1,8 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import { EOperatorType } from '@/components/Table/constant';
-import { EKieuHienThi, ETrangThaiMuonSach, type EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
+import FormItemKhoaNganh from '@/pages/DaoTao/KhoaNganh/FormItemKhoaNganh';
+import { EKieuHienThi, ETrangThaiMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import { exportThongKeTheMuon } from '@/services/SachTaiLieu/MuonSach';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
@@ -54,12 +55,20 @@ const ModalExportAnPham = (props: {
 				operator: EOperatorType.BETWEEN,
 				values: [dateRangeFrom, dateRangeTo],
 			},
+			value.maKhoaNganh?.length
+				? {
+						active: true,
+						field: 'maKhoaNganh',
+						operator: EOperatorType.INCLUDE,
+						values: value.maKhoaNganh,
+				  }
+				: undefined,
 		];
 
 		setLoadingExport(true);
 		exportThongKeTheMuon({
 			condition: { quaHan: value.quaHan, vaiTro },
-			filters: filter,
+			filters: filter?.filter(Boolean),
 		})
 			.then((res) => {
 				fileDownload(res.data, 'Thống thuê mượn ấn phẩm.xlsx');
@@ -70,7 +79,13 @@ const ModalExportAnPham = (props: {
 	};
 
 	return (
-		<Modal title='Xuất dữ liệu thống kê ấn phẩm' visible={visible} onCancel={() => setVisible(false)} footer={null}>
+		<Modal
+			title='Xuất dữ liệu thống kê ấn phẩm'
+			visible={visible}
+			onCancel={() => setVisible(false)}
+			footer={null}
+			width={vaiTro === EVaiTroMuonTra.SINHVIEN ? 1100 : 600}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col xs={24}>
@@ -101,6 +116,14 @@ const ModalExportAnPham = (props: {
 						<Col xs={24}>
 							<Form.Item name='quaHan' valuePropName='checked' initialValue={false}>
 								<Checkbox>Chỉ xuất dữ liệu ấn phẩm quá hạn</Checkbox>
+							</Form.Item>
+						</Col>
+					) : null}
+
+					{vaiTro === EVaiTroMuonTra.SINHVIEN ? (
+						<Col xs={24}>
+							<Form.Item name='maKhoaNganh' label={<div className='fw500'>Danh sách khóa ngành áp dụng</div>}>
+								<FormItemKhoaNganh />
 							</Form.Item>
 						</Col>
 					) : null}
