@@ -71,7 +71,10 @@ const ModalExportAnPham = (props: {
 			filters: filter?.filter(Boolean),
 		})
 			.then((res) => {
-				fileDownload(res.data, 'Thống thuê mượn ấn phẩm.xlsx');
+				fileDownload(
+					res.data,
+					trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'Thống mượn ấn phẩm.xlsx' : 'Thống trả ấn phẩm.xlsx',
+				);
 			})
 			.finally(() => {
 				setLoadingExport(false);
