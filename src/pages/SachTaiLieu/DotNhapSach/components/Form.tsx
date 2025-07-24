@@ -88,7 +88,7 @@ const FormDotNhapSach = (props: any) => {
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Mô tả' name='mota'>
+						<Form.Item label='Mô tả' name='moTa'>
 							<Input.TextArea rows={2} placeholder='Nhập mô tả' />
 						</Form.Item>
 					</Col>
