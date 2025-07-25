@@ -353,7 +353,10 @@ const MuonTraSachPage = (props: any) => {
 					formProps={{ getData, trangThai, setTrangThai, setVisibleGhiTra }}
 					Form={ChiTietMuonTraSach}
 					hideCard
-					buttons={{ create: false, export: tatCaLichSu ? true : false }}
+					buttons={{
+						create: false,
+						//  export: tatCaLichSu ? true : false
+					}}
 					otherButtons={[
 						trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
 							<Segmented

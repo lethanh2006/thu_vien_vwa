@@ -39,7 +39,7 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 								<Row gutter={[12, 0]}>
 									<Col xs={24} md={12}>
 										<Form.Item name='dotNhapSachId' label='Sổ đăng ký tổng quát'>
-											<SelectDotNhapSach />
+											<SelectDotNhapSach allowClear />
 										</Form.Item>
 									</Col>
 									<Col xs={24} md={12}>

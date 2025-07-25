@@ -100,7 +100,7 @@ const DotNhapSachPage = () => {
 	return (
 		<TableBase
 			getData={getData}
-			formProps={getData}
+			formProps={{ getData }}
 			columns={columns}
 			dependencies={[page, limit, recHocKy?.ma]}
 			modelName='sachtailieu.anpham.dotnhapsach'
