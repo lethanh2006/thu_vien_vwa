@@ -11,7 +11,7 @@ import { useIntl, useModel } from 'umi';
 const FormDotNhapSach = (props: any) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
-	const { title } = props;
+	const { title, getData } = props;
 	const thoiGianBatDau: Date = Form.useWatch('thoiGianBatDau', form);
 	const { record: recHocKy } = useModel('daotao.hocky');
 	const { record, setVisibleForm, edit, postModel, putModel, formSubmiting, visibleForm } = useModel(
@@ -29,11 +29,11 @@ const FormDotNhapSach = (props: any) => {
 		values.thoiGianBatDau = moment(values.thoiGianBatDau).startOf('day').toISOString();
 		values.thoiGianKetThuc = moment(values.thoiGianKetThuc).endOf('day').toISOString();
 		if (edit) {
-			putModel(record?._id ?? '', values)
+			putModel(record?._id ?? '', values, getData)
 				.then()
 				.catch((er) => console.log(er));
 		} else {
-			postModel(values)
+			postModel(values, getData)
 				.then()
 				.catch((er) => console.log(er));
 		}

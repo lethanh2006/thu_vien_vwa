@@ -15,8 +15,6 @@ import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import {
 	CheckOutlined,
 	DeleteOutlined,
-	ExportOutlined,
-	ImportOutlined,
 	InfoCircleOutlined,
 	MenuOutlined,
 	PlusCircleOutlined,
@@ -356,13 +354,13 @@ const GhiTraPage = () => {
 						Ghi trả
 					</ButtonExtend>,
 
-					<ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
-						Nhập dữ liệu
-					</ButtonExtend>,
+					// <ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
+					// 	Nhập dữ liệu
+					// </ButtonExtend>,
 
-					<ButtonExtend key={'export'} icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
-						Xuất dữ liệu
-					</ButtonExtend>,
+					// <ButtonExtend key={'export'} icon={<ExportOutlined />} onClick={() => setVisibleExport(true)}>
+					// 	Xuất dữ liệu
+					// </ButtonExtend>,
 
 					<Segmented
 						key={'2'}

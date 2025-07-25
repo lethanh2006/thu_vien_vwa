@@ -181,7 +181,13 @@ const ThongKeMuonTraPage = () => {
 				]}
 			/>
 
-			<ModalExportAnPham visible={modalExport} setVisible={setModalExport} trangThai={trangThai} vaiTro={vaiTro} />
+			<ModalExportAnPham
+				title='Xuất dữ liệu thống kê mượn trả'
+				visible={modalExport}
+				setVisible={setModalExport}
+				trangThai={trangThai}
+				vaiTro={vaiTro}
+			/>
 		</Card>
 	);
 };

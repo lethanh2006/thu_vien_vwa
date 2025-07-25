@@ -86,7 +86,7 @@ const DotNhapSachPage = () => {
 				<>
 					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
 					<Popconfirm
-						onConfirm={() => deleteModel(rec._id)}
+						onConfirm={() => deleteModel(rec._id, getData)}
 						title='Bạn có chắc chắn muốn xóa thông tin này?'
 						placement='topRight'
 					>
@@ -100,6 +100,7 @@ const DotNhapSachPage = () => {
 	return (
 		<TableBase
 			getData={getData}
+			formProps={getData}
 			columns={columns}
 			dependencies={[page, limit, recHocKy?.ma]}
 			modelName='sachtailieu.anpham.dotnhapsach'

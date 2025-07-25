@@ -5,7 +5,7 @@ import ModalImport from '@/components/Table/Import';
 import type { IColumn } from '@/components/Table/typing';
 import { colorTrangThaiDuyeMuonSach, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
-import { DeleteOutlined, ImportOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { Card, Popconfirm, Select, Tabs, Tag } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -208,9 +208,9 @@ const PhieuMuonTraSachPage = () => {
 							>
 								Ghi mượn
 							</ButtonExtend>,
-							<ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
-								Nhập dữ liệu
-							</ButtonExtend>,
+							// <ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
+							// 	Nhập dữ liệu
+							// </ButtonExtend>,
 						]}
 					/>
 				</>

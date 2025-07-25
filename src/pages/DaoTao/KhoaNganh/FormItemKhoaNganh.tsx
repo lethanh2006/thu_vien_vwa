@@ -7,10 +7,10 @@ import { Col, Form, Row } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import SelectTrinhDo from '../TrinhDo/Select';
 import SelectHinhThuc from '../HinhThuc/Select';
 import SelectKhoaSinhVien from '../KhoaSinhVien/Select';
 import SelectNganhCoSo from '../Nganh/Select';
+import SelectTrinhDo from '../TrinhDo/Select';
 
 /** Form Item chọn khóa ngành theo Trình độ, hình thức, khóa, ngành */
 const FormItemKhoaNganh = (props: {
@@ -151,11 +151,11 @@ const FormItemKhoaNganh = (props: {
 				</Form.Item>
 			</Col>
 
-			{!maKhoaList?.length && !maNganhList?.length ? (
+			{/* {!maKhoaList?.length && !maNganhList?.length ? (
 				<Col span={24}>
 					<i className='text-error'>Vui lòng chọn khóa hoặc ngành trước</i>
 				</Col>
-			) : null}
+			) : null} */}
 
 			<Col span={24}>
 				<TableStaticData

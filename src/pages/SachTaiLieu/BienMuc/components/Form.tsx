@@ -26,7 +26,7 @@ const FormBienMucSachTaiLieu = (props: {
 		visibleForm,
 		setFormSubmiting,
 	} = useModel('sachtailieu.anpham.anpham');
-	const { getAllModel } = useModel('sachtailieu.anpham.thongtinanpham');
+	const { getAllModel, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
 	const { record: recDot } = useModel('sachtailieu.anpham.dotnhapsach');
 	const { initialState } = useModel('@@initialState');
 	const { afterAddNew, tabActive, getData } = props;
@@ -39,7 +39,41 @@ const FormBienMucSachTaiLieu = (props: {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			form.setFieldsValue(record);
+			const fieldMapping = {
+				ISBN: { tagCode: '020', subCode: '$a' },
+				ISSN: { tagCode: '022', subCode: '$a' },
+				tacGia: { tagCode: '100', subCode: '$a' },
+				nhanDe: { tagCode: '245', subCode: '$a' },
+				soThuTuCuaTap: { tagCode: '245', subCode: '$n' },
+				tenTap: { tagCode: '245', subCode: '$p' },
+				nhanDeSongSong: { tagCode: '245', subCode: '$b' },
+				phuDe: { tagCode: '245', subCode: '$b' },
+				thongTinTrachNhiem: { tagCode: '245', subCode: '$c' },
+				lanXuatBan: { tagCode: '250', subCode: '$a' },
+				noiXuatBan: { tagCode: '260', subCode: '$a' },
+				namXuatBan: { tagCode: '260', subCode: '$c' },
+				nhaXuatBan: { tagCode: '260', subCode: '$b' },
+				soTrang: { tagCode: '300', subCode: '$a' },
+				dacDiemVatLy: { tagCode: '300', subCode: '$b' },
+				khuonKho: { tagCode: '300', subCode: '$c' },
+				tuLieuDiKem: { tagCode: '300', subCode: '$e' },
+				maNgonNgu: { tagCode: '041', subCode: '$a' },
+			};
+
+			const formValues: Record<string, any> = {};
+			Object.entries(fieldMapping).forEach(([fieldName, { tagCode, subCode }]) => {
+				const tag = danhSach?.find((item) => item?.tagCode === tagCode);
+				const value = tag?.thuocTinhAnPham?.find((i) => i.code === subCode)?.value;
+
+				if (value) {
+					formValues[fieldName] = value;
+				}
+			});
+
+			form.setFieldsValue({
+				...record,
+				...formValues,
+			});
 		}
 
 		if (!record?._id) {

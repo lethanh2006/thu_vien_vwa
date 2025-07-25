@@ -164,7 +164,7 @@ const XepGiaPage = () => {
 							/>
 							<ButtonExtend tooltip='Xếp giá' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
 							<Popconfirm
-								onConfirm={() => deleteModel(rec._id)}
+								onConfirm={() => deleteModel(rec._id, getData)}
 								title='Bạn có chắc chắn muốn xóa thông tin này?'
 								placement='topRight'
 							>

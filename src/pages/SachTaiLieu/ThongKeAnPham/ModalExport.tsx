@@ -13,12 +13,13 @@ import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 
 const ModalExportAnPham = (props: {
+	title?: string;
 	visible: boolean;
 	setVisible: (val: boolean) => void;
 	trangThai: ETrangThaiMuonSach;
 	vaiTro?: EVaiTroMuonTra;
 }) => {
-	const { visible, setVisible, trangThai, vaiTro } = props;
+	const { visible, setVisible, trangThai, vaiTro, title } = props;
 	const [form] = Form.useForm();
 	const intl = useIntl();
 	const [loadingExport, setLoadingExport] = useState<boolean>(false);
@@ -83,7 +84,7 @@ const ModalExportAnPham = (props: {
 
 	return (
 		<Modal
-			title='Xuất dữ liệu thống kê ấn phẩm'
+			title={title ?? 'Xuất dữ liệu thống kê ấn phẩm'}
 			visible={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}

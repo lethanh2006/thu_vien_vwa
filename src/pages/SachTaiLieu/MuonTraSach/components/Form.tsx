@@ -407,10 +407,10 @@ const FormMuonTraSach = (props: any) => {
 									<a type='link' onClick={handleLuuDKCB}>
 										Thêm
 									</a>{' '}
-									|{' '}
+									{/* |{' '}
 									<a type='link' onClick={() => setVisibleTimKiem(true)}>
 										Tìm
-									</a>
+									</a> */}
 								</Space>
 							</Col>
 						</Row>
@@ -439,7 +439,6 @@ const FormMuonTraSach = (props: any) => {
 									size='small'
 									addStt
 									hasTotal
-									otherProps={{ pagination: true }}
 								/>
 							</Col>
 						</Row>
@@ -483,7 +482,7 @@ const FormMuonTraSach = (props: any) => {
 						columns={columnsPrint}
 						data={danhSach ?? []}
 						size='small'
-						otherProps={{ pagination: false, scroll: false }}
+						otherProps={{ pagination: false, scroll: undefined }}
 					/>
 				</div>
 			</PrintTemplate>
