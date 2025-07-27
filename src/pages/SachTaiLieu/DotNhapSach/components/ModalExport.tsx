@@ -4,6 +4,7 @@ import rules from '@/utils/rules';
 import { Button, Form, message, Modal } from 'antd';
 import fileDownload from 'js-file-download';
 import React from 'react';
+import { useModel } from 'umi';
 
 type TProps = {
 	visible: boolean;
@@ -11,6 +12,7 @@ type TProps = {
 };
 
 const ModalExportDangKyTongQuat: React.FC<TProps> = ({ visible, setVisible }) => {
+	const { record } = useModel('daotao.hocky');
 	const [loading, setLoading] = React.useState(false);
 	const [form] = Form.useForm();
 
@@ -25,7 +27,11 @@ const ModalExportDangKyTongQuat: React.FC<TProps> = ({ visible, setVisible }) =>
 		}
 		setLoading(true);
 
-		thongKeDangKyTongQuat({ thoiGianBatDau: values.thoiGian[0], thoiGianKetThuc: values.thoiGian[1] })
+		thongKeDangKyTongQuat({
+			maHocKy: record?.ma,
+			thoiGianBatDau: values.thoiGian[0],
+			thoiGianKetThuc: values.thoiGian[1],
+		})
 			.then((res) => {
 				fileDownload(res.data, 'Thống kê đăng ký tổng quát.xlsx');
 			})
