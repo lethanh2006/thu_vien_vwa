@@ -34,12 +34,17 @@ export async function inMaBarCode(payLoad: any) {
 }
 
 /** Xuất thống kê đăng ký tổng quát */
-export async function thongKeDangKyTongQuat(params?: {
-	maHocKy?: string;
-	thoiGianBatDau?: string;
-	thoiGianKetThuc?: string;
-}) {
-	return axios.get(`${ip3}/dot-nhap-sach/export-mau-so-dang-ky-tong-quat`, { params, responseType: 'arraybuffer' });
+export async function thongKeDangKyTongQuat(
+	maHocKy?: string,
+	params?: {
+		thoiGianBatDau?: string;
+		thoiGianKetThuc?: string;
+	},
+) {
+	return axios.get(`${ip3}/dot-nhap-sach/export-mau-so-dang-ky-tong-quat/${maHocKy}`, {
+		params,
+		responseType: 'arraybuffer',
+	});
 }
 
 /** Xuất thống kê mẫu số đăng ký cá biệt */

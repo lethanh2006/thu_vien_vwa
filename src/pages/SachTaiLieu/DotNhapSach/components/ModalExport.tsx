@@ -27,8 +27,7 @@ const ModalExportDangKyTongQuat: React.FC<TProps> = ({ visible, setVisible }) =>
 		}
 		setLoading(true);
 
-		thongKeDangKyTongQuat({
-			maHocKy: record?.ma,
+		thongKeDangKyTongQuat(record?.ma, {
 			thoiGianBatDau: values.thoiGian[0],
 			thoiGianKetThuc: values.thoiGian[1],
 		})
