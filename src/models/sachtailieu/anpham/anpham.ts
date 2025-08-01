@@ -4,8 +4,10 @@ import {
 	bienMucChiTiet,
 	bienMucSoLuoc,
 	chinhSuaBienMucSoLuoc,
+	deleteAnPhamSo,
 	getChiTietAnPham,
 	getThongKeAnPham,
+	putAnPhamSo,
 } from '@/services/SachTaiLieu/AnPham';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { timKiemAnPhamZ3950 } from '@/services/SachTaiLieu/Z3950';
@@ -171,6 +173,46 @@ export default () => {
 		}
 	};
 
+	const putAnPhamSoModel = async (
+		idAnPham: string,
+		payLoad: Partial<AnPham.IRecord>,
+		getData?: () => void,
+	): Promise<any> => {
+		if (formSubmiting) return Promise.reject('form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await putAnPhamSo(idAnPham, payLoad);
+			message.success('Lưu thành công');
+
+			if (getData) getData();
+
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
+	const deleteAnPhamSoModel = async (idAnPham: string, getData?: () => void): Promise<any> => {
+		if (formSubmiting) return Promise.reject('form submiting');
+		setFormSubmiting(true);
+
+		try {
+			const res = await deleteAnPhamSo(idAnPham);
+			message.success('Lưu thành công');
+
+			if (getData) getData();
+
+			return res.data?.data;
+		} catch (err) {
+			return Promise.reject(err);
+		} finally {
+			setFormSubmiting(false);
+		}
+	};
+
 	return {
 		...objInit,
 		loadingChiTiet,
@@ -191,5 +233,7 @@ export default () => {
 		timKiemZ3950Model,
 		visibleTimKiemZ3950,
 		setVisibleTimKiemZ3950,
+		putAnPhamSoModel,
+		deleteAnPhamSoModel,
 	};
 };

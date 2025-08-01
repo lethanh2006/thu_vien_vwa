@@ -9,15 +9,15 @@ import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import {
-	CheckOutlined,
-	CloseOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	EyeOutlined,
 	MenuOutlined,
 	PlusCircleOutlined,
+	StarOutlined,
+	StarTwoTone,
 } from '@ant-design/icons';
-import { Button, Card, Checkbox, Popconfirm, Popover, Segmented, Select, Tag } from 'antd';
+import { Button, Card, Popconfirm, Popover, Select, Tag, Tooltip } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import news from '../../../assets/new6.gif';
@@ -39,18 +39,16 @@ const BienMucSachTaiLieuPage = () => {
 		setEdit,
 		setIsView,
 		setVisibleForm,
-		deleteModel,
 		putBienMucSoLuocModel,
 		setVisibleTimKiemZ3950,
+		deleteModel,
 	} = useModel('sachtailieu.anpham.anpham');
-	const [tabActive, setTabActive] = useState<string>('1');
 	const [visibleSachHay, setVisibleSachHay] = useState<boolean>(false);
 
 	const getData = () => {
 		getModel({
 			dotNhapSachId: recDot?._id,
 			trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC,
-			online: tabActive === '1' ? false : true,
 		});
 	};
 
@@ -87,30 +85,42 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
+			title: 'Nhan đề',
+			dataIndex: 'nhanDe',
+			width: 150,
+			filterType: 'string',
+			onCell,
+		},
+		{
 			title: 'Sách hay',
 			dataIndex: 'isSachHay',
 			align: 'center',
-			width: 90,
-			render: (val, rec) => <Checkbox checked={!!val} />,
+			width: 80,
+			render: (val) =>
+				val ? (
+					<Tooltip title='Sách hay'>
+						<StarTwoTone twoToneColor='#fadb14' style={{ fontSize: 20 }} />
+					</Tooltip>
+				) : (
+					<Tooltip title='Không phải sách hay'>
+						<StarOutlined style={{ color: '#ccc', fontSize: 20 }} />
+					</Tooltip>
+				),
 			filterType: 'customselect',
 			filterCustomSelect: (
 				<Select
 					mode='multiple'
-					placeholder='Sách hay'
+					placeholder='Lọc sách hay'
 					options={[
-						{ label: 'Có', value: true },
+						{ label: 'Sách hay', value: true },
 						{ label: 'Không', value: false },
 					]}
 					allowClear
+					showArrow
+					showSearch
+					optionFilterProp='label'
 				/>
 			),
-			onCell,
-		},
-		{
-			title: 'Nhan đề chính',
-			dataIndex: 'nhanDe',
-			width: 150,
-			filterType: 'string',
 			onCell,
 		},
 		{
@@ -192,37 +202,38 @@ const BienMucSachTaiLieuPage = () => {
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					{!rec?.isSachHay ? (
-						<ButtonExtend
-							tooltip='Sách hay'
-							type='link'
-							className='text-success'
-							icon={<CheckOutlined />}
-							onClick={() => {
-								setRecord(rec);
-								setVisibleSachHay(true);
-							}}
-						/>
-					) : (
-						<Popconfirm
-							onConfirm={() => handleSachHay(rec, false)}
-							title='Xác nhận đây bỏ sách hay này?'
-							placement='topRight'
-						>
-							<ButtonExtend tooltip='Bỏ sách hay' type='link' danger icon={<CloseOutlined />} />
-						</Popconfirm>
-					)}
+					<ButtonExtend
+						tooltip='Biên mục chi tiết'
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popover
 						placement='topRight'
 						content={
 							<>
+								{!rec?.isSachHay ? (
+									<ButtonExtend
+										tooltip='Sách hay'
+										type='link'
+										className='text-success'
+										icon={<StarOutlined />}
+										onClick={() => {
+											setRecord(rec);
+											setVisibleSachHay(true);
+										}}
+									/>
+								) : (
+									<Popconfirm
+										onConfirm={() => handleSachHay(rec, false)}
+										title='Xác nhận đây bỏ sách hay này?'
+										placement='topRight'
+									>
+										<ButtonExtend tooltip='Bỏ sách hay' type='link' danger icon={<StarTwoTone />} />
+									</Popconfirm>
+								)}
+
 								<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
-								<ButtonExtend
-									tooltip='Biên mục chi tiết'
-									onClick={() => handleEdit(rec)}
-									type='link'
-									icon={<EditOutlined />}
-								/>
 
 								<Popconfirm
 									onConfirm={() => deleteModel(rec._id, getData)}
@@ -256,11 +267,11 @@ const BienMucSachTaiLieuPage = () => {
 			<TableBase
 				getData={getData}
 				columns={columns}
-				dependencies={[page, limit, tabActive, recDot?._id]}
+				dependencies={[page, limit, recDot?._id]}
 				modelName='sachtailieu.anpham.anpham'
 				title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}
 				Form={ModalBienMucTaiLieu}
-				formProps={{ getData, tabActive, isBienMuc: true }}
+				formProps={{ getData, isBienMuc: true }}
 				widthDrawer={1200}
 				buttons={{ create: false }}
 				hideCard
@@ -284,15 +295,6 @@ const BienMucSachTaiLieuPage = () => {
 					<ButtonExtend key='3' tooltip='Biên mục qua Z39.50' onClick={() => setVisibleTimKiemZ3950(true)}>
 						Biên mục qua Z39.50
 					</ButtonExtend>,
-					<Segmented
-						key={'2'}
-						value={tabActive}
-						onChange={(value) => setTabActive(value.toString())}
-						options={[
-							{ value: '1', label: 'Ấn phẩm vật lý' },
-							{ value: '2', label: 'Ấn phẩm số' },
-						]}
-					/>,
 				]}
 			/>
 

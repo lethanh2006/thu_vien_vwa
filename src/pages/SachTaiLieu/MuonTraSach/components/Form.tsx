@@ -20,6 +20,7 @@ import ConfirmMuonQuaHan from './ConfirmQuaHan';
 import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
 import TitlePrintMuonTra from './TitlePrintMuonTra';
+import ModalNguoiMuon from '../NguoiMuon';
 
 const FormMuonTraSach = (props: any) => {
 	const { getData } = props;
@@ -46,6 +47,7 @@ const FormMuonTraSach = (props: any) => {
 	const isSinhVien = vaiTro === EVaiTroMuonTra.SINHVIEN;
 	const isCanBo = vaiTro === EVaiTroMuonTra.CANBO;
 	const setBorrowerInfo = isSinhVien ? setRecSinhVien : setRecCanBo;
+	const [visibleTimTen, setVisibleTimTen] = useState<boolean>(false);
 
 	const componentRef = useRef(null);
 	const soTheInputRef = useRef<any>(null);
@@ -373,7 +375,15 @@ const FormMuonTraSach = (props: any) => {
 								</Form.Item>
 							</Col>
 							<Col span={24}>
-								<Form.Item name='soThe' label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}>
+								<Form.Item
+									name='soThe'
+									label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}
+									extra={
+										<a type='link' onClick={() => setVisibleTimTen(true)}>
+											Tìm kiếm theo tên
+										</a>
+									}
+								>
 									<Input
 										ref={soTheInputRef}
 										placeholder='Nhập mã định danh'
@@ -392,7 +402,21 @@ const FormMuonTraSach = (props: any) => {
 								</Form.Item>
 							</Col>
 							<Col span={24}>
-								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
+								<Form.Item
+									name='dkcb'
+									label='Đăng ký cá biệt'
+									extra={
+										<Space>
+											<a type='link' onClick={handleLuuDKCB}>
+												Thêm
+											</a>{' '}
+											{/* |{' '}
+									<a type='link' onClick={() => setVisibleTimKiem(true)}>
+										Tìm
+									</a> */}
+										</Space>
+									}
+								>
 									<Input
 										ref={dkcbInputRef}
 										placeholder='Nhập đăng ký cá biệt'
@@ -403,15 +427,6 @@ const FormMuonTraSach = (props: any) => {
 										allowClear
 									/>
 								</Form.Item>
-								<Space>
-									<a type='link' onClick={handleLuuDKCB}>
-										Thêm
-									</a>{' '}
-									{/* |{' '}
-									<a type='link' onClick={() => setVisibleTimKiem(true)}>
-										Tìm
-									</a> */}
-								</Space>
 							</Col>
 						</Row>
 					</Col>
@@ -497,6 +512,8 @@ const FormMuonTraSach = (props: any) => {
 			<FormMuonTra />
 
 			<ConfirmMuonQuaHan visible={visibleQuaHan} setVisible={setVisibleQuaHan} onOk={() => form.submit()} />
+
+			<ModalNguoiMuon visible={visibleTimTen} setVisible={setVisibleTimTen} />
 		</Card>
 	);
 };

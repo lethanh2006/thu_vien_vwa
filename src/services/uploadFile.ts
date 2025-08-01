@@ -1,5 +1,5 @@
 import axios from '@/utils/axios';
-import { ip3, ipDaoTao } from '@/utils/ip';
+import { ip3 } from '@/utils/ip';
 
 export enum EFileScope {
 	PUBLIC = 'Public',
@@ -25,7 +25,7 @@ export async function uploadFile(payload: { file: string | Blob; scope: EFileSco
 	const form = new FormData();
 	form.append('file', payload?.file);
 	form.append('scope', payload?.scope);
-	return axios.post(`${ipDaoTao}/file`, form);
+	return axios.post(`${ip3}/file`, form);
 }
 
 /**

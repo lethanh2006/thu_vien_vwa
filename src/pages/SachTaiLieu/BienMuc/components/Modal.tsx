@@ -10,7 +10,7 @@ import FormBienMucChiTiet from './FormBienMucChiTiet';
 import NoiDungSachHay from './NoiDungSachHay';
 
 const ModalBienMucTaiLieu = (props: any) => {
-	const { title, getData, tabActive: tabActiveExternal, isBienMuc } = props;
+	const { title, getData, isBienMuc } = props;
 	const intl = useIntl();
 	const { record, edit, isView, setVisibleForm, visibleForm } = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel, loading } = useModel('sachtailieu.anpham.thongtinanpham');
@@ -31,9 +31,7 @@ const ModalBienMucTaiLieu = (props: any) => {
 
 	return (
 		<Card
-			title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()} ${
-				tabActiveExternal === '1' ? 'ấn phẩm vật lý' : 'ấn phẩm số'
-			}`}
+			title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()} ${'ấn phẩm vật lý'}`}
 			loading={loading}
 		>
 			{isView ? (
@@ -74,7 +72,7 @@ const ModalBienMucTaiLieu = (props: any) => {
 					</Steps>
 
 					{currentStep === 0 ? (
-						<Form afterAddNew={() => setCurrentStep(1)} tabActive={tabActiveExternal} getData={getData} />
+						<Form afterAddNew={() => setCurrentStep(1)} getData={getData} />
 					) : (
 						<FormBienMucChiTiet getData={getData} isBienMuc={isBienMuc} />
 					)}

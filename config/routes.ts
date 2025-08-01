@@ -142,6 +142,8 @@
 		],
 	},
 
+	//AN PHAM DINH KY
+
 	// DANH MUC HE THONG
 	{
 		name: 'DanhMuc',

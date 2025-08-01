@@ -49,7 +49,7 @@ const ModalSachHay = (props: { visible: boolean; setVisible: (val: boolean) => v
 					</Col>
 					<Col xs={24} md={18}>
 						<Form.Item name='moTa' label='Nội dung sách hay' rules={[...rules.text]}>
-							<TinyEditor height={300} hideMenubar miniToolbar />
+							<TinyEditor height={300} hideMenubar miniToolbar stickyToolbar={false} />
 						</Form.Item>
 					</Col>
 				</Row>

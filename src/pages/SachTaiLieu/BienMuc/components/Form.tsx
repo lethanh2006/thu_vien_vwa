@@ -7,11 +7,7 @@ import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import BienMucSoLuoc from './BienMucSoLuoc';
 
-const FormBienMucSachTaiLieu = (props: {
-	afterAddNew: (rec: AnPham.IRecord) => void;
-	tabActive: string;
-	getData: () => void;
-}) => {
+const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; getData: () => void }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const {
@@ -29,7 +25,7 @@ const FormBienMucSachTaiLieu = (props: {
 	const { getAllModel, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
 	const { record: recDot } = useModel('sachtailieu.anpham.dotnhapsach');
 	const { initialState } = useModel('@@initialState');
-	const { afterAddNew, tabActive, getData } = props;
+	const { afterAddNew, getData } = props;
 
 	const fullName = initialState?.currentUser?.family_name
 		? `${initialState?.currentUser.family_name} ${initialState?.currentUser?.given_name ?? ''}`
@@ -78,7 +74,6 @@ const FormBienMucSachTaiLieu = (props: {
 
 		if (!record?._id) {
 			form.setFieldsValue({
-				online: tabActive === '1' ? false : true,
 				dotNhapSachId: recDot?._id,
 				canBoBienMuc: fullName,
 			});

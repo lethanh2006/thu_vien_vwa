@@ -60,3 +60,12 @@ export async function exportNhanMaGay(payLoad: any) {
 		responseType: 'arraybuffer',
 	});
 }
+
+//Ấn phẩm số
+export async function putAnPhamSo(idAnPham: string, payLoad: any) {
+	return axios.put(`${ip3}/an-pham/sync-to-dspace/${idAnPham}`, payLoad);
+}
+
+export async function deleteAnPhamSo(idAnPham: string) {
+	return axios.delete(`${ip3}/an-pham/dspace-item/${idAnPham}`);
+}

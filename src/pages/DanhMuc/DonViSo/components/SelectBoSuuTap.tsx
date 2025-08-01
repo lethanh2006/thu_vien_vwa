@@ -20,14 +20,16 @@ const SelectBoSuuTap = (props: {
 	idDonViSo: string;
 }) => {
 	const { value, onChange, multiple, allowClear, placeholder, disabled, style, idDonViSo } = props;
-	const { getAllModel } = useModel('danhmuc.donviso');
+	const { getAllModel } = useModel('sachtailieu.anpham.anpham');
 	const [danhSach, setDanhSach] = useState<DonViSo.IRecord[]>();
 
 	useEffect(() => {
 		if (idDonViSo)
-			getAllModel(undefined, undefined, undefined, undefined, `${idDonViSo}/collections`, false).then((data) => {
-				setDanhSach(data);
-			});
+			getAllModel(undefined, undefined, undefined, undefined, `/public/dspace/collections/${idDonViSo}`, false).then(
+				(data: any) => {
+					setDanhSach(data?._embedded?.collections ?? []);
+				},
+			);
 	}, [idDonViSo]);
 
 	return (

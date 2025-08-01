@@ -17,15 +17,14 @@ const SelectDonViSo = (props: {
 	style?: React.CSSProperties;
 }) => {
 	const { value, onChange, multiple, allowClear, placeholder, disabled, style } = props;
-	const { getAllModel, visibleForm } = useModel('danhmuc.donviso');
+	const { getAllModel } = useModel('sachtailieu.anpham.anpham');
 	const [danhSach, setDanhSach] = useState<DonViSo.IRecord[]>();
 
 	useEffect(() => {
-		if (!visibleForm)
-			getAllModel(undefined, undefined, undefined, undefined, undefined, false).then((data: any) => {
-				setDanhSach(data?.communities ?? []);
-			});
-	}, [visibleForm]);
+		getAllModel(undefined, undefined, undefined, undefined, '/public/dspace/communities', false).then((data: any) => {
+			setDanhSach(data?._embedded?.communities ?? []);
+		});
+	}, []);
 
 	return (
 		<Select

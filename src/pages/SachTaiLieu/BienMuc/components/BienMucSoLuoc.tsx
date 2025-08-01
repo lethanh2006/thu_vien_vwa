@@ -9,11 +9,9 @@ import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import SelectDotNhapSach from '@/pages/SachTaiLieu/DotNhapSach/components/Select';
 import rules from '@/utils/rules';
 import { Alert, Checkbox, Col, Form, type FormInstance, Input, InputNumber, Row, Select } from 'antd';
-import FormItemTaiLieuSo from '../DanhSachTaiLieu/FormItem';
 
 const BienMucSoLuoc = (props: { form: FormInstance }) => {
 	const { form } = props;
-	const online: boolean = Form.useWatch('online', form);
 	const isSachHay: boolean = Form.useWatch('isSachHay', form);
 
 	return (
@@ -189,11 +187,6 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 			<Col span={24}>
 				<Row gutter={[12, 0]}>
 					<Col xs={24} md={12}>
-						<Form.Item name='online' valuePropName='checked' initialValue={false}>
-							<Checkbox>Ấn phẩm số</Checkbox>
-						</Form.Item>
-					</Col>
-					<Col xs={24} md={12}>
 						<Form.Item name='isSachHay' valuePropName='checked' initialValue={false}>
 							<Checkbox>Sách hay</Checkbox>
 						</Form.Item>
@@ -201,18 +194,10 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 				</Row>
 			</Col>
 
-			{online && (
-				<Col span={24}>
-					<Form.Item name='thongTinAnPhamTrucTuyen' label='Danh sách tài liệu ấn phẩm số' rules={[...rules.required]}>
-						<FormItemTaiLieuSo />
-					</Form.Item>
-				</Col>
-			)}
-
 			{isSachHay && (
 				<Col xs={24}>
 					<Form.Item name='moTa' label='Nội dung sách hay' rules={[...rules.text]}>
-						<TinyEditor height={300} hideMenubar miniToolbar />
+						<TinyEditor height={300} hideMenubar miniToolbar stickyToolbar={false} />
 					</Form.Item>
 				</Col>
 			)}
