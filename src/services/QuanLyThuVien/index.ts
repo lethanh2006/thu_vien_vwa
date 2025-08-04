@@ -5,12 +5,7 @@ export async function postRaVaoThuVien(payload: any) {
 	return axios.post(`${ipSlink}/ql-thu-vien/chuyen-vien`, payload);
 }
 
-export async function exportDanhSachRaVaoThuVien(params?: {
-	thoiGianBatDau?: string;
-	thoiGianKetThuc?: string;
-	condition?: any;
-	filters?: any[];
-}) {
+export async function exportDanhSachRaVaoThuVien(params?: { condition?: any; filters?: any[] }) {
 	return axios.get(`${ipSlink}/ql-thu-vien/export/danh-sach`, {
 		responseType: 'arraybuffer',
 		params,

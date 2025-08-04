@@ -22,7 +22,7 @@ import {
 	StarTwoTone,
 	StopOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Popconfirm, Popover, Select, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Card, Popconfirm, Popover, Select, Tag, Tooltip } from 'antd';
 import fileDownload from 'js-file-download';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -88,6 +88,16 @@ const CardAnPham = () => {
 	};
 
 	const columns: IColumn<AnPham.IRecord>[] = [
+		{
+			title: 'Ảnh',
+			dataIndex: 'urlScanBia',
+			width: 80,
+			align: 'center',
+			render: (url: string, rec) => (
+				<Avatar src={url} alt={rec?.nhanDe} shape='square' style={{ width: 40, height: 40, objectFit: 'cover' }} />
+			),
+			onCell,
+		},
 		{
 			title: 'Loại ấn phẩm',
 			dataIndex: 'online',

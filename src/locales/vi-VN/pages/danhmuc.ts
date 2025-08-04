@@ -14,4 +14,5 @@ export default {
 	'danhmuc.truongcon.title': 'Trường con',
 	'danhmuc.maudinhdang.title': 'Mẫu định dạng mã vạch, nhãn gáy / nhãn bìa',
 	'danhmuc.danhmucngonngu.title': 'Ngôn ngữ',
+	'danhmuc.kieuxuatban.title': 'Kiểu xuất bản',
 };

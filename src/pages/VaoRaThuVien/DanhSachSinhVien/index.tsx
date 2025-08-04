@@ -18,7 +18,7 @@ import Form from './components/Form';
 
 const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 	const { maSinhVien, dateRange: dateRangeProps } = props;
-	const { getModel, page, limit, filters, setRecord } = useModel('quanlythuvien.vaorathuvien');
+	const { getModel, page, limit, setRecord } = useModel('quanlythuvien.vaorathuvien');
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
 	const [visibleSetting, setVisibleSetting] = useState<boolean>(false);
 	const [loadingExport, setLoadingExport] = useState<boolean>(false);
@@ -28,36 +28,21 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 		moment().endOf('M').toISOString(),
 	]);
 
+	const filters = [
+		maSinhVien && {
+			field: 'maSv',
+			values: [maSinhVien],
+			operator: EOperatorType.INCLUDE,
+		},
+		dateRange?.length && {
+			field: 'thoiGianCheckIn',
+			values: [moment(dateRange[0]).startOf('date').toISOString(), moment(dateRange[1]).endOf('date').toISOString()],
+			operator: EOperatorType.BETWEEN,
+		},
+	];
+
 	const getData = () => {
-		getModel(
-			undefined,
-			maSinhVien
-				? [
-						{
-							field: 'maSv',
-							values: [maSinhVien],
-							operator: EOperatorType.INCLUDE,
-						},
-						{
-							field: 'thoiGianCheckIn',
-							values: [
-								moment(dateRange[0]).startOf('date').toISOString(),
-								moment(dateRange[1]).endOf('date').toISOString(),
-							],
-							operator: EOperatorType.BETWEEN,
-						},
-				  ]
-				: [
-						{
-							field: 'thoiGianCheckIn',
-							values: [
-								moment(dateRange[0]).startOf('date').toISOString(),
-								moment(dateRange[1]).endOf('date').toISOString(),
-							],
-							operator: EOperatorType.BETWEEN,
-						},
-				  ],
-		);
+		getModel(undefined, filters?.filter(Boolean) as any);
 	};
 
 	const onCell = (rec: QuanLyThuVien.IVaoRaThuVien) => ({
@@ -73,9 +58,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 	const handlExport = () => {
 		setLoadingExport(true);
 		exportDanhSachRaVaoThuVien({
-			thoiGianBatDau: dateRange[0],
-			thoiGianKetThuc: dateRange[1],
-			filters: filters ?? undefined,
+			filters: filters?.filter(Boolean),
 		})
 			.then((res) => {
 				fileDownload(res.data, 'Danh sách sinh viên ra vào thư viện.docx');
@@ -206,13 +189,14 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 		>
 			<Space style={{ marginBottom: 12 }}>
 				<MyDateRangePicker
-					value={[moment(dateRange[0]), moment(dateRange[1])]}
-					onChange={(val: any) => setDateRange(val)}
+					value={dateRange?.length ? [moment(dateRange[0]), moment(dateRange[1])] : null}
+					onChange={(val: any) => setDateRange(val ?? [])}
 					ranges={{
 						'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
 						'Tuần này': [moment().startOf('week'), moment().endOf('week')],
 						'Tháng này': [moment().startOf('M'), moment().endOf('M')],
 					}}
+					allowClear
 				/>
 				<ButtonExtend
 					key='2'

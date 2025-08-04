@@ -29,6 +29,11 @@ export default {
 	'menu.SachTaiLieu.ThongKe.DanhSachBanDoc': 'Danh sách bạn đọc',
 	'menu.SachTaiLieu.InMaVach': 'In mã vạch, nhãn gáy',
 
+	'menu.AnPhamDinhKy': 'Ấn phẩm định kỳ',
+	'menu.AnPhamDinhKy.BienMucAnPhamDinhKy': 'Biên mục',
+	'menu.AnPhamDinhKy.DanhSachGhiNhan': 'Danh sách ghi nhận',
+	'menu.AnPhamDinhKy.ThongKeAnPhamDinhKy': 'Thống kê',
+
 	'menu.DanhMuc': 'Danh mục',
 	'menu.DanhMuc.ChucVu': 'Chức vụ',
 	'menu.DanhMuc.MauBienMuc': 'Mẫu biên mục',
@@ -47,4 +52,5 @@ export default {
 	'menu.DanhMuc.MauDinhDang': 'Mẫu định dạng',
 	'menu.DanhMuc.ThuVienQuocTe': 'Thư viện quốc tế',
 	'menu.DanhMuc.DanhMucNgonNgu': 'Ngôn ngữ',
+	'menu.DanhMuc.KyXuatBan': 'Kỳ xuất bản',
 };

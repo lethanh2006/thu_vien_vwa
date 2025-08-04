@@ -17,7 +17,7 @@ import {
 	StarOutlined,
 	StarTwoTone,
 } from '@ant-design/icons';
-import { Button, Card, Popconfirm, Popover, Select, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Card, Popconfirm, Popover, Select, Tag, Tooltip } from 'antd';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import news from '../../../assets/new6.gif';
@@ -64,6 +64,16 @@ const BienMucSachTaiLieuPage = () => {
 	};
 
 	const columns: IColumn<AnPham.IRecord>[] = [
+		{
+			title: 'Ảnh',
+			dataIndex: 'urlScanBia',
+			width: 80,
+			align: 'center',
+			render: (url: string, rec) => (
+				<Avatar src={url} alt={rec?.nhanDe} shape='square' style={{ width: 40, height: 40, objectFit: 'cover' }} />
+			),
+			onCell,
+		},
 		{
 			title: 'Mã tài liệu',
 			dataIndex: 'maTaiLieu',

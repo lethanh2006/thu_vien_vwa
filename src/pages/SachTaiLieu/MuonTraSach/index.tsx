@@ -108,6 +108,20 @@ const PhieuMuonTraSachPage = () => {
 			onCell,
 		},
 		{
+			title: 'Khóa sinh viên',
+			dataIndex: 'tenKhoaSinhVienNguoiMuon',
+			width: 90,
+			filterType: 'string',
+			onCell,
+		},
+		{
+			title: 'Khóa ngành',
+			dataIndex: 'tenNganhNguoiMuon',
+			width: 120,
+			filterType: 'string',
+			onCell,
+		},
+		{
 			title: 'Thời gian đăng ký',
 			dataIndex: 'thoiGianDangKy',
 			align: 'center',

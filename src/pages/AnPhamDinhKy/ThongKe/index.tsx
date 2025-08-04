@@ -4,31 +4,25 @@ import MyDatePicker from '@/components/MyDatePicker';
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
-import { EKieuHienThi, ETrangThaiMuonSach, EVaiTroMuonTra, KieuHienThi } from '@/services/SachTaiLieu/constant';
+import { EKieuHienThi, KieuHienThi } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
-import { ExportOutlined } from '@ant-design/icons';
-import { Card, Col, Empty, Row, Segmented, Select, Space, Spin, Tabs } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
+import { Card, Col, Empty, Row, Segmented, Space, Spin } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import { useModel } from 'umi';
-import ModalExportAnPham from './ModalExport';
 
-const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
-	const { isBanDoc } = props;
-	const { thongKeAnPhamMuonTraModel, dataThongKeAnPhamMuonTra, loadingThongKe } =
-		useModel('sachtailieu.muontra.muontra');
+const ThongKeAnPhamDinhKy = () => {
+	const { thongKeGhiNhanAnPhamModel, loadingThongKe, dataThongKeGhiNhanAnPham } = useModel('anphamdinhky.ghinhan');
 
 	const [kieuHienThi, setKieuHienThi] = useState<EKieuHienThi>(EKieuHienThi.NAM);
-	const [trangThai, setTrangThai] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.DANG_THUE_MUON);
 	const [yearSelect, setYearSelect] = useState(moment().year());
 	const [monthSelect, setMonthSelect] = useState(moment().month());
 	const [dateRange, setDateRange] = useState<string[]>([
 		moment().startOf('M').toISOString(),
 		moment().endOf('M').toISOString(),
 	]);
-	const [modalExport, setModalExport] = useState<boolean>(false);
-	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
 
 	useEffect(() => {
 		let startOfMonth, endOfMonth;
@@ -50,43 +44,40 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 		setDateRange([startOfMonth.toISOString(), endOfMonth.toISOString()]);
 	}, [yearSelect, monthSelect]);
 
-	useEffect(() => {
+	const getData = () => {
 		const condition = {
 			...(kieuHienThi === EKieuHienThi.THANG && { nam: yearSelect }),
-			...{ trangThai: trangThai },
 		};
 
 		const filter = [
-			vaiTro && {
-				active: true,
-				field: ['phieuMuonTra', 'vaiTro'],
-				values: [vaiTro],
-				operator: EOperatorType.INCLUDE,
-			},
 			kieuHienThi === EKieuHienThi.NGAY && {
 				active: true,
-				field: trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'thoiGianMuon' : 'thoiGianTra',
+				field: 'ngayGhiNhan',
 				values: [moment(dateRange[0]).startOf('date').toISOString(), moment(dateRange[1]).endOf('date').toISOString()],
 				operator: EOperatorType.BETWEEN,
 			},
 		];
 
-		thongKeAnPhamMuonTraModel(kieuHienThi, isBanDoc, condition, filter?.filter(Boolean));
-	}, [kieuHienThi, monthSelect, yearSelect, trangThai, isBanDoc, vaiTro]);
+		thongKeGhiNhanAnPhamModel(kieuHienThi, condition, filter?.filter(Boolean));
+	};
+
+	useEffect(() => {
+		getData();
+	}, [kieuHienThi, monthSelect, yearSelect]);
 
 	const total = useMemo(() => {
-		return dataThongKeAnPhamMuonTra?.reduce((sum, item) => sum + Number(item.soLuong), 0);
-	}, [dataThongKeAnPhamMuonTra]);
+		return dataThongKeGhiNhanAnPham?.reduce((sum, item) => sum + Number(item.soLuong), 0);
+	}, [dataThongKeGhiNhanAnPham]);
 
 	const chartData = useMemo(() => {
-		if (!dataThongKeAnPhamMuonTra?.length) return [];
+		if (!dataThongKeGhiNhanAnPham?.length) return [];
 
-		const rawPercentages = dataThongKeAnPhamMuonTra?.map((item) => ({
+		const rawPercentages = dataThongKeGhiNhanAnPham?.map((item) => ({
 			x: item.title ?? 'Không có thông tin',
 			y: (Number(item.soLuong) / (total || 1)) * 100,
 		}));
 
-		const roundedPercentages = rawPercentages.map((item) => ({
+		const roundedPercentages = rawPercentages?.map((item) => ({
 			...item,
 			y: _.round(item.y, 2),
 		}));
@@ -98,24 +89,11 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 		}
 
 		return roundedPercentages;
-	}, [dataThongKeAnPhamMuonTra, total]);
+	}, [dataThongKeGhiNhanAnPham, total]);
 
 	return (
-		<Card title={isBanDoc ? 'Thống kê bạn đọc' : 'Thống kê mượn trả ấn phẩm'}>
-			<div>
-				<Select
-					style={{ width: 250, marginBottom: 12 }}
-					value={vaiTro}
-					placeholder='Chọn đối tượng'
-					options={Object.values(EVaiTroMuonTra).map((item) => ({
-						value: item,
-						label: item,
-					}))}
-					onChange={(val) => setVaiTro(val)}
-				/>
-			</div>
-
-			<Space wrap>
+		<Card title='Thống kê ghi nhận ấn phẩm định kỳ'>
+			<Space wrap style={{ marginBottom: 12 }}>
 				<Segmented
 					value={kieuHienThi}
 					onChange={(val) => setKieuHienThi(val as EKieuHienThi)}
@@ -162,35 +140,28 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 						}}
 					/>
 				) : null}
+
+				<ButtonExtend icon={<ReloadOutlined />} onClick={getData}>
+					Tải lại
+				</ButtonExtend>
 			</Space>
 
-			<Tabs onChange={(tab) => setTrangThai(tab as ETrangThaiMuonSach)} activeKey={trangThai}>
-				<Tabs.TabPane tab='Ấn phẩm đang mượn' key={ETrangThaiMuonSach.DANG_THUE_MUON} />
-				<Tabs.TabPane tab='Ấn phẩm đã trả' key={ETrangThaiMuonSach.DA_TRA} />
-			</Tabs>
-
-			<div style={{ marginBottom: 12 }}>
-				<ButtonExtend icon={<ExportOutlined />} onClick={() => setModalExport(true)}>
-					Xuất dữ liệu
-				</ButtonExtend>
-			</div>
-
 			<Spin spinning={loadingThongKe}>
-				{dataThongKeAnPhamMuonTra?.length ? (
+				{dataThongKeGhiNhanAnPham?.length ? (
 					<Row gutter={[12, 0]}>
 						<Col span={24} md={16}>
 							<ColumnChart
 								yLabel={['Số lượt']}
-								xAxis={dataThongKeAnPhamMuonTra?.map((item) =>
+								xAxis={dataThongKeGhiNhanAnPham?.map((item) =>
 									kieuHienThi === EKieuHienThi.NGAY
 										? moment(item.title ?? '').format('DD/MM')
 										: kieuHienThi === EKieuHienThi.THANG
 										? `Tháng ${item.title ?? ''}`
 										: item.title ?? 'Không có thông tin',
 								)}
-								yAxis={[dataThongKeAnPhamMuonTra?.map((item) => Number(item.soLuong) ?? 0)]}
+								yAxis={[dataThongKeGhiNhanAnPham?.map((item) => Number(item.soLuong) ?? 0)]}
 								showTotal
-								type={dataThongKeAnPhamMuonTra.length >= 10 ? 'area' : 'bar'}
+								type={dataThongKeGhiNhanAnPham.length >= 10 ? 'area' : 'bar'}
 								otherOptions={{
 									yaxis: {
 										labels: { formatter: (val) => `${inputFormat(val)}` },
@@ -272,16 +243,8 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 					<Empty description='Không có dữ liệu' style={{ marginBottom: 32, marginTop: 32 }} />
 				)}
 			</Spin>
-
-			<ModalExportAnPham
-				title='Xuất dữ liệu thống kê bạn đọc'
-				visible={modalExport}
-				setVisible={setModalExport}
-				trangThai={trangThai}
-				vaiTro={vaiTro}
-			/>
 		</Card>
 	);
 };
 
-export default ThongKeAnPham;
+export default ThongKeAnPhamDinhKy;

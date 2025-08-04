@@ -34,7 +34,7 @@
 	{
 		name: 'VaoRaThuVien',
 		path: 'vao-ra-thu-vien',
-		icon: 'SolutionOutlined',
+		icon: 'LoginOutlined',
 		routes: [
 			{
 				name: 'DanhSachSinhVien',
@@ -52,7 +52,7 @@
 	{
 		name: 'LALVKhoaLuan',
 		path: 'la-lv-kl-sinh-vien',
-		icon: 'container',
+		icon: 'FileTextOutlined',
 		routes: [
 			{
 				name: 'QuanLyDot',
@@ -143,12 +143,34 @@
 	},
 
 	//AN PHAM DINH KY
+	{
+		name: 'AnPhamDinhKy',
+		path: 'an-pham-dinh-ky',
+		icon: 'ReadOutlined',
+		routes: [
+			{
+				name: 'BienMucAnPhamDinhKy',
+				path: 'bien-muc-an-pham-dinh-ky',
+				component: './AnPhamDinhKy/AnPhamDinhKy',
+			},
+			{
+				name: 'DanhSachGhiNhan',
+				path: 'danh-sach-ghi-nhan',
+				component: './AnPhamDinhKy/GhiNhan',
+			},
+			{
+				name: 'ThongKeAnPhamDinhKy',
+				path: 'thong-ke-an-pham-dinh-ky',
+				component: './AnPhamDinhKy/ThongKe',
+			},
+		],
+	},
 
 	// DANH MUC HE THONG
 	{
 		name: 'DanhMuc',
 		path: '/danh-muc',
-		icon: 'copy',
+		icon: 'AppstoreOutlined',
 		routes: [
 			{
 				name: 'ThuVien',
@@ -229,6 +251,11 @@
 				name: 'TruongBienMuc',
 				path: 'truong-bien-muc',
 				component: './DanhMuc/TruongBienMuc',
+			},
+			{
+				name: 'KyXuatBan',
+				path: 'ky-xuat-ban',
+				component: './DanhMuc/KyXuatBan',
 			},
 		],
 	},
