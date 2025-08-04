@@ -138,7 +138,7 @@ const ModalGhiNhanAnPhamDinhKy = (props: { visible: boolean; setVisible: (val: b
 					</div>
 				</Form>
 			) : (
-				<GhiNhanAnPhamDinhKyPage type='lich_su' />
+				<GhiNhanAnPhamDinhKyPage type='lich_su' getData={getThongKeAnPhamDinhKy} />
 			)}
 		</Modal>
 	);

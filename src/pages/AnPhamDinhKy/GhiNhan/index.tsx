@@ -12,9 +12,20 @@ import { useModel } from 'umi';
 import Form from './components/CardForm';
 
 const GhiNhanAnPhamDinhKyPage = (props: { type: 'ghi_nhan' | 'lich_su'; getData?: () => void }) => {
-	const { getData } = props;
+	const { getData: getDataExternal } = props;
 	const { type = 'ghi_nhan' } = props;
-	const { page, limit, handleEdit, deleteModel } = useModel('anphamdinhky.ghinhan');
+	const { record: recAnPhamDinhKy } = useModel('anphamdinhky.anphamdinhky');
+	const { getModel, page, limit, handleEdit, deleteModel } = useModel('anphamdinhky.ghinhan');
+
+	const getData = () => {
+		getModel(
+			type === 'lich_su' && recAnPhamDinhKy?._id
+				? {
+						anPhamDinhKyId: recAnPhamDinhKy?._id,
+				  }
+				: undefined,
+		);
+	};
 
 	const columns: IColumn<AnPhamDinhKy.GhiNhanAnPhamDinhKy>[] = [
 		{
@@ -103,6 +114,7 @@ const GhiNhanAnPhamDinhKyPage = (props: { type: 'ghi_nhan' | 'lich_su'; getData?
 
 	return (
 		<TableBase
+			getData={getData}
 			columns={columns}
 			dependencies={[page, limit]}
 			modelName='anphamdinhky.ghinhan'
@@ -110,7 +122,12 @@ const GhiNhanAnPhamDinhKyPage = (props: { type: 'ghi_nhan' | 'lich_su'; getData?
 			buttons={{ create: type === 'ghi_nhan' }}
 			hideCard={type === 'lich_su'}
 			Form={Form}
-			formProps={{ getData }}
+			formProps={{
+				getData: () => {
+					if (getDataExternal) getDataExternal();
+					getData();
+				},
+			}}
 			widthDrawer={800}
 		/>
 	);
