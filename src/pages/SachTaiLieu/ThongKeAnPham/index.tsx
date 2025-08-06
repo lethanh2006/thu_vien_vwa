@@ -6,7 +6,7 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import { EKieuHienThi, ETrangThaiMuonSach, EVaiTroMuonTra, KieuHienThi } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
-import { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Card, Col, Empty, Row, Segmented, Select, Space, Spin, Tabs } from 'antd';
 import _ from 'lodash';
 import moment from 'moment';
@@ -23,6 +23,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	const [trangThai, setTrangThai] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.DANG_THUE_MUON);
 	const [yearSelect, setYearSelect] = useState(moment().year());
 	const [monthSelect, setMonthSelect] = useState(moment().month());
+
 	const [dateRange, setDateRange] = useState<string[]>([
 		moment().startOf('M').toISOString(),
 		moment().endOf('M').toISOString(),
@@ -30,27 +31,20 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	const [modalExport, setModalExport] = useState<boolean>(false);
 	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
 
-	useEffect(() => {
-		let startOfMonth, endOfMonth;
+	const [readyToFetch, setReadyToFetch] = useState(false);
 
-		if (yearSelect && monthSelect) {
-			startOfMonth = moment()
-				.year(yearSelect)
-				.month(monthSelect - 1)
-				.startOf('month');
-			endOfMonth = moment()
-				.year(yearSelect)
-				.month(monthSelect - 1)
-				.endOf('month');
-		} else {
-			startOfMonth = moment().startOf('month');
-			endOfMonth = moment().endOf('month');
-		}
+	useEffect(() => {
+		const startOfMonth = moment().year(yearSelect).month(monthSelect).startOf('month');
+		const endOfMonth = moment().year(yearSelect).month(monthSelect).endOf('month');
 
 		setDateRange([startOfMonth.toISOString(), endOfMonth.toISOString()]);
-	}, [yearSelect, monthSelect]);
+	}, [kieuHienThi, yearSelect, monthSelect]);
 
 	useEffect(() => {
+		setReadyToFetch(true);
+	}, [dateRange, vaiTro, trangThai]);
+
+	const getData = () => {
 		const condition = {
 			...(kieuHienThi === EKieuHienThi.THANG && { nam: yearSelect }),
 			...{ trangThai: trangThai },
@@ -72,33 +66,37 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 		];
 
 		thongKeAnPhamMuonTraModel(kieuHienThi, isBanDoc, condition, filter?.filter(Boolean));
-	}, [kieuHienThi, monthSelect, yearSelect, trangThai, isBanDoc, vaiTro]);
+	};
 
-	const total = useMemo(() => {
-		return dataThongKeAnPhamMuonTra?.reduce((sum, item) => sum + Number(item.soLuong), 0);
-	}, [dataThongKeAnPhamMuonTra]);
+	useEffect(() => {
+		if (readyToFetch) {
+			getData();
+			setReadyToFetch(false);
+		}
+	}, [readyToFetch]);
 
 	const chartData = useMemo(() => {
 		if (!dataThongKeAnPhamMuonTra?.length) return [];
 
-		const rawPercentages = dataThongKeAnPhamMuonTra?.map((item) => ({
+		const rawData = dataThongKeAnPhamMuonTra.map((item) => ({
 			x: item.title ?? 'Không có thông tin',
-			y: (Number(item.soLuong) / (total || 1)) * 100,
+			soLuong: Number(item.soLuong),
 		}));
 
-		const roundedPercentages = rawPercentages.map((item) => ({
+		const totalSoLuong = _.sumBy(rawData, 'soLuong');
+
+		const chart = rawData.map((item) => ({
 			...item,
-			y: _.round(item.y, 2),
+			y: _.round((item.soLuong / (totalSoLuong || 1)) * 100, 2),
 		}));
 
-		const roundedTotal = _.sumBy(roundedPercentages, 'y');
-		if (roundedTotal !== 100 && roundedPercentages.length > 0) {
-			const difference = 100 - roundedTotal;
-			roundedPercentages[roundedPercentages.length - 1].y += difference;
+		const diff = 100 - _.sumBy(chart, 'y');
+		if (chart.length > 0) {
+			chart[chart.length - 1].y += diff;
 		}
 
-		return roundedPercentages;
-	}, [dataThongKeAnPhamMuonTra, total]);
+		return chart;
+	}, [dataThongKeAnPhamMuonTra]);
 
 	return (
 		<Card title={isBanDoc ? 'Thống kê bạn đọc' : 'Thống kê mượn trả ấn phẩm'}>
@@ -114,7 +112,6 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 					onChange={(val) => setVaiTro(val)}
 				/>
 			</div>
-
 			<Space wrap>
 				<Segmented
 					value={kieuHienThi}
@@ -125,32 +122,16 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 						label: KieuHienThi[item],
 					}))}
 				/>
-
 				{kieuHienThi === EKieuHienThi.NGAY ? (
-					<>
-						<MyDateRangePicker
-							format={'DD/MM'}
-							style={{ width: 180 }}
-							value={[moment(dateRange[0]), moment(dateRange[1])]}
-							onChange={(val: any) => {
-								setDateRange(val);
-								setMonthSelect(moment(val[0]).month() + 1);
-								setYearSelect(moment(val[0]).year());
-							}}
-							disabledDate={(current) => {
-								if (!monthSelect || !yearSelect) return false;
-								const startOfMonth = moment()
-									.year(yearSelect)
-									.month(monthSelect - 1)
-									.startOf('month');
-								const endOfMonth = moment()
-									.year(yearSelect)
-									.month(monthSelect - 1)
-									.endOf('month');
-								return moment(current).isBefore(startOfMonth) || moment(current).isAfter(endOfMonth);
-							}}
-						/>
-					</>
+					<MyDateRangePicker
+						format={'DD/MM'}
+						style={{ width: 180 }}
+						value={[moment(dateRange[0]), moment(dateRange[1])]}
+						onChange={(val: any) => {
+							if (!val || val.length !== 2) return;
+							setDateRange([val[0].toISOString(), val[1].toISOString()]);
+						}}
+					/>
 				) : kieuHienThi === EKieuHienThi.THANG ? (
 					<MyDatePicker
 						style={{ width: 90 }}
@@ -162,13 +143,15 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 						}}
 					/>
 				) : null}
-			</Space>
 
+				<ButtonExtend icon={<ReloadOutlined />} onClick={getData}>
+					Tải lại
+				</ButtonExtend>
+			</Space>
 			<Tabs onChange={(tab) => setTrangThai(tab as ETrangThaiMuonSach)} activeKey={trangThai}>
 				<Tabs.TabPane tab='Ấn phẩm đang mượn' key={ETrangThaiMuonSach.DANG_THUE_MUON} />
 				<Tabs.TabPane tab='Ấn phẩm đã trả' key={ETrangThaiMuonSach.DA_TRA} />
 			</Tabs>
-
 			<div style={{ marginBottom: 12 }}>
 				<ButtonExtend icon={<ExportOutlined />} onClick={() => setModalExport(true)}>
 					Xuất dữ liệu
@@ -246,7 +229,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 									} else if (kieuHienThi === EKieuHienThi.THANG) {
 										const month = Number(value.replace('Tháng ', ''));
 										setKieuHienThi(EKieuHienThi.NGAY);
-										setMonthSelect(month);
+										setMonthSelect(month - 1);
 									}
 								}}
 							/>
@@ -264,7 +247,17 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 								yLabel={['Phần trăm (%)']}
 								showTotal
 								formatY={(val) => `${inputFormat(val)} %`}
-								otherOptions={{ legend: { position: 'bottom' } }}
+								otherOptions={{
+									legend: { position: 'bottom' },
+									tooltip: {
+										y: {
+											formatter: function (val, { dataPointIndex }) {
+												const value = chartData?.[dataPointIndex]?.soLuong ?? 0;
+												return `${inputFormat(value)} lượt`;
+											},
+										},
+									},
+								}}
 							/>
 						</Col>
 					</Row>

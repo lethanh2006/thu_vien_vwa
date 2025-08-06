@@ -22,16 +22,10 @@ const ViewAnPhamDinhKy = () => {
 				<Descriptions.Item label='Số trang'>{record?.soTrang ?? ''}</Descriptions.Item>
 				<Descriptions.Item label='Đặc điểm vật lý'>{record?.dacDiemVatLy ?? ''}</Descriptions.Item>
 
-				<Descriptions.Item label='Mẫu biên mục'>
-					{record?.mauBienMuc?.ten ?? ''} ({record?.mauBienMuc?.ma ?? ''})
-				</Descriptions.Item>
-				<Descriptions.Item label='Dạng tài liệu'>
-					{record?.dangTaiLieu?.ten ?? ''} ({record?.dangTaiLieu?.ma ?? ''})
-				</Descriptions.Item>
+				<Descriptions.Item label='Mẫu biên mục'>{record?.mauBienMuc?.ten ?? ''}</Descriptions.Item>
+				<Descriptions.Item label='Dạng tài liệu'>{record?.dangTaiLieu?.ten ?? ''}</Descriptions.Item>
 
-				<Descriptions.Item label='Kỳ xuất bản'>
-					{record?.kyXuatBan?.ten ?? ''} - {record?.kyXuatBan?.moTa ?? ''}
-				</Descriptions.Item>
+				<Descriptions.Item label='Kỳ xuất bản'>{record?.kyXuatBan?.ten ?? ''}</Descriptions.Item>
 
 				{record?.anhBiaUrl && (
 					<Descriptions.Item label='Ảnh bìa' span={2}>
@@ -41,7 +35,9 @@ const ViewAnPhamDinhKy = () => {
 
 				{record?.tomTat && (
 					<Descriptions.Item label='Tóm tắt' span={2}>
-						<Paragraph>{record?.tomTat}</Paragraph>
+						<Paragraph>
+							<div dangerouslySetInnerHTML={{ __html: record?.tomTat ?? '' }} />
+						</Paragraph>
 					</Descriptions.Item>
 				)}
 

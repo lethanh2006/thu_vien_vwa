@@ -42,12 +42,12 @@ const FormKyXuatBan = (props: any) => {
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item name='mota' label='Mô tả' rules={[...rules.text]}>
+						<Form.Item name='moTa' label='Mô tả' rules={[...rules.text]}>
 							<Input.TextArea rows={3} placeholder='Nhập mô tả' />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item name='thoiGianBatDau' label='Thời gian bắt đầu' rules={[...rules.required]}>
+						<Form.Item name='thoiGianBatDau' label='Thời gian bắt đầu'>
 							<MyDatePicker format='DD/MM/YYYY' />
 						</Form.Item>
 					</Col>
@@ -55,7 +55,7 @@ const FormKyXuatBan = (props: any) => {
 						<Form.Item
 							name='thoiGianKetThuc'
 							label='Thời gian kết thúc'
-							rules={[...rules.required, ...rules.sauNgay(moment(thoiGianBatDau))]}
+							rules={[...rules.sauNgay(moment(thoiGianBatDau))]}
 						>
 							<MyDatePicker disabledDate={(cur) => (thoiGianBatDau ? moment(cur).isBefore(thoiGianBatDau) : false)} />
 						</Form.Item>

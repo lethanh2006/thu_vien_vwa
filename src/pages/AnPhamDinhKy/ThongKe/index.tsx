@@ -25,24 +25,11 @@ const ThongKeAnPhamDinhKy = () => {
 	]);
 
 	useEffect(() => {
-		let startOfMonth, endOfMonth;
-
-		if (yearSelect && monthSelect) {
-			startOfMonth = moment()
-				.year(yearSelect)
-				.month(monthSelect - 1)
-				.startOf('month');
-			endOfMonth = moment()
-				.year(yearSelect)
-				.month(monthSelect - 1)
-				.endOf('month');
-		} else {
-			startOfMonth = moment().startOf('month');
-			endOfMonth = moment().endOf('month');
-		}
+		const startOfMonth = moment().year(yearSelect).month(monthSelect).startOf('month');
+		const endOfMonth = moment().year(yearSelect).month(monthSelect).endOf('month');
 
 		setDateRange([startOfMonth.toISOString(), endOfMonth.toISOString()]);
-	}, [yearSelect, monthSelect]);
+	}, [kieuHienThi, yearSelect, monthSelect]);
 
 	const getData = () => {
 		const condition = {
@@ -63,33 +50,30 @@ const ThongKeAnPhamDinhKy = () => {
 
 	useEffect(() => {
 		getData();
-	}, [kieuHienThi, monthSelect, yearSelect]);
-
-	const total = useMemo(() => {
-		return dataThongKeGhiNhanAnPham?.reduce((sum, item) => sum + Number(item.soLuong), 0);
-	}, [dataThongKeGhiNhanAnPham]);
+	}, [kieuHienThi, monthSelect, yearSelect, dateRange]);
 
 	const chartData = useMemo(() => {
 		if (!dataThongKeGhiNhanAnPham?.length) return [];
 
-		const rawPercentages = dataThongKeGhiNhanAnPham?.map((item) => ({
+		const rawData = dataThongKeGhiNhanAnPham.map((item) => ({
 			x: item.title ?? 'Không có thông tin',
-			y: (Number(item.soLuong) / (total || 1)) * 100,
+			soLuong: Number(item.soLuong),
 		}));
 
-		const roundedPercentages = rawPercentages?.map((item) => ({
+		const totalSoLuong = _.sumBy(rawData, 'soLuong');
+
+		const chart = rawData.map((item) => ({
 			...item,
-			y: _.round(item.y, 2),
+			y: _.round((item.soLuong / (totalSoLuong || 1)) * 100, 2),
 		}));
 
-		const roundedTotal = _.sumBy(roundedPercentages, 'y');
-		if (roundedTotal !== 100 && roundedPercentages.length > 0) {
-			const difference = 100 - roundedTotal;
-			roundedPercentages[roundedPercentages.length - 1].y += difference;
+		const diff = 100 - _.sumBy(chart, 'y');
+		if (chart.length > 0) {
+			chart[chart.length - 1].y += diff;
 		}
 
-		return roundedPercentages;
-	}, [dataThongKeGhiNhanAnPham, total]);
+		return chart;
+	}, [dataThongKeGhiNhanAnPham]);
 
 	return (
 		<Card title='Thống kê ghi nhận ấn phẩm định kỳ'>
@@ -105,30 +89,15 @@ const ThongKeAnPhamDinhKy = () => {
 				/>
 
 				{kieuHienThi === EKieuHienThi.NGAY ? (
-					<>
-						<MyDateRangePicker
-							format={'DD/MM'}
-							style={{ width: 180 }}
-							value={[moment(dateRange[0]), moment(dateRange[1])]}
-							onChange={(val: any) => {
-								setDateRange(val);
-								setMonthSelect(moment(val[0]).month() + 1);
-								setYearSelect(moment(val[0]).year());
-							}}
-							disabledDate={(current) => {
-								if (!monthSelect || !yearSelect) return false;
-								const startOfMonth = moment()
-									.year(yearSelect)
-									.month(monthSelect - 1)
-									.startOf('month');
-								const endOfMonth = moment()
-									.year(yearSelect)
-									.month(monthSelect - 1)
-									.endOf('month');
-								return moment(current).isBefore(startOfMonth) || moment(current).isAfter(endOfMonth);
-							}}
-						/>
-					</>
+					<MyDateRangePicker
+						format={'DD/MM'}
+						style={{ width: 180 }}
+						value={[moment(dateRange[0]), moment(dateRange[1])]}
+						onChange={(val: any) => {
+							if (!val || val.length !== 2) return;
+							setDateRange([val[0].toISOString(), val[1].toISOString()]);
+						}}
+					/>
 				) : kieuHienThi === EKieuHienThi.THANG ? (
 					<MyDatePicker
 						style={{ width: 90 }}
@@ -217,7 +186,7 @@ const ThongKeAnPhamDinhKy = () => {
 									} else if (kieuHienThi === EKieuHienThi.THANG) {
 										const month = Number(value.replace('Tháng ', ''));
 										setKieuHienThi(EKieuHienThi.NGAY);
-										setMonthSelect(month);
+										setMonthSelect(month - 1);
 									}
 								}}
 							/>
@@ -235,7 +204,17 @@ const ThongKeAnPhamDinhKy = () => {
 								yLabel={['Phần trăm (%)']}
 								showTotal
 								formatY={(val) => `${inputFormat(val)} %`}
-								otherOptions={{ legend: { position: 'bottom' } }}
+								otherOptions={{
+									legend: { position: 'bottom' },
+									tooltip: {
+										y: {
+											formatter: function (val, { dataPointIndex }) {
+												const value = chartData?.[dataPointIndex]?.soLuong ?? 0;
+												return `${inputFormat(value)} lượt`;
+											},
+										},
+									},
+								}}
 							/>
 						</Col>
 					</Row>

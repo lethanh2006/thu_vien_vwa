@@ -47,7 +47,7 @@ const ModalGhiNhanAnPhamDinhKy = (props: { visible: boolean; setVisible: (val: b
 			},
 			() => {
 				getThongKeAnPhamDinhKy();
-				resetFieldsForm(form);
+				resetFieldsForm(form, { ngayGhiNhan: moment() });
 				setTabActive('2');
 			},
 			false,
@@ -59,7 +59,7 @@ const ModalGhiNhanAnPhamDinhKy = (props: { visible: boolean; setVisible: (val: b
 
 	return (
 		<Modal
-			title='Xếp giá'
+			title='Ghi nhận'
 			visible={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}

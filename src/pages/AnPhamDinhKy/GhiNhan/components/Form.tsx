@@ -37,7 +37,7 @@ const FormGhiNhanAnPham = () => {
 			</Col>
 
 			<Col xs={24} md={12}>
-				<Form.Item name='donGia' label='Đơn giá' rules={[...rules.required]}>
+				<Form.Item name='donGia' label='Đơn giá'>
 					<InputNumber style={{ width: '100%' }} placeholder='Nhập đơn giá' />
 				</Form.Item>
 			</Col>

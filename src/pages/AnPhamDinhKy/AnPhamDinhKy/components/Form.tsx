@@ -41,6 +41,8 @@ const FormAnPhamDinhKy = () => {
 		if (!record?._id) {
 			form.setFieldsValue({
 				canBoBienMuc: fullName,
+				maDangTaiLieu: 'TT',
+				tomTat: '',
 			});
 		}
 	}, [record?._id, visibleForm]);
@@ -83,7 +85,7 @@ const FormAnPhamDinhKy = () => {
 
 											<Col xs={24} md={12}>
 												<Form.Item name='maDangTaiLieu' label='Dạng tài liệu [927]' rules={[...rules.required]}>
-													<SelectDangTaiLieu selectMa />
+													<SelectDangTaiLieu selectMa disabled />
 												</Form.Item>
 											</Col>
 

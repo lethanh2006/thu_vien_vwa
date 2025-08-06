@@ -22,10 +22,11 @@ const ConfirmXoaAnPham = (props: { visible: boolean; setVisible: (val: boolean) 
 				await deleteAnPhamSoModel(record?._id ?? '');
 			}
 
-			await deleteModel(record?._id ?? '', undefined);
+			await deleteModel(record?._id ?? '', () => {});
+
+			getData();
 
 			setVisible(false);
-			getData();
 		} catch (error) {
 			console.error('Lỗi khi xóa:', error);
 		}

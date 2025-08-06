@@ -313,7 +313,10 @@ const CardAnPham = () => {
 									icon={<DollarOutlined />}
 								/>
 								<ButtonExtend
-									onClick={() => setVisibleXoa(true)}
+									onClick={() => {
+										setRecord(rec);
+										setVisibleXoa(true);
+									}}
 									tooltip='Xóa'
 									danger
 									type='link'
