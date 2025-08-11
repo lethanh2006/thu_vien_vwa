@@ -65,6 +65,7 @@ declare module QuanLyThuVien {
 		maNganh: string;
 		tenNganh: string;
 		ngaySinh: Date;
+		tenLopHanhChinh: string;
 	}
 
 	//Thống kê

@@ -30,6 +30,7 @@ declare module PhieuMuonTra {
 		maKhoaNguoiMuon: string;
 		tenKhoaNguoiMuon: string;
 		trangThaiHoc: ETrangThaiHocSv;
+		tenLopHanhChinh: string;
 
 		//CanBo
 		maDonViNguoiMuon: string;

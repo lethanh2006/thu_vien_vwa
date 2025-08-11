@@ -113,6 +113,7 @@ const PhieuMuonTraSachPage = () => {
 			width: 90,
 			filterType: 'string',
 			onCell,
+			hide: vaiTro === EVaiTroMuonTra.CANBO,
 		},
 		{
 			title: 'Khóa ngành',
@@ -120,6 +121,24 @@ const PhieuMuonTraSachPage = () => {
 			width: 120,
 			filterType: 'string',
 			onCell,
+			hide: vaiTro === EVaiTroMuonTra.CANBO,
+		},
+		{
+			title: 'Lớp hành chính',
+			dataIndex: 'tenLopHanhChinh',
+			width: 120,
+			render: (val, rec) => val ?? rec?.tenLopHanhChinhNguoiMuon,
+			filterType: 'string',
+			onCell,
+			hide: vaiTro === EVaiTroMuonTra.CANBO,
+		},
+		{
+			title: 'Đơn vị',
+			dataIndex: 'tenDonViNguoiMuon',
+			width: 120,
+			filterType: 'string',
+			onCell,
+			hide: vaiTro === EVaiTroMuonTra.SINHVIEN,
 		},
 		{
 			title: 'Thời gian đăng ký',
