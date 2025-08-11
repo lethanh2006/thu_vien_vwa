@@ -143,28 +143,28 @@
 	},
 
 	//AN PHAM DINH KY
-	{
-		name: 'AnPhamDinhKy',
-		path: 'an-pham-dinh-ky',
-		icon: 'ReadOutlined',
-		routes: [
-			{
-				name: 'BienMucAnPhamDinhKy',
-				path: 'bien-muc-an-pham-dinh-ky',
-				component: './AnPhamDinhKy/AnPhamDinhKy',
-			},
-			{
-				name: 'DanhSachGhiNhan',
-				path: 'danh-sach-ghi-nhan',
-				component: './AnPhamDinhKy/GhiNhan',
-			},
-			{
-				name: 'ThongKeAnPhamDinhKy',
-				path: 'thong-ke-an-pham-dinh-ky',
-				component: './AnPhamDinhKy/ThongKe',
-			},
-		],
-	},
+	// {
+	// 	name: 'AnPhamDinhKy',
+	// 	path: 'an-pham-dinh-ky',
+	// 	icon: 'ReadOutlined',
+	// 	routes: [
+	// 		{
+	// 			name: 'BienMucAnPhamDinhKy',
+	// 			path: 'bien-muc-an-pham-dinh-ky',
+	// 			component: './AnPhamDinhKy/AnPhamDinhKy',
+	// 		},
+	// 		{
+	// 			name: 'DanhSachGhiNhan',
+	// 			path: 'danh-sach-ghi-nhan',
+	// 			component: './AnPhamDinhKy/GhiNhan',
+	// 		},
+	// 		{
+	// 			name: 'ThongKeAnPhamDinhKy',
+	// 			path: 'thong-ke-an-pham-dinh-ky',
+	// 			component: './AnPhamDinhKy/ThongKe',
+	// 		},
+	// 	],
+	// },
 
 	// DANH MUC HE THONG
 	{
@@ -252,11 +252,11 @@
 				path: 'truong-bien-muc',
 				component: './DanhMuc/TruongBienMuc',
 			},
-			{
-				name: 'KyXuatBan',
-				path: 'ky-xuat-ban',
-				component: './DanhMuc/KyXuatBan',
-			},
+			// {
+			// 	name: 'KyXuatBan',
+			// 	path: 'ky-xuat-ban',
+			// 	component: './DanhMuc/KyXuatBan',
+			// },
 		],
 	},
 
