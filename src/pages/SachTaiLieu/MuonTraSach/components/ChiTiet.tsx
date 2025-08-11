@@ -1,4 +1,9 @@
-import { colorTrangThaiMuonSach, ETrangThaiMuonSach, mapNameTrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
+import {
+	colorTrangThaiMuonSach,
+	ETrangThaiMuonSach,
+	EVaiTroMuonTra,
+	mapNameTrangThaiMuonSach,
+} from '@/services/SachTaiLieu/constant';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Descriptions, Form, Row, Tag } from 'antd';
 import moment from 'moment';
@@ -51,6 +56,24 @@ const ChiTietMuonTraSach = (props: any) => {
 					<Descriptions column={1}>
 						<Descriptions.Item label='Mã'>{record?.phieuMuonTra?.maDinhDanhNguoiMuon ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Họ tên'>{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
+
+						{record?.phieuMuonTra?.vaiTro === EVaiTroMuonTra.SINHVIEN ? (
+							<>
+								<Descriptions.Item label='Khóa sinh viên'>
+									{record?.phieuMuonTra?.tenKhoaSinhVienNguoiMuon ?? '--'}
+								</Descriptions.Item>
+								<Descriptions.Item label='Khóa ngành'>
+									{record?.phieuMuonTra?.tenNganhNguoiMuon ?? '--'}
+								</Descriptions.Item>
+								<Descriptions.Item label='Lớp hành chính'>
+									{record?.phieuMuonTra?.tenLopHanhChinh ?? record?.phieuMuonTra?.tenLopHanhChinhNguoiMuon}
+								</Descriptions.Item>
+							</>
+						) : (
+							<>
+								<Descriptions.Item label='Đơn vị'>{record?.phieuMuonTra?.tenDonViNguoiMuon ?? '--'}</Descriptions.Item>
+							</>
+						)}
 						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 

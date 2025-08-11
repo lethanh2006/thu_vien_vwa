@@ -411,9 +411,9 @@ const FormMuonTraSach = (props: any) => {
 												Thêm
 											</a>{' '}
 											{/* |{' '}
-									<a type='link' onClick={() => setVisibleTimKiem(true)}>
-										Tìm
-									</a> */}
+											<a type='link' onClick={() => setVisibleTimKiem(true)}>
+												Tìm
+											</a> */}
 										</Space>
 									}
 								>
@@ -513,7 +513,11 @@ const FormMuonTraSach = (props: any) => {
 
 			<ConfirmMuonQuaHan visible={visibleQuaHan} setVisible={setVisibleQuaHan} onOk={() => form.submit()} />
 
-			<ModalNguoiMuon visible={visibleTimTen} setVisible={setVisibleTimTen} />
+			<ModalNguoiMuon
+				visible={visibleTimTen}
+				setVisible={setVisibleTimTen}
+				activeKey={isSinhVien ? 'sinh-vien' : 'can-bo'}
+			/>
 		</Card>
 	);
 };

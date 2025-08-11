@@ -151,6 +151,14 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			onCell,
 		},
 		{
+			title: 'Lớp hành chính',
+			dataIndex: 'tenLopHanhChinh',
+			width: 120,
+			filterType: 'string',
+			hide: !!maSinhVien,
+			onCell,
+		},
+		{
 			title: 'Thao tác',
 			align: 'center',
 			fixed: 'right',

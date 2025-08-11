@@ -442,6 +442,9 @@ const MuonTraSachPage = (props: any) => {
 										{recPhieu?.tenKhoaSinhVienNguoiMuon ?? '--'}
 									</Descriptions.Item>
 									<Descriptions.Item label='Khóa ngành'>{recPhieu?.tenNganhNguoiMuon ?? '--'}</Descriptions.Item>
+									<Descriptions.Item label='Lớp hành chính'>
+										{recPhieu?.tenLopHanhChinh ?? recPhieu?.tenLopHanhChinhNguoiMuon}
+									</Descriptions.Item>
 								</>
 							) : (
 								<>
