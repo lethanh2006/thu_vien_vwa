@@ -27,6 +27,8 @@ declare module MuonSach {
 		ghiChuDangKy: string;
 		ghiChu: string;
 
+		thoiGianDangKy: Date;
+
 		//fake
 		ssoId?: string;
 	}

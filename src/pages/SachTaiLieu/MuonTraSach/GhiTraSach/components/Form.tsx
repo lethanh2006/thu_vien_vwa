@@ -125,6 +125,12 @@ const FormGhiTraSach = (props: any) => {
 				values: [ETrangThaiMuonSach.DANG_THUE_MUON],
 				operator: EOperatorType.INCLUDE,
 			},
+			{
+				active: true,
+				field: 'thanhLy',
+				values: [false],
+				operator: EOperatorType.EQUAL,
+			},
 		];
 
 		const anPhamData = await getModel(
@@ -350,7 +356,7 @@ const FormGhiTraSach = (props: any) => {
 										rowSelection: {
 											type: 'checkbox',
 											selectedRowKeys: selectedIds ?? [],
-											onChange: setSelectedIds,
+											onChange: (selectedRowKeys: any[]) => setSelectedIds(selectedRowKeys),
 											columnWidth: 40,
 										},
 									}}

@@ -2,12 +2,13 @@ import ExpandText from '@/components/ExpandText';
 import PrintBarcode from '@/components/PrintTemplate/Barcode';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiDangKyCaBiet, type ETrangThaiDangKyCaBiet } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
-import { HistoryOutlined } from '@ant-design/icons';
-import { Card, Tag } from 'antd';
+import { HistoryOutlined, ShoppingCartOutlined, SyncOutlined } from '@ant-design/icons';
+import { Card, Popconfirm, Tabs, Tag } from 'antd';
 import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
@@ -18,9 +19,12 @@ import StatDanhSachDKCB from './components/Stat';
 
 const DangKyCaBietPage = () => {
 	const { getSettingModel, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
-	const { page, limit, record, setRecord, selectedIds, setSelectedIds } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { getModel, page, limit, record, setRecord, selectedIds, setSelectedIds, thanhLyDangKyCaBietModel } = useModel(
+		'sachtailieu.anpham.anphamxepgia',
+	);
 
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
+	const [tabActive, setTabActive] = useState<string>('1');
 	// const [visibleIn, setVisibleIn] = useState<boolean>(false);
 	// const [activeKey, setActiveKey] = useState<string>('1');
 
@@ -40,6 +44,12 @@ const DangKyCaBietPage = () => {
 	useEffect(() => {
 		if (!settingMuonTra) getSettingModel();
 	}, []);
+
+	const getData = () => {
+		getModel(undefined, [
+			{ active: true, field: 'thanhLy', values: [tabActive === '1' ? false : true], operator: EOperatorType.EQUAL },
+		]);
+	};
 
 	const onCell = (rec: AnPham.IAnPhamXepGia) => ({
 		onClick: () => {
@@ -97,25 +107,42 @@ const DangKyCaBietPage = () => {
 			render: (val, rec) => <Tag color={colorTrangThaiDangKyCaBiet[val as ETrangThaiDangKyCaBiet]}>{val}</Tag>,
 			fixed: 'right',
 			onCell,
+			hide: tabActive === '2',
 		},
 		{
 			title: 'Thao tác',
 			align: 'center',
 			width: 90,
 			fixed: 'right',
-			render: (val, rec) => (
-				<>
-					<ButtonExtend
-						tooltip='Lịch sử đăng ký'
-						onClick={() => {
-							setRecord(rec);
-							setVisibleModal(true);
-						}}
-						type='link'
-						icon={<HistoryOutlined />}
-					/>
-				</>
-			),
+			render: (val, rec) =>
+				tabActive === '1' ? (
+					<>
+						<Popconfirm
+							onConfirm={() => thanhLyDangKyCaBietModel({ _id: rec?._id, thanhLy: true }, getData)}
+							title='Xác nhận thanh lý đăng ký cá biệt này?'
+							placement='topRight'
+						>
+							<ButtonExtend tooltip='Thanh lý' type='link' icon={<ShoppingCartOutlined />} />
+						</Popconfirm>
+						<ButtonExtend
+							tooltip='Lịch sử đăng ký'
+							onClick={() => {
+								setRecord(rec);
+								setVisibleModal(true);
+							}}
+							type='link'
+							icon={<HistoryOutlined />}
+						/>
+					</>
+				) : (
+					<Popconfirm
+						onConfirm={() => thanhLyDangKyCaBietModel({ _id: rec?._id, thanhLy: false }, getData)}
+						title='Xác nhận tái sử dụng đăng ký cá biệt này?'
+						placement='topRight'
+					>
+						<ButtonExtend tooltip='Tái sử dụng' type='link' icon={<SyncOutlined />} />
+					</Popconfirm>
+				),
 		},
 	];
 
@@ -123,31 +150,42 @@ const DangKyCaBietPage = () => {
 		<Card title='Danh sách đăng ký cá biệt'>
 			<StatDanhSachDKCB />
 
+			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
+				<Tabs.TabPane tab='Khả dụng' key='1' />
+				<Tabs.TabPane tab='Đã thanh ký' key='2' />
+			</Tabs>
+
 			<TableBase
+				getData={getData}
 				columns={columns}
-				dependencies={[page, limit]}
+				dependencies={[page, limit, tabActive]}
 				modelName='sachtailieu.anpham.anphamxepgia'
 				buttons={{ create: false }}
 				hideCard
 				Form={FormDangKyCaBiet}
+				formProps={{ getData }}
 				widthDrawer={800}
 				otherProps={{
 					rowKey: (rec: AnPham.IAnPhamXepGia) => rec.soDangKyCaBiet,
 					rowSelection: {
 						type: 'checkbox',
 						selectedRowKeys: selectedIds ?? [],
-						onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
+						onChange: (selectedRowKeys: any[]) => setSelectedIds(selectedRowKeys),
 						columnWidth: 40,
 					},
 				}}
 				otherButtons={[
-					<ReactToPrint
-						key={'prin'}
-						content={reactToPrintContent}
-						documentTitle='In'
-						trigger={reactToPrintTrigger}
-						removeAfterPrint
-					/>,
+					tabActive === '1' ? (
+						<ReactToPrint
+							key={'prin'}
+							content={reactToPrintContent}
+							documentTitle='In'
+							trigger={reactToPrintTrigger}
+							removeAfterPrint
+						/>
+					) : (
+						<></>
+					),
 				]}
 			/>
 

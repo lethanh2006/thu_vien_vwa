@@ -15,6 +15,7 @@ import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import {
 	CheckOutlined,
 	DeleteOutlined,
+	EditOutlined,
 	InfoCircleOutlined,
 	MenuOutlined,
 	PlusCircleOutlined,
@@ -26,6 +27,7 @@ import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ChiTietAnPham from '../../AnPham/components/ChiTiet';
 import ChiTietMuonTraSach from '../components/ChiTiet';
+import FormThoiGianMuonTra from '../components/FormThoiGian';
 import GhiTraAnPham from '../components/GhiTraSach';
 import ConfirmGiaHan from '../components/ModalGiaHan';
 import RenderHanTra from '../components/RenderHanTra';
@@ -46,6 +48,8 @@ const GhiTraPage = () => {
 		setEdit,
 		setIsView,
 		setVisibleForm,
+		edit,
+		handleEdit,
 	} = useModel('sachtailieu.muontra.muontra');
 	const { visibleForm, setVisibleForm: setVisibleAnPham } = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel } = useModel('sachtailieu.anpham.thongtinanpham');
@@ -320,6 +324,13 @@ const GhiTraPage = () => {
 						content={
 							<>
 								<ButtonExtend
+									disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA}
+									tooltip='Chỉnh sửa'
+									type='link'
+									icon={<EditOutlined />}
+									onClick={() => handleEdit(rec)}
+								/>
+								<ButtonExtend
 									tooltip='Gia hạn'
 									type='link'
 									icon={<RetweetOutlined />}
@@ -365,9 +376,9 @@ const GhiTraPage = () => {
 				columns={columns}
 				dependencies={[page, limit, activeKey, vaiTro]}
 				modelName='sachtailieu.muontra.muontra'
-				widthDrawer={isView ? 600 : 'full'}
+				widthDrawer={isView || edit ? 600 : 'full'}
 				formProps={{ getData, setVisibleGhiTra }}
-				Form={isView ? ChiTietMuonTraSach : FormGhiTra}
+				Form={isView ? ChiTietMuonTraSach : edit ? FormThoiGianMuonTra : FormGhiTra}
 				title='Ghi trả sách'
 				buttons={{ create: false }}
 				otherButtons={[

@@ -1,6 +1,6 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
-import { ETrangThaiDuyetMuonSach, ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
+import { ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import rules from '@/utils/rules';
 import { inputFormat, resetFieldsForm } from '@/utils/utils';
@@ -9,21 +9,21 @@ import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
-const FormDangKyCaBiet = () => {
+const FormDangKyCaBiet = (props: any) => {
+	const { getData: getDataExtenal } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { formSubmiting, edit, putModel, postModel, record, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
 	const { danhSach: danhSachSinhVien } = useModel('sinhvien.sinhvien');
 	const {
 		record: recDKCB,
-		getModel,
 		thongKeDangKyCaBietModel,
 		visibleForm,
 		setVisibleForm,
 	} = useModel('sachtailieu.anpham.anphamxepgia');
 
 	const getData = () => {
-		getModel();
+		getDataExtenal();
 		thongKeDangKyCaBietModel();
 	};
 
