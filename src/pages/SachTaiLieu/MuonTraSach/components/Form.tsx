@@ -137,6 +137,7 @@ const FormMuonTraSach = (props: any) => {
 			tenKhoaSinhVienNguoiMuon: recSinhVien?.khoaSinhVien?.ten ?? '',
 			maKhoaNguoiMuon: recSinhVien?.maKhoaNganh ?? '',
 			tenKhoaNguoiMuon: recSinhVien?.khoaNganh?.ten ?? '',
+			tenLopHanhChinh: recSinhVien?.tenLopHanhChinhVirtual ?? '',
 
 			//Cán bộ, giảng viên
 			maDonViNguoiMuon: recCanBo?.maDonVi ?? '',
