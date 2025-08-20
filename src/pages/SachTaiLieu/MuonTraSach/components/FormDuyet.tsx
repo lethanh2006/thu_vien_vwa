@@ -74,12 +74,12 @@ const FormDuyet = (props: { form: FormInstance }) => {
 					buttons={{ create: false }}
 					hideCard
 					otherProps={{
-						rowKey: (rec: AnPham.IThongTinAnPham) => rec._id,
+						rowKey: (rec: AnPham.IThongTinAnPham) => rec._id ?? '',
 						rowSelection: {
 							type: 'checkbox',
 							selectedRowKeys: selectedIds,
 							preserveSelectedRowKeys: true,
-							onChange: (selectedRowKeys: string[]) => {
+							onChange: (selectedRowKeys: any[]) => {
 								setSelectedIds(selectedRowKeys.slice(-1));
 							},
 							columnWidth: 40,

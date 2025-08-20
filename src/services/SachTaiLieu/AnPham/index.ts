@@ -33,6 +33,10 @@ export async function inMaBarCode(payLoad: any) {
 	return axios.post(`${ip3}/an-pham/in-barcode`, payLoad);
 }
 
+export async function thanhLyDangKyCaBiet(payLoad: any) {
+	return axios.post(`${ip3}/an-pham-xep-gia/thanh-ly`, payLoad);
+}
+
 /** Xuất thống kê đăng ký tổng quát */
 export async function thongKeDangKyTongQuat(
 	maHocKy?: string,

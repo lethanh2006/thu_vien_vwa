@@ -93,12 +93,11 @@ const FormMauBienMuc = (props: any) => {
 								addStt
 								hasTotal
 								otherProps={{
-									pagination: true,
 									rowKey: (rec: TruongCon.IRecord) => rec.code,
 									rowSelection: {
 										type: 'checkbox',
 										selectedRowKeys: selectedIds ?? [],
-										onChange: (selectedRowKeys: string[]) => setSelectedIds(selectedRowKeys),
+										onChange: (selectedRowKeys: any[]) => setSelectedIds(selectedRowKeys),
 										columnWidth: 40,
 									},
 								}}

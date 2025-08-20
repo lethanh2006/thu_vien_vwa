@@ -165,6 +165,7 @@ declare module AnPham {
 		thongTinXepGiaId: string;
 		thongTinXepGia: IXepGia;
 		trangThai: ETrangThaiDangKyCaBiet;
+		thanhLy?: boolean;
 
 		//fake
 		ghiChu?: string;

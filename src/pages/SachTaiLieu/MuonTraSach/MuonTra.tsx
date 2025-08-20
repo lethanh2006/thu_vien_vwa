@@ -10,13 +10,22 @@ import {
 	mapNameTrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
-import { CheckOutlined, DeleteOutlined, InfoCircleOutlined, MenuOutlined, RetweetOutlined } from '@ant-design/icons';
+import {
+	CheckOutlined,
+	DeleteOutlined,
+	EditOutlined,
+	InfoCircleOutlined,
+	MenuOutlined,
+	RetweetOutlined,
+} from '@ant-design/icons';
 import { Button, Card, Col, Descriptions, Modal, Popconfirm, Popover, Row, Segmented, Tabs, Tag } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ChiTietAnPham from '../AnPham/components/ChiTiet';
 import ChiTietMuonTraSach from './components/ChiTiet';
+import FormMuonTra from './components/FormMuonTra';
+import FormThoiGianMuonTra from './components/FormThoiGian';
 import GhiTraAnPham from './components/GhiTraSach';
 import ConfirmGiaHan from './components/ModalGiaHan';
 import RenderHanTra from './components/RenderHanTra';
@@ -25,8 +34,18 @@ const MuonTraSachPage = (props: any) => {
 	const { tatCaLichSu, vaiTro } = props;
 	const intl = useIntl();
 	const { record: recPhieu, setVisibleForm, visibleForm: visiblePhieu } = useModel('sachtailieu.muontra.phieumuontra');
-	const { thongKeMuonTraSachModel, getModel, page, limit, handleView, setRecord, deleteModel } =
-		useModel('sachtailieu.muontra.muontra');
+	const {
+		thongKeMuonTraSachModel,
+		getModel,
+		page,
+		limit,
+		handleView,
+		setRecord,
+		deleteModel,
+		isView,
+		handleEdit,
+		edit,
+	} = useModel('sachtailieu.muontra.muontra');
 	const { visibleForm, setVisibleForm: setVisibleAnPham } = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel } = useModel('sachtailieu.anpham.thongtinanpham');
 	const [trangThai, setTrangThai] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.DANG_THUE_MUON);
@@ -268,37 +287,46 @@ const MuonTraSachPage = (props: any) => {
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 60,
+			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
-				<Popover
-					placement='topRight'
-					content={
-						<>
-							{
-								// trangThai === ETrangThaiMuonSach.CHO_XU_LY ? (
-								// 	<ButtonExtend
-								// 		tooltip='Duyệt'
-								// 		type='link'
-								// 		icon={<CheckOutlined />}
-								// 		className='text-success'
-								// 		onClick={() => handleView(rec)}
-								// 	/>
-								// ) :
-								trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
-									<>
-										<ButtonExtend
-											disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA}
-											onClick={() => {
-												setRecord(rec);
-												setVisibleGhiTra(true);
-											}}
-											tooltip='Ghi trả'
-											className='text-success'
-											type='link'
-											icon={<CheckOutlined />}
-										/>
-										{/* <Popconfirm
+				<>
+					<ButtonExtend
+						disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA}
+						tooltip='Chỉnh sửa'
+						type='link'
+						icon={<EditOutlined />}
+						onClick={() => handleEdit(rec)}
+					/>
+
+					<Popover
+						placement='topRight'
+						content={
+							<>
+								{
+									// trangThai === ETrangThaiMuonSach.CHO_XU_LY ? (
+									// 	<ButtonExtend
+									// 		tooltip='Duyệt'
+									// 		type='link'
+									// 		icon={<CheckOutlined />}
+									// 		className='text-success'
+									// 		onClick={() => handleView(rec)}
+									// 	/>
+									// ) :
+									trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
+										<>
+											<ButtonExtend
+												disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA}
+												onClick={() => {
+													setRecord(rec);
+													setVisibleGhiTra(true);
+												}}
+												tooltip='Ghi trả'
+												className='text-success'
+												type='link'
+												icon={<CheckOutlined />}
+											/>
+											{/* <Popconfirm
 											onConfirm={() => handleLaySach(rec)}
 											title='Bạn có chắc chắn sinh viên đã lấy đầu sách này?'
 											placement='topRight'
@@ -310,32 +338,35 @@ const MuonTraSachPage = (props: any) => {
 												icon={<UserOutlined />}
 											/>
 										</Popconfirm> */}
-										<ButtonExtend
-											tooltip='Gia hạn'
-											type='link'
-											icon={<RetweetOutlined />}
-											onClick={() => {
-												setRecord(rec);
-												setVisibleGiaHan(true);
-											}}
-											disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA || moment().isBefore(moment(rec?.expired))}
-										/>
-									</>
-								) : null
-							}
+											<ButtonExtend
+												tooltip='Gia hạn'
+												type='link'
+												icon={<RetweetOutlined />}
+												onClick={() => {
+													setRecord(rec);
+													setVisibleGiaHan(true);
+												}}
+												disabled={
+													rec?.trangThai === ETrangThaiMuonSach.DA_TRA || moment().isBefore(moment(rec?.expired))
+												}
+											/>
+										</>
+									) : null
+								}
 
-							<Popconfirm
-								onConfirm={() => deleteModel(rec._id, getData)}
-								title='Bạn có chắc chắn muốn xóa thông tin này?'
-								placement='topRight'
-							>
-								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
-							</Popconfirm>
-						</>
-					}
-				>
-					<ButtonExtend type='link' icon={<MenuOutlined />} />
-				</Popover>
+								<Popconfirm
+									onConfirm={() => deleteModel(rec._id, getData)}
+									title='Bạn có chắc chắn muốn xóa thông tin này?'
+									placement='topRight'
+								>
+									<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+								</Popconfirm>
+							</>
+						}
+					>
+						<ButtonExtend type='link' icon={<MenuOutlined />} />
+					</Popover>
+				</>
 			),
 		},
 	];
@@ -349,9 +380,9 @@ const MuonTraSachPage = (props: any) => {
 					params={filter}
 					dependencies={[page, limit, trangThai, activeKey, recPhieu?._id, tatCaLichSu, vaiTro]}
 					modelName='sachtailieu.muontra.muontra'
-					widthDrawer={900}
+					widthDrawer={edit ? 600 : 900}
 					formProps={{ getData, trangThai, setTrangThai, setVisibleGhiTra }}
-					Form={ChiTietMuonTraSach}
+					Form={isView ? ChiTietMuonTraSach : FormThoiGianMuonTra}
 					hideCard
 					buttons={{
 						create: false,
@@ -463,6 +494,8 @@ const MuonTraSachPage = (props: any) => {
 			</Tabs>
 
 			{content()}
+
+			<FormMuonTra />
 
 			<div className='form-footer'>
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
