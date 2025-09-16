@@ -8,19 +8,20 @@ import { ETrangThaiDangKyCaBiet, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from 
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
 import { resetFieldsForm } from '@/utils/utils';
-import { DeleteOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, message, Popconfirm, Row, Segmented, Space, Spin } from 'antd';
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PrinterOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Form, Input, message, Modal, Popconfirm, Row, Segmented, Space, Spin } from 'antd';
 import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactToPrint from 'react-to-print';
 import { useIntl, useModel } from 'umi';
+import ChiTietAnPham from '../../AnPham/components/ChiTiet';
 import InforNguoiMuon from '../GhiTraSach/components/Infor';
 import StatNguoiDungAnPham from '../GhiTraSach/components/Stat';
+import ModalNguoiMuon from '../NguoiMuon';
 import ConfirmMuonQuaHan from './ConfirmQuaHan';
 import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
 import TitlePrintMuonTra from './TitlePrintMuonTra';
-import ModalNguoiMuon from '../NguoiMuon';
 
 const FormMuonTraSach = (props: any) => {
 	const { getData } = props;
@@ -39,6 +40,8 @@ const FormMuonTraSach = (props: any) => {
 	} = useModel('sachtailieu.anpham.anphamxepgia');
 	const { record: recSinhVien, setRecord: setRecSinhVien } = useModel('sinhvien.sinhvien');
 	const { record: recCanBo, setRecord: setRecCanBo } = useModel('tochucnhansu.nhansu');
+	const { getAllModel } = useModel('sachtailieu.anpham.thongtinanpham');
+	const { visibleForm: visibleAnPham, setVisibleForm: setVisibleAnPham } = useModel('sachtailieu.anpham.anpham');
 	const [visibleTimKiem, setVisibleTimKiem] = useState<boolean>(false);
 	const [visibleQuaHan, setVisibleQuaHan] = useState<boolean>(false);
 	const dkcb: string = Form.useWatch('dkcb', form);
@@ -191,7 +194,21 @@ const FormMuonTraSach = (props: any) => {
 		{
 			title: 'Nhan đề',
 			width: 220,
-			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
+			render: (val, rec) => (
+				<ExpandText>
+					<ButtonExtend
+						size='small'
+						type='link'
+						icon={<InfoCircleOutlined />}
+						onClick={(e) => {
+							e.stopPropagation();
+							getAllModel(undefined, undefined, { anPhamId: rec?.anPhamId });
+							setVisibleAnPham(true);
+						}}
+					/>
+					{rec?.anPham?.nhanDe}
+				</ExpandText>
+			),
 		},
 		{
 			title: 'Tác giả',
@@ -525,6 +542,20 @@ const FormMuonTraSach = (props: any) => {
 				setVisible={setVisibleTimTen}
 				activeKey={isSinhVien ? 'sinh-vien' : 'can-bo'}
 			/>
+
+			<Modal
+				title='Chi tiết ấn phẩm'
+				visible={visibleAnPham}
+				onCancel={() => setVisibleAnPham(false)}
+				width={900}
+				footer={
+					<div className='form-footer'>
+						<Button onClick={() => setVisibleAnPham(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
+					</div>
+				}
+			>
+				<ChiTietAnPham />
+			</Modal>
 		</Card>
 	);
 };
