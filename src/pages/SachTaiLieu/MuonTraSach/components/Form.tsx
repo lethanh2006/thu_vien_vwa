@@ -211,14 +211,14 @@ const FormMuonTraSach = (props: any) => {
 			),
 		},
 		{
-			title: 'Tác giả',
-			width: 150,
-			render: (val, rec) => rec?.anPham?.tacGia,
-		},
-		{
 			title: 'Số thứ tự của tập',
 			width: 150,
 			render: (val, rec) => rec?.anPham?.soThuTuCuaTap,
+		},
+		{
+			title: 'Tác giả',
+			width: 150,
+			render: (val, rec) => rec?.anPham?.tacGia,
 		},
 		{
 			title: 'Thời gian mượn',
