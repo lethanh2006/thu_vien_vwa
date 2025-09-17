@@ -216,6 +216,11 @@ const FormMuonTraSach = (props: any) => {
 			render: (val, rec) => rec?.anPham?.tacGia,
 		},
 		{
+			title: 'Số thứ tự của tập',
+			width: 150,
+			render: (val, rec) => rec?.anPham?.soThuTuCuaTap,
+		},
+		{
 			title: 'Thời gian mượn',
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
