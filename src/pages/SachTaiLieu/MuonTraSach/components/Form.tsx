@@ -193,7 +193,7 @@ const FormMuonTraSach = (props: any) => {
 		},
 		{
 			title: 'Nhan đề',
-			width: 220,
+			width: 350,
 			render: (val, rec) => (
 				<ExpandText>
 					<ButtonExtend
@@ -206,19 +206,9 @@ const FormMuonTraSach = (props: any) => {
 							setVisibleAnPham(true);
 						}}
 					/>
-					{rec?.anPham?.nhanDe}
+					{[rec?.anPham?.nhanDe, rec?.anPham?.soThuTuCuaTap, rec?.anPham?.tacGia].filter(Boolean).join(', ')}
 				</ExpandText>
 			),
-		},
-		{
-			title: 'Số thứ tự của tập',
-			width: 150,
-			render: (val, rec) => rec?.anPham?.soThuTuCuaTap,
-		},
-		{
-			title: 'Tác giả',
-			width: 150,
-			render: (val, rec) => rec?.anPham?.tacGia,
 		},
 		{
 			title: 'Thời gian mượn',
@@ -237,7 +227,7 @@ const FormMuonTraSach = (props: any) => {
 		{
 			title: 'Ghi chú',
 			dataIndex: 'ghiChu',
-			width: 220,
+			width: 180,
 			onCell,
 		},
 		{
