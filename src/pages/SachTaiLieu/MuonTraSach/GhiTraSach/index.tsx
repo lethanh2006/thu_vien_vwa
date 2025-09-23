@@ -117,7 +117,7 @@ const GhiTraPage = () => {
 					{
 						active: true,
 						field: 'expired',
-						values: [moment().toISOString(), moment().add(7, 'days').toISOString()],
+						values: [moment().startOf('d').toISOString(), moment().add(7, 'day').endOf('d').toISOString()],
 						operator: EOperatorType.BETWEEN,
 					},
 				];
@@ -127,7 +127,7 @@ const GhiTraPage = () => {
 					{
 						active: true,
 						field: 'expired',
-						values: [moment().toISOString()],
+						values: [moment().startOf('d').toISOString()],
 						operator: EOperatorType.LESS_THAN,
 					},
 				];

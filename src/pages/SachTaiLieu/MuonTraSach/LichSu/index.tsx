@@ -50,12 +50,19 @@ const LichSuThueMuonPage = (props: {
 						{
 							active: true,
 							field: 'expired',
-							values: [moment().toISOString(), moment().add(7, 'day').toISOString()],
+							values: [moment().startOf('d').toISOString(), moment().add(7, 'day').endOf('d').toISOString()],
 							operator: EOperatorType.BETWEEN,
 						},
 				  ]
 				: activeKey === '3'
-				? [{ active: true, field: 'expired', values: [moment().toISOString()], operator: EOperatorType.LESS_THAN }]
+				? [
+						{
+							active: true,
+							field: 'expired',
+							values: [moment().startOf('d').toISOString()],
+							operator: EOperatorType.LESS_THAN,
+						},
+				  ]
 				: activeKey === '4'
 				? [{ active: true, field: 'daLaySach', values: [false], operator: EOperatorType.EQUAL }]
 				: [];

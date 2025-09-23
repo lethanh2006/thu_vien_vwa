@@ -24,7 +24,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	const [yearSelect, setYearSelect] = useState(moment().year());
 	const [monthSelect, setMonthSelect] = useState(moment().month());
 
-	const [dateRange, setDateRange] = useState<string[]>([
+	const [dateRange, setDateRange] = useState<any>([
 		moment().startOf('M').toISOString(),
 		moment().endOf('M').toISOString(),
 	]);
@@ -36,7 +36,6 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	useEffect(() => {
 		const startOfMonth = moment().year(yearSelect).month(monthSelect).startOf('month');
 		const endOfMonth = moment().year(yearSelect).month(monthSelect).endOf('month');
-
 		setDateRange([startOfMonth.toISOString(), endOfMonth.toISOString()]);
 	}, [kieuHienThi, yearSelect, monthSelect]);
 
@@ -45,27 +44,32 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	}, [dateRange, vaiTro, trangThai]);
 
 	const getData = () => {
-		const condition = {
+		const condition: any = {
 			...(kieuHienThi === EKieuHienThi.THANG && { nam: yearSelect }),
-			...{ trangThai: trangThai },
+			trangThai,
 		};
 
-		const filter = [
-			vaiTro && {
+		const filter: any[] = [];
+
+		if (vaiTro) {
+			filter.push({
 				active: true,
 				field: ['phieuMuonTra', 'vaiTro'],
 				values: [vaiTro],
 				operator: EOperatorType.INCLUDE,
-			},
-			kieuHienThi === EKieuHienThi.NGAY && {
+			});
+		}
+
+		if (kieuHienThi === EKieuHienThi.NGAY && dateRange?.length === 2) {
+			filter.push({
 				active: true,
 				field: trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'thoiGianMuon' : 'thoiGianTra',
 				values: [moment(dateRange[0]).startOf('date').toISOString(), moment(dateRange[1]).endOf('date').toISOString()],
 				operator: EOperatorType.BETWEEN,
-			},
-		];
+			});
+		}
 
-		thongKeAnPhamMuonTraModel(kieuHienThi, isBanDoc, condition, filter?.filter(Boolean));
+		thongKeAnPhamMuonTraModel(kieuHienThi, isBanDoc, condition, filter);
 	};
 
 	useEffect(() => {
@@ -80,7 +84,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 
 		const rawData = dataThongKeAnPhamMuonTra.map((item) => ({
 			x: item.title ?? 'Không có thông tin',
-			soLuong: Number(item.soLuong),
+			soLuong: Number(item.soLuong) || 0,
 		}));
 
 		const totalSoLuong = _.sumBy(rawData, 'soLuong');
@@ -91,8 +95,8 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 		}));
 
 		const diff = 100 - _.sumBy(chart, 'y');
-		if (chart.length > 0) {
-			chart[chart.length - 1].y += diff;
+		if (chart.length > 0 && diff !== 0) {
+			chart[chart.length - 1].y = _.round(chart[chart.length - 1].y + diff, 2);
 		}
 
 		return chart;
@@ -124,22 +128,25 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 				/>
 				{kieuHienThi === EKieuHienThi.NGAY ? (
 					<MyDateRangePicker
-						format={'DD/MM'}
+						value={dateRange}
+						onChange={(val) => setDateRange(val || [])}
 						style={{ width: 180 }}
-						value={[moment(dateRange[0]), moment(dateRange[1])]}
-						onChange={(val: any) => {
-							if (!val || val.length !== 2) return;
-							setDateRange([val[0].toISOString(), val[1].toISOString()]);
+						placeholder={['Từ ngày', 'Đến ngày']}
+						ranges={{
+							'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
+							'Tuần này': [moment().startOf('week'), moment().endOf('week')],
+							'Tháng này': [moment().startOf('M'), moment().endOf('M')],
 						}}
+						format='DD/MM'
 					/>
 				) : kieuHienThi === EKieuHienThi.THANG ? (
 					<MyDatePicker
 						style={{ width: 90 }}
-						value={moment(yearSelect, 'YYYY')}
+						value={yearSelect ? moment(yearSelect, 'YYYY') : undefined}
 						pickerStyle={'year'}
 						format={'YYYY'}
 						onChange={(val) => {
-							setYearSelect(moment(val).year());
+							if (val) setYearSelect(moment(val).year());
 						}}
 					/>
 				) : null}
@@ -164,14 +171,16 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 						<Col span={24} md={16}>
 							<ColumnChart
 								yLabel={['Số lượt']}
-								xAxis={dataThongKeAnPhamMuonTra?.map((item) =>
-									kieuHienThi === EKieuHienThi.NGAY
-										? moment(item.title ?? '').format('DD/MM')
-										: kieuHienThi === EKieuHienThi.THANG
-										? `Tháng ${item.title ?? ''}`
-										: item.title ?? 'Không có thông tin',
-								)}
-								yAxis={[dataThongKeAnPhamMuonTra?.map((item) => Number(item.soLuong) ?? 0)]}
+								xAxis={dataThongKeAnPhamMuonTra?.map((item) => {
+									if (kieuHienThi === EKieuHienThi.NGAY) {
+										return moment(item.title, moment.ISO_8601, true).isValid()
+											? moment(item.title).format('DD/MM')
+											: 'Không rõ';
+									}
+									if (kieuHienThi === EKieuHienThi.THANG) return `Tháng ${item.title ?? ''}`;
+									return item.title ?? 'Không có thông tin';
+								})}
+								yAxis={[dataThongKeAnPhamMuonTra?.map((item) => Number(item.soLuong) || 0)]}
 								showTotal
 								type={dataThongKeAnPhamMuonTra.length >= 10 ? 'area' : 'bar'}
 								otherOptions={{
@@ -236,13 +245,15 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 						</Col>
 						<Col span={24} md={8}>
 							<DonutChart
-								xAxis={chartData?.map((item) =>
-									kieuHienThi === EKieuHienThi.NGAY
-										? moment(item.x).format('DD/MM/YYYY')
-										: kieuHienThi === EKieuHienThi.THANG
-										? `Tháng ${item.x}`
-										: item.x,
-								)}
+								xAxis={chartData?.map((item) => {
+									if (kieuHienThi === EKieuHienThi.NGAY) {
+										return moment(item.x, moment.ISO_8601, true).isValid()
+											? moment(item.x).format('DD/MM/YYYY')
+											: 'Không rõ';
+									}
+									if (kieuHienThi === EKieuHienThi.THANG) return `Tháng ${item.x}`;
+									return item.x;
+								})}
 								yAxis={[chartData?.map((item) => item.y)]}
 								yLabel={['Phần trăm (%)']}
 								showTotal

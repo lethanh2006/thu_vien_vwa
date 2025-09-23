@@ -64,7 +64,7 @@ const MuonTraSachPage = (props: any) => {
 			{
 				active: true,
 				field: 'expired',
-				values: [moment().toISOString(), moment().add(7, 'day').toISOString()],
+				values: [moment().startOf('d').toISOString(), moment().add(7, 'day').endOf('d').toISOString()],
 				operator: EOperatorType.BETWEEN,
 			},
 		];
@@ -73,7 +73,7 @@ const MuonTraSachPage = (props: any) => {
 			{
 				active: true,
 				field: 'expired',
-				values: [moment().toISOString()],
+				values: [moment().startOf('d').toISOString()],
 				operator: EOperatorType.LESS_THAN,
 			},
 		];
