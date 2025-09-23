@@ -8,7 +8,6 @@ import { EKieuHienThi, ETrangThaiMuonSach, EVaiTroMuonTra, KieuHienThi } from '@
 import { inputFormat } from '@/utils/utils';
 import { ExportOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Card, Col, Empty, Row, Segmented, Select, Space, Spin, Tabs } from 'antd';
-import _ from 'lodash';
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import { useModel } from 'umi';
@@ -79,28 +78,31 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 		}
 	}, [readyToFetch]);
 
-	const chartData = useMemo(() => {
+	const filteredData = useMemo(() => {
 		if (!dataThongKeAnPhamMuonTra?.length) return [];
 
-		const rawData = dataThongKeAnPhamMuonTra.map((item) => ({
+		let data = [...dataThongKeAnPhamMuonTra];
+
+		if (kieuHienThi === EKieuHienThi.NGAY && dateRange?.length === 2) {
+			const start = moment(dateRange[0]).startOf('day');
+			const end = moment(dateRange[1]).endOf('day');
+			data = data.filter((item) => {
+				const date = moment(item.title, 'YYYY-MM-DD', true);
+				return date.isValid() && date.isBetween(start, end, undefined, '[]');
+			});
+		}
+
+		return data;
+	}, [dataThongKeAnPhamMuonTra, kieuHienThi, dateRange]);
+
+	const chartData = useMemo(() => {
+		if (!filteredData.length) return [];
+
+		return filteredData.map((item) => ({
 			x: item.title ?? 'Không có thông tin',
 			soLuong: Number(item.soLuong) || 0,
 		}));
-
-		const totalSoLuong = _.sumBy(rawData, 'soLuong');
-
-		const chart = rawData.map((item) => ({
-			...item,
-			y: _.round((item.soLuong / (totalSoLuong || 1)) * 100, 2),
-		}));
-
-		const diff = 100 - _.sumBy(chart, 'y');
-		if (chart.length > 0 && diff !== 0) {
-			chart[chart.length - 1].y = _.round(chart[chart.length - 1].y + diff, 2);
-		}
-
-		return chart;
-	}, [dataThongKeAnPhamMuonTra]);
+	}, [filteredData]);
 
 	return (
 		<Card title={isBanDoc ? 'Thống kê bạn đọc' : 'Thống kê mượn trả ấn phẩm'}>
@@ -166,23 +168,21 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 			</div>
 
 			<Spin spinning={loadingThongKe}>
-				{dataThongKeAnPhamMuonTra?.length ? (
+				{filteredData.length ? (
 					<Row gutter={[12, 0]}>
 						<Col span={24} md={16}>
 							<ColumnChart
 								yLabel={['Số lượt']}
-								xAxis={dataThongKeAnPhamMuonTra?.map((item) => {
+								xAxis={filteredData.map((item) => {
 									if (kieuHienThi === EKieuHienThi.NGAY) {
-										return moment(item.title, moment.ISO_8601, true).isValid()
-											? moment(item.title).format('DD/MM')
-											: 'Không rõ';
+										return moment(item.title, 'YYYY-MM-DD').format('DD/MM');
 									}
 									if (kieuHienThi === EKieuHienThi.THANG) return `Tháng ${item.title ?? ''}`;
 									return item.title ?? 'Không có thông tin';
 								})}
-								yAxis={[dataThongKeAnPhamMuonTra?.map((item) => Number(item.soLuong) || 0)]}
+								yAxis={[filteredData.map((item) => Number(item.soLuong) || 0)]}
 								showTotal
-								type={dataThongKeAnPhamMuonTra.length >= 10 ? 'area' : 'bar'}
+								type={filteredData.length >= 10 ? 'area' : 'bar'}
 								otherOptions={{
 									yaxis: {
 										labels: { formatter: (val) => `${inputFormat(val)}` },
@@ -254,10 +254,10 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 									if (kieuHienThi === EKieuHienThi.THANG) return `Tháng ${item.x}`;
 									return item.x;
 								})}
-								yAxis={[chartData?.map((item) => item.y)]}
-								yLabel={['Phần trăm (%)']}
+								yAxis={[chartData?.map((item) => item.soLuong)]}
+								yLabel={['Số lượt']}
 								showTotal
-								formatY={(val) => `${inputFormat(val)} %`}
+								formatY={(val) => `${inputFormat(val)} lượt`}
 								otherOptions={{
 									legend: { position: 'bottom' },
 									tooltip: {
