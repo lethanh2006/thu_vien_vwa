@@ -189,7 +189,8 @@ const FormMuonTraSach = (props: any) => {
 			title: 'ĐKCB',
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
-			width: 120,
+			width: 100,
+			filterType: 'string',
 		},
 		{
 			title: 'Nhan đề',
@@ -209,6 +210,21 @@ const FormMuonTraSach = (props: any) => {
 					{[rec?.anPham?.nhanDe, rec?.anPham?.soThuTuCuaTap, rec?.anPham?.tacGia].filter(Boolean).join(', ')}
 				</ExpandText>
 			),
+			filterType: 'string',
+		},
+		{
+			title: 'Nhà xuất bản',
+			align: 'center',
+			render: (val, rec) => rec?.anPham?.nhaXuatBan,
+			width: 120,
+			filterType: 'string',
+		},
+		{
+			title: 'Năm xuất bản',
+			align: 'center',
+			render: (val, rec) => rec?.anPham?.namXuatBan,
+			width: 120,
+			filterType: 'string',
 		},
 		{
 			title: 'Thời gian mượn',

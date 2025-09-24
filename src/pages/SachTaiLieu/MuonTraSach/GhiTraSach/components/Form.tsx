@@ -3,6 +3,7 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
+import ChiTietAnPham from '@/pages/SachTaiLieu/AnPham/components/ChiTiet';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import {
 	colorTrangThaiMuonSach,
@@ -11,8 +12,8 @@ import {
 	mapNameTrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
 import { resetFieldsForm } from '@/utils/utils';
-import { CheckOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, message, Popconfirm, Row, Segmented, Space, Spin, Tag } from 'antd';
+import { CheckOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Form, Input, message, Modal, Popconfirm, Row, Segmented, Space, Spin, Tag } from 'antd';
 import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { useIntl, useModel } from 'umi';
@@ -38,6 +39,8 @@ const FormGhiTraSach = (props: any) => {
 	} = useModel('sachtailieu.muontra.muontra');
 	const { record: recSinhVien, setRecord: setRecSinhVien } = useModel('sinhvien.sinhvien');
 	const { record: recCanBo, setRecord: setRecCanBo } = useModel('tochucnhansu.nhansu');
+	const { getAllModel } = useModel('sachtailieu.anpham.thongtinanpham');
+	const { visibleForm: visibleAnPham, setVisibleForm: setVisibleAnPham } = useModel('sachtailieu.anpham.anpham');
 
 	const [danhSach, setDanhSach] = useState<MuonSach.IRecord[]>([]);
 	const [visibleGhiTra, setVisibleGhiTra] = useState(false);
@@ -171,23 +174,43 @@ const FormGhiTraSach = (props: any) => {
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
-			title: 'Nhan đề',
-			dataIndex: ['anPham', 'nhanDe'],
-			width: 220,
-			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
-			filterType: 'string',
-		},
-		{
-			title: 'Tác giả',
-			dataIndex: ['anPham', 'tacGia'],
-			width: 180,
-			render: (val, rec) => rec?.anPham?.tacGia,
-			filterType: 'string',
-		},
-		{
 			title: 'ĐKCB',
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
+			width: 100,
+			filterType: 'string',
+		},
+		{
+			title: 'Nhan đề',
+			width: 350,
+			render: (val, rec) => (
+				<ExpandText>
+					<ButtonExtend
+						size='small'
+						type='link'
+						icon={<InfoCircleOutlined />}
+						onClick={(e) => {
+							e.stopPropagation();
+							getAllModel(undefined, undefined, { anPhamId: rec?.anPhamId });
+							setVisibleAnPham(true);
+						}}
+					/>
+					{[rec?.anPham?.nhanDe, rec?.anPham?.soThuTuCuaTap, rec?.anPham?.tacGia].filter(Boolean).join(', ')}
+				</ExpandText>
+			),
+			filterType: 'string',
+		},
+		{
+			title: 'Nhà xuất bản',
+			align: 'center',
+			render: (val, rec) => rec?.anPham?.nhaXuatBan,
+			width: 120,
+			filterType: 'string',
+		},
+		{
+			title: 'Năm xuất bản',
+			align: 'center',
+			render: (val, rec) => rec?.anPham?.namXuatBan,
 			width: 120,
 			filterType: 'string',
 		},
@@ -396,6 +419,20 @@ const FormGhiTraSach = (props: any) => {
 				}}
 				isThongTin
 			/>
+
+			<Modal
+				title='Chi tiết ấn phẩm'
+				visible={visibleAnPham}
+				onCancel={() => setVisibleAnPham(false)}
+				width={900}
+				footer={
+					<div className='form-footer'>
+						<Button onClick={() => setVisibleAnPham(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
+					</div>
+				}
+			>
+				<ChiTietAnPham />
+			</Modal>
 		</Card>
 	);
 };
