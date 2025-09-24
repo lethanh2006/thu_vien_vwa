@@ -302,7 +302,7 @@ const CardAnPham = () => {
 										<ButtonExtend tooltip='Bỏ sách hay' type='link' danger icon={<StarTwoTone />} />
 									</Popconfirm>
 								)}
-								<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
+								{/* <ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} /> */}
 								<ButtonExtend
 									tooltip='Xếp giá'
 									onClick={() => {

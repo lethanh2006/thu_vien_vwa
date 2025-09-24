@@ -67,10 +67,9 @@
 		],
 	},
 
-	//SACH TAI LIEU
 	{
-		name: 'SachTaiLieu',
-		path: 'sach-tai-lieu',
+		name: 'BienMuc',
+		path: 'bien-muc',
 		icon: 'BookOutlined',
 		routes: [
 			{
@@ -88,16 +87,29 @@
 				path: 'an-pham',
 				component: './SachTaiLieu/AnPham',
 			},
-			{
-				name: 'XepGia',
-				path: 'xep-gia',
-				component: './SachTaiLieu/XepGia',
-			},
+			// {
+			// 	name: 'XepGia',
+			// 	path: 'xep-gia',
+			// 	component: './SachTaiLieu/XepGia',
+			// },
 			{
 				name: 'DangKyCaBiet',
 				path: 'dang-ky-ca-biet',
 				component: './SachTaiLieu/DangKyCaBiet',
 			},
+			{
+				name: 'InMaVach',
+				path: 'in-ma-vach',
+				component: './SachTaiLieu/InMaVach',
+			},
+		],
+	},
+
+	{
+		name: 'GhiMuonGhiTra',
+		path: 'ghi-muon-ghi-tra',
+		icon: 'SwapOutlined',
+		routes: [
 			{
 				name: 'MuonTraSach',
 				path: 'ghi-muon-sach',
@@ -134,37 +146,32 @@
 					},
 				],
 			},
-			{
-				name: 'InMaVach',
-				path: 'in-ma-vach',
-				component: './SachTaiLieu/InMaVach',
-			},
 		],
 	},
 
 	//AN PHAM DINH KY
-	// {
-	// 	name: 'AnPhamDinhKy',
-	// 	path: 'an-pham-dinh-ky',
-	// 	icon: 'ReadOutlined',
-	// 	routes: [
-	// 		{
-	// 			name: 'BienMucAnPhamDinhKy',
-	// 			path: 'bien-muc-an-pham-dinh-ky',
-	// 			component: './AnPhamDinhKy/AnPhamDinhKy',
-	// 		},
-	// 		{
-	// 			name: 'DanhSachGhiNhan',
-	// 			path: 'danh-sach-ghi-nhan',
-	// 			component: './AnPhamDinhKy/GhiNhan',
-	// 		},
-	// 		{
-	// 			name: 'ThongKeAnPhamDinhKy',
-	// 			path: 'thong-ke-an-pham-dinh-ky',
-	// 			component: './AnPhamDinhKy/ThongKe',
-	// 		},
-	// 	],
-	// },
+	{
+		name: 'AnPhamDinhKy',
+		path: 'an-pham-dinh-ky',
+		icon: 'ReadOutlined',
+		routes: [
+			{
+				name: 'BienMucAnPhamDinhKy',
+				path: 'bien-muc-an-pham-dinh-ky',
+				component: './AnPhamDinhKy/AnPhamDinhKy',
+			},
+			{
+				name: 'DanhSachGhiNhan',
+				path: 'danh-sach-ghi-nhan',
+				component: './AnPhamDinhKy/GhiNhan',
+			},
+			{
+				name: 'ThongKeAnPhamDinhKy',
+				path: 'thong-ke-an-pham-dinh-ky',
+				component: './AnPhamDinhKy/ThongKe',
+			},
+		],
+	},
 
 	// DANH MUC HE THONG
 	{

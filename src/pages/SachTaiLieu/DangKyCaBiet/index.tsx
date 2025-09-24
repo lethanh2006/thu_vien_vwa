@@ -2,16 +2,14 @@ import ExpandText from '@/components/ExpandText';
 import PrintBarcode from '@/components/PrintTemplate/Barcode';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
-import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiDangKyCaBiet, type ETrangThaiDangKyCaBiet } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
-import { HistoryOutlined, ShoppingCartOutlined, SyncOutlined } from '@ant-design/icons';
-import { Card, Popconfirm, Tabs, Tag } from 'antd';
+import { HistoryOutlined, SyncOutlined } from '@ant-design/icons';
+import { Card, Popconfirm, Tag } from 'antd';
 import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import ReactToPrint from 'react-to-print';
 import { useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
 import FormDangKyCaBiet from './components/Form';
@@ -168,28 +166,28 @@ const DangKyCaBietPage = () => {
 				Form={FormDangKyCaBiet}
 				formProps={{ getData }}
 				widthDrawer={800}
-				otherProps={{
-					rowKey: (rec: AnPham.IAnPhamXepGia) => rec.soDangKyCaBiet,
-					rowSelection: {
-						type: 'checkbox',
-						selectedRowKeys: selectedIds ?? [],
-						onChange: (selectedRowKeys: any[]) => setSelectedIds(selectedRowKeys),
-						columnWidth: 40,
-					},
-				}}
-				otherButtons={[
-					tabActive === '1' ? (
-						<ReactToPrint
-							key={'prin'}
-							content={reactToPrintContent}
-							documentTitle='In'
-							trigger={reactToPrintTrigger}
-							removeAfterPrint
-						/>
-					) : (
-						<></>
-					),
-				]}
+				// otherProps={{
+				// 	rowKey: (rec: AnPham.IAnPhamXepGia) => rec.soDangKyCaBiet,
+				// 	rowSelection: {
+				// 		type: 'checkbox',
+				// 		selectedRowKeys: selectedIds ?? [],
+				// 		onChange: (selectedRowKeys: any[]) => setSelectedIds(selectedRowKeys),
+				// 		columnWidth: 40,
+				// 	},
+				// }}
+				// otherButtons={[
+				// 	tabActive === '1' ? (
+				// 		<ReactToPrint
+				// 			key={'prin'}
+				// 			content={reactToPrintContent}
+				// 			documentTitle='In'
+				// 			trigger={reactToPrintTrigger}
+				// 			removeAfterPrint
+				// 		/>
+				// 	) : (
+				// 		<></>
+				// 	),
+				// ]}
 			/>
 
 			<LichSuThueMuonPage

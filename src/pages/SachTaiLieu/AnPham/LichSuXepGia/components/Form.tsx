@@ -82,7 +82,11 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 						<Divider>Thông tin xếp giá bổ sung</Divider>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='dotNhapSachId' label='Sổ đăng ký tổng quát' rules={[...rules.required]}>
+						<Form.Item
+							name='dotNhapSachId'
+							label='Sổ đăng ký tổng quát'
+							//  rules={[...rules.required]}
+						>
 							<SelectDotNhapSach />
 						</Form.Item>
 					</Col>

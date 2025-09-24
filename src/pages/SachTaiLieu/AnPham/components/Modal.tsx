@@ -7,6 +7,7 @@ import NoiDungSachHay from '../../BienMuc/components/NoiDungSachHay';
 import FormItemTaiLieuSo from '../../BienMuc/DanhSachTaiLieu/FormItem';
 import LichSuThueMuonPage from '../../MuonTraSach/LichSu';
 import DanhSachDKCB from '../DanhSachDKCB';
+import LichSuXepGia from '../LichSuXepGia';
 import ChiTietAnPham from './ChiTiet';
 
 const ModalAnPham = () => {
@@ -49,6 +50,10 @@ const ModalAnPham = () => {
 						<NoiDungSachHay />
 					</Tabs.TabPane>
 				) : null}
+
+				<Tabs.TabPane tab='Lịch sử xếp giá' key='7'>
+					<LichSuXepGia />
+				</Tabs.TabPane>
 			</Tabs>
 
 			<div className='form-footer'>

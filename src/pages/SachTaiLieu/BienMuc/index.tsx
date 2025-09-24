@@ -243,7 +243,7 @@ const BienMucSachTaiLieuPage = () => {
 									</Popconfirm>
 								)}
 
-								<ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
+								{/* <ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} /> */}
 
 								<Popconfirm
 									onConfirm={() => deleteModel(rec._id, getData)}
