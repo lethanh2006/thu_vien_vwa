@@ -287,12 +287,12 @@ const FormMuonTraSach = (props: any) => {
 				values: [dkcb],
 				operator: EOperatorType.CONTAIN,
 			},
-			{
-				active: true,
-				field: 'thanhLy',
-				values: [false],
-				operator: EOperatorType.EQUAL,
-			},
+			// {
+			// 	active: true,
+			// 	field: 'thanhLy',
+			// 	values: [false],
+			// 	operator: EOperatorType.EQUAL,
+			// },
 		];
 
 		const anPhamData = await getAnPhamXepGia(

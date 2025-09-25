@@ -128,12 +128,12 @@ const FormGhiTraSach = (props: any) => {
 				values: [ETrangThaiMuonSach.DANG_THUE_MUON],
 				operator: EOperatorType.INCLUDE,
 			},
-			{
-				active: true,
-				field: 'thanhLy',
-				values: [false],
-				operator: EOperatorType.EQUAL,
-			},
+			// {
+			// 	active: true,
+			// 	field: 'thanhLy',
+			// 	values: [false],
+			// 	operator: EOperatorType.EQUAL,
+			// },
 		];
 
 		const anPhamData = await getModel(
