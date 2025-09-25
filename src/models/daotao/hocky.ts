@@ -1,4 +1,5 @@
 import useInitModel from '@/hooks/useInitModel';
+import type { HocKy } from '@/services/DaoTao/HocKy/typing';
 import { ipDaoTao } from '@/utils/ip';
 import { useState } from 'react';
 

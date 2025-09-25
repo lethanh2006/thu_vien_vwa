@@ -1,5 +1,6 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
+import SelectHocKy from '@/pages/DaoTao/HocKy/SelectHocKy';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
@@ -21,7 +22,13 @@ const FormDotNhapSach = (props: any) => {
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
 		else if (record?._id) form.setFieldsValue(record);
-	}, [record?._id, visibleForm]);
+
+		if (!record?._id && recHocKy?._id) {
+			form.setFieldsValue({
+				maHocKy: recHocKy?.ma,
+			});
+		}
+	}, [record?._id, recHocKy?._id, visibleForm]);
 
 	const onFinish = async (values: AnPham.IDotNhapSach) => {
 		values.maHocKy = recHocKy?.ma ?? '';
@@ -44,8 +51,8 @@ const FormDotNhapSach = (props: any) => {
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item label='Học kỳ'>
-							<Input value={recHocKy?.ten} disabled />
+						<Form.Item name='maHocKy' label='Học kỳ' rules={[...rules.required]}>
+							<SelectHocKy selectMa />
 						</Form.Item>
 					</Col>
 					<Col span={24}>

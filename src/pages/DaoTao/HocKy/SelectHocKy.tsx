@@ -1,49 +1,66 @@
+import type { HocKy } from '@/services/DaoTao/HocKy/typing';
 import { Select } from 'antd';
 import React, { useEffect } from 'react';
 import { useModel } from 'umi';
 
 /**
- * Secect Căn cứ pháp lý để cho vào FormItem
+ * Select học kỳ đưa vào FormItem
  */
 const SelectHocKy = (props: {
 	value?: string;
 	onChange?: (id: string) => void;
 	multiple?: boolean;
+	condition?: Partial<HocKy.IRecord>;
 	disabled?: boolean;
 	allowClear?: boolean;
 	style?: React.CSSProperties;
 	isSetRecord?: boolean;
 	selectMa?: boolean;
-	/** Nếu căn cứ từ lớp hành chính thì chỉ lọc những HK có `sinh viên học kỳ`, còn ko mặc định sẽ lấy toàn bộ học kỳ theo `Khóa ngành` */
-	fromLhc?: boolean;
+	selectLatest?: boolean;
+	filters?: any;
+	loadData?: boolean;
 }) => {
-	const { value, onChange, multiple, allowClear, style, isSetRecord, selectMa, disabled, fromLhc = false } = props;
-	const { danhSach, getAllModel, loading, setRecord, record, danhSachHkLhc, setDanhSach, setDanhSachHkLhc } =
-		useModel('daotao.hocky');
-	const danhSachHienThi = fromLhc ? danhSachHkLhc : danhSach;
+	const {
+		value,
+		onChange,
+		multiple,
+		condition,
+		allowClear,
+		style,
+		isSetRecord,
+		selectMa,
+		selectLatest,
+		disabled,
+		filters,
+		loadData,
+	} = props;
+
+	const { danhSach, getAllModel, loading, record, setRecord } = useModel('daotao.hocky');
 
 	useEffect(() => {
-		// Đảm bảo chỉ get học kỳ 1 lần
-		if (!danhSachHienThi.length)
-			getAllModel(
-				!!isSetRecord,
-				{ ma: -1 },
-				undefined,
-				undefined,
-				fromLhc ? 'lop-hanh-chinh/sinh-vien/me' : 'sinh-vien/me',
-				false,
-			).then((res) => {
-				if (fromLhc) setDanhSachHkLhc(res);
-				else setDanhSach(res);
-				const exist = record?._id && res.some((i) => i._id === record?._id);
-				if (!exist) setRecord(res?.[0]);
+		if (loadData !== false) {
+			getAllModel(undefined, { ma: -1 }, condition, filters).then((res) => {
+				if (isSetRecord) {
+					let hocKy: HocKy.IRecord | undefined;
+
+					// 1. Ưu tiên theo record.ma
+					if (record?.ma) {
+						hocKy = res.find((i) => i.ma === record.ma) ?? res?.[0];
+					}
+					// 2. Nếu không có record.ma và có yêu cầu lấy latest
+					else if (selectLatest) {
+						hocKy = res?.[0];
+					}
+					// 3. Nếu không thì ưu tiên học kỳ hiện tại
+					else {
+						hocKy = res.find((i) => i.kyHienTai) ?? res?.[0];
+					}
+
+					setRecord(hocKy);
+				}
 			});
-		else {
-			// Set lại record nếu record hiện tại ko có trong danh sách
-			const exist = record?._id && danhSachHienThi.some((i) => i._id === record?._id);
-			if (!exist) setRecord(danhSachHienThi?.[0]);
 		}
-	}, [fromLhc]);
+	}, [JSON.stringify(condition), JSON.stringify(filters), loadData]);
 
 	return (
 		<Select
@@ -51,17 +68,18 @@ const SelectHocKy = (props: {
 			disabled={disabled}
 			value={value}
 			onChange={onChange}
-			options={danhSachHienThi.map((item) => ({
+			options={danhSach.map((item) => ({
 				key: item._id,
 				value: selectMa ? item.ma : item._id,
 				label: `${item.ten}`,
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn học kỳ'
+			placeholder='Chọn kỳ học'
 			allowClear={allowClear ?? false}
 			style={{ width: '100%', ...style }}
 			loading={loading}
+			showArrow
 		/>
 	);
 };

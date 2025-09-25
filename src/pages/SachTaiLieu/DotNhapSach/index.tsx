@@ -2,6 +2,7 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
+import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import SelectHocKy from '@/pages/DaoTao/HocKy/SelectHocKy';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
@@ -11,7 +12,6 @@ import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
 import ModalExportDangKyTongQuat from './components/ModalExport';
-import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 
 const DotNhapSachPage = () => {
 	const intl = useIntl();
@@ -20,10 +20,17 @@ const DotNhapSachPage = () => {
 	const [visibleThongKe, setVisibleThongKe] = useState(false);
 
 	const getData = () => {
-		if (recHocKy?.ma) getModel({ maHocKy: recHocKy?.ma });
+		getModel({ maHocKy: recHocKy?.ma });
 	};
 
 	const columns: IColumn<AnPham.IDotNhapSach>[] = [
+		{
+			title: 'Học kỳ',
+			dataIndex: 'maHocKy',
+			width: 150,
+			render: (val, rec) => rec?.hocKy?.ten ?? danhSachHocKy?.find((item) => item?.ma === val)?.ten,
+			hide: !!recHocKy?._id,
+		},
 		{
 			title: 'Tên đợt',
 			dataIndex: 'ten',
@@ -110,10 +117,13 @@ const DotNhapSachPage = () => {
 		>
 			<Space style={{ marginBottom: 12 }}>
 				<SelectHocKy
+					isSetRecord
+					condition={{ active: true }}
 					style={{ width: 250 }}
 					value={recHocKy?.ma}
 					onChange={(val) => setRecHocKy(danhSachHocKy?.find((item) => item?.ma === val))}
 					selectMa
+					allowClear
 				/>
 				<ButtonExtend onClick={() => setVisibleThongKe(true)} icon={<ExportOutlined />}>
 					Tổng hợp thông tin chung

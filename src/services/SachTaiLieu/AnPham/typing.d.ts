@@ -1,5 +1,6 @@
 import type { GiaSach } from '@/services/DanhMuc/GiaSach/typing';
 import type { ETrangThaiBienMuc, ETrangThaiDangKyCaBiet } from '../constant';
+import type { HocKy } from '@/services/DaoTao/HocKy/typing';
 
 declare module AnPham {
 	export interface IDotNhapSach {
@@ -7,6 +8,7 @@ declare module AnPham {
 		ten: string;
 		maNamHoc: string;
 		maHocKy: string;
+		hocKy: HocKy.IRecord;
 		thoiGianBatDau: Date | string;
 		thoiGianKetThuc: Date | string;
 		moTa: string;
