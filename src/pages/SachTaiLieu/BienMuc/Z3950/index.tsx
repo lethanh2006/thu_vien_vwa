@@ -67,7 +67,7 @@ const Z3950Page = (props: { getData: () => void }) => {
 			nhanDe: z390Data.title || null,
 			tacGia: z390Data.author || null,
 			ISBN: z390Data.isbn?.map((item) => item).join('; ') || null,
-			namXuatBan: parseInt(z390Data.publication_year) || null,
+			namXuatBan: z390Data.publication_year || null,
 			nhaXuatBan: z390Data.publisher || null,
 			canBoBienMuc: fullName,
 			dotNhapSachId: recDot?._id,
@@ -244,7 +244,6 @@ const Z3950Page = (props: { getData: () => void }) => {
 						data={dsAnPhamZ3950 ?? []}
 						loading={loading}
 						size='small'
-						otherProps={{ pagination: true }}
 						hasTotal
 						addStt
 					/>

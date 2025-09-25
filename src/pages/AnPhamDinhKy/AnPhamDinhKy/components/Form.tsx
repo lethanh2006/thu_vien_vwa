@@ -131,7 +131,7 @@ const FormAnPhamDinhKy = () => {
 							</Col>
 							<Col xs={24} md={12}>
 								<Form.Item name='namXuatBan' label='Năm xuất bản'>
-									<InputNumber style={{ width: '100%' }} placeholder='Nhập năm xuất bản' />
+									<Input placeholder='Nhập năm xuất bản' />
 								</Form.Item>
 							</Col>
 							<Col xs={24} md={12}>

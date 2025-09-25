@@ -64,7 +64,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 							Ấn phẩm đã xếp giá,{' '}
 							<a
 								onClick={() => {
-									history.push('/sach-tai-lieu/an-pham');
+									history.push('/bien-muc/an-pham');
 									onCancel();
 								}}
 							>

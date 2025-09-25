@@ -91,7 +91,6 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		setFormSubmiting(true);
 		const urlScanBia = await buildUpLoadFile(values, 'urlScanBia').finally(() => setFormSubmiting(false));
 		values.urlScanBia = urlScanBia ?? '';
-		values.namXuatBan = Number(values.namXuatBan);
 		if (edit) {
 			putBienMucSoLuocModel(record?._id ?? '', values, getData)
 				.then((rec) => getDataThen(rec))

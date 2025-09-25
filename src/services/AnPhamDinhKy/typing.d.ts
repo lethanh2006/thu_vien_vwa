@@ -12,7 +12,7 @@ declare module AnPhamDinhKy {
 		mauBienMuc: MauBienMuc.IRecord;
 		nhaXuatBan: string;
 		noiXuatBan: string;
-		namXuatBan: number;
+		namXuatBan: string;
 		khuonKho: string;
 		soTrang: number;
 		dacDiemVatLy: string;

@@ -146,7 +146,7 @@ const FormBienMucChiTietZ3950 = (props: any) => {
 				setVisibleZ3950(false);
 				setVisibleTimKiemZ3950(false);
 				if (actionType === ETrangThaiBienMuc.DA_BIEN_MUC) {
-					history.push('/sach-tai-lieu/an-pham');
+					history.push('/bien-muc/an-pham');
 				}
 			})
 			.catch((er) => console.log(er));

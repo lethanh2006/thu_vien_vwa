@@ -57,7 +57,7 @@ declare module AnPham {
 		thongTinTrachNhiem: string;
 		lanXuatBan: string;
 		noiXuatBan: string;
-		namXuatBan: number;
+		namXuatBan: string;
 		soTrang: string;
 		dacDiemVatLy: string;
 		khuonKho: string;

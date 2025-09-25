@@ -8,7 +8,7 @@ import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
 import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import SelectDotNhapSach from '@/pages/SachTaiLieu/DotNhapSach/components/Select';
 import rules from '@/utils/rules';
-import { Alert, Checkbox, Col, Form, type FormInstance, Input, InputNumber, Row, Select } from 'antd';
+import { Alert, Checkbox, Col, Form, type FormInstance, Input, Row, Select } from 'antd';
 
 const BienMucSoLuoc = (props: { form: FormInstance }) => {
 	const { form } = props;
@@ -148,7 +148,7 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 					</Col>
 					<Col xs={24} md={8}>
 						<Form.Item name='namXuatBan' label='Năm xuất bản [260$c]'>
-							<InputNumber style={{ width: '100%' }} placeholder='Nhập năm xuất bản' />
+							<Input placeholder='Nhập năm xuất bản' />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>

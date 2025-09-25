@@ -74,7 +74,7 @@ const FormBienMucChiTiet = (props: any) => {
 			.then(() => {
 				setVisibleForm(false);
 				if (actionType === ETrangThaiBienMuc.DA_BIEN_MUC) {
-					history.push('/sach-tai-lieu/an-pham');
+					history.push('/bien-muc/an-pham');
 				}
 			})
 			.catch((er) => console.log(er));
