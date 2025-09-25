@@ -78,8 +78,7 @@ const AnPhamDinhKyPage = () => {
 			title: 'Năm xuất bản',
 			dataIndex: 'namXuatBan',
 			width: 90,
-			filterType: 'number',
-			sortable: true,
+			filterType: 'string',
 			onCell,
 		},
 		{
