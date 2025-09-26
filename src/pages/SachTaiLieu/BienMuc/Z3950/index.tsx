@@ -101,6 +101,9 @@ const Z3950Page = (props: { getData: () => void }) => {
 			maNgonNgu: z390Data.data_fields
 				?.find((item) => item?.tag === '401')
 				?.subfields?.find((item) => item?.code === 'a')?.value,
+			chiSoPhanLoai: z390Data.data_fields
+				?.find((item) => item?.tag === '082')
+				?.subfields?.find((item) => item?.code === 'a')?.value,
 		};
 
 		// Xử lý danhSachThongTin từ tất cả data_fields
