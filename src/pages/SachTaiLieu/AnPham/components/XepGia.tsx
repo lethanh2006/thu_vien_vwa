@@ -178,7 +178,7 @@ const ModalXepGia = () => {
 										const index = danhSachKhoSach?.find((item) => item?.ma === val);
 										form.setFieldsValue({
 											soDangKyCaBiet: `${index?.ma}/${String((index?.soLuongAnPhamDaXepGia ?? 0) + 1).padStart(
-												6,
+												5,
 												'0',
 											)}`,
 										});

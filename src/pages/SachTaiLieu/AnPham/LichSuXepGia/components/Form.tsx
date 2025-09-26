@@ -131,7 +131,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 								onChange={(val) => {
 									const index = danhSachKieuTuLieu?.find((item) => item?.ma === val);
 									form.setFieldsValue({
-										soDangKyCaBiet: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
+										soDangKyCaBiet: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(5, '0')}`,
 									});
 									form.resetFields(['giaSachId']);
 								}}
