@@ -36,7 +36,7 @@ const FormMauBienMuc = (props: { afterAddNew?: (rec: MauBienMuc.IRecord) => void
 			<Row gutter={[12, 0]}>
 				<Col span={24} md={12}>
 					<Form.Item label='Mã mẫu biên mục' name='ma' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
-						<Input placeholder='Nhập mã mẫu biên mục' disabled={edit} />
+						<Input placeholder='Nhập mã mẫu biên mục' />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>

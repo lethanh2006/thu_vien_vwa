@@ -1,14 +1,14 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { CopyOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
 import ModalMauBienMuc from './components/Modal';
 
 const BieuMauPhuLucPage = () => {
 	const intl = useIntl();
-	const { page, limit, handleEdit, deleteModel } = useModel('danhmuc.maubienmuc');
+	const { page, limit, handleEdit, deleteModel, getModel, saoChepMauBienMucModel } = useModel('danhmuc.maubienmuc');
 
 	const columns: IColumn<MauBienMuc.IRecord>[] = [
 		{
@@ -31,6 +31,13 @@ const BieuMauPhuLucPage = () => {
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
+					<Popconfirm
+						onConfirm={() => saoChepMauBienMucModel(rec._id, getModel)}
+						title='Bạn có chắc chắn muốn sao chép mẫu biên mục này?'
+						placement='topRight'
+					>
+						<ButtonExtend tooltip='Sao chép' type='link' icon={<CopyOutlined />} />
+					</Popconfirm>
 					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}

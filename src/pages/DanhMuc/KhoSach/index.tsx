@@ -33,6 +33,13 @@ const KhoSachPage = () => {
 			filterType: 'customselect',
 			filterCustomSelect: <SelectPhongDoc multiple selectMa />,
 		},
+		// {
+		// 	title: 'Số ĐKCB cuối',
+		// 	dataIndex: 'soLuongAnPhamDaXepGia',
+		// 	width: 80,
+		// 	filterType: 'number',
+		// 	sortable: true,
+		// },
 		{
 			title: 'Thao tác',
 			align: 'center',

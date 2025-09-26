@@ -47,6 +47,11 @@ const FormKhoSach = (props: any) => {
 							<SelectPhongDoc selectMa />
 						</Form.Item>
 					</Col>
+					{/* <Col span={24}>
+						<Form.Item label='Số đăng ký cá biệt cuối' name='soLuongAnPhamDaXepGia' rules={[...rules.required]}>
+							<InputNumber style={{ width: '100%' }} placeholder='Nhập số đăng ký cá biệt cuối' />
+						</Form.Item>
+					</Col> */}
 				</Row>
 
 				<div className='form-footer' style={{ marginTop: 24 }}>

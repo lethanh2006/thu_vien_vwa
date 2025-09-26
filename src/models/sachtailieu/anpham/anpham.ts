@@ -17,7 +17,7 @@ import _ from 'lodash';
 import { useState } from 'react';
 
 export default () => {
-	const objInit = useInitModel<AnPham.IRecord>('an-pham');
+	const objInit = useInitModel<AnPham.IRecord>('an-pham', undefined, undefined, undefined, { updatedAt: -1 });
 	const [loadingChiTiet, setLoadingChiTiet] = useState<boolean>(false);
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [danhSachTag, setDanhSachTag] = useState<AnPham.IThongTinAnPham[]>([]);

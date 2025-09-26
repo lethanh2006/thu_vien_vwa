@@ -181,6 +181,11 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 							<Input placeholder='Nhập tư liệu đi kèm' />
 						</Form.Item>
 					</Col>
+					<Col xs={24} md={12}>
+						<Form.Item name='chiSoPhanLoai' label='Chi số phân loại [082$a]'>
+							<Input placeholder='Nhập chi số phân loại' />
+						</Form.Item>
+					</Col>
 				</Row>
 			</Col>
 

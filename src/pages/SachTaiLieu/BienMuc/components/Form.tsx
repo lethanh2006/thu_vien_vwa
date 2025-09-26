@@ -54,6 +54,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				khuonKho: { tagCode: '300', subCode: '$c' },
 				tuLieuDiKem: { tagCode: '300', subCode: '$e' },
 				maNgonNgu: { tagCode: '041', subCode: '$a' },
+				chiSoPhanLoai: { tagCode: '082', subCode: '$a' },
 			};
 
 			const formValues: Record<string, any> = {};

@@ -14,7 +14,7 @@ export default {
 	'menu.LALVKhoaLuan.QuanLyDot': 'Đợt nộp LA, LV, KL',
 	'menu.LALVKhoaLuan.DanhSachSinhVien': 'Danh sách sinh viên',
 
-	'menu.BienMuc': 'Biên mục',
+	'menu.BienMuc': 'Bổ sung - Biên mục',
 	'menu.BienMuc.DotNhapSach': 'Sổ đăng ký tổng quát',
 	'menu.BienMuc.BienMuc': 'Biên mục',
 	'menu.BienMuc.AnPham': 'Xếp giá',
@@ -22,7 +22,7 @@ export default {
 	'menu.BienMuc.DangKyCaBiet': 'Đăng ký cá biệt',
 	'menu.BienMuc.InMaVach': 'In mã vạch, nhãn gáy',
 
-	'menu.GhiMuonGhiTra': 'Ghi mượn, Ghi trả',
+	'menu.GhiMuonGhiTra': 'Ghi mượn - Ghi trả',
 	'menu.GhiMuonGhiTra.MuonTraSach': 'Ghi mượn',
 	'menu.GhiMuonGhiTra.GhiTraSach': 'Ghi trả',
 	'menu.GhiMuonGhiTra.ThongKe': 'Thống kê',

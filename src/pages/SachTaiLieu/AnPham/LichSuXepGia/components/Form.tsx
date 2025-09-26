@@ -19,6 +19,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 	const [form] = Form.useForm();
 	const { formSubmiting, putModel, record, visibleForm } = useModel('sachtailieu.anpham.xepgia');
 	const { danhSach: danhSachKieuTuLieu } = useModel('danhmuc.kieutulieu');
+	const { getByIdModel } = useModel('sachtailieu.anpham.anphamxepgia');
 	const maKhoSach: string = Form.useWatch('maKhoSach', form);
 	const [actionType, setActionType] = useState<string>();
 
@@ -33,6 +34,16 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 			});
 		}
 	}, [visibleForm, record?._id]);
+
+	useEffect(() => {
+		if (visibleForm && maKhoSach) {
+			getByIdModel(`soDangKyCaBietCuoi/${maKhoSach}`, false).then((res) => {
+				form.setFieldsValue({
+					soDangKyCaBiet: res?.soDangKyCaBietCuoi,
+				});
+			});
+		}
+	}, [visibleForm, maKhoSach]);
 
 	const onFinish = async (values: AnPham.IXepGia) => {
 		if (record?._id) {
@@ -126,16 +137,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='maKhoSach' label='Kho' rules={[...rules.required]}>
-							<SelectKhoSach
-								selectMa
-								onChange={(val) => {
-									const index = danhSachKieuTuLieu?.find((item) => item?.ma === val);
-									form.setFieldsValue({
-										soDangKyCaBiet: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
-									});
-									form.resetFields(['giaSachId']);
-								}}
-							/>
+							<SelectKhoSach selectMa onChange={(val) => form.resetFields(['giaSachId'])} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>

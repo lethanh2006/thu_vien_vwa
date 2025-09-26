@@ -65,6 +65,7 @@ declare module AnPham {
 		khuonKho: string;
 		tuLieuDiKem: string;
 		nhaXuatBan: string;
+		chiSoPhanLoai: string;
 		thongTinTaiLieu: MauBienMuc.IThongTinKhaiBao[];
 
 		trangThai: ETrangThaiBienMuc;
@@ -171,6 +172,7 @@ declare module AnPham {
 
 		//fake
 		ghiChu?: string;
+		soDangKyCaBietCuoi?: string;
 	}
 
 	export interface IThongKeAnPhamXepGia {
