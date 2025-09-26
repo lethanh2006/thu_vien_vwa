@@ -1,6 +1,6 @@
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Card, Col, Form, Input, Row } from 'antd';
+import { Button, Card, Col, Form, Input, InputNumber, Row } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectPhongDoc from '../../PhongDoc/components/Select';
@@ -47,11 +47,11 @@ const FormKhoSach = (props: any) => {
 							<SelectPhongDoc selectMa />
 						</Form.Item>
 					</Col>
-					{/* <Col span={24}>
+					<Col span={24}>
 						<Form.Item label='Số đăng ký cá biệt cuối' name='soLuongAnPhamDaXepGia' rules={[...rules.required]}>
 							<InputNumber style={{ width: '100%' }} placeholder='Nhập số đăng ký cá biệt cuối' />
 						</Form.Item>
-					</Col> */}
+					</Col>
 				</Row>
 
 				<div className='form-footer' style={{ marginTop: 24 }}>

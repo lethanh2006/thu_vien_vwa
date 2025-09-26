@@ -32,7 +32,6 @@ const ModalXepGia = () => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record } = useModel('sachtailieu.anpham.anpham');
-	const { getByIdModel } = useModel('sachtailieu.anpham.anphamxepgia');
 	const {
 		formSubmiting,
 		postModel,
@@ -43,6 +42,7 @@ const ModalXepGia = () => {
 		loadingThongKe,
 		datathongKeXepGia,
 	} = useModel('sachtailieu.anpham.xepgia');
+	const { danhSach: danhSachKhoSach } = useModel('danhmuc.khosach');
 	const maKhoSach: string = Form.useWatch('maKhoSach', form);
 	const [actionType, setActionType] = useState<string>();
 	const [tabActive, setTabActive] = useState<string>('1');
@@ -57,16 +57,6 @@ const ModalXepGia = () => {
 			});
 		}
 	}, [visibleForm, record?._id]);
-
-	useEffect(() => {
-		if (visibleForm && maKhoSach) {
-			getByIdModel(`soDangKyCaBietCuoi/${maKhoSach}`, false).then((res) => {
-				form.setFieldsValue({
-					soDangKyCaBiet: res?.soDangKyCaBietCuoi,
-				});
-			});
-		}
-	}, [visibleForm, maKhoSach]);
 
 	const onFinish = async (values: AnPham.IXepGia) => {
 		postModel(
@@ -180,7 +170,20 @@ const ModalXepGia = () => {
 						</Col>
 						<Col xs={24} md={12}>
 							<Form.Item name='maKhoSach' label='Kho' rules={[...rules.required]}>
-								<SelectKhoSach selectMa onChange={(val) => form.resetFields(['giaSachId'])} />
+								<SelectKhoSach
+									selectMa
+									onChange={(val) => {
+										form.resetFields(['giaSachId']);
+
+										const index = danhSachKhoSach?.find((item) => item?.ma === val);
+										form.setFieldsValue({
+											soDangKyCaBiet: `${index?.ma}/${String((index?.soLuongAnPhamDaXepGia ?? 0) + 1).padStart(
+												6,
+												'0',
+											)}`,
+										});
+									}}
+								/>
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
