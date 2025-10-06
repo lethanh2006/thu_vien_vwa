@@ -1,4 +1,4 @@
-import { MenuOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
+import { MenuOutlined, PlusCircleOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { AutoComplete, ConfigProvider, Drawer, Empty, Input, Table, Tooltip, type InputRef } from 'antd';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -194,7 +194,7 @@ const TableStaticData = (props: TableStaticProps) => {
 							onClick={() => {
 								if (setShowEdit) setShowEdit(true);
 							}}
-							icon={<PlusOutlined />}
+							icon={<PlusCircleOutlined />}
 							type='primary'
 							size={props?.size ?? 'middle'}
 							tooltip={intl.formatMessage({ id: 'global.tablestatic.button.themmoi.tooltip' })}
@@ -202,6 +202,8 @@ const TableStaticData = (props: TableStaticProps) => {
 							{intl.formatMessage({ id: 'global.tablestatic.button.themmoi' })}
 						</ButtonExtend>
 					)}
+
+					{props.otherButtons}
 				</div>
 
 				<div className='extra'>
@@ -240,8 +242,7 @@ const TableStaticData = (props: TableStaticProps) => {
 				)}
 			>
 				<Table
-					title={props?.title ? () => props.title : false}
-					columns={columns}
+					columns={columns as any[]}
 					dataSource={(props?.data ?? []).map((item, index) => ({
 						...item,
 						index: index + 1,
