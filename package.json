@@ -25,7 +25,7 @@
     "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
     "precommit": "lint-staged",
     "prettier": "prettier -c --write \"src/**/*\"",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org aisoft --project sentry-vwa build && sentry-cli --url https://sentry.aisoftech.vn/ sourcemaps upload --org aisoft --project sentry-vwa build"
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org aisoft --project sentry-ript build && sentry-cli --url https://sentry.aisoftech.vn/ sourcemaps upload --org aisoft --project sentry-ript build"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
