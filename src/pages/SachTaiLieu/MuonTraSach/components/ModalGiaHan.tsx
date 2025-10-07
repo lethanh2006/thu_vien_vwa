@@ -1,8 +1,8 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Button, Col, Form, Modal, Row } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
@@ -28,7 +28,7 @@ const ConfirmGiaHan = (props: { visible: boolean; setVisible: (val: boolean) => 
 
 	return (
 		<Modal
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			title='Xác nhận gia hạn mượn sách'
 			footer={null}
@@ -55,7 +55,7 @@ const ConfirmGiaHan = (props: { visible: boolean; setVisible: (val: boolean) => 
 
 					<Col xs={24} md={24}>
 						<Form.Item name='thoiGianGiaHan' label='Thời gian gia hạn'>
-							<MyDatePicker disabledDate={(cur) => moment(cur).isBefore(record?.expired)} />
+							<MyDatePicker disabledDate={(cur) => dayjs(cur).isBefore(record?.expired)} />
 						</Form.Item>
 					</Col>
 				</Row>

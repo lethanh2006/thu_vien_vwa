@@ -4,10 +4,10 @@ import { type IColumn } from '@/components/Table/typing';
 import SelectKhoSach from '@/pages/DanhMuc/KhoSach/components/Select';
 import { colorTrangThaiGhiNhanAnPhamDinhKy, ETrangThaiGhiNhanAnPhamDinhKy } from '@/services/AnPhamDinhKy/constant';
 import type { AnPhamDinhKy } from '@/services/AnPhamDinhKy/typing';
+import dayjs from '@/utils/dayjs';
 import { tienVietNam } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm, Tag } from 'antd';
-import moment from 'moment';
 import { useModel } from 'umi';
 import Form from './components/CardForm';
 
@@ -22,7 +22,7 @@ const GhiNhanAnPhamDinhKyPage = (props: { type: 'ghi_nhan' | 'lich_su'; getData?
 			type === 'lich_su' && recAnPhamDinhKy?._id
 				? {
 						anPhamDinhKyId: recAnPhamDinhKy?._id,
-				  }
+					}
 				: undefined,
 		);
 	};
@@ -76,7 +76,7 @@ const GhiNhanAnPhamDinhKyPage = (props: { type: 'ghi_nhan' | 'lich_su'; getData?
 			title: 'Ngày nhận',
 			dataIndex: 'ngayGhiNhan',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},

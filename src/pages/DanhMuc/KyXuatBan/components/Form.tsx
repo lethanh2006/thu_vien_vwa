@@ -1,8 +1,8 @@
 import MyDatePicker from '@/components/MyDatePicker';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, Row } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -20,8 +20,8 @@ const FormKyXuatBan = (props: any) => {
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: KyXuatBan.IRecord) => {
-		values.thoiGianBatDau = moment(values.thoiGianBatDau).startOf('d').toISOString();
-		values.thoiGianKetThuc = moment(values.thoiGianKetThuc).endOf('d').toISOString();
+		values.thoiGianBatDau = dayjs(values.thoiGianBatDau).startOf('d').toISOString();
+		values.thoiGianKetThuc = dayjs(values.thoiGianKetThuc).endOf('d').toISOString();
 
 		if (edit) {
 			putModel(record?._id ?? '', values)
@@ -55,9 +55,9 @@ const FormKyXuatBan = (props: any) => {
 						<Form.Item
 							name='thoiGianKetThuc'
 							label='Thời gian kết thúc'
-							rules={[...rules.sauNgay(moment(thoiGianBatDau))]}
+							rules={[...rules.sauNgay(dayjs(thoiGianBatDau))]}
 						>
-							<MyDatePicker disabledDate={(cur) => (thoiGianBatDau ? moment(cur).isBefore(thoiGianBatDau) : false)} />
+							<MyDatePicker disabledDate={(cur) => (thoiGianBatDau ? dayjs(cur).isBefore(thoiGianBatDau) : false)} />
 						</Form.Item>
 					</Col>
 				</Row>

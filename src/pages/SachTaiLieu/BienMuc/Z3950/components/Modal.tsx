@@ -22,7 +22,7 @@ const ModalBienMucZ3950 = (props: any) => {
 		<Modal
 			title='Biên mục qua Z39.50'
 			width={1200}
-			visible={visibleZ3950}
+			open={visibleZ3950}
 			onCancel={() => setVisibleZ3950(false)}
 			footer={null}
 		>

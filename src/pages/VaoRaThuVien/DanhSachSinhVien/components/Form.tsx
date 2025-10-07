@@ -1,9 +1,9 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Row } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
@@ -25,10 +25,10 @@ const FormVaoRaThuVien = (props: any) => {
 	}, [record?._id, visibleForm]);
 
 	const disabledDateStart = (current: any) => {
-		return current && current.isAfter(moment(outputDate)) && outputDate;
+		return current && current.isAfter(dayjs(outputDate)) && outputDate;
 	};
 	const disabledDateEnd = (current: any) => {
-		return current && current.isBefore(moment(inputDate)) && inputDate;
+		return current && current.isBefore(dayjs(inputDate)) && inputDate;
 	};
 
 	const onFinish = async (values: any) => {

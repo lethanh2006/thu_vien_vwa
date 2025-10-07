@@ -5,8 +5,8 @@ import { resetFieldsForm } from '@/utils/utils';
 import { Button, Form, Modal, Segmented } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
-import WebcamNhanDienKhuonMat from './Webcam';
 import SelectSinhVienDebounce from '../component/Select';
+import WebcamNhanDienKhuonMat from './Webcam';
 
 const ModalCapNhatAnhNhanDien = (props: { visible: boolean; setVisible: (val: boolean) => void }) => {
 	const { formSubmiting, updateFaceRegModel, record, setFormSubmiting, danhSach } = useModel('sinhvien.sinhvien');
@@ -42,11 +42,11 @@ const ModalCapNhatAnhNhanDien = (props: { visible: boolean; setVisible: (val: bo
 	return (
 		<Modal
 			title='Cập nhật nhận diện khuôn mặt'
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={800}
-			destroyOnClose
+			destroyOnHidden
 		>
 			<div style={{ marginBottom: 12 }}>
 				Cập nhật ảnh nhận diện khuôn mặt phục vụ việc checkin tự động khi ra vào Thư viện

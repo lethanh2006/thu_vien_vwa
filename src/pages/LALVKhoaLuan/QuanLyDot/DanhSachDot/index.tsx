@@ -4,9 +4,9 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import { colorTrangThaiNopThuVien, ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
+import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Alert, Popconfirm, Tag } from 'antd';
-import moment from 'moment';
 import { useModel } from 'umi';
 import ChiTietDanhSach from './components/ChiTiet';
 import FormDanhSachNop from './components/Form';
@@ -14,7 +14,7 @@ import FormDanhSachNop from './components/Form';
 const DanhSachDot = () => {
 	const { record: recDot } = useModel('quanlythuvien.quanlydot');
 	const { getModel, page, limit, handleEdit, handleView, isView, deleteModel } = useModel('quanlythuvien.danhsachdot');
-	const isNgoaiThoiGian = moment(recDot?.thoiGianKetThuc).isBefore(moment());
+	const isNgoaiThoiGian = dayjs(recDot?.thoiGianKetThuc).isBefore(dayjs());
 
 	const getData = () => {
 		getModel({ idDot: recDot?._id });

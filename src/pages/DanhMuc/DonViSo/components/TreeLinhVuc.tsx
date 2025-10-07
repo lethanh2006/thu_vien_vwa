@@ -366,8 +366,8 @@ const TreeDonViSo = (props: any) => {
 			</div>
 
 			<Modal
-				destroyOnClose
-				visible={visibleForm}
+				destroyOnHidden
+				open={visibleForm}
 				onOk={handleCancel}
 				onCancel={handleCancel}
 				footer={null}
@@ -382,7 +382,7 @@ const TreeDonViSo = (props: any) => {
 			</Modal>
 
 			<Modal
-				visible={dialog}
+				open={dialog}
 				onOk={handleCancelDialog}
 				onCancel={handleCancelDialog}
 				footer={

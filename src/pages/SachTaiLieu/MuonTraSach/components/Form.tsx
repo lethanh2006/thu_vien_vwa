@@ -7,12 +7,12 @@ import type { IColumn } from '@/components/Table/typing';
 import { ETrangThaiDangKyCaBiet, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
+import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PrinterOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, message, Modal, Popconfirm, Row, Segmented, Space, Spin } from 'antd';
-import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import ReactToPrint from 'react-to-print';
+import { useReactToPrint } from 'react-to-print';
 import { useIntl, useModel } from 'umi';
 import ChiTietAnPham from '../../AnPham/components/ChiTiet';
 import InforNguoiMuon from '../GhiTraSach/components/Infor';
@@ -56,20 +56,11 @@ const FormMuonTraSach = (props: any) => {
 	const soTheInputRef = useRef<any>(null);
 	const dkcbInputRef = useRef<any>(null);
 
-	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
-
-	const reactToPrintTrigger = useCallback(
-		() => (
-			<ButtonExtend icon={<PrinterOutlined />} tooltip='Phiếu'>
-				Phiếu
-			</ButtonExtend>
-		),
-		[],
-	);
+	const handlePrintPhieu = useReactToPrint({ contentRef: componentRef });
 
 	const slConMuonDuoc = Math.max(
 		0,
-		(isSinhVien ? settingMuonTra?.soLuongMuonToiDa ?? 7 : settingMuonTra?.soLuongMuonToiDaCanBo ?? 5) -
+		(isSinhVien ? (settingMuonTra?.soLuongMuonToiDa ?? 7) : (settingMuonTra?.soLuongMuonToiDaCanBo ?? 5)) -
 			Number((isSinhVien ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ?? 0),
 	);
 
@@ -230,14 +221,14 @@ const FormMuonTraSach = (props: any) => {
 			title: 'Thời gian mượn',
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			width: 120,
 		},
 		{
 			title: 'Hạn trả',
 			dataIndex: 'expired',
 			align: 'center',
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			width: 120,
 		},
 		{
@@ -330,9 +321,9 @@ const FormMuonTraSach = (props: any) => {
 		const newItem = {
 			...anPhamData?.[0],
 			soDangKyCaBiet: anPhamData?.[0]?.soDangKyCaBiet.trim(),
-			thoiGianMuon: moment(),
-			expired: moment().add(
-				isSinhVien ? settingMuonTra?.thoiHanMuonTraSach ?? 150 : settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7,
+			thoiGianMuon: dayjs(),
+			expired: dayjs().add(
+				isSinhVien ? (settingMuonTra?.thoiHanMuonTraSach ?? 150) : (settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7),
 				'd',
 			),
 
@@ -506,12 +497,10 @@ const FormMuonTraSach = (props: any) => {
 						</Button>
 					)}
 
-					<ReactToPrint
-						content={reactToPrintContent}
-						documentTitle='Phiếu'
-						trigger={reactToPrintTrigger}
-						removeAfterPrint
-					/>
+					<ButtonExtend icon={<PrinterOutlined />} tooltip='Phiếu' onClick={() => handlePrintPhieu()}>
+						Phiếu
+					</ButtonExtend>
+
 					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
@@ -556,7 +545,7 @@ const FormMuonTraSach = (props: any) => {
 
 			<Modal
 				title='Chi tiết ấn phẩm'
-				visible={visibleAnPham}
+				open={visibleAnPham}
 				onCancel={() => setVisibleAnPham(false)}
 				width={900}
 				footer={

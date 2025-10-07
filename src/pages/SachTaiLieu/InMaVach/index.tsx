@@ -5,8 +5,8 @@ import { resetFieldsForm } from '@/utils/utils';
 import { ReloadOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, Modal, Radio, Row, Space } from 'antd';
 import fileDownload from 'js-file-download';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import ReactToPrint from 'react-to-print';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import TimKiemInMaVach from './components/TimKiem';
 
 const InMaVachPage = () => {
@@ -22,9 +22,7 @@ const InMaVachPage = () => {
 	const [loadingExport, setLoadingExport] = useState<boolean>(false);
 	const componentRef = useRef(null);
 
-	const reactToPrintContent = useCallback(() => componentRef.current, [componentRef.current]);
-
-	const reactToPrintTrigger = useCallback(() => <ButtonExtend type='primary'>In Barcode</ButtonExtend>, []);
+	const handlePrintBarcord = useReactToPrint({ contentRef: componentRef });
 
 	useEffect(() => {
 		form.setFieldsValue({ kieuIn: 'maTaiLieu' });
@@ -201,7 +199,9 @@ const InMaVachPage = () => {
 						Làm mới
 					</Button>
 
-					<ReactToPrint content={reactToPrintContent} trigger={reactToPrintTrigger} removeAfterPrint />
+					<ButtonExtend type='primary' onClick={() => handlePrintBarcord()}>
+						In Barcode
+					</ButtonExtend>
 
 					<ButtonExtend type='primary' loading={loadingExport} onClick={handleExport}>
 						In nhãn gáy
@@ -213,7 +213,7 @@ const InMaVachPage = () => {
 
 			<Modal
 				title={`Thông tin ${kieuIn === 'maTaiLieu' ? 'mã tài liệu' : 'đăng ký cá biệt'}`}
-				visible={visibleTimKiem}
+				open={visibleTimKiem}
 				onCancel={() => setVisibleTimKiem(false)}
 				width={1000}
 				footer={
@@ -221,7 +221,7 @@ const InMaVachPage = () => {
 						<Button onClick={() => setVisibleTimKiem(false)}>Đóng</Button>
 					</div>
 				}
-				destroyOnClose
+				destroyOnHidden
 			>
 				<TimKiemInMaVach field={field} form={form} setVisibleTimKiem={setVisibleTimKiem} />
 			</Modal>

@@ -2,10 +2,10 @@ import MyDatePicker from '@/components/MyDatePicker';
 import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import SelectHocKy from '@/pages/DaoTao/HocKy/SelectHocKy';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Input, Row } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -33,8 +33,8 @@ const FormDotNhapSach = (props: any) => {
 	const onFinish = async (values: AnPham.IDotNhapSach) => {
 		values.maHocKy = recHocKy?.ma ?? '';
 		values.maNamHoc = recHocKy?.namHoc?.ma ?? '';
-		values.thoiGianBatDau = moment(values.thoiGianBatDau).startOf('day').toISOString();
-		values.thoiGianKetThuc = moment(values.thoiGianKetThuc).endOf('day').toISOString();
+		values.thoiGianBatDau = dayjs(values.thoiGianBatDau).startOf('day').toISOString();
+		values.thoiGianKetThuc = dayjs(values.thoiGianKetThuc).endOf('day').toISOString();
 		if (edit) {
 			putModel(record?._id ?? '', values, getData)
 				.then()
@@ -80,7 +80,7 @@ const FormDotNhapSach = (props: any) => {
 							label='Thời gian kết thúc'
 							rules={[...rules.required, ...rules.sauNgay(thoiGianBatDau, 'Thời gian bắt đầu')]}
 						>
-							<MyDatePicker disabledDate={(cur) => moment(cur).isBefore(thoiGianBatDau)} />
+							<MyDatePicker disabledDate={(cur) => dayjs(cur).isBefore(thoiGianBatDau)} />
 						</Form.Item>
 					</Col>
 

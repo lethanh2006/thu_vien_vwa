@@ -2,27 +2,27 @@ import LineChart from '@/components/Chart/LineChart';
 import MyDatePicker from '@/components/MyDatePicker';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { exportThongKe } from '@/services/QuanLyThuVien';
+import dayjs from '@/utils/dayjs';
 import { getFilenameHeader } from '@/utils/utils';
 import { ArrowRightOutlined, ExportOutlined } from '@ant-design/icons';
 import { Card, Space, Spin } from 'antd';
 import fileDownload from 'js-file-download';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Link, useModel } from 'umi';
 
 const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 	const { isDashBoard } = props;
 	const { loadingThang, getSoLuotCheckInThangModel, dataThongKeCheckInThang } = useModel('quanlythuvien.vaorathuvien');
-	const [currentMonth, setCurrentMonth] = useState<moment.Moment>(moment());
+	const [currentMonth, setCurrentMonth] = useState<dayjs.Moment>(dayjs());
 
 	useEffect(() => {
-		getSoLuotCheckInThangModel(moment(currentMonth).get('month'), moment(currentMonth).get('year'));
+		getSoLuotCheckInThangModel(dayjs(currentMonth).get('month'), dayjs(currentMonth).get('year'));
 	}, [currentMonth]);
 
 	const handleExport = async () => {
 		await exportThongKe('thong-ke-thang', {
-			thang: moment(currentMonth).get('month'),
-			nam: moment(currentMonth).get('year'),
+			thang: dayjs(currentMonth).get('month'),
+			nam: dayjs(currentMonth).get('year'),
 		}).then((response) => {
 			if (response?.data) {
 				fileDownload(response?.data, getFilenameHeader(response));

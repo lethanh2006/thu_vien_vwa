@@ -41,7 +41,7 @@ const ModalExportDangKyTongQuat: React.FC<TProps> = ({ visible, setVisible }) =>
 	};
 
 	return (
-		<Modal visible={visible} onCancel={handleCancel} footer={null} title='Thống kê đăng ký tổng quát'>
+		<Modal open={visible} onCancel={handleCancel} footer={null} title='Thống kê đăng ký tổng quát'>
 			<Form form={form} layout='vertical' onFinish={handleExport}>
 				<Form.Item name='thoiGian' label='Thời gian cần thống kê' rules={[...rules.required]}>
 					<MyDateRangePicker format='DD/MM/YYYY' />

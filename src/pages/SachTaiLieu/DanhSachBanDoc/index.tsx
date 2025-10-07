@@ -2,8 +2,8 @@ import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
 import type { SinhVien } from '@/services/SinhVien/typings';
 import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
+import dayjs from '@/utils/dayjs';
 import { Segmented } from 'antd';
-import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
@@ -50,7 +50,7 @@ const DanhSachBanDocPage = () => {
 			align: 'center',
 			filterType: 'date',
 			sortable: true,
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 			onCell,
 			hide: activeKey !== 'sinh-vien',
 		},

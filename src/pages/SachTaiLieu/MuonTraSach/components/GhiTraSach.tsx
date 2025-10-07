@@ -2,9 +2,9 @@ import { EOperatorType } from '@/components/Table/constant';
 import { EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import { colorTrangThaiHocSv, type ETrangThaiHocSv } from '@/services/SinhVien/constant';
 import { type ETrangThaiNhanSu, MapColorETrangThaiNhanSu } from '@/services/ToChucNhanSu/constant';
+import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import { Avatar, Button, Card, Descriptions, Form, Input, Modal, Tag } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -88,7 +88,7 @@ const GhiTraAnPham = (props: {
 	return (
 		<Modal
 			title='Ghi trả ấn phẩm'
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={isThongTin ? 800 : 600}
@@ -116,7 +116,7 @@ const GhiTraAnPham = (props: {
 							<Descriptions.Item label='Họ tên'>{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
 							<Descriptions.Item label='Ngày sinh'>
 								{record?.phieuMuonTra?.ngaySinhNguoiMuon
-									? moment(record?.phieuMuonTra?.ngaySinhNguoiMuon).format('DD/MM/YYYY')
+									? dayjs(record?.phieuMuonTra?.ngaySinhNguoiMuon).format('DD/MM/YYYY')
 									: '--'}
 							</Descriptions.Item>
 							<Descriptions.Item label='Lớp'>
@@ -148,7 +148,7 @@ const GhiTraAnPham = (props: {
 							<Descriptions.Item label='Họ tên'>{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
 							<Descriptions.Item label='Ngày sinh'>
 								{record?.phieuMuonTra?.ngaySinhNguoiMuon
-									? moment(record?.phieuMuonTra?.ngaySinhNguoiMuon).format('DD/MM/YYYY')
+									? dayjs(record?.phieuMuonTra?.ngaySinhNguoiMuon).format('DD/MM/YYYY')
 									: '--'}
 							</Descriptions.Item>
 							<Descriptions.Item label='Đơn vị'>{record?.phieuMuonTra?.tenDonViNguoiMuon ?? '--'}</Descriptions.Item>
@@ -168,12 +168,7 @@ const GhiTraAnPham = (props: {
 				</Descriptions>
 			</div>
 
-			<Card
-				title='Thông tin ấn phẩm'
-				bordered={false}
-				style={{ marginBottom: '24px' }}
-				headStyle={{ backgroundColor: '#f0f2f5', fontWeight: 'bold' }}
-			>
+			<Card title='Thông tin ấn phẩm' variant='borderless' style={{ marginBottom: '24px' }}>
 				<Descriptions column={{ xs: 1, md: 2 }}>
 					<Descriptions.Item label='Nhan đề' span={24}>
 						{record?.anPham?.nhanDe ?? '--'}
@@ -181,16 +176,16 @@ const GhiTraAnPham = (props: {
 					<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 					<Descriptions.Item label='Đăng ký cá biệt'>{record?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
 					<Descriptions.Item label='Thời gian mượn'>
-						{record?.thoiGianMuon ? moment(record?.thoiGianMuon).format('DD/MM/YYYY') : '--'}
+						{record?.thoiGianMuon ? dayjs(record?.thoiGianMuon).format('DD/MM/YYYY') : '--'}
 					</Descriptions.Item>
 					<Descriptions.Item label='Hạn trả'>
-						{record?.expired ? moment(record?.expired).format('DD/MM/YYYY') : '--'}
+						{record?.expired ? dayjs(record?.expired).format('DD/MM/YYYY') : '--'}
 					</Descriptions.Item>
 					<Descriptions.Item label='Thời gian gia hạn'>
-						{record?.thoiGianGiaHan ? moment(record?.thoiGianGiaHan).format('DD/MM/YYYY') : '--'}
+						{record?.thoiGianGiaHan ? dayjs(record?.thoiGianGiaHan).format('DD/MM/YYYY') : '--'}
 					</Descriptions.Item>
 					<Descriptions.Item label='Thời gian trả'>
-						{record?.thoiGianTra ? moment(record?.thoiGianTra).format('DD/MM/YYYY') : '--'}
+						{record?.thoiGianTra ? dayjs(record?.thoiGianTra).format('DD/MM/YYYY') : '--'}
 					</Descriptions.Item>
 					<Descriptions.Item label='Ghi chú'>{record?.ghiChu ?? '--'}</Descriptions.Item>
 				</Descriptions>

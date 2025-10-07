@@ -1,9 +1,9 @@
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { ETrangThaiGhiNhanAnPhamDinhKy } from '@/services/AnPhamDinhKy/constant';
 import type { AnPhamDinhKy } from '@/services/AnPhamDinhKy/typing';
+import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Descriptions, Divider, Form, Modal, Row, Spin, Tabs } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import GhiNhanAnPhamDinhKyPage from '../../GhiNhan';
@@ -32,7 +32,7 @@ const ModalGhiNhanAnPhamDinhKy = (props: { visible: boolean; setVisible: (val: b
 			getThongKeAnPhamDinhKy();
 
 			form.setFieldsValue({
-				ngayGhiNhan: moment(),
+				ngayGhiNhan: dayjs(),
 			});
 		}
 	}, [visible, recAnPhanDinhKy?._id]);
@@ -41,13 +41,13 @@ const ModalGhiNhanAnPhamDinhKy = (props: { visible: boolean; setVisible: (val: b
 		postModel(
 			{
 				...values,
-				ngayGhiNhan: moment(values.ngayGhiNhan).startOf('d').toISOString(),
+				ngayGhiNhan: dayjs(values.ngayGhiNhan).startOf('d').toISOString(),
 				trangThaiGhiNhan: actionType,
 				anPhamDinhKyId: recAnPhanDinhKy?._id,
 			},
 			() => {
 				getThongKeAnPhamDinhKy();
-				resetFieldsForm(form, { ngayGhiNhan: moment() });
+				resetFieldsForm(form, { ngayGhiNhan: dayjs() });
 				setTabActive('2');
 			},
 			false,
@@ -60,11 +60,11 @@ const ModalGhiNhanAnPhamDinhKy = (props: { visible: boolean; setVisible: (val: b
 	return (
 		<Modal
 			title='Ghi nhận'
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={1000}
-			destroyOnClose
+			destroyOnHidden
 		>
 			<Spin spinning={loading}>
 				<Row gutter={[12, 12]} style={{ marginBottom: 12 }}>

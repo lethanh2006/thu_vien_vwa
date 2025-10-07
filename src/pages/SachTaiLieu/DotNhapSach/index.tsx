@@ -5,9 +5,9 @@ import { type IColumn } from '@/components/Table/typing';
 import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import SelectHocKy from '@/pages/DaoTao/HocKy/SelectHocKy';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined, ExportOutlined } from '@ant-design/icons';
 import { Popconfirm, Space } from 'antd';
-import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
@@ -50,7 +50,7 @@ const DotNhapSachPage = () => {
 			dataIndex: 'thoiGianBatDau',
 			width: 100,
 			align: 'center',
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
@@ -59,7 +59,7 @@ const DotNhapSachPage = () => {
 			dataIndex: 'thoiGianKetThuc',
 			width: 100,
 			align: 'center',
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
@@ -74,7 +74,7 @@ const DotNhapSachPage = () => {
 			dataIndex: 'ngayChungTu',
 			width: 100,
 			align: 'center',
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},

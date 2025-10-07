@@ -2,10 +2,10 @@ import MyDatePicker from '@/components/MyDatePicker';
 import SelectSinhVienDebounce from '@/pages/SinhVien/component/Select';
 import { ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { inputFormat, resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Checkbox, Col, Descriptions, Form, Input, Row } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -32,8 +32,8 @@ const FormDangKyCaBiet = (props: any) => {
 			resetFieldsForm(form);
 		} else if (recDKCB?._id) {
 			form.setFieldsValue({
-				thoiGianMuon: moment().toISOString(),
-				expired: moment()
+				thoiGianMuon: dayjs().toISOString(),
+				expired: dayjs()
 					.add(settingMuonTra?.thoiHanMuonTraSach || 150, 'days')
 					.toISOString(),
 			});

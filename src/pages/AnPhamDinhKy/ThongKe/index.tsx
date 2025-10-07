@@ -5,11 +5,11 @@ import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import { EKieuHienThi, KieuHienThi } from '@/services/SachTaiLieu/constant';
+import dayjs from '@/utils/dayjs';
 import { inputFormat } from '@/utils/utils';
 import { ReloadOutlined } from '@ant-design/icons';
 import { Card, Col, Empty, Row, Segmented, Space, Spin } from 'antd';
 import _ from 'lodash';
-import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import { useModel } from 'umi';
 
@@ -17,16 +17,16 @@ const ThongKeAnPhamDinhKy = () => {
 	const { thongKeGhiNhanAnPhamModel, loadingThongKe, dataThongKeGhiNhanAnPham } = useModel('anphamdinhky.ghinhan');
 
 	const [kieuHienThi, setKieuHienThi] = useState<EKieuHienThi>(EKieuHienThi.NAM);
-	const [yearSelect, setYearSelect] = useState(moment().year());
-	const [monthSelect, setMonthSelect] = useState(moment().month());
+	const [yearSelect, setYearSelect] = useState(dayjs().year());
+	const [monthSelect, setMonthSelect] = useState(dayjs().month());
 	const [dateRange, setDateRange] = useState<string[]>([
-		moment().startOf('M').toISOString(),
-		moment().endOf('M').toISOString(),
+		dayjs().startOf('M').toISOString(),
+		dayjs().endOf('M').toISOString(),
 	]);
 
 	useEffect(() => {
-		const startOfMonth = moment().year(yearSelect).month(monthSelect).startOf('month');
-		const endOfMonth = moment().year(yearSelect).month(monthSelect).endOf('month');
+		const startOfMonth = dayjs().year(yearSelect).month(monthSelect).startOf('month');
+		const endOfMonth = dayjs().year(yearSelect).month(monthSelect).endOf('month');
 
 		setDateRange([startOfMonth.toISOString(), endOfMonth.toISOString()]);
 	}, [kieuHienThi, yearSelect, monthSelect]);
@@ -40,7 +40,7 @@ const ThongKeAnPhamDinhKy = () => {
 			kieuHienThi === EKieuHienThi.NGAY && {
 				active: true,
 				field: 'ngayGhiNhan',
-				values: [moment(dateRange[0]).startOf('date').toISOString(), moment(dateRange[1]).endOf('date').toISOString()],
+				values: [dayjs(dateRange[0]).startOf('date').toISOString(), dayjs(dateRange[1]).endOf('date').toISOString()],
 				operator: EOperatorType.BETWEEN,
 			},
 		];
@@ -92,7 +92,7 @@ const ThongKeAnPhamDinhKy = () => {
 					<MyDateRangePicker
 						format={'DD/MM'}
 						style={{ width: 180 }}
-						value={[moment(dateRange[0]), moment(dateRange[1])]}
+						value={[dayjs(dateRange[0]), dayjs(dateRange[1])]}
 						onChange={(val: any) => {
 							if (!val || val.length !== 2) return;
 							setDateRange([val[0].toISOString(), val[1].toISOString()]);
@@ -101,11 +101,11 @@ const ThongKeAnPhamDinhKy = () => {
 				) : kieuHienThi === EKieuHienThi.THANG ? (
 					<MyDatePicker
 						style={{ width: 90 }}
-						value={moment(yearSelect, 'YYYY')}
+						value={dayjs(yearSelect, 'YYYY')}
 						pickerStyle={'year'}
 						format={'YYYY'}
 						onChange={(val) => {
-							setYearSelect(moment(val).year());
+							setYearSelect(dayjs(val).year());
 						}}
 					/>
 				) : null}
@@ -123,10 +123,10 @@ const ThongKeAnPhamDinhKy = () => {
 								yLabel={['Số lượt']}
 								xAxis={dataThongKeGhiNhanAnPham?.map((item) =>
 									kieuHienThi === EKieuHienThi.NGAY
-										? moment(item.title ?? '').format('DD/MM')
+										? dayjs(item.title ?? '').format('DD/MM')
 										: kieuHienThi === EKieuHienThi.THANG
-										? `Tháng ${item.title ?? ''}`
-										: item.title ?? 'Không có thông tin',
+											? `Tháng ${item.title ?? ''}`
+											: (item.title ?? 'Không có thông tin'),
 								)}
 								yAxis={[dataThongKeGhiNhanAnPham?.map((item) => Number(item.soLuong) ?? 0)]}
 								showTotal
@@ -195,10 +195,10 @@ const ThongKeAnPhamDinhKy = () => {
 							<DonutChart
 								xAxis={chartData?.map((item) =>
 									kieuHienThi === EKieuHienThi.NGAY
-										? moment(item.x).format('DD/MM/YYYY')
+										? dayjs(item.x).format('DD/MM/YYYY')
 										: kieuHienThi === EKieuHienThi.THANG
-										? `Tháng ${item.x}`
-										: item.x,
+											? `Tháng ${item.x}`
+											: item.x,
 								)}
 								yAxis={[chartData?.map((item) => item.y)]}
 								yLabel={['Phần trăm (%)']}

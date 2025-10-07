@@ -5,10 +5,10 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiDangKyCaBiet, type ETrangThaiDangKyCaBiet } from '@/services/SachTaiLieu/constant';
+import dayjs from '@/utils/dayjs';
 import { inputFormat } from '@/utils/utils';
 import { HistoryOutlined, SyncOutlined } from '@ant-design/icons';
 import { Card, Popconfirm, Tag } from 'antd';
-import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
@@ -88,7 +88,7 @@ const DangKyCaBietPage = () => {
 			dataIndex: 'thoiGianXepGia',
 			align: 'center',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,

@@ -10,6 +10,7 @@ import {
 	mapNameTrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
+import dayjs from '@/utils/dayjs';
 import {
 	CheckOutlined,
 	DeleteOutlined,
@@ -19,7 +20,6 @@ import {
 	RetweetOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Col, Descriptions, Modal, Popconfirm, Popover, Row, Segmented, Tabs, Tag } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ChiTietAnPham from '../AnPham/components/ChiTiet';
@@ -64,7 +64,7 @@ const MuonTraSachPage = (props: any) => {
 			{
 				active: true,
 				field: 'expired',
-				values: [moment().startOf('d').toISOString(), moment().add(7, 'day').endOf('d').toISOString()],
+				values: [dayjs().startOf('d').toISOString(), dayjs().add(7, 'day').endOf('d').toISOString()],
 				operator: EOperatorType.BETWEEN,
 			},
 		];
@@ -73,7 +73,7 @@ const MuonTraSachPage = (props: any) => {
 			{
 				active: true,
 				field: 'expired',
-				values: [moment().startOf('d').toISOString()],
+				values: [dayjs().startOf('d').toISOString()],
 				operator: EOperatorType.LESS_THAN,
 			},
 		];
@@ -178,7 +178,7 @@ const MuonTraSachPage = (props: any) => {
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -228,7 +228,7 @@ const MuonTraSachPage = (props: any) => {
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			hide: trangThai !== ETrangThaiMuonSach.DA_TRA && !tatCaLichSu,
@@ -346,9 +346,7 @@ const MuonTraSachPage = (props: any) => {
 													setRecord(rec);
 													setVisibleGiaHan(true);
 												}}
-												disabled={
-													rec?.trangThai === ETrangThaiMuonSach.DA_TRA || moment().isBefore(moment(rec?.expired))
-												}
+												disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA || dayjs().isBefore(dayjs(rec?.expired))}
 											/>
 										</>
 									) : null
@@ -409,7 +407,7 @@ const MuonTraSachPage = (props: any) => {
 
 				<Modal
 					title='Chi tiết ấn phẩm'
-					visible={visibleForm}
+					open={visibleForm}
 					onCancel={() => setVisibleAnPham(false)}
 					width={900}
 					footer={
@@ -462,9 +460,11 @@ const MuonTraSachPage = (props: any) => {
 								{recPhieu?.maDinhDanhNguoiMuon ?? '--'}
 							</Descriptions.Item>
 							<Descriptions.Item label='Họ tên'>{recPhieu?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Ngày sinh'>{recPhieu?.ngaySinhNguoiMuon ?? '--'}</Descriptions.Item>
+							<Descriptions.Item label='Ngày sinh'>
+								{recPhieu?.ngaySinhNguoiMuon ? dayjs(recPhieu?.ngaySinhNguoiMuon).format('DD/MM/YYYY') : '--'}
+							</Descriptions.Item>
 							<Descriptions.Item label='Thời gian đăng ký'>
-								{recPhieu?.thoiGianDangKy ? moment(recPhieu?.thoiGianDangKy).format('DD/MM/YYYY') : '--'}
+								{recPhieu?.thoiGianDangKy ? dayjs(recPhieu?.thoiGianDangKy).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
 
 							{recPhieu?.vaiTro === EVaiTroMuonTra.SINHVIEN ? (

@@ -1,15 +1,15 @@
 import useInitModel from '@/hooks/useInitModel';
 import { postPhieuMuonTraSach } from '@/services/SachTaiLieu/PhieuMuonTra';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
+import dayjs from '@/utils/dayjs';
 import { message } from 'antd';
-import moment from 'moment';
 
 export default () => {
 	const objInit = useInitModel<PhieuMuonTra.IRecord>('phieu-muon-tra-an-pham');
 	const { formSubmiting, setFormSubmiting } = objInit;
 
 	// Lấy giờ hiện tại
-	const currentHour = moment().hour();
+	const currentHour = dayjs().hour();
 	const ngoaiThoiGian = currentHour < 8 || currentHour >= 17;
 
 	const postPhieuMuonTraSachModel = async (

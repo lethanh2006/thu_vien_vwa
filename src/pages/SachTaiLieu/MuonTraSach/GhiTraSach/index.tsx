@@ -12,6 +12,7 @@ import {
 	mapNameTrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
+import dayjs from '@/utils/dayjs';
 import {
 	CheckOutlined,
 	DeleteOutlined,
@@ -22,7 +23,6 @@ import {
 	RetweetOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Modal, Popconfirm, Popover, Segmented, Select, Tag } from 'antd';
-import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import ChiTietAnPham from '../../AnPham/components/ChiTiet';
@@ -117,7 +117,7 @@ const GhiTraPage = () => {
 					{
 						active: true,
 						field: 'expired',
-						values: [moment().startOf('d').toISOString(), moment().add(7, 'day').endOf('d').toISOString()],
+						values: [dayjs().startOf('d').toISOString(), dayjs().add(7, 'day').endOf('d').toISOString()],
 						operator: EOperatorType.BETWEEN,
 					},
 				];
@@ -127,7 +127,7 @@ const GhiTraPage = () => {
 					{
 						active: true,
 						field: 'expired',
-						values: [moment().startOf('d').toISOString()],
+						values: [dayjs().startOf('d').toISOString()],
 						operator: EOperatorType.LESS_THAN,
 					},
 				];
@@ -218,7 +218,7 @@ const GhiTraPage = () => {
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -228,7 +228,7 @@ const GhiTraPage = () => {
 			align: 'center',
 			dataIndex: 'thoiGianTra',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -338,7 +338,7 @@ const GhiTraPage = () => {
 										setRecord(rec);
 										setVisibleGiaHan(true);
 									}}
-									disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA || moment().isBefore(moment(rec?.expired))}
+									disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA || dayjs().isBefore(dayjs(rec?.expired))}
 								/>
 
 								<Popconfirm
@@ -421,7 +421,7 @@ const GhiTraPage = () => {
 			/>
 			<Modal
 				title='Chi tiết ấn phẩm'
-				visible={visibleForm}
+				open={visibleForm}
 				onCancel={() => setVisibleAnPham(false)}
 				width={900}
 				footer={

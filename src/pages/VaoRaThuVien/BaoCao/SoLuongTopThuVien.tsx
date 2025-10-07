@@ -74,8 +74,7 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 		<Card
 			title='Bạn đọc có số lượt vào thư viện nhiều nhất'
 			bordered={isDashBoard ? true : false}
-			headStyle={isDashBoard ? undefined : { padding: 0 }}
-			bodyStyle={isDashBoard ? undefined : { padding: '12px 0 0' }}
+			style={isDashBoard ? undefined : { padding: '12px 0 0' }}
 			extra={
 				isDashBoard ? (
 					<Link to='/vao-ra-thu-vien/tong-hop'>
@@ -99,7 +98,7 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 
 			<Modal
 				title={`Danh sách vào ra thư viện ${record?.maSv ?? ''} - ${record?.hoTen ?? ''}`}
-				visible={visibleChiTiet}
+				open={visibleChiTiet}
 				onCancel={() => setVisibleChiTiet(false)}
 				footer={null}
 				width={800}

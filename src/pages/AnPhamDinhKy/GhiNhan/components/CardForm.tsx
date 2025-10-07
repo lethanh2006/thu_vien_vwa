@@ -1,10 +1,10 @@
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { colorTrangThaiGhiNhanAnPhamDinhKy, ETrangThaiGhiNhanAnPhamDinhKy } from '@/services/AnPhamDinhKy/constant';
 import type { AnPhamDinhKy } from '@/services/AnPhamDinhKy/typing';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Row, Tag } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectAnPhamDinhKy from '../../AnPhamDinhKy/components/Select';
@@ -33,7 +33,7 @@ const CardFormGhiNhan = (props: any) => {
 
 		if (!record?._id) {
 			form.setFieldsValue({
-				ngayGhiNhan: moment(),
+				ngayGhiNhan: dayjs(),
 			});
 		}
 	}, [visibleForm, record?._id]);
@@ -41,7 +41,7 @@ const CardFormGhiNhan = (props: any) => {
 	const onFinish = async (values: AnPhamDinhKy.GhiNhanAnPhamDinhKy) => {
 		const data = {
 			...values,
-			ngayGhiNhan: moment(values.ngayGhiNhan).startOf('d').toISOString(),
+			ngayGhiNhan: dayjs(values.ngayGhiNhan).startOf('d').toISOString(),
 			trangThaiGhiNhan: actionType,
 		};
 

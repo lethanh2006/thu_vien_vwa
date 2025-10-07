@@ -1,7 +1,7 @@
 import { ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
+import dayjs from '@/utils/dayjs';
 import { Tag } from 'antd';
-import moment from 'moment';
 
 const RenderHanTra = (props: { rec: MuonSach.IRecord }) => {
 	const { rec } = props;
@@ -10,9 +10,9 @@ const RenderHanTra = (props: { rec: MuonSach.IRecord }) => {
 		return <span>-</span>;
 	}
 
-	const hanTra = moment(rec.expired).startOf('day');
-	const ngayTra = rec?.thoiGianTra ? moment(rec.thoiGianTra).startOf('day') : null;
-	const now = moment().startOf('day');
+	const hanTra = dayjs(rec.expired).startOf('day');
+	const ngayTra = rec?.thoiGianTra ? dayjs(rec.thoiGianTra).startOf('day') : null;
+	const now = dayjs().startOf('day');
 
 	const expiredText = <div style={{ marginBottom: 4 }}>{hanTra.format('DD/MM/YYYY')}</div>;
 

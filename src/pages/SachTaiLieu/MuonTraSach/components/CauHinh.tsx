@@ -24,7 +24,7 @@ const CauHinhThoiHanMuonTra = (props: { visible: boolean; setVisible: (val: bool
 	return (
 		<Modal
 			title='Cấu hình thời hạn trả sách'
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={800}

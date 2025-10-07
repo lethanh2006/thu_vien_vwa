@@ -1,19 +1,19 @@
 import ExpandText from '@/components/ExpandText';
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import TableBase from '@/components/Table';
+import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 import { ETrangThaiMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
+import dayjs from '@/utils/dayjs';
+import { ExportOutlined } from '@ant-design/icons';
 import { Card, Select, Space, Tabs } from 'antd';
-import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import RenderHanTra from '../MuonTraSach/components/RenderHanTra';
-import StatThongKeMuonTra from './Stat';
-import ButtonExtend from '@/components/Table/ButtonExtend';
-import { ExportOutlined } from '@ant-design/icons';
 import ModalExportAnPham from '../ThongKeAnPham/ModalExport';
+import StatThongKeMuonTra from './Stat';
 
 const ThongKeMuonTraPage = () => {
 	const { getModel, page, limit } = useModel('sachtailieu.muontra.muontra');
@@ -38,7 +38,7 @@ const ThongKeMuonTraPage = () => {
 		datePicker && {
 			active: true,
 			field: trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'thoiGianMuon' : 'thoiGianTra',
-			values: [moment(datePicker?.[0]).startOf('date'), moment(datePicker?.[1]).endOf('date')],
+			values: [dayjs(datePicker?.[0]).startOf('date'), dayjs(datePicker?.[1]).endOf('date')],
 			operator: EOperatorType.BETWEEN,
 		},
 	];
@@ -88,7 +88,7 @@ const ThongKeMuonTraPage = () => {
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
@@ -96,7 +96,7 @@ const ThongKeMuonTraPage = () => {
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
@@ -152,9 +152,9 @@ const ThongKeMuonTraPage = () => {
 						style={{ width: 300 }}
 						placeholder={['Từ ngày', 'Đến ngày']}
 						ranges={{
-							'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
-							'Tuần này': [moment().startOf('week'), moment().endOf('week')],
-							'Tháng này': [moment().startOf('M'), moment().endOf('M')],
+							'Hôm nay': [dayjs().startOf('date'), dayjs().endOf('date')],
+							'Tuần này': [dayjs().startOf('week'), dayjs().endOf('week')],
+							'Tháng này': [dayjs().startOf('M'), dayjs().endOf('M')],
 						}}
 						format='DD/MM/YYYY'
 					/>

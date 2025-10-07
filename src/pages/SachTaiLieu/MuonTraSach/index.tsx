@@ -5,9 +5,9 @@ import ModalImport from '@/components/Table/Import';
 import type { IColumn } from '@/components/Table/typing';
 import { colorTrangThaiDuyeMuonSach, ETrangThaiDuyetMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
+import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { Card, Popconfirm, Select, Tabs, Tag } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import CauHinhThoiHanMuonTra from './components/CauHinh';
@@ -145,7 +145,7 @@ const PhieuMuonTraSachPage = () => {
 			dataIndex: 'thoiGianDangKy',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,

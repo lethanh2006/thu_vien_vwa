@@ -4,11 +4,11 @@ import { EOperatorType } from '@/components/Table/constant';
 import FormItemKhoaNganh from '@/pages/DaoTao/KhoaNganh/FormItemKhoaNganh';
 import { EKieuHienThi, ETrangThaiMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import { exportThongKeTheMuon } from '@/services/SachTaiLieu/MuonSach';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Checkbox, Col, Form, Modal, Radio, Row } from 'antd';
 import fileDownload from 'js-file-download';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl } from 'umi';
 
@@ -39,14 +39,14 @@ const ModalExportAnPham = (props: {
 		let dateRangeFrom, dateRangeTo;
 
 		if (kieuXuatDuLieu === EKieuHienThi.NAM) {
-			dateRangeFrom = moment(value.thoiGianXuat).startOf('year').toISOString();
-			dateRangeTo = moment(value.thoiGianXuat).endOf('year').toISOString();
+			dateRangeFrom = dayjs(value.thoiGianXuat).startOf('year').toISOString();
+			dateRangeTo = dayjs(value.thoiGianXuat).endOf('year').toISOString();
 		} else if (kieuXuatDuLieu === EKieuHienThi.THANG) {
-			dateRangeFrom = moment(value.thoiGianXuat).startOf('month').toISOString();
-			dateRangeTo = moment(value.thoiGianXuat).endOf('month').toISOString();
+			dateRangeFrom = dayjs(value.thoiGianXuat).startOf('month').toISOString();
+			dateRangeTo = dayjs(value.thoiGianXuat).endOf('month').toISOString();
 		} else {
-			dateRangeFrom = moment(value.thoiGianXuat[0]).startOf('day').toISOString();
-			dateRangeTo = moment(value.thoiGianXuat[1]).endOf('day').toISOString();
+			dateRangeFrom = dayjs(value.thoiGianXuat[0]).startOf('day').toISOString();
+			dateRangeTo = dayjs(value.thoiGianXuat[1]).endOf('day').toISOString();
 		}
 
 		const filter = [
@@ -62,7 +62,7 @@ const ModalExportAnPham = (props: {
 						field: 'maKhoaNganh',
 						operator: EOperatorType.INCLUDE,
 						values: value.maKhoaNganh,
-				  }
+					}
 				: undefined,
 		];
 
@@ -85,7 +85,7 @@ const ModalExportAnPham = (props: {
 	return (
 		<Modal
 			title={title ?? 'Xuất dữ liệu thống kê ấn phẩm'}
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={vaiTro === EVaiTroMuonTra.SINHVIEN ? 1100 : 600}

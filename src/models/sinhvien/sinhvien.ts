@@ -11,7 +11,7 @@ import _ from 'lodash';
 export default () => {
 	const objInit = useInitModel<SinhVien.IRecord>('sinh-vien', undefined, undefined, ipDaoTao);
 
-	const { setRecord, setLoading, getService, setDanhSach } = objInit;
+	const { setRecord, setLoading, getService, setDanhSach, putModel } = objInit;
 
 	const getThongTinSinhVienBySsoIdModel = async (ssoId: string): Promise<SinhVien.IRecord | undefined> => {
 		if (!ssoId) return;
@@ -77,13 +77,13 @@ export default () => {
 		}
 	};
 
-	// const updateFaceRegModel = (sinhVienSsoId: string, data: { faceRegImgUrl: string }, getData?: () => void) =>
-	// 	putModel(`${sinhVienSsoId}/admin/face-reg`, data, getData);
+	const updateFaceRegModel = (sinhVienSsoId: string, data: { faceRegImgUrl: string }, getData?: () => void) =>
+		putModel(`${sinhVienSsoId}/admin/face-reg`, data, getData);
 
 	return {
 		...objInit,
 		getThongTinSinhVienBySsoIdModel,
 		searchSinhVienModel,
-		// updateFaceRegModel,
+		updateFaceRegModel,
 	};
 };

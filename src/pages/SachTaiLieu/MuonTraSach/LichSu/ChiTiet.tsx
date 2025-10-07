@@ -5,8 +5,8 @@ import {
 	type ETrangThaiDuyetMuonSach,
 	type ETrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
+import dayjs from '@/utils/dayjs';
 import { Button, Card, Col, Descriptions, Row, Tag } from 'antd';
-import moment from 'moment';
 import { useIntl, useModel } from 'umi';
 
 const ChiTietLichSu = () => {
@@ -28,10 +28,10 @@ const ChiTietLichSu = () => {
 
 						<Descriptions.Item label='Đăng ký cá biệt'>{record?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
 						<Descriptions.Item label='Thời gian mượn'>
-							{record?.thoiGianMuon ? moment(record?.thoiGianMuon).format('HH:mm DD/MM/YYYY') : '--'}
+							{record?.thoiGianMuon ? dayjs(record?.thoiGianMuon).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 						<Descriptions.Item label='Hạn trả'>
-							{record?.expired ? moment(record?.expired).format('HH:mm DD/MM/YYYY') : '--'}
+							{record?.expired ? dayjs(record?.expired).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 
 						{/* <Descriptions.Item label='Trạng thái'>
@@ -43,16 +43,16 @@ const ChiTietLichSu = () => {
 						</Descriptions.Item> */}
 
 						<Descriptions.Item label='Thời gian gia hạn'>
-							{record?.thoiGianGiaHan ? moment(record?.thoiGianGiaHan).format('HH:mm DD/MM/YYYY') : '--'}
+							{record?.thoiGianGiaHan ? dayjs(record?.thoiGianGiaHan).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Thời gian trả'>
-							{record?.thoiGianTra ? moment(record?.thoiGianTra).format('HH:mm DD/MM/YYYY') : '--'}
+							{record?.thoiGianTra ? dayjs(record?.thoiGianTra).format('HH:mm DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Thời gian đăng ký'>
 							{record?.phieuMuonTra?.thoiGianDangKy
-								? moment(record?.phieuMuonTra?.thoiGianDangKy).format('HH:mm DD/MM/YYYY')
+								? dayjs(record?.phieuMuonTra?.thoiGianDangKy).format('HH:mm DD/MM/YYYY')
 								: '--'}
 						</Descriptions.Item>
 

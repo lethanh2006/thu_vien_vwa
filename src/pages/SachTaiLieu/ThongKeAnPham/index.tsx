@@ -5,10 +5,10 @@ import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { EOperatorType } from '@/components/Table/constant';
 import { EKieuHienThi, ETrangThaiMuonSach, EVaiTroMuonTra, KieuHienThi } from '@/services/SachTaiLieu/constant';
+import dayjs from '@/utils/dayjs';
 import { inputFormat } from '@/utils/utils';
 import { ExportOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Card, Col, Empty, Row, Segmented, Select, Space, Spin, Tabs } from 'antd';
-import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import { useModel } from 'umi';
 import ModalExportAnPham from './ModalExport';
@@ -20,12 +20,12 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 
 	const [kieuHienThi, setKieuHienThi] = useState<EKieuHienThi>(EKieuHienThi.NAM);
 	const [trangThai, setTrangThai] = useState<ETrangThaiMuonSach>(ETrangThaiMuonSach.DANG_THUE_MUON);
-	const [yearSelect, setYearSelect] = useState(moment().year());
-	const [monthSelect, setMonthSelect] = useState(moment().month());
+	const [yearSelect, setYearSelect] = useState(dayjs().year());
+	const [monthSelect, setMonthSelect] = useState(dayjs().month());
 
 	const [dateRange, setDateRange] = useState<any>([
-		moment().startOf('M').toISOString(),
-		moment().endOf('M').toISOString(),
+		dayjs().startOf('M').toISOString(),
+		dayjs().endOf('M').toISOString(),
 	]);
 	const [modalExport, setModalExport] = useState<boolean>(false);
 	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
@@ -33,8 +33,8 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	const [readyToFetch, setReadyToFetch] = useState(false);
 
 	useEffect(() => {
-		const startOfMonth = moment().year(yearSelect).month(monthSelect).startOf('month');
-		const endOfMonth = moment().year(yearSelect).month(monthSelect).endOf('month');
+		const startOfMonth = dayjs().year(yearSelect).month(monthSelect).startOf('month');
+		const endOfMonth = dayjs().year(yearSelect).month(monthSelect).endOf('month');
 		setDateRange([startOfMonth.toISOString(), endOfMonth.toISOString()]);
 	}, [kieuHienThi, yearSelect, monthSelect]);
 
@@ -63,7 +63,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 			filter.push({
 				active: true,
 				field: trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'thoiGianMuon' : 'thoiGianTra',
-				values: [moment(dateRange[0]).startOf('date').toISOString(), moment(dateRange[1]).endOf('date').toISOString()],
+				values: [dayjs(dateRange[0]).startOf('date').toISOString(), dayjs(dateRange[1]).endOf('date').toISOString()],
 				operator: EOperatorType.BETWEEN,
 			});
 		}
@@ -84,10 +84,10 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 		let data = [...dataThongKeAnPhamMuonTra];
 
 		if (kieuHienThi === EKieuHienThi.NGAY && dateRange?.length === 2) {
-			const start = moment(dateRange[0]).startOf('day');
-			const end = moment(dateRange[1]).endOf('day');
+			const start = dayjs(dateRange[0]).startOf('day');
+			const end = dayjs(dateRange[1]).endOf('day');
 			data = data.filter((item) => {
-				const date = moment(item.title, 'YYYY-MM-DD', true);
+				const date = dayjs(item.title, 'YYYY-MM-DD', true);
 				return date.isValid() && date.isBetween(start, end, undefined, '[]');
 			});
 		}
@@ -135,20 +135,20 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 						style={{ width: 180 }}
 						placeholder={['Từ ngày', 'Đến ngày']}
 						ranges={{
-							'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
-							'Tuần này': [moment().startOf('week'), moment().endOf('week')],
-							'Tháng này': [moment().startOf('M'), moment().endOf('M')],
+							'Hôm nay': [dayjs().startOf('date'), dayjs().endOf('date')],
+							'Tuần này': [dayjs().startOf('week'), dayjs().endOf('week')],
+							'Tháng này': [dayjs().startOf('M'), dayjs().endOf('M')],
 						}}
 						format='DD/MM'
 					/>
 				) : kieuHienThi === EKieuHienThi.THANG ? (
 					<MyDatePicker
 						style={{ width: 90 }}
-						value={yearSelect ? moment(yearSelect, 'YYYY') : undefined}
+						value={yearSelect ? dayjs(yearSelect, 'YYYY') : undefined}
 						pickerStyle={'year'}
 						format={'YYYY'}
 						onChange={(val) => {
-							if (val) setYearSelect(moment(val).year());
+							if (val) setYearSelect(dayjs(val).year());
 						}}
 					/>
 				) : null}
@@ -175,7 +175,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 								yLabel={['Số lượt']}
 								xAxis={filteredData.map((item) => {
 									if (kieuHienThi === EKieuHienThi.NGAY) {
-										return moment(item.title, 'YYYY-MM-DD').format('DD/MM');
+										return dayjs(item.title, 'YYYY-MM-DD').format('DD/MM');
 									}
 									if (kieuHienThi === EKieuHienThi.THANG) return `Tháng ${item.title ?? ''}`;
 									return item.title ?? 'Không có thông tin';
@@ -247,9 +247,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 							<DonutChart
 								xAxis={chartData?.map((item) => {
 									if (kieuHienThi === EKieuHienThi.NGAY) {
-										return moment(item.x, moment.ISO_8601, true).isValid()
-											? moment(item.x).format('DD/MM/YYYY')
-											: 'Không rõ';
+										return dayjs(item.x, undefined, true).isValid() ? dayjs(item.x).format('DD/MM/YYYY') : 'Không rõ';
 									}
 									if (kieuHienThi === EKieuHienThi.THANG) return `Tháng ${item.x}`;
 									return item.x;

@@ -13,6 +13,7 @@ import {
 	ETrangThaiNopThuVien,
 } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
+import dayjs from '@/utils/dayjs';
 import { getFilenameHeader } from '@/utils/utils';
 import {
 	CheckOutlined,
@@ -25,7 +26,6 @@ import {
 } from '@ant-design/icons';
 import { Button, Card, InputNumber, Popconfirm, Popover, Space, Tabs, Tag } from 'antd';
 import fileDownload from 'js-file-download';
-import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { useModel } from 'umi';
 import ChiTietThuVien from './components/ChiTiet';
@@ -62,7 +62,7 @@ const QuanLyThuVienPage = () => {
 			{
 				active: true,
 				field: 'thoiGianNop',
-				values: [moment(datePicker?.[0]).startOf('date'), moment(datePicker?.[1]).endOf('date')],
+				values: [dayjs(datePicker?.[0]).startOf('date'), dayjs(datePicker?.[1]).endOf('date')],
 				operator: EOperatorType.BETWEEN,
 			},
 		];
@@ -78,18 +78,18 @@ const QuanLyThuVienPage = () => {
 							luanAn: luanAnValue.current,
 							luanVan: settingThuVien?.luanVan || 0,
 							khoaLuan: settingThuVien?.khoaLuan || 0,
-					  }
+						}
 					: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-					? {
-							luanVan: luanAnValue.current,
-							luanAn: settingThuVien?.luanAn || 0,
-							khoaLuan: settingThuVien?.khoaLuan || 0,
-					  }
-					: {
-							khoaLuan: luanAnValue.current,
-							luanVan: settingThuVien?.luanVan || 0,
-							luanAn: settingThuVien?.luanAn || 0,
-					  },
+						? {
+								luanVan: luanAnValue.current,
+								luanAn: settingThuVien?.luanAn || 0,
+								khoaLuan: settingThuVien?.khoaLuan || 0,
+							}
+						: {
+								khoaLuan: luanAnValue.current,
+								luanVan: settingThuVien?.luanVan || 0,
+								luanAn: settingThuVien?.luanAn || 0,
+							},
 			);
 		}
 	};
@@ -104,8 +104,8 @@ const QuanLyThuVienPage = () => {
 			loai === ELoaiDotQuanLyThuvien.LUAN_AN
 				? 'luan-an'
 				: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-				? 'luan-van'
-				: 'khoa-luan-do-an',
+					? 'luan-van'
+					: 'khoa-luan-do-an',
 		).then((res) => fileDownload(res.data, getFilenameHeader(res)));
 	};
 
@@ -132,7 +132,7 @@ const QuanLyThuVienPage = () => {
 			title: 'Ngày sinh',
 			align: 'center',
 			width: 150,
-			render: (val, rec) => rec?.sinhVien?.ngaySinh && moment(rec?.sinhVien?.ngaySinh)?.format('DD/MM/YYYY'),
+			render: (val, rec) => rec?.sinhVien?.ngaySinh && dayjs(rec?.sinhVien?.ngaySinh)?.format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Số điện thoại',
@@ -194,7 +194,7 @@ const QuanLyThuVienPage = () => {
 			dataIndex: 'thoiGianNop',
 			align: 'center',
 			width: 150,
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
@@ -363,15 +363,15 @@ const QuanLyThuVienPage = () => {
 							loai === ELoaiDotQuanLyThuvien.LUAN_AN
 								? 'LA-'
 								: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-								? 'LV-'
-								: 'KL-DA-'
+									? 'LV-'
+									: 'KL-DA-'
 						}
 						value={
 							loai === ELoaiDotQuanLyThuvien.LUAN_AN
 								? settingThuVien?.luanAn
 								: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-								? settingThuVien?.luanVan
-								: settingThuVien?.khoaLuan
+									? settingThuVien?.luanVan
+									: settingThuVien?.khoaLuan
 						}
 						onChange={(val) => handleChange(Number(val))}
 					/>
@@ -392,8 +392,8 @@ const QuanLyThuVienPage = () => {
 					loai === ELoaiDotQuanLyThuvien.LUAN_AN
 						? 'Quản lý luận án'
 						: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-						? 'Quản lý luận văn'
-						: 'Quản lý khóa luận/đồ án'
+							? 'Quản lý luận văn'
+							: 'Quản lý khóa luận/đồ án'
 				}
 				widthDrawer={1000}
 				hideCard

@@ -1,9 +1,9 @@
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import dayjs from '@/utils/dayjs';
 import { inputFormat } from '@/utils/utils';
 import { Modal } from 'antd';
-import moment from 'moment';
 import { useModel } from 'umi';
 
 const ChiTietXepGia = (props: { visible: boolean; setVisible: (val: boolean) => void }) => {
@@ -28,7 +28,7 @@ const ChiTietXepGia = (props: { visible: boolean; setVisible: (val: boolean) => 
 			dataIndex: 'thoiGianXepGia',
 			align: 'center',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Đơn giá',
@@ -39,7 +39,7 @@ const ChiTietXepGia = (props: { visible: boolean; setVisible: (val: boolean) => 
 	];
 
 	return (
-		<Modal title='Chi tiết xếp giá' visible={visible} onCancel={() => setVisible(false)} width={800} footer={null}>
+		<Modal title='Chi tiết xếp giá' open={visible} onCancel={() => setVisible(false)} width={800} footer={null}>
 			<TableBase
 				getData={getData}
 				columns={columns}

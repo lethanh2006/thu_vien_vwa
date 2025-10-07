@@ -13,7 +13,7 @@ const ConfirmMuonQuaHan = (props: { visible: boolean; setVisible: (val: boolean)
 
 	return (
 		<Modal
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			width={600}
 			footer={null}

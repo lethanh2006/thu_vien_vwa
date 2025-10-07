@@ -1,4 +1,6 @@
+import BoxFile from '@/components/BoxFile';
 import ExpandText from '@/components/ExpandText';
+import PreviewFile from '@/components/PreviewFile';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import { type IColumn } from '@/components/Table/typing';
@@ -7,8 +9,6 @@ import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/ic
 import { Button, Modal, Popconfirm } from 'antd';
 import { useModel } from 'umi';
 import Form from './Form';
-import BoxFile from '@/components/BoxFile';
-import PreviewFile from '@/components/PreviewFile';
 
 const FormItemTaiLieuSo = (props: {
 	value?: AnPham.TDanhSachTaiLieuTrucTuyen[];
@@ -116,7 +116,7 @@ const FormItemTaiLieuSo = (props: {
 
 			<Modal
 				title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} tài liệu ấn phẩm số`}
-				visible={visibleForm}
+				open={visibleForm}
 				width={isView ? 1000 : 600}
 				footer={null}
 				onCancel={() => setVisibleForm(false)}

@@ -1,10 +1,10 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import { ELoaiDotQuanLyThuvien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Row, Select } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -73,7 +73,7 @@ const FormQuanLyDot = (props: { afterAddNew?: (rec: QuanLyThuVien.IQuanLyDot) =>
 						<MyDatePicker
 							format='DD/MM/YYYY HH:mm'
 							showTime
-							disabledDate={(cur) => moment(cur).isBefore(thoiGianBatDau)}
+							disabledDate={(cur) => dayjs(cur).isBefore(thoiGianBatDau)}
 						/>
 					</Form.Item>
 				</Col>

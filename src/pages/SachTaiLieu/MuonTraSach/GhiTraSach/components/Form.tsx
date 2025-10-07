@@ -11,10 +11,10 @@ import {
 	EVaiTroMuonTra,
 	mapNameTrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
+import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import { CheckOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, message, Modal, Popconfirm, Row, Segmented, Space, Spin, Tag } from 'antd';
-import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import GhiTraAnPham from '../../components/GhiTraSach';
@@ -219,7 +219,7 @@ const FormGhiTraSach = (props: any) => {
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
@@ -227,7 +227,7 @@ const FormGhiTraSach = (props: any) => {
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
@@ -422,7 +422,7 @@ const FormGhiTraSach = (props: any) => {
 
 			<Modal
 				title='Chi tiết ấn phẩm'
-				visible={visibleAnPham}
+				open={visibleAnPham}
 				onCancel={() => setVisibleAnPham(false)}
 				width={900}
 				footer={

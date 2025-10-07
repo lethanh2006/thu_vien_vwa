@@ -1,5 +1,5 @@
+import dayjs from '@/utils/dayjs';
 import { Button, Descriptions, Modal, Tag } from 'antd';
-import moment from 'moment';
 import { useModel } from 'umi';
 
 const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) => void }) => {
@@ -9,7 +9,7 @@ const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) =
 	return (
 		<Modal
 			title='Chi tiết SV vào ra thư viện'
-			visible={visible}
+			open={visible}
 			width={800}
 			footer={null}
 			onCancel={() => setVisible(false)}
@@ -18,7 +18,7 @@ const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) =
 				<Descriptions.Item label='Mã SV'>{record?.maSv ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Họ tên'>{record?.hoTen ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Ngày sinh'>
-					{record?.ngaySinh ? moment(record?.ngaySinh).format('DD/MM/YYYY') : '--'}
+					{record?.ngaySinh ? dayjs(record?.ngaySinh).format('DD/MM/YYYY') : '--'}
 				</Descriptions.Item>
 				<Descriptions.Item label='Số điện thoại'>{record?.soDienThoai ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Khóa sinh viên'>{record?.tenKhoaSinhVien ?? '--'}</Descriptions.Item>
@@ -27,7 +27,7 @@ const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) =
 				<Descriptions.Item label='Thời gian vào'>
 					{record?.thoiGianCheckIn ? (
 						<>
-							Buổi {record?.buoi ?? '--'}, {moment(record?.thoiGianCheckIn).format('HH:mm DD/MM/YYYY')}
+							Buổi {record?.buoi ?? '--'}, {dayjs(record?.thoiGianCheckIn).format('HH:mm DD/MM/YYYY')}
 						</>
 					) : (
 						<Tag color='red'>Chưa vào</Tag>
@@ -35,7 +35,7 @@ const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) =
 				</Descriptions.Item>
 				<Descriptions.Item label='Thời gian ra'>
 					{record?.thoiGianCheckOut ? (
-						moment(record?.thoiGianCheckOut).format('HH:mm DD/MM/YYYY')
+						dayjs(record?.thoiGianCheckOut).format('HH:mm DD/MM/YYYY')
 					) : (
 						<Tag color='red'>Chưa ra</Tag>
 					)}

@@ -10,9 +10,9 @@ import {
 	mapNameTrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
+import dayjs from '@/utils/dayjs';
 import { CheckOutlined } from '@ant-design/icons';
 import { Button, Modal, Segmented, Tag } from 'antd';
-import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import GhiTraAnPham from '../components/GhiTraSach';
@@ -50,22 +50,22 @@ const LichSuThueMuonPage = (props: {
 						{
 							active: true,
 							field: 'expired',
-							values: [moment().startOf('d').toISOString(), moment().add(7, 'day').endOf('d').toISOString()],
+							values: [dayjs().startOf('d').toISOString(), dayjs().add(7, 'day').endOf('d').toISOString()],
 							operator: EOperatorType.BETWEEN,
 						},
-				  ]
+					]
 				: activeKey === '3'
-				? [
-						{
-							active: true,
-							field: 'expired',
-							values: [moment().startOf('d').toISOString()],
-							operator: EOperatorType.LESS_THAN,
-						},
-				  ]
-				: activeKey === '4'
-				? [{ active: true, field: 'daLaySach', values: [false], operator: EOperatorType.EQUAL }]
-				: [];
+					? [
+							{
+								active: true,
+								field: 'expired',
+								values: [dayjs().startOf('d').toISOString()],
+								operator: EOperatorType.LESS_THAN,
+							},
+						]
+					: activeKey === '4'
+						? [{ active: true, field: 'daLaySach', values: [false], operator: EOperatorType.EQUAL }]
+						: [];
 
 		if (ssoId) {
 			getModel(undefined, filter, undefined, undefined, undefined, `nguoi-muon/${ssoId}/page`);
@@ -139,7 +139,7 @@ const LichSuThueMuonPage = (props: {
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -184,7 +184,7 @@ const LichSuThueMuonPage = (props: {
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
 			width: 150,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -300,11 +300,11 @@ const LichSuThueMuonPage = (props: {
 	return (
 		<Modal
 			title={title}
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible && setVisible(false)}
 			width={width}
 			footer={null}
-			destroyOnClose
+			destroyOnHidden
 		>
 			{main()}
 

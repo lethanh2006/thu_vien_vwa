@@ -4,10 +4,10 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
+import dayjs from '@/utils/dayjs';
 import { inputFormat } from '@/utils/utils';
 import { CheckOutlined } from '@ant-design/icons';
 import { Button, Card, Empty, message, Modal } from 'antd';
-import moment from 'moment';
 import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import SplitPane from 'react-split-pane';
@@ -34,8 +34,8 @@ const ModalTimKiem = (props: {
 
 	const getDataExternal = () => {
 		getModel(undefined, undefined, undefined, undefined, undefined, 'search/kha-dung', {
-			thoiGianBatDau: moment().toISOString(),
-			thoiGianKetThuc: moment()
+			thoiGianBatDau: dayjs().toISOString(),
+			thoiGianKetThuc: dayjs()
 				.add(settingMuonTra?.thoiHanMuonTraSach ?? 150, 'd')
 				.toISOString(),
 		})
@@ -46,8 +46,8 @@ const ModalTimKiem = (props: {
 	const getData = () => {
 		if (record?._id)
 			getModalDKCB(undefined, undefined, undefined, undefined, undefined, `${record?._id}/kha-dung`, {
-				thoiGianBatDau: moment().toISOString(),
-				thoiGianKetThuc: moment()
+				thoiGianBatDau: dayjs().toISOString(),
+				thoiGianKetThuc: dayjs()
 					.add(settingMuonTra?.thoiHanMuonTraSach ?? 150, 'd')
 					.toISOString(),
 			});
@@ -100,7 +100,7 @@ const ModalTimKiem = (props: {
 			dataIndex: 'thoiGianXepGia',
 			align: 'center',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Đơn giá',
@@ -127,11 +127,11 @@ const ModalTimKiem = (props: {
 									...prev,
 									{
 										...rec,
-										thoiGianMuon: moment(),
-										expired: moment().add(
+										thoiGianMuon: dayjs(),
+										expired: dayjs().add(
 											vaiTro === EVaiTroMuonTra.SINHVIEN
-												? settingMuonTra?.thoiHanMuonTraSach ?? 150
-												: settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7,
+												? (settingMuonTra?.thoiHanMuonTraSach ?? 150)
+												: (settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7),
 											'd',
 										),
 										ghiChu: danhSach?.length >= slConMuonDuoc ? 'Mượn vượt quá hạn ngạch cho phép' : '',
@@ -152,20 +152,15 @@ const ModalTimKiem = (props: {
 	return (
 		<Modal
 			title='Thông tin ấn phẩm tìm kiếm'
-			visible={visibleForm}
+			open={visibleForm}
 			onCancel={() => setVisibleForm(false)}
 			width={1000}
 			footer={null}
-			destroyOnClose
+			destroyOnHidden
 		>
 			<SplitPane split={isMobile ? 'horizontal' : 'vertical'} onChange={handlePaneSizeChange}>
 				<Pane initialSize={paneSize} minSize='30%'>
-					<Card
-						title='Danh sách ấn phẩm'
-						bordered={false}
-						bodyStyle={{ padding: '8px 0 0' }}
-						headStyle={{ padding: 0 }}
-					>
+					<Card title='Danh sách ấn phẩm' variant='borderless' style={{ padding: '8px 0 0' }}>
 						<TableBase
 							getData={getDataExternal}
 							columns={columns}
@@ -180,12 +175,7 @@ const ModalTimKiem = (props: {
 
 				<Pane minSize='30%'>
 					{record?._id ? (
-						<Card
-							title='Danh sách đăng ký cá biệt'
-							bordered={false}
-							bodyStyle={{ padding: '8px 0 0' }}
-							headStyle={{ padding: 0 }}
-						>
+						<Card title='Danh sách đăng ký cá biệt' variant='borderless' style={{ padding: '8px 0 0' }}>
 							<TableBase
 								getData={getData}
 								columns={columnsĐKCB}

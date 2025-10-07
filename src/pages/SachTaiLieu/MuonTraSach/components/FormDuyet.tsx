@@ -3,10 +3,10 @@ import MyDatePicker from '@/components/MyDatePicker';
 import TableBase from '@/components/Table';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import dayjs from '@/utils/dayjs';
 import rules from '@/utils/rules';
 import { inputFormat } from '@/utils/utils';
 import { Col, Form, type FormInstance, Input, Row } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
@@ -18,16 +18,16 @@ const FormDuyet = (props: { form: FormInstance }) => {
 
 	useEffect(() => {
 		form.setFieldsValue({
-			thoiGianMuon: moment(recMuonTra?.thoiGianMuonDuKien).toISOString(),
-			expired: moment(recMuonTra?.thoiGianTraDuKien).toISOString(),
+			thoiGianMuon: dayjs(recMuonTra?.thoiGianMuonDuKien).toISOString(),
+			expired: dayjs(recMuonTra?.thoiGianTraDuKien).toISOString(),
 		});
 	}, [, recMuonTra?._id, settingMuonTra?._id]);
 
 	const getData = () => {
 		if (recMuonTra?.anPhamId)
 			getModel(undefined, undefined, undefined, undefined, undefined, `${recMuonTra?.anPhamId}/kha-dung`, {
-				thoiGianBatDau: moment(recMuonTra?.thoiGianDangKy).toISOString(),
-				thoiGianKetThuc: moment(expired).toISOString(),
+				thoiGianBatDau: dayjs(recMuonTra?.thoiGianDangKy).toISOString(),
+				thoiGianKetThuc: dayjs(expired).toISOString(),
 			});
 	};
 
@@ -53,7 +53,7 @@ const FormDuyet = (props: { form: FormInstance }) => {
 			dataIndex: 'thoiGianXepGia',
 			align: 'center',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Đơn giá',

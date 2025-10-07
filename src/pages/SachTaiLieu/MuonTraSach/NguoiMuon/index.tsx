@@ -3,9 +3,9 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import type { SinhVien } from '@/services/SinhVien/typings';
 import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
+import dayjs from '@/utils/dayjs';
 import { CheckOutlined } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
-import moment from 'moment';
 import { useIntl, useModel } from 'umi';
 
 const ModalNguoiMuon = (props: {
@@ -46,7 +46,7 @@ const ModalNguoiMuon = (props: {
 			align: 'center',
 			filterType: 'date',
 			sortable: true,
-			render: (val) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 			hide: activeKey !== 'sinh-vien',
 		},
 		{
@@ -131,7 +131,7 @@ const ModalNguoiMuon = (props: {
 	];
 
 	return (
-		<Modal title='Tìm kiếm' visible={visible} onCancel={() => setVisible(false)} footer={null} width={900}>
+		<Modal title='Tìm kiếm' open={visible} onCancel={() => setVisible(false)} footer={null} width={900}>
 			<TableBase
 				getData={getData}
 				columns={columns}

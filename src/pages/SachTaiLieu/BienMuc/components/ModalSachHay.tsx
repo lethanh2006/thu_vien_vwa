@@ -35,7 +35,7 @@ const ModalSachHay = (props: { visible: boolean; setVisible: (val: boolean) => v
 	return (
 		<Modal
 			title='Chỉnh sửa nội dung sách hay'
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={800}

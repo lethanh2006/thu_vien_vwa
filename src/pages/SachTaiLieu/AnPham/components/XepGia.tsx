@@ -81,11 +81,11 @@ const ModalXepGia = () => {
 	return (
 		<Modal
 			title='Xếp giá'
-			visible={visibleForm}
+			open={visibleForm}
 			onCancel={() => setVisibleForm(false)}
 			footer={null}
 			width={1000}
-			destroyOnClose
+			destroyOnHidden
 		>
 			<Spin spinning={loadingThongKe}>
 				<Row gutter={[12, 12]} style={{ marginBottom: 12 }}>

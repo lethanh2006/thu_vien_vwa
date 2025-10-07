@@ -1,6 +1,6 @@
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
+import dayjs from '@/utils/dayjs';
 import { Card, Col, Row, Segmented } from 'antd';
-import moment from 'moment';
 import { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import SplitPane from 'react-split-pane';
@@ -15,8 +15,8 @@ const ThongKeThuVien = () => {
 	const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 	const [paneSize, setPaneSize] = useState('65%');
 	const [dateRange, setDateRange] = useState<any>([
-		moment().startOf('M').toISOString(),
-		moment().endOf('M').toISOString(),
+		dayjs().startOf('M').toISOString(),
+		dayjs().endOf('M').toISOString(),
 	]);
 
 	const handlePaneSizeChange = (size: any) => {
@@ -32,21 +32,16 @@ const ThongKeThuVien = () => {
 						value={dateRange}
 						onChange={(val: any) => setDateRange(val)}
 						ranges={{
-							'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
-							'Tuần này': [moment().startOf('week'), moment().endOf('week')],
-							'Tháng này': [moment().startOf('M'), moment().endOf('M')],
+							'Hôm nay': [dayjs().startOf('date'), dayjs().endOf('date')],
+							'Tuần này': [dayjs().startOf('week'), dayjs().endOf('week')],
+							'Tháng này': [dayjs().startOf('M'), dayjs().endOf('M')],
 						}}
 						allowClear
 					/>
 
 					<SplitPane split={isMobile ? 'horizontal' : 'vertical'} onChange={handlePaneSizeChange}>
 						<Pane initialSize={paneSize} minSize='40%'>
-							<Card
-								title='Số lượng vào ra thư viện'
-								bordered={false}
-								headStyle={{ padding: 0 }}
-								bodyStyle={{ padding: '12px 0 0' }}
-							>
+							<Card title='Số lượng vào ra thư viện' variant='borderless' style={{ padding: '12px 0 0' }}>
 								<div style={{ marginBottom: 12 }}>
 									<Segmented
 										value={activeKey}

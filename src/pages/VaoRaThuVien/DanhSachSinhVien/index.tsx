@@ -6,10 +6,10 @@ import type { IColumn } from '@/components/Table/typing';
 import ModalCapNhatAnhNhanDien from '@/pages/SinhVien/CapNhatKhuonMat/Modal';
 import { exportDanhSachRaVaoThuVien } from '@/services/QuanLyThuVien';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
+import dayjs from '@/utils/dayjs';
 import { ExportOutlined, EyeOutlined, QrcodeOutlined, SettingOutlined, SmileOutlined } from '@ant-design/icons';
 import { Card, Space, Tag } from 'antd';
 import fileDownload from 'js-file-download';
-import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import CauHinhVaoRaThuVien from './CauHinh';
@@ -24,8 +24,8 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 	const [loadingExport, setLoadingExport] = useState<boolean>(false);
 	const [visibleFaceReg, setVisibleFaceReg] = useState<boolean>(false);
 	const [dateRange, setDateRange] = useState<string[]>([
-		moment().startOf('M').toISOString(),
-		moment().endOf('M').toISOString(),
+		dayjs().startOf('M').toISOString(),
+		dayjs().endOf('M').toISOString(),
 	]);
 
 	const filters = [
@@ -36,7 +36,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 		},
 		dateRange?.length && {
 			field: 'thoiGianCheckIn',
-			values: [moment(dateRange[0]).startOf('date').toISOString(), moment(dateRange[1]).endOf('date').toISOString()],
+			values: [dayjs(dateRange[0]).startOf('date').toISOString(), dayjs(dateRange[1]).endOf('date').toISOString()],
 			operator: EOperatorType.BETWEEN,
 		},
 	];
@@ -94,7 +94,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			render: (val, rec) =>
 				val ? (
 					<>
-						Buổi {rec?.buoi ?? '--'}, {moment(val).format('HH:mm DD/MM/YYYY')}
+						Buổi {rec?.buoi ?? '--'}, {dayjs(val).format('HH:mm DD/MM/YYYY')}
 					</>
 				) : (
 					<Tag color='red'>Chưa vào</Tag>
@@ -108,7 +108,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			dataIndex: 'thoiGianCheckOut',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => (val ? moment(val).format('HH:mm DD/MM/YYYY') : <Tag color='red'>Chưa ra</Tag>),
+			render: (val, rec) => (val ? dayjs(val).format('HH:mm DD/MM/YYYY') : <Tag color='red'>Chưa ra</Tag>),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -127,7 +127,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			dataIndex: 'ngaySinh',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			hide: !!maSinhVien,
@@ -197,12 +197,12 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 		>
 			<Space style={{ marginBottom: 12 }}>
 				<MyDateRangePicker
-					value={dateRange?.length ? [moment(dateRange[0]), moment(dateRange[1])] : null}
+					value={dateRange?.length ? [dayjs(dateRange[0]), dayjs(dateRange[1])] : null}
 					onChange={(val: any) => setDateRange(val ?? [])}
 					ranges={{
-						'Hôm nay': [moment().startOf('date'), moment().endOf('date')],
-						'Tuần này': [moment().startOf('week'), moment().endOf('week')],
-						'Tháng này': [moment().startOf('M'), moment().endOf('M')],
+						'Hôm nay': [dayjs().startOf('date'), dayjs().endOf('date')],
+						'Tuần này': [dayjs().startOf('week'), dayjs().endOf('week')],
+						'Tháng này': [dayjs().startOf('M'), dayjs().endOf('M')],
 					}}
 					allowClear
 				/>

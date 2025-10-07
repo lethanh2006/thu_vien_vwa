@@ -3,10 +3,10 @@ import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import type { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import dayjs from '@/utils/dayjs';
 import { inputFormat } from '@/utils/utils';
 import { CheckOutlined } from '@ant-design/icons';
 import { type FormInstance } from 'antd';
-import moment from 'moment';
 import { useModel } from 'umi';
 
 const TimKiemInMaVach = (props: { field: string; form: FormInstance; setVisibleTimKiem: (val: boolean) => void }) => {
@@ -89,7 +89,7 @@ const TimKiemInMaVach = (props: { field: string; form: FormInstance; setVisibleT
 			dataIndex: 'thoiGianXepGia',
 			align: 'center',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
 			title: 'Đơn giá',

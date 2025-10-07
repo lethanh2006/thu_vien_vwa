@@ -31,7 +31,7 @@ const FormMuonTra = () => {
 	return (
 		<Modal
 			title='Thông tin ấn phẩm tìm kiếm'
-			visible={visibleForm}
+			open={visibleForm}
 			onCancel={() => setVisibleForm(false)}
 			width={600}
 			footer={null}

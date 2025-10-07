@@ -1,6 +1,6 @@
 import { colorTrangThaiNopThuVien, type ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
+import dayjs from '@/utils/dayjs';
 import { Card, Descriptions, Tag } from 'antd';
-import moment from 'moment';
 import { useModel } from 'umi';
 
 const ChiTietDanhSach = (props: any) => {
@@ -17,7 +17,7 @@ const ChiTietDanhSach = (props: any) => {
 				<Descriptions.Item label='Mã học viên'>{record?.maSinhVien ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Họ tên tác giả'>{record?.hoTenTacGia ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Ngày sinh'>
-					{record?.sinhVien?.ngaySinh ? moment(record?.sinhVien?.ngaySinh).format('DD/MM/YYYY') : 'Không có'}
+					{record?.sinhVien?.ngaySinh ? dayjs(record?.sinhVien?.ngaySinh).format('DD/MM/YYYY') : 'Không có'}
 				</Descriptions.Item>
 				<Descriptions.Item label='Số điện thoại'>{record?.sinhVien?.soDienThoai ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Nơi công tác'>{record?.noiCongTac ?? '--'}</Descriptions.Item>

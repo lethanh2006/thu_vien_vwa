@@ -1,7 +1,7 @@
 import { colorTrangThaiHocSv, type ETrangThaiHocSv } from '@/services/SinhVien/constant';
 import { type ETrangThaiNhanSu, MapColorETrangThaiNhanSu } from '@/services/ToChucNhanSu/constant';
-import { Descriptions, Tag, Avatar, Row, Col } from 'antd';
-import moment from 'moment';
+import dayjs from '@/utils/dayjs';
+import { Avatar, Col, Descriptions, Row, Tag } from 'antd';
 import { useModel } from 'umi';
 
 const InforNguoiMuon = (props: { isSinhVien: boolean }) => {
@@ -36,7 +36,7 @@ const InforNguoiMuon = (props: { isSinhVien: boolean }) => {
 								<b>{recSinhVien?.ma ?? '--'}</b>
 							</Descriptions.Item>
 							<Descriptions.Item label='Ngày sinh'>
-								<b>{recSinhVien?.ngaySinh ? moment(recSinhVien?.ngaySinh).format('DD/MM/YYYY') : '--'}</b>
+								<b>{recSinhVien?.ngaySinh ? dayjs(recSinhVien?.ngaySinh).format('DD/MM/YYYY') : '--'}</b>
 							</Descriptions.Item>
 							<Descriptions.Item label='Lớp'>
 								<b>{recSinhVien?.tenLopHanhChinhVirtual ?? '--'}</b>
@@ -64,7 +64,7 @@ const InforNguoiMuon = (props: { isSinhVien: boolean }) => {
 								<b>{recCanBo?.maCanBo ?? '--'}</b>
 							</Descriptions.Item>
 							<Descriptions.Item label='Ngày sinh'>
-								<b>{recCanBo?.ngaySinh ? moment(recCanBo?.ngaySinh).format('DD/MM/YYYY') : '--'}</b>
+								<b>{recCanBo?.ngaySinh ? dayjs(recCanBo?.ngaySinh).format('DD/MM/YYYY') : '--'}</b>
 							</Descriptions.Item>
 							<Descriptions.Item label='Đơn vị'>
 								<b>{recCanBo?.donViChinh?.ten ?? '--'}</b>

@@ -4,9 +4,9 @@ import {
 	EVaiTroMuonTra,
 	mapNameTrangThaiMuonSach,
 } from '@/services/SachTaiLieu/constant';
+import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Descriptions, Form, Row, Tag } from 'antd';
-import moment from 'moment';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -81,10 +81,10 @@ const ChiTietMuonTraSach = (props: any) => {
 						<>
 							<Descriptions.Item label='Đăng ký cá biệt'>{record?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
 							<Descriptions.Item label='Thời gian mượn'>
-								{record?.thoiGianMuon ? moment(record?.thoiGianMuon).format('DD/MM/YYYY') : '--'}
+								{record?.thoiGianMuon ? dayjs(record?.thoiGianMuon).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
 							<Descriptions.Item label='Hạn trả'>
-								{record?.expired ? moment(record?.expired).format('DD/MM/YYYY') : '--'}
+								{record?.expired ? dayjs(record?.expired).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
 
 							{/* <Descriptions.Item label='Trạng thái'>
@@ -96,11 +96,11 @@ const ChiTietMuonTraSach = (props: any) => {
 							</Descriptions.Item> */}
 
 							<Descriptions.Item label='Thời gian gia hạn'>
-								{record?.thoiGianGiaHan ? moment(record?.thoiGianGiaHan).format('DD/MM/YYYY') : '--'}
+								{record?.thoiGianGiaHan ? dayjs(record?.thoiGianGiaHan).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
 
 							<Descriptions.Item label='Thời gian trả'>
-								{record?.thoiGianTra ? moment(record?.thoiGianTra).format('DD/MM/YYYY') : '--'}
+								{record?.thoiGianTra ? dayjs(record?.thoiGianTra).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
 						</>
 						{/* )} */}

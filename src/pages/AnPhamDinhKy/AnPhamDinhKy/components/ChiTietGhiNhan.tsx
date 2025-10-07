@@ -4,10 +4,10 @@ import { type IColumn } from '@/components/Table/typing';
 import SelectKhoSach from '@/pages/DanhMuc/KhoSach/components/Select';
 import { colorTrangThaiGhiNhanAnPhamDinhKy, ETrangThaiGhiNhanAnPhamDinhKy } from '@/services/AnPhamDinhKy/constant';
 import type { AnPhamDinhKy } from '@/services/AnPhamDinhKy/typing';
+import dayjs from '@/utils/dayjs';
 import { tienVietNam } from '@/utils/utils';
 import { Button, Modal, Select, Space, Tag } from 'antd';
 import _ from 'lodash';
-import moment from 'moment';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -16,8 +16,8 @@ const ModalChiTietGhiNhanAnPham = (props: { visible: boolean; setVisible: (val: 
 	const { visible, setVisible } = props;
 	const { record: recAnPhamDinhKy } = useModel('anphamdinhky.anphamdinhky');
 	const { page, limit, getModel } = useModel('anphamdinhky.ghinhan');
-	const [monthSelect, setMonthSelect] = useState(moment().month());
-	const [yearSelect, setYearSelect] = useState(moment().year());
+	const [monthSelect, setMonthSelect] = useState(dayjs().month());
+	const [yearSelect, setYearSelect] = useState(dayjs().year());
 
 	const getData = () => {
 		if (recAnPhamDinhKy?._id) {
@@ -63,7 +63,7 @@ const ModalChiTietGhiNhanAnPham = (props: { visible: boolean; setVisible: (val: 
 			title: 'Ngày nhận',
 			dataIndex: 'ngayGhiNhan',
 			width: 130,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 		},
@@ -84,7 +84,7 @@ const ModalChiTietGhiNhanAnPham = (props: { visible: boolean; setVisible: (val: 
 	return (
 		<Modal
 			title='Chi tiết ghi nhận ấn phẩm định kỳ'
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={1000}
@@ -116,11 +116,11 @@ const ModalChiTietGhiNhanAnPham = (props: { visible: boolean; setVisible: (val: 
 
 						<MyDatePicker
 							style={{ width: 120 }}
-							value={yearSelect ? moment(yearSelect, 'YYYY') : null}
+							value={yearSelect ? dayjs(yearSelect, 'YYYY') : null}
 							pickerStyle={'year'}
 							format={'YYYY'}
 							onChange={(val) => {
-								setYearSelect(moment(val).year());
+								setYearSelect(dayjs(val).year());
 							}}
 						/>
 					</Space>,

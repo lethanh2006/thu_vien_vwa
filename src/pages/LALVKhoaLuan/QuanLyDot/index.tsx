@@ -6,9 +6,9 @@ import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 import { ELoaiDotQuanLyThuvien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
+import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Card, Popconfirm, Space } from 'antd';
-import moment from 'moment';
 import { useState } from 'react';
 import { history, useModel } from 'umi';
 import ModalFormQuanLyDot from './components/ModalForm';
@@ -23,7 +23,7 @@ const QuanLyDotPage = () => {
 			{
 				active: true,
 				field: 'thoiGianBatDau',
-				values: [moment(datePicker?.[0]).startOf('date'), moment(datePicker?.[1]).endOf('date')],
+				values: [dayjs(datePicker?.[0]).startOf('date'), dayjs(datePicker?.[1]).endOf('date')],
 				operator: EOperatorType.BETWEEN,
 			},
 		];
@@ -52,7 +52,7 @@ const QuanLyDotPage = () => {
 			render: (val, rec) =>
 				val && (
 					<>
-						{moment(val).format('HH:mm DD/MM/YYYY')} - {moment(rec?.thoiGianKetThuc).format('HH:mm DD/MM/YYYY')}
+						{dayjs(val).format('HH:mm DD/MM/YYYY')} - {dayjs(rec?.thoiGianKetThuc).format('HH:mm DD/MM/YYYY')}
 					</>
 				),
 			filterType: 'date',

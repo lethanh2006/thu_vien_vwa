@@ -8,10 +8,10 @@ import SelectKieuTuLieu from '@/pages/DanhMuc/KieuTuLieu/components/Select';
 import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import SelectThuVien from '@/pages/DanhMuc/ThuVien/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import dayjs from '@/utils/dayjs';
 import { inputFormat } from '@/utils/utils';
 import { CheckOutlined, DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined } from '@ant-design/icons';
 import { Button, Modal, Popconfirm, Popover, Tag } from 'antd';
-import moment from 'moment';
 import { useState } from 'react';
 import { useModel } from 'umi';
 import ChiTietXepGia from '../../XepGia/components/ChiTiet';
@@ -121,7 +121,7 @@ const LichSuXepGia = () => {
 			dataIndex: 'ngayBoSung',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
 			onCell,
@@ -228,7 +228,7 @@ const LichSuXepGia = () => {
 
 			<Modal
 				title='Chỉnh sửa xếp giá'
-				visible={visibleModal}
+				open={visibleModal}
 				onCancel={() => setVisibleModal(false)}
 				width={800}
 				footer={null}

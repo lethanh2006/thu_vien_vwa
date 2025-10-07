@@ -1,14 +1,14 @@
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import TableStaticData from '@/components/Table/TableStaticData';
 import type { IColumn } from '@/components/Table/typing';
+import { type EThuTrongTuan, mapNameThuTrongTuan } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import { EditOutlined, PlusCircleFilled } from '@ant-design/icons';
 import { Modal } from 'antd';
+import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import FormCauHinhVaoRaThuVien from './components/Form';
-import _ from 'lodash';
-import { type EThuTrongTuan, mapNameThuTrongTuan } from '@/services/QuanLyThuVien/constants';
 
 const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolean) => void }) => {
 	const { visible, setVisible } = props;
@@ -102,7 +102,7 @@ const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolea
 	return (
 		<Modal
 			title='Cấu hình vào ra thư viện trong tuần'
-			visible={visible}
+			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={1000}
@@ -132,7 +132,7 @@ const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolea
 
 			<Modal
 				title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} cấu hình`}
-				visible={visibleForm}
+				open={visibleForm}
 				onCancel={() => setVisibleForm(false)}
 				footer={null}
 				width={800}

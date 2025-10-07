@@ -2,11 +2,11 @@ import SelectBoSuuTap from '@/pages/DanhMuc/DonViSo/components/SelectBoSuuTap';
 import SelectDonViSo from '@/pages/DanhMuc/DonViSo/components/SelectDonViSo';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import rules from '@/utils/rules';
+import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Modal, Row } from 'antd';
+import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import FormItemTaiLieuSo from '../DanhSachTaiLieu/FormItem';
-import { useEffect } from 'react';
-import { resetFieldsForm } from '@/utils/utils';
 
 const ModalAnPhamSo = (props: { visible: boolean; setVisible: (val: boolean) => void; getData: () => void }) => {
 	const intl = useIntl();
@@ -30,7 +30,7 @@ const ModalAnPhamSo = (props: { visible: boolean; setVisible: (val: boolean) => 
 	};
 
 	return (
-		<Modal title='Thêm mới ấn phẩm số' visible={visible} onCancel={() => setVisible(false)} footer={null} width={800}>
+		<Modal title='Thêm mới ấn phẩm số' open={visible} onCancel={() => setVisible(false)} footer={null} width={800}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col xs={24} md={12}>

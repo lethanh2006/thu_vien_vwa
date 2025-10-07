@@ -33,7 +33,7 @@ const Z3950Page = (props: { getData: () => void }) => {
 
 	const fullName = initialState?.currentUser?.family_name
 		? `${initialState?.currentUser.family_name} ${initialState?.currentUser?.given_name ?? ''}`
-		: initialState?.currentUser?.name ?? (initialState?.currentUser?.preferred_username || '');
+		: (initialState?.currentUser?.name ?? (initialState?.currentUser?.preferred_username || ''));
 
 	useEffect(() => {
 		if (!visibleTimKiemZ3950) {
@@ -190,7 +190,7 @@ const Z3950Page = (props: { getData: () => void }) => {
 	return (
 		<Modal
 			title='Tải dữ liệu qua giao thức Z39.50'
-			visible={visibleTimKiemZ3950}
+			open={visibleTimKiemZ3950}
 			onCancel={() => setVisibleTimKiemZ3950(false)}
 			footer={null}
 			width={900}
