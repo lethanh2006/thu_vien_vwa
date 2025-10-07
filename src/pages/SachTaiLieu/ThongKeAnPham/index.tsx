@@ -144,9 +144,9 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 				) : kieuHienThi === EKieuHienThi.THANG ? (
 					<MyDatePicker
 						style={{ width: 90 }}
-						value={yearSelect ? dayjs(yearSelect, 'YYYY') : undefined}
-						pickerStyle={'year'}
-						format={'YYYY'}
+						value={yearSelect ? dayjs().year(yearSelect).startOf('year') : undefined}
+						pickerStyle='year'
+						format='YYYY'
 						onChange={(val) => {
 							if (val) setYearSelect(dayjs(val).year());
 						}}

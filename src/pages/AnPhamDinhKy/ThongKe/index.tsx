@@ -101,11 +101,11 @@ const ThongKeAnPhamDinhKy = () => {
 				) : kieuHienThi === EKieuHienThi.THANG ? (
 					<MyDatePicker
 						style={{ width: 90 }}
-						value={dayjs(yearSelect, 'YYYY')}
-						pickerStyle={'year'}
-						format={'YYYY'}
+						value={yearSelect ? dayjs().year(yearSelect).startOf('year') : undefined}
+						pickerStyle='year'
+						format='YYYY'
 						onChange={(val) => {
-							setYearSelect(dayjs(val).year());
+							if (val) setYearSelect(dayjs(val).year());
 						}}
 					/>
 				) : null}
