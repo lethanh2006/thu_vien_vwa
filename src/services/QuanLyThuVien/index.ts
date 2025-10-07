@@ -1,5 +1,5 @@
 import { ipDaoTao, ipSlink } from '@/utils/ip';
-import axios from 'axios';
+import axios from '@/utils/axios';
 
 export async function postRaVaoThuVien(payload: any) {
 	return axios.post(`${ipSlink}/ql-thu-vien/chuyen-vien`, payload);

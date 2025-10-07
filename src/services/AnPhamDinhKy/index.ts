@@ -1,5 +1,5 @@
 import { ip3 } from '@/utils/ip';
-import axios from 'axios';
+import axios from '@/utils/axios';
 
 export async function bienMucAnPhamDinhKy(payLoad: any) {
 	return axios.post(`${ip3}/an-pham-dinh-ky/bien-muc`, payLoad);

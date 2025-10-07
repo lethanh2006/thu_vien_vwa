@@ -358,7 +358,7 @@ const QuanLyThuVienPage = () => {
 				<Space>
 					<span>Số lưu chiểu hiện tại:</span>
 					<InputNumber
-						style={{ width: 110 }}
+						style={{ width: 150 }}
 						addonBefore={
 							loai === ELoaiDotQuanLyThuvien.LUAN_AN
 								? 'LA-'

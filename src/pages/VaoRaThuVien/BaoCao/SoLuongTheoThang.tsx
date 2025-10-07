@@ -13,7 +13,7 @@ import { Link, useModel } from 'umi';
 const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 	const { isDashBoard } = props;
 	const { loadingThang, getSoLuotCheckInThangModel, dataThongKeCheckInThang } = useModel('quanlythuvien.vaorathuvien');
-	const [currentMonth, setCurrentMonth] = useState<dayjs.Moment>(dayjs());
+	const [currentMonth, setCurrentMonth] = useState<dayjs.Dayjs>(dayjs());
 
 	useEffect(() => {
 		getSoLuotCheckInThangModel(dayjs(currentMonth).get('month'), dayjs(currentMonth).get('year'));

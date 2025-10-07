@@ -1,5 +1,5 @@
 import { ipZ39050 } from '@/utils/ip';
-import axios from 'axios';
+import axios from '@/utils/axios';
 
 export async function timKiemAnPhamZ3950(params: {
 	query: string;
