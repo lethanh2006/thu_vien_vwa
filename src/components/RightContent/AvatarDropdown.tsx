@@ -1,11 +1,10 @@
 import { landingUrl } from '@/services/base/constant';
 import { DatabaseOutlined, FileWordOutlined, GlobalOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Menu, Spin } from 'antd';
-import { type ItemType } from 'antd/lib/menu/hooks/useItems';
+import { Avatar, Dropdown, Spin } from 'antd';
+import { ItemType } from 'antd/es/menu/interface';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import { OIDCBounder } from '../OIDCBounder';
-import HeaderDropdown from './HeaderDropdown';
 import styles from './index.less';
 
 const AvatarDropdown = () => {
@@ -44,7 +43,7 @@ const AvatarDropdown = () => {
 
 	const fullName = initialState.currentUser?.family_name
 		? `${initialState.currentUser.family_name} ${initialState.currentUser?.given_name ?? ''}`
-		: initialState.currentUser?.name ?? (initialState.currentUser?.preferred_username || '');
+		: (initialState.currentUser?.name ?? (initialState.currentUser?.preferred_username || ''));
 	const lastNameChar = fullName.split(' ')?.at(-1)?.[0]?.toUpperCase();
 
 	const partitionItems: ItemType[] =
@@ -115,13 +114,13 @@ const AvatarDropdown = () => {
 
 	return (
 		<>
-			<HeaderDropdown overlay={<Menu className={styles.menu} items={items} />}>
+			<Dropdown menu={{ items }}>
 				<span className={`${styles.action} ${styles.account}`}>
 					<div className={styles.avatarWrapper}>
 						<Avatar
 							className={styles.avatar}
 							src={initialState.currentUser?.picture ? <img src={initialState.currentUser?.picture} /> : undefined}
-							icon={!initialState.currentUser?.picture ? lastNameChar ?? <UserOutlined /> : undefined}
+							icon={!initialState.currentUser?.picture ? (lastNameChar ?? <UserOutlined />) : undefined}
 							alt='avatar'
 						/>
 						{danhSach?.length >= 2 && (
@@ -134,7 +133,7 @@ const AvatarDropdown = () => {
 					</div>
 					<span className={`${styles.name}`}>{fullName}</span>
 				</span>
-			</HeaderDropdown>
+			</Dropdown>
 		</>
 	);
 };
