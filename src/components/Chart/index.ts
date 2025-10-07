@@ -18,6 +18,7 @@ export type DataChartType = {
 	colors?: string[];
 	formatY?: (val: number) => string;
 	showTotal?: boolean;
+	onColumnClick?: (value: string) => void;
 
 	otherOptions?: ApexOptions;
 };

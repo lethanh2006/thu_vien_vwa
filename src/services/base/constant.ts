@@ -13,6 +13,7 @@ export enum EModuleKey {
 	KT = 'khao-thi',
 	CSVC = 'co-so-vat-chat',
 	VBCC = 'van-bang-chung-chi',
+	THU_VIEN = 'thu-vien',
 }
 
 export const AppModules: Record<EModuleKey, Login.TModule> = {
@@ -87,6 +88,12 @@ export const AppModules: Record<EModuleKey, Login.TModule> = {
 		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}vbcc`,
 		url: APP_CONFIG_URL_VBCC,
 		icon: EModuleKey.VBCC + '.svg',
+	},
+	[EModuleKey.THU_VIEN]: {
+		title: APP_CONFIG_TITLE_THU_VIEN,
+		clientId: `${APP_CONFIG_PREFIX_OF_KEYCLOAK_CLIENT_ID}thu-vien`,
+		url: APP_CONFIG_URL_THU_VIEN,
+		icon: EModuleKey.THU_VIEN + '.svg',
 	},
 };
 

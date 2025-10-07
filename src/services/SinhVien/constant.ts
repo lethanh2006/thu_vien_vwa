@@ -39,3 +39,23 @@ export enum ETrangThaiThanhVienGiaDinh {
 	CO_THONG_TIN = 'Có thông tin',
 	KHONG_CO_THONG_TIN = 'Không có thông tin',
 }
+
+export enum ETrangThaiHocSv {
+	CHUA_PHAN_LOP = 'Chưa phân lớp',
+	DANG_HOC = 'Đang học',
+	BAO_LUU = 'Bảo lưu',
+	DA_TOT_NGHIEP = 'Đã tốt nghiệp',
+	THOI_HOC = 'Thôi học',
+	BUOC_THOI_HOC = 'Buộc thôi học',
+	CHUYEN_TRUONG = 'Chuyển trường',
+}
+
+export const colorTrangThaiHocSv: Record<ETrangThaiHocSv, string> = {
+	[ETrangThaiHocSv.CHUA_PHAN_LOP]: 'geekblue',
+	[ETrangThaiHocSv.DANG_HOC]: 'blue',
+	[ETrangThaiHocSv.BAO_LUU]: 'orange',
+	[ETrangThaiHocSv.DA_TOT_NGHIEP]: 'green',
+	[ETrangThaiHocSv.THOI_HOC]: 'red',
+	[ETrangThaiHocSv.BUOC_THOI_HOC]: 'purple',
+	[ETrangThaiHocSv.CHUYEN_TRUONG]: 'volcano',
+};

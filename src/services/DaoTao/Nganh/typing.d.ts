@@ -18,5 +18,8 @@ declare module NganhDaoTao {
 		parent?: IRecordCoSo;
 		createdAt?: string;
 		updatedAt?: string;
+
+		maTrinhDo?: string;
+		maNganhGoc?: any;
 	}
 }

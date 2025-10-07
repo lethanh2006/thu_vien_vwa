@@ -1,0 +1,18 @@
+export default {
+	'danhmuc.thuvien.title': 'Thư viện',
+	'danhmuc.dangtailieu.title': 'Dạng tài liệu',
+	'danhmuc.kieubanghi.title': 'Kiểu bản ghi',
+	'danhmuc.capthumuc.title': 'Cấp thư mục',
+	'danhmuc.vatmangtin.title': 'Vật mang tin',
+	'danhmuc.maubienmuc.title': 'Mẫu biên mục',
+	'danhmuc.khosach.title': 'Kho sách',
+	'danhmuc.phongdoc.title': 'Phòng đọc',
+	'danhmuc.giasach.title': 'Giá sách',
+	'danhmuc.nguonbosung.title': 'Nguồn bổ sung',
+	'danhmuc.kieutulieu.title': 'Kiểu tư liệu',
+	'danhmuc.truongbienmuc.title': 'Trường biên mục',
+	'danhmuc.truongcon.title': 'Trường con',
+	'danhmuc.maudinhdang.title': 'Mẫu định dạng mã vạch, nhãn gáy / nhãn bìa',
+	'danhmuc.danhmucngonngu.title': 'Ngôn ngữ',
+	'danhmuc.kieuxuatban.title': 'Kiểu xuất bản',
+};

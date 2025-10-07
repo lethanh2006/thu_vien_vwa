@@ -14,9 +14,7 @@ declare module QuanLyThuVien {
 		_id: string;
 		idDot: string;
 		tenDeTai: string;
-		urlTaiLieu: string;
-		urlTomTat: string;
-		urlTaiLieuMinhChung: string;
+
 		thoiGianNop: Date;
 		trangThai: ETrangThaiNopThuVien;
 		soLuuChieu: string;
@@ -31,6 +29,13 @@ declare module QuanLyThuVien {
 		nganh: NganhDaoTao.IRecordCoSo;
 		noiCongTac: string;
 		nguoiHuongDan: string;
+
+		urlTaiLieu: any;
+		urlTomTat: any;
+		urlTaiLieuMinhChung: any;
+		idTaiLieu: string;
+		idTomTat: string;
+		idTaiLieuMinhChung: string;
 	}
 
 	export interface settingThuVien {
@@ -60,6 +65,7 @@ declare module QuanLyThuVien {
 		maNganh: string;
 		tenNganh: string;
 		ngaySinh: Date;
+		tenLopHanhChinh: string;
 	}
 
 	//Thống kê

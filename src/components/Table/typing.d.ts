@@ -1,4 +1,4 @@
-import type { ColumnType } from 'antd/lib/table';
+import type { ColumnType, TableProps } from 'antd/lib/table';
 import { type EOperatorType } from './constant';
 
 export interface IColumn<T> extends Omit<ColumnType<T>, 'dataIndex' | 'width' | 'children'> {
@@ -140,6 +140,8 @@ export type TableBaseProps = {
 
 	hideChildrenRows?: boolean;
 
+	extra?: any;
+
 	/** Hàm reload dữ liệu
 	 * @default getData
 	 */
@@ -149,7 +151,7 @@ export type TableBaseProps = {
 export type TFilter<T> = {
 	field: keyof T | [keyof T, string];
 	operator?: EOperatorType;
-	values: (string | number)[];
+	values: (string | number | boolean)[];
 	active?: boolean;
 };
 

@@ -3,16 +3,19 @@ import { AppModules, EModuleKey } from '@/services/base/constant';
 const ipRoot = APP_CONFIG_IP_ROOT; // ip dev
 
 // Ip Chính => Mặc định dùng trong các useInitModel
-const ip3 = ipRoot + 'qldt'; // ip dev
+const ip3 = ipRoot + 'thu-vien'; // ip dev
 
 // Ip khác
 const ipNotif = ipRoot + 'notification'; // ip dev
 const ipSlink = ipRoot + 'slink'; // ip dev
+const ipDaoTao = ipRoot + 'qldt'; // ip dev
+const ipNhanSu = ipRoot + 'tcns'; // ip dev
 const ipCore = ipRoot + 'core'; // ip dev
+const ipZ39050 = 'https://ais.aisenote.com/ript/thu-vien-qt'; // ip dev
 
-const currentRole = EModuleKey.TCNS;
+const currentRole = EModuleKey.THU_VIEN;
 const replaceRole: EModuleKey | undefined = undefined; //EModuleKey.CONG_CAN_BO; // Thay đổi theo từng phân hệ
-const oneSignalRole = EModuleKey.CONG_CAN_BO;
+const oneSignalRole = EModuleKey.THU_VIEN;
 
 // DO NOT TOUCH
 const keycloakClientID = AppModules[currentRole].clientId;
@@ -25,12 +28,15 @@ const sentryDSN = APP_CONFIG_SENTRY_DSN;
 const oneSignalClient = APP_CONFIG_ONE_SIGNAL_ID;
 
 export {
-	currentRole,
 	replaceRole,
 	ip3,
 	ipCore,
 	ipNotif,
 	ipSlink,
+	ipDaoTao,
+	ipNhanSu,
+	ipZ39050,
+	currentRole,
 	keycloakAuthEndpoint,
 	keycloakAuthority,
 	keycloakClientID,
