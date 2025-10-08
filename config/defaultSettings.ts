@@ -7,10 +7,10 @@ const defaultSettings: LayoutSettings & {
 	navTheme: 'light',
 	layout: 'mix',
 	contentWidth: 'Fluid',
-	fixedHeader: true,
+	fixedHeader: false,
 	fixSiderbar: true,
 	colorWeak: true,
-	logo: '/logo-text.png',
+	logo: '/logo.png',
 	iconfontUrl: '',
 	siderWidth: 220,
 };
