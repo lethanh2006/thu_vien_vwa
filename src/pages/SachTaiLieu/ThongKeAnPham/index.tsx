@@ -276,7 +276,7 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 			</Spin>
 
 			<ModalExportAnPham
-				title='Xuất dữ liệu thống kê bạn đọc'
+				title={isBanDoc ? 'Xuất dữ liệu thống kê bạn đọc' : 'Xuất dữ liệu thống kê ấn phẩm'}
 				visible={modalExport}
 				setVisible={setModalExport}
 				trangThai={trangThai}
