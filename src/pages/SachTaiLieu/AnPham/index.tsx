@@ -15,7 +15,6 @@ import {
 	DollarOutlined,
 	EditOutlined,
 	ExportOutlined,
-	EyeOutlined,
 	FilePdfOutlined,
 	MenuOutlined,
 	StarOutlined,
@@ -94,7 +93,12 @@ const CardAnPham = () => {
 			width: 80,
 			align: 'center',
 			render: (url: string, rec) => (
-				<Avatar src={url} alt={rec?.nhanDe} shape='square' style={{ width: 40, height: 40, objectFit: 'cover' }} />
+				<Avatar
+					src={url ?? '/logo.png'}
+					alt={rec?.nhanDe}
+					shape='square'
+					style={{ width: 40, height: 40, objectFit: 'cover' }}
+				/>
 			),
 			onCell,
 		},

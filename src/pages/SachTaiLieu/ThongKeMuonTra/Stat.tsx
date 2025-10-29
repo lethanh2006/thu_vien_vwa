@@ -1,10 +1,11 @@
+import { ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
 import { Card, Col, Row, Spin, Tooltip } from 'antd';
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 
-const StatThongKeMuonTra = (props: { filter?: any }) => {
-	const { filter } = props;
+const StatThongKeMuonTra = (props: { filter?: any; trangThai: ETrangThaiMuonSach }) => {
+	const { filter, trangThai } = props;
 	const { thongKeTongSoMuonTraAnPhamModel, loadingThongKe, dataTheMuonAnPham } =
 		useModel('sachtailieu.muontra.muontra');
 
@@ -26,26 +27,31 @@ const StatThongKeMuonTra = (props: { filter?: any }) => {
 	return (
 		<Spin spinning={loadingThongKe}>
 			<Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
-				<Col span={24} md={6}>
+				{/* <Col span={24} md={6}>
 					{renderCard(dataTheMuonAnPham?.tongSoLuot ?? 0, 'blue', 'Tổng số', 'Thống kê tổng số ghi mượn/ghi trả')}
-				</Col>
-				<Col span={24} md={6}>
+				</Col> */}
+				<Col span={24} md={8}>
 					{renderCard(
 						dataTheMuonAnPham?.theoDkcb ?? 0,
 						'orange',
 						'Theo ĐKCB',
-						'Thống kê tổng số ĐKCB ghi mượn/ghi trả',
+						`Thống kê tổng số ĐKCB ${trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'ghi mượn' : 'ghi trả'}`,
 					)}
 				</Col>
-				<Col span={24} md={6}>
-					{renderCard(dataTheMuonAnPham?.theoBanDoc ?? 0, 'red', 'Theo bạn đọc', 'Thống kê số bạn đọc mượn/trả')}
+				<Col span={24} md={8}>
+					{renderCard(
+						dataTheMuonAnPham?.theoBanDoc ?? 0,
+						'red',
+						'Theo bạn đọc',
+						`Thống kê số bạn đọc ${trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'đang mượn' : 'đã trả'}`,
+					)}
 				</Col>
-				<Col span={24} md={6}>
+				<Col span={24} md={8}>
 					{renderCard(
 						dataTheMuonAnPham?.theoDauAnPham ?? 0,
 						'green',
 						'Theo ấn phẩm',
-						'Thống kê số đầu ấn phẩm ghi mượn/ghi trả',
+						`Thống kê số đầu ấn phẩm ${trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'ghi mượn' : 'ghi trả'}`,
 					)}
 				</Col>
 			</Row>
