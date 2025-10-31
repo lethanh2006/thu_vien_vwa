@@ -67,6 +67,12 @@ const MuonTraSachPage = (props: any) => {
 				values: [dayjs().startOf('d').toISOString(), dayjs().add(7, 'day').endOf('d').toISOString()],
 				operator: EOperatorType.BETWEEN,
 			},
+			{
+				active: true,
+				field: 'trangThai',
+				values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+				operator: EOperatorType.INCLUDE,
+			},
 		];
 	} else if (activeKey === '3') {
 		filter = [
@@ -75,6 +81,12 @@ const MuonTraSachPage = (props: any) => {
 				field: 'expired',
 				values: [dayjs().startOf('d').toISOString()],
 				operator: EOperatorType.LESS_THAN,
+			},
+			{
+				active: true,
+				field: 'trangThai',
+				values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+				operator: EOperatorType.INCLUDE,
 			},
 		];
 	} else if (activeKey === '4') {
