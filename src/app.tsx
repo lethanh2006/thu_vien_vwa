@@ -29,10 +29,19 @@ export function rootContainer(container: React.ReactNode) {
 }
 
 export async function getInitialState(): Promise<IInitialState> {
-	return {
+	const initialState: IInitialState = {
 		settings: defaultSettings,
 		permissionLoading: true,
 	};
+	try {
+		const raw = sessionStorage.getItem('initialState');
+		if (raw) {
+			const { authorizedPermissions } = JSON.parse(raw) as Partial<IInitialState>;
+			Object.assign(initialState, { authorizedPermissions });
+		}
+	} catch (e) {}
+
+	return initialState;
 }
 
 // ProLayout  https://procomponents.ant.design/components/layout

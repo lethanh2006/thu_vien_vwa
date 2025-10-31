@@ -1,5 +1,5 @@
 import { Namespaces } from '@/pages/TienIch/AuditLog/Modal';
-import type { ColumnType } from 'antd/lib/table';
+import type { ColumnType, TableProps } from 'antd/lib/table';
 import React, { JSX } from 'react';
 import { type EOperatorType } from './constant';
 
@@ -154,15 +154,30 @@ export type TableBaseProps = {
 	 * @default getData
 	 */
 	onReload?: (params?: any) => void;
+
+	extra?: any;
 };
 
 export type TFilter<T> = {
-	field: keyof T | [keyof T, string];
+	field?: keyof T | [keyof T, string];
 	operator?: EOperatorType;
 	values: (string | number | boolean)[];
 	active?: boolean;
+	filters?: TFilter<T>[];
+	logicOperator?: 'or' | 'and';
 };
 
+export type RowFilterProps = {
+	index: number;
+	columns: IColumn<any>[];
+	filter: TFilter<any>;
+	onChange: (filter: TFilter<any>) => void;
+	fieldsFilterable: string[];
+	onRemove?: () => void;
+	allowGrouping?: boolean;
+	level?: number;
+	path?: (string | number)[];
+};
 
 export type ConditionCriteria<T> = {
 	/** Giá trị nằm trong danh sách */
@@ -222,6 +237,8 @@ export type TableStaticProps = Pick<
 	hasCreate?: boolean;
 	hasTotal?: boolean;
 	size?: 'small' | 'middle';
+
+	totalComponent?: any;
 };
 
 // IMPORT HEADER
