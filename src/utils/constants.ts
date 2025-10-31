@@ -24,3 +24,11 @@ export const excludedPaths = [
 	sentryDSN,
 	oneSignalClient,
 ].filter(Boolean);
+
+export const getPartitionCode = (): string | null => {
+	return localStorage.getItem('partitionCode');
+};
+
+export const kiemTraPhanVung = (dataPartitionCode: string | null) => {
+	return !dataPartitionCode || dataPartitionCode === localStorage.getItem('partitionCode');
+};
