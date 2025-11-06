@@ -81,6 +81,15 @@ const TableBase = (props: TableBaseProps) => {
 	const [visibleExport, setVisibleExport] = useState(false);
 	const searchInputRef = useRef<InputRef>(null);
 
+	//Đóng visible khi ấn back trình duyệt
+	useEffect(() => {
+		const handleBack = () => {
+			setVisibleForm(false);
+		};
+
+		window.addEventListener('popstate', handleBack);
+	}, []);
+
 	// dnd-kit: sensors
 	const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
