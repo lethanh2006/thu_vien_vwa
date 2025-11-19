@@ -32,8 +32,7 @@ const FormMuonTraSach = (props: any) => {
 	);
 	const { getModel, settingMuonTra, loading, thongKeMuonTraSachModel } = useModel('sachtailieu.muontra.muontra');
 	const {
-		// getModel: getAnPhamXepGia,
-		getOneModel,
+		getModel: getAnPhamXepGia,
 		danhSach,
 		setDanhSach,
 		handleEdit,
@@ -287,32 +286,32 @@ const FormMuonTraSach = (props: any) => {
 			// },
 		];
 
-		const anPhamData = await getOneModel({ soDangKyCaBiet: dkcb });
-		// await getAnPhamXepGia(
-		// 	undefined,
-		// 	filter as any,
-		// 	undefined,
-		// 	undefined,
-		// 	undefined,
-		// 	undefined,
-		// 	undefined,
-		// 	false,
-		// );
+		const anPhamData = await getAnPhamXepGia(undefined, filter as any, undefined, 1, 50, undefined, undefined, false);
 
-		if (anPhamData?.trangThai === ETrangThaiDangKyCaBiet.BAN) {
-			message.error('Ấn phẩm đang được mượn!');
-			return;
-		}
-
-		if (!anPhamData?._id) {
+		if (!anPhamData?.length) {
 			message.error('Không tồn tại ấn phẩm!');
 			form.resetFields(['dkcb']);
 			return;
 		}
 
+		const dkcbNormalized = dkcb.toLocaleUpperCase().trim();
+
+		let itemChon = anPhamData.find((i) => i?.soDangKyCaBiet?.toLocaleUpperCase().trim() === dkcbNormalized);
+
+		if (!itemChon) {
+			itemChon = anPhamData.find((i) => i?.soDangKyCaBiet?.toLocaleUpperCase().trim().startsWith(dkcbNormalized));
+		}
+
+		if (!itemChon) itemChon = anPhamData[0];
+
+		if (itemChon?.trangThai === ETrangThaiDangKyCaBiet.BAN) {
+			message.error('Ấn phẩm đang được mượn!');
+			return;
+		}
+
 		if (
 			danhSach?.find(
-				(i) => i?.soDangKyCaBiet.toLocaleUpperCase().trim() === (anPhamData?.soDangKyCaBiet).toLocaleUpperCase().trim(),
+				(i) => i?.soDangKyCaBiet.toLocaleUpperCase().trim() === itemChon.soDangKyCaBiet.toLocaleUpperCase().trim(),
 			)
 		) {
 			message.error('Ấn phẩm đã tồn tại trong danh sách!');
@@ -320,8 +319,8 @@ const FormMuonTraSach = (props: any) => {
 		}
 
 		const newItem = {
-			...anPhamData,
-			soDangKyCaBiet: anPhamData?.soDangKyCaBiet.trim(),
+			...itemChon,
+			soDangKyCaBiet: itemChon.soDangKyCaBiet.trim(),
 			thoiGianMuon: dayjs(),
 			expired: dayjs().add(
 				isSinhVien ? (settingMuonTra?.thoiHanMuonTraSach ?? 150) : (settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7),
@@ -446,7 +445,7 @@ const FormMuonTraSach = (props: any) => {
 								>
 									<Input
 										ref={dkcbInputRef}
-										placeholder='Nhập đăng ký cá biệt (Cán bộ tìm kiếm chính xác ĐKCB)'
+										placeholder='Nhập đăng ký cá biệt'
 										onPressEnter={(e) => {
 											e.preventDefault();
 											handleLuuDKCB();
