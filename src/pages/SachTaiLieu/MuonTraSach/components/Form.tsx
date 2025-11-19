@@ -32,7 +32,8 @@ const FormMuonTraSach = (props: any) => {
 	);
 	const { getModel, settingMuonTra, loading, thongKeMuonTraSachModel } = useModel('sachtailieu.muontra.muontra');
 	const {
-		getModel: getAnPhamXepGia,
+		// getModel: getAnPhamXepGia,
+		getOneModel,
 		danhSach,
 		setDanhSach,
 		handleEdit,
@@ -286,23 +287,24 @@ const FormMuonTraSach = (props: any) => {
 			// },
 		];
 
-		const anPhamData = await getAnPhamXepGia(
-			undefined,
-			filter as any,
-			undefined,
-			undefined,
-			undefined,
-			undefined,
-			undefined,
-			false,
-		);
+		const anPhamData = await getOneModel({ soDangKyCaBiet: dkcb });
+		// await getAnPhamXepGia(
+		// 	undefined,
+		// 	filter as any,
+		// 	undefined,
+		// 	undefined,
+		// 	undefined,
+		// 	undefined,
+		// 	undefined,
+		// 	false,
+		// );
 
-		if (anPhamData?.[0]?.trangThai === ETrangThaiDangKyCaBiet.BAN) {
+		if (anPhamData?.trangThai === ETrangThaiDangKyCaBiet.BAN) {
 			message.error('Ấn phẩm đang được mượn!');
 			return;
 		}
 
-		if (!anPhamData?.length) {
+		if (!anPhamData?._id) {
 			message.error('Không tồn tại ấn phẩm!');
 			form.resetFields(['dkcb']);
 			return;
@@ -310,8 +312,7 @@ const FormMuonTraSach = (props: any) => {
 
 		if (
 			danhSach?.find(
-				(i) =>
-					i?.soDangKyCaBiet.toLocaleUpperCase().trim() === (anPhamData?.[0]?.soDangKyCaBiet).toLocaleUpperCase().trim(),
+				(i) => i?.soDangKyCaBiet.toLocaleUpperCase().trim() === (anPhamData?.soDangKyCaBiet).toLocaleUpperCase().trim(),
 			)
 		) {
 			message.error('Ấn phẩm đã tồn tại trong danh sách!');
@@ -319,8 +320,8 @@ const FormMuonTraSach = (props: any) => {
 		}
 
 		const newItem = {
-			...anPhamData?.[0],
-			soDangKyCaBiet: anPhamData?.[0]?.soDangKyCaBiet.trim(),
+			...anPhamData,
+			soDangKyCaBiet: anPhamData?.soDangKyCaBiet.trim(),
 			thoiGianMuon: dayjs(),
 			expired: dayjs().add(
 				isSinhVien ? (settingMuonTra?.thoiHanMuonTraSach ?? 150) : (settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7),
@@ -445,7 +446,7 @@ const FormMuonTraSach = (props: any) => {
 								>
 									<Input
 										ref={dkcbInputRef}
-										placeholder='Nhập đăng ký cá biệt'
+										placeholder='Nhập đăng ký cá biệt (Cán bộ tìm kiếm chính xác ĐKCB)'
 										onPressEnter={(e) => {
 											e.preventDefault();
 											handleLuuDKCB();
