@@ -31,6 +31,8 @@ ENV APP_CONFIG_URL_CSVC=
 ENV APP_CONFIG_URL_THU_VIEN=https://qltv.ptit.edu.vn/
 ENV APP_CONFIG_URL_QLVB=https://gwdu.ptit.edu.vn/sso/realms/ptit/protocol/openid-connect/auth?response_type=token&client_id=lms_ptit&redirect_uri=http%3A%2F%2Fvanban.ptit.edu.vn%2Fauth_oauth%2Fsignin&scope=openid+profile+email&state=%7B%22d%22%3A+%22ptit-bu%22%2C+%22p%22%3A+4%2C+%22r%22%3A+%22http%253A%252F%252Fvanban.ptit.edu.vn%252Fweb%22%7D
 ENV APP_CONFIG_URL_VBCC=
+ENV APP_CONFIG_URL_QLND=
+ENV APP_CONFIG_URL_TAP_CHI_KH=
 
 ENV APP_CONFIG_TITLE_LANDING='Cổng thông tin'
 ENV APP_CONFIG_TITLE_CONNECT='Slink'
@@ -47,6 +49,8 @@ ENV APP_CONFIG_TITLE_CSVC='Cơ sở vật chất'
 ENV APP_CONFIG_TITLE_THU_VIEN='Thư viện'
 ENV APP_CONFIG_TITLE_QLVB='Quản lý văn bản'
 ENV APP_CONFIG_TITLE_VBCC='Văn bằng chứng chỉ'
+ENV APP_CONFIG_TITLE_QLND='Người dùng & phân quyền'
+ENV APP_CONFIG_TITLE_TAP_CHI_KH='Tạp chí khoa học'
 
 ENV APP_CONFIG_INIT_TRINH_DO=7
 ENV APP_CONFIG_INIT_HINH_THUC=1
