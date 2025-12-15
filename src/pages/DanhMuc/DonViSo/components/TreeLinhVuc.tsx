@@ -366,7 +366,7 @@ const TreeDonViSo = (props: any) => {
 			</div>
 
 			<Modal
-				destroyOnHidden
+				destroyOnClose
 				open={visibleForm}
 				onOk={handleCancel}
 				onCancel={handleCancel}

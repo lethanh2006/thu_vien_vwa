@@ -668,7 +668,7 @@ const TableBase = (props: TableBaseProps) => {
 							footer={false}
 							styles={{ body: { padding: 0 } }}
 							open={visibleForm}
-							destroyOnHidden={destroyModal || false}
+							destroyOnClose={destroyModal || false}
 						>
 							<Form title={title ?? ''} {...props.formProps} />
 
@@ -694,7 +694,7 @@ const TableBase = (props: TableBaseProps) => {
 							footer={null}
 							styles={!props.showModalTitle ? { body: { padding: 0 } } : undefined}
 							open={visibleForm}
-							destroyOnHidden={destroyModal || false}
+							destroyOnClose={destroyModal || false}
 						>
 							<Form title={title ?? ''} {...props.formProps} />
 						</ModalExpandable>

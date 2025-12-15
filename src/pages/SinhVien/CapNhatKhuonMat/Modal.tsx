@@ -46,7 +46,7 @@ const ModalCapNhatAnhNhanDien = (props: { visible: boolean; setVisible: (val: bo
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={800}
-			destroyOnHidden
+			destroyOnClose
 		>
 			<div style={{ marginBottom: 12 }}>
 				Cập nhật ảnh nhận diện khuôn mặt phục vụ việc checkin tự động khi ra vào Thư viện

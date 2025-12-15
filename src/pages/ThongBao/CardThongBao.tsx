@@ -296,7 +296,7 @@ const CardThongBao = (props: { notiType: NotificationType; activeKey: string }) 
 				cancelText='Đóng'
 				open={visible}
 				onCancel={() => setVisible(false)}
-				destroyOnHidden
+				destroyOnClose
 			>
 				<ViewThongBao record={record} />
 			</ModalExpandable>
@@ -308,7 +308,7 @@ const CardThongBao = (props: { notiType: NotificationType; activeKey: string }) 
 				cancelText='Đóng'
 				open={visibleNguoiNhan}
 				onCancel={() => setVisibleNguoiNhan(false)}
-				destroyOnHidden
+				destroyOnClose
 			>
 				<TableReceiverThongBao record={record} />
 			</ModalExpandable>

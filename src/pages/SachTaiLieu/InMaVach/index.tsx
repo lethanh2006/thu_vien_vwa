@@ -221,7 +221,7 @@ const InMaVachPage = () => {
 						<Button onClick={() => setVisibleTimKiem(false)}>Đóng</Button>
 					</div>
 				}
-				destroyOnHidden
+				destroyOnClose
 			>
 				<TimKiemInMaVach field={field} form={form} setVisibleTimKiem={setVisibleTimKiem} />
 			</Modal>

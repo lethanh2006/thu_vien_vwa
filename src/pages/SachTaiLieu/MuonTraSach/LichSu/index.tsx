@@ -160,7 +160,7 @@ const LichSuThueMuonPage = (props: {
 		// 	title: 'Thời gian dự kiến mượn',
 		// 	dataIndex: 'thoiGianMuonDuKien',
 		// 	width: 130,
-		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		// 	filterType: 'date',
 		// 	sortable: true,
 		// 	onCell,
@@ -169,7 +169,7 @@ const LichSuThueMuonPage = (props: {
 		// 	title: 'Thời gian dự kiến trả',
 		// 	dataIndex: 'thoiGianTraDuKien',
 		// 	width: 130,
-		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		// 	filterType: 'date',
 		// 	sortable: true,
 		// 	onCell,
@@ -187,7 +187,7 @@ const LichSuThueMuonPage = (props: {
 		// 	align: 'center',
 		// 	dataIndex: 'thoiGianGiaHan',
 		// 	width: 130,
-		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		// 	filterType: 'date',
 		// 	sortable: true,
 		// 	onCell,
@@ -316,7 +316,7 @@ const LichSuThueMuonPage = (props: {
 			onCancel={() => setVisible && setVisible(false)}
 			width={width}
 			footer={null}
-			destroyOnHidden
+			destroyOnClose
 		>
 			{main()}
 

@@ -85,7 +85,7 @@ const ModalXepGia = () => {
 			onCancel={() => setVisibleForm(false)}
 			footer={null}
 			width={1000}
-			destroyOnHidden
+			destroyOnClose
 		>
 			<Spin spinning={loadingThongKe}>
 				<Row gutter={[12, 12]} style={{ marginBottom: 12 }}>

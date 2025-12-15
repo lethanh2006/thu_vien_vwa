@@ -106,10 +106,10 @@ const ChiTietMuonTraSach = (props: any) => {
 						{/* )} */}
 
 						{/* <Descriptions.Item label='Thời gian dự kiến mượn'>
-							{record?.thoiGianMuonDuKien ? moment(record?.thoiGianMuonDuKien).format('DD/MM/YYYY') : '--'}
+							{record?.thoiGianMuonDuKien ? dayjs(record?.thoiGianMuonDuKien).format('DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 						<Descriptions.Item label='Thời gian dự kiến trả'>
-							{record?.thoiGianTraDuKien ? moment(record?.thoiGianTraDuKien).format('DD/MM/YYYY') : '--'}
+							{record?.thoiGianTraDuKien ? dayjs(record?.thoiGianTraDuKien).format('DD/MM/YYYY') : '--'}
 						</Descriptions.Item>
 
 						<Descriptions.Item label='Ghi chú đăng ký'>{record?.ghiChuDangKy ?? '--'}</Descriptions.Item> */}

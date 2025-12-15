@@ -58,14 +58,7 @@ const ModalGhiNhanAnPhamDinhKy = (props: { visible: boolean; setVisible: (val: b
 	};
 
 	return (
-		<Modal
-			title='Ghi nhận'
-			open={visible}
-			onCancel={() => setVisible(false)}
-			footer={null}
-			width={1000}
-			destroyOnHidden
-		>
+		<Modal title='Ghi nhận' open={visible} onCancel={() => setVisible(false)} footer={null} width={1000} destroyOnClose>
 			<Spin spinning={loading}>
 				<Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
 					<Col span={12} md={12}>

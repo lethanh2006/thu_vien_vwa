@@ -51,7 +51,7 @@ const ModalImport = (props: {
 			onCancel={() => setVisible(false)}
 			footer={null}
 			width={600}
-			destroyOnHidden
+			destroyOnClose
 		>
 			<Form layout='vertical' onFinish={onFinish} form={form}>
 				<Row gutter={[12, 0]}>

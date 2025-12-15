@@ -156,11 +156,11 @@ const ModalTimKiem = (props: {
 			onCancel={() => setVisibleForm(false)}
 			width={1000}
 			footer={null}
-			destroyOnHidden
+			destroyOnClose
 		>
 			<SplitPane split={isMobile ? 'horizontal' : 'vertical'} onChange={handlePaneSizeChange}>
 				<Pane initialSize={paneSize} minSize='30%'>
-					<Card title='Danh sách ấn phẩm' variant='borderless' style={{ padding: '8px 0 0' }}>
+					<Card title='Danh sách ấn phẩm' variant='borderless' styles={{ body: { padding: '8px 0 0' } }}>
 						<TableBase
 							getData={getDataExternal}
 							columns={columns}
@@ -175,7 +175,7 @@ const ModalTimKiem = (props: {
 
 				<Pane minSize='30%'>
 					{record?._id ? (
-						<Card title='Danh sách đăng ký cá biệt' variant='borderless' style={{ padding: '8px 0 0' }}>
+						<Card title='Danh sách đăng ký cá biệt' variant='borderless' styles={{ body: { padding: '8px 0 0' } }}>
 							<TableBase
 								getData={getData}
 								columns={columnsĐKCB}
