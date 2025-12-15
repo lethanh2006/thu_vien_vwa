@@ -44,12 +44,11 @@ const axios = axios1.create({
 	paramsSerializer: (params) => {
 		const cleanedParams: Record<string, any> = {};
 		Object.entries(params || {}).forEach(([key, value]) => {
-			const isEmptyObject = typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0;
-			const isEmptyArray = Array.isArray(value) && value.length === 0;
-			if (value === undefined || value === null || isEmptyObject || isEmptyArray) return;
+			if (value === undefined) return;
 
+			// Stringify objects and array values which may contain nested objects
 			cleanedParams[key] = Array.isArray(value)
-				? value.map((item) => JSON.stringify(item))
+				? value.map((item) => (item !== null && typeof item === 'object' ? JSON.stringify(item) : item))
 				: typeof value === 'object'
 					? JSON.stringify(value)
 					: value;
@@ -220,8 +219,17 @@ axios.interceptors.response.use(
 				case 502:
 					notification.warning({
 						message: 'Máy chủ gặp lỗi (005)',
-						description: descriptionError,
+						// description: descriptionError,
+						description: 'Có lỗi xảy ra. Vui lòng thử lại sau!',
 						key: 'error500',
+					});
+					break;
+
+				case 504:
+					notification.info({
+						message: 'Quá thời gian phản hồi (405)',
+						description: 'Hệ thống đang tiếp tục xử lý, kết quả xử lý sẽ được cập nhật sau!',
+						key: 'error504',
 					});
 					break;
 
