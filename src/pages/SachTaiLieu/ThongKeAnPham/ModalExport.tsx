@@ -2,6 +2,7 @@ import MyDatePicker from '@/components/MyDatePicker';
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import { EOperatorType } from '@/components/Table/constant';
 import FormItemKhoaNganh from '@/pages/DaoTao/KhoaNganh/FormItemKhoaNganh';
+import SelectLopHanhChinhDebounce from '@/pages/DaoTao/LopHanhChinh/Select';
 import { EKieuHienThi, ETrangThaiMuonSach, EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import { exportThongKeTheMuon } from '@/services/SachTaiLieu/MuonSach';
 import dayjs from '@/utils/dayjs';
@@ -50,18 +51,29 @@ const ModalExportAnPham = (props: {
 		}
 
 		const filter = [
-			{
-				active: true,
-				field: trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'thoiGianMuon' : 'thoiGianTra',
-				operator: EOperatorType.BETWEEN,
-				values: [dateRangeFrom, dateRangeTo],
-			},
+			value.thoiGianXuat
+				? {
+						active: true,
+						field: trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'thoiGianMuon' : 'thoiGianTra',
+						operator: EOperatorType.BETWEEN,
+						values: [dateRangeFrom, dateRangeTo],
+					}
+				: undefined,
 			value.maKhoaNganh?.length
 				? {
 						active: true,
 						field: 'maKhoaNganh',
 						operator: EOperatorType.INCLUDE,
 						values: value.maKhoaNganh,
+					}
+				: undefined,
+
+			value.tenLopHanhChinh?.length
+				? {
+						active: true,
+						field: ['phieuMuonTra', 'tenLopHanhChinh'],
+						operator: EOperatorType.INCLUDE,
+						values: value.tenLopHanhChinh,
 					}
 				: undefined,
 		];
@@ -104,17 +116,25 @@ const ModalExportAnPham = (props: {
 							/>
 						</Form.Item>
 					</Col>
-					<Col xs={24}>
-						<Form.Item name='thoiGianXuat' label='Thời gian' rules={[...rules.required]}>
+					<Col xs={24} md={vaiTro === EVaiTroMuonTra.SINHVIEN ? 12 : 24}>
+						<Form.Item name='thoiGianXuat' label='Thời gian'>
 							{kieuXuatDuLieu === EKieuHienThi.NAM ? (
-								<MyDatePicker pickerStyle={'year'} format={'YYYY'} />
+								<MyDatePicker pickerStyle={'year'} format={'YYYY'} allowClear />
 							) : kieuXuatDuLieu === EKieuHienThi.THANG ? (
-								<MyDatePicker pickerStyle={'month'} format={'MM/YYYY'} />
+								<MyDatePicker pickerStyle={'month'} format={'MM/YYYY'} allowClear />
 							) : (
-								<MyDateRangePicker />
+								<MyDateRangePicker allowClear />
 							)}
 						</Form.Item>
 					</Col>
+
+					{vaiTro === EVaiTroMuonTra.SINHVIEN ? (
+						<Col xs={24} md={12}>
+							<Form.Item name='tenLopHanhChinh' label='Lớp hành chính'>
+								<SelectLopHanhChinhDebounce multiple selectMa />
+							</Form.Item>
+						</Col>
+					) : null}
 
 					{trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
 						<Col xs={24}>

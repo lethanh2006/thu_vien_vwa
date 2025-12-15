@@ -47,7 +47,7 @@ const FormDangKyCaBiet = (props: any) => {
 		// const sinhVien = danhSachSinhVien?.find((item) => item?.ssoId === values?.ssoIdNguoiMuon);
 		// values.maDinhDanhNguoiMuon = sinhVien?.ma ?? '';
 		// values.hotenNguoiMuon = sinhVien?.ten ?? '';
-		// values.thoiGianDangKy = moment().toISOString();
+		// values.thoiGianDangKy = dayjs().toISOString();
 
 		values.anPhamId = recDKCB?.anPhamId ?? '';
 		values.soDangKyCaBiet = recDKCB?.soDangKyCaBiet ?? '';

@@ -274,10 +274,12 @@ const TableStaticData = (props: TableStaticProps) => {
 
 					{hasTotal ? (
 						<Tooltip title={intl.formatMessage({ id: 'global.tablestatic.button.tongso.tooltip' })}>
-							<div className={classNames({ total: true, small: props?.size === 'small' })}>
-								{intl.formatMessage({ id: 'global.tablestatic.button.tongso' })}:
-								<span>{total || props.data?.length || 0}</span>
-							</div>
+							{props.totalComponent || (
+								<div className={classNames({ total: true, small: props?.size === 'small' })}>
+									{intl.formatMessage({ id: 'global.tablestatic.button.tongso' })}:
+									<span>{total || props.data?.length || 0}</span>
+								</div>
+							)}
 						</Tooltip>
 					) : null}
 				</div>

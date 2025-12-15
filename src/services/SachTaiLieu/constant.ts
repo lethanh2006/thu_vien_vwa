@@ -44,11 +44,19 @@ export const colorTrangThaiBienMuc: Record<ETrangThaiBienMuc, string> = {
 export enum ETrangThaiDangKyCaBiet {
 	RANH = 'Rảnh',
 	BAN = 'Bận',
+	// THANH_LY = 'Đã Thanh lý',
 }
+
+export const nameTrangThaiDangKyCaBiet: Record<ETrangThaiDangKyCaBiet, string> = {
+	[ETrangThaiDangKyCaBiet.RANH]: 'ĐKCB khả dụng',
+	[ETrangThaiDangKyCaBiet.BAN]: 'ĐKCB cho mượn',
+	// [ETrangThaiDangKyCaBiet.THANH_LY]: 'Đã thanh lý',
+};
 
 export const colorTrangThaiDangKyCaBiet: Record<ETrangThaiDangKyCaBiet, string> = {
 	[ETrangThaiDangKyCaBiet.RANH]: 'green',
 	[ETrangThaiDangKyCaBiet.BAN]: 'red',
+	// [ETrangThaiDangKyCaBiet.THANH_LY]: 'orange',
 };
 
 export enum EVaiTroMuonTra {

@@ -2,7 +2,6 @@ import TableStaticData from '@/components/Table/TableStaticData';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn, TFilter } from '@/components/Table/typing';
 import type { KhoaNganh } from '@/services/DaoTao/KhoaNganh/typings';
-
 import { Col, Form, Row } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -88,6 +87,20 @@ const FormItemKhoaNganh = (props: {
 		},
 	];
 
+	const onChangeTrinhDo = (maTrinhDo: string) => {
+		const trinhDo = danhSachTrinhDo.find((item) => item.ma === maTrinhDo);
+		setTrinhDo(trinhDo);
+		setMaKhoaList([]);
+		setMaNganhList([]);
+	};
+
+	const onChangeHinhThuc = (maHinhThuc: string) => {
+		const hinhThuc = danhSachHinhThuc.find((item) => item.ma === maHinhThuc);
+		setHinhThuc(hinhThuc);
+		setMaKhoaList([]);
+		setMaNganhList([]);
+	};
+
 	return (
 		<Row gutter={[12, 0]}>
 			<Col span={24} md={6}>
@@ -95,9 +108,7 @@ const FormItemKhoaNganh = (props: {
 					<SelectTrinhDo
 						// allowClear
 						value={recTrinhDo?.ma}
-						onChange={(val) => {
-							setTrinhDo(danhSachTrinhDo.find((item) => item.ma === val));
-						}}
+						onChange={(val) => onChangeTrinhDo(val as string)}
 						selectMa
 						hasDefault
 					/>
@@ -108,7 +119,7 @@ const FormItemKhoaNganh = (props: {
 					<SelectHinhThuc
 						// allowClear
 						value={recHinhThuc?.ma}
-						onChange={(val) => setHinhThuc(danhSachHinhThuc.find((item) => item.ma === val))}
+						onChange={(val) => onChangeHinhThuc(val as string)}
 						selectMa
 						hasDefault
 					/>
@@ -173,7 +184,6 @@ const FormItemKhoaNganh = (props: {
 							preserveSelectedRowKeys: true,
 							columnWidth: 40,
 						},
-						scroll: { y: 380 },
 						pagination: false,
 					}}
 					otherButtons={
@@ -185,7 +195,7 @@ const FormItemKhoaNganh = (props: {
 											(Bỏ chọn tất cả)
 										</a>
 									</div>,
-							  ]
+								]
 							: undefined
 					}
 				/>

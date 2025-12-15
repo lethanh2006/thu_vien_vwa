@@ -286,21 +286,7 @@ const FormMuonTraSach = (props: any) => {
 			// },
 		];
 
-		const anPhamData = await getAnPhamXepGia(
-			undefined,
-			filter as any,
-			undefined,
-			undefined,
-			undefined,
-			undefined,
-			undefined,
-			false,
-		);
-
-		if (anPhamData?.[0]?.trangThai === ETrangThaiDangKyCaBiet.BAN) {
-			message.error('Ấn phẩm đang được mượn!');
-			return;
-		}
+		const anPhamData = await getAnPhamXepGia(undefined, filter as any, undefined, 1, 50, undefined, undefined, false);
 
 		if (!anPhamData?.length) {
 			message.error('Không tồn tại ấn phẩm!');
@@ -308,10 +294,24 @@ const FormMuonTraSach = (props: any) => {
 			return;
 		}
 
+		const dkcbNormalized = dkcb.toLocaleUpperCase().trim();
+
+		let itemChon = anPhamData.find((i) => i?.soDangKyCaBiet?.toLocaleUpperCase().trim() === dkcbNormalized);
+
+		if (!itemChon) {
+			itemChon = anPhamData.find((i) => i?.soDangKyCaBiet?.toLocaleUpperCase().trim().startsWith(dkcbNormalized));
+		}
+
+		if (!itemChon) itemChon = anPhamData[0];
+
+		if (itemChon?.trangThai === ETrangThaiDangKyCaBiet.BAN) {
+			message.error('Ấn phẩm đang được mượn!');
+			return;
+		}
+
 		if (
 			danhSach?.find(
-				(i) =>
-					i?.soDangKyCaBiet.toLocaleUpperCase().trim() === (anPhamData?.[0]?.soDangKyCaBiet).toLocaleUpperCase().trim(),
+				(i) => i?.soDangKyCaBiet.toLocaleUpperCase().trim() === itemChon.soDangKyCaBiet.toLocaleUpperCase().trim(),
 			)
 		) {
 			message.error('Ấn phẩm đã tồn tại trong danh sách!');
@@ -319,8 +319,8 @@ const FormMuonTraSach = (props: any) => {
 		}
 
 		const newItem = {
-			...anPhamData?.[0],
-			soDangKyCaBiet: anPhamData?.[0]?.soDangKyCaBiet.trim(),
+			...itemChon,
+			soDangKyCaBiet: itemChon.soDangKyCaBiet.trim(),
 			thoiGianMuon: dayjs(),
 			expired: dayjs().add(
 				isSinhVien ? (settingMuonTra?.thoiHanMuonTraSach ?? 150) : (settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7),

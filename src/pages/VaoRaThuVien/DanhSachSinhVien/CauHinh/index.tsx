@@ -114,7 +114,6 @@ const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolea
 				size='small'
 				addStt
 				hasTotal
-				otherProps={{ pagination: true }}
 			>
 				<ButtonExtend
 					size='small'

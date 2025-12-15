@@ -67,13 +67,7 @@ const ConfirmThongBaoTuyChinh = (props: { getData: () => void; type: Notificatio
 
 	return (
 		<>
-			<TableStaticData
-				columns={columns}
-				data={danhSachThongBaoDanhSach ?? []}
-				addStt
-				hasTotal
-				otherProps={{ pagination: true }}
-			/>
+			<TableStaticData columns={columns} data={danhSachThongBaoDanhSach ?? []} addStt hasTotal />
 
 			<div className='form-footer'>
 				<Button loading={formSubmiting} onClick={() => handleGui()} type='primary'>

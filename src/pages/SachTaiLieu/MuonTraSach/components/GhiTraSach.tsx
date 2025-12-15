@@ -6,6 +6,7 @@ import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import { Avatar, Button, Card, Descriptions, Form, Input, Modal, Tag } from 'antd';
 import { useEffect } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { useIntl, useModel } from 'umi';
 
 const GhiTraAnPham = (props: {
@@ -17,6 +18,7 @@ const GhiTraAnPham = (props: {
 	const intl = useIntl();
 	const { visible, setVisible, getData, isThongTin } = props;
 	const [form] = Form.useForm();
+	const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
 
 	const { record, ghiTraThueMuonAnPhamModel, formSubmiting, getModel } = useModel('sachtailieu.muontra.muontra');
 
@@ -27,7 +29,7 @@ const GhiTraAnPham = (props: {
 	const setBorrowerInfo = isSinhVien ? setRecSinhVien : setRecCanBo;
 
 	const getBorrower = async () => {
-		const filter = [
+		const filters = [
 			{
 				active: true,
 				field: isSinhVien ? 'ma' : 'maCanBo',
@@ -38,7 +40,7 @@ const GhiTraAnPham = (props: {
 
 		const nguoiMuon = await getModel(
 			undefined,
-			filter as any,
+			filters as any,
 			undefined,
 			undefined,
 			undefined,
@@ -109,7 +111,7 @@ const GhiTraAnPham = (props: {
 						: [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' ').charAt(0)}
 				</Avatar>
 
-				<Descriptions column={{ xs: 1, md: 2 }}>
+				<Descriptions column={isMobile ? 1 : 2}>
 					{isSinhVien ? (
 						<>
 							<Descriptions.Item label='Mã SV'>{record?.phieuMuonTra?.maDinhDanhNguoiMuon ?? '--'}</Descriptions.Item>
@@ -169,7 +171,7 @@ const GhiTraAnPham = (props: {
 			</div>
 
 			<Card title='Thông tin ấn phẩm' variant='borderless' style={{ marginBottom: '24px' }}>
-				<Descriptions column={{ xs: 1, md: 2 }}>
+				<Descriptions column={isMobile ? 1 : 2}>
 					<Descriptions.Item label='Nhan đề' span={24}>
 						{record?.anPham?.nhanDe ?? '--'}
 					</Descriptions.Item>

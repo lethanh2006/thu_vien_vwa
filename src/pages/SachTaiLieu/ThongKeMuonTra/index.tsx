@@ -163,7 +163,7 @@ const ThongKeMuonTraPage = () => {
 
 			<div style={{ marginBottom: 12 }}>
 				{/* <StatMuonTraSach /> */}
-				<StatThongKeMuonTra filter={filter} />
+				<StatThongKeMuonTra filter={filter} trangThai={trangThai} />
 			</div>
 
 			<TableBase

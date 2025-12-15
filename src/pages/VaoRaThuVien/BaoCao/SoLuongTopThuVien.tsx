@@ -73,8 +73,6 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 	return (
 		<Card
 			title='Bạn đọc có số lượt vào thư viện nhiều nhất'
-			bordered={isDashBoard ? true : false}
-			style={isDashBoard ? undefined : { padding: '12px 0 0' }}
 			extra={
 				isDashBoard ? (
 					<Link to='/vao-ra-thu-vien/tong-hop'>
@@ -82,6 +80,7 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 					</Link>
 				) : null
 			}
+			variant='borderless'
 		>
 			<TableStaticData
 				loading={loadingTop}

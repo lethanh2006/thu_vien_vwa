@@ -53,6 +53,12 @@ const LichSuThueMuonPage = (props: {
 							values: [dayjs().startOf('d').toISOString(), dayjs().add(7, 'day').endOf('d').toISOString()],
 							operator: EOperatorType.BETWEEN,
 						},
+						{
+							active: true,
+							field: 'trangThai',
+							values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+							operator: EOperatorType.INCLUDE,
+						},
 					]
 				: activeKey === '3'
 					? [
@@ -61,6 +67,12 @@ const LichSuThueMuonPage = (props: {
 								field: 'expired',
 								values: [dayjs().startOf('d').toISOString()],
 								operator: EOperatorType.LESS_THAN,
+							},
+							{
+								active: true,
+								field: 'trangThai',
+								values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+								operator: EOperatorType.INCLUDE,
 							},
 						]
 					: activeKey === '4'
@@ -148,7 +160,7 @@ const LichSuThueMuonPage = (props: {
 		// 	title: 'Thời gian dự kiến mượn',
 		// 	dataIndex: 'thoiGianMuonDuKien',
 		// 	width: 130,
-		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		// 	filterType: 'date',
 		// 	sortable: true,
 		// 	onCell,
@@ -157,7 +169,7 @@ const LichSuThueMuonPage = (props: {
 		// 	title: 'Thời gian dự kiến trả',
 		// 	dataIndex: 'thoiGianTraDuKien',
 		// 	width: 130,
-		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		// 	filterType: 'date',
 		// 	sortable: true,
 		// 	onCell,
@@ -175,7 +187,7 @@ const LichSuThueMuonPage = (props: {
 		// 	align: 'center',
 		// 	dataIndex: 'thoiGianGiaHan',
 		// 	width: 130,
-		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		// 	filterType: 'date',
 		// 	sortable: true,
 		// 	onCell,

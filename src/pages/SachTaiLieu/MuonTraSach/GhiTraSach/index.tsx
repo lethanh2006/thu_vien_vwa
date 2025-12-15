@@ -120,6 +120,12 @@ const GhiTraPage = () => {
 						values: [dayjs().startOf('d').toISOString(), dayjs().add(7, 'day').endOf('d').toISOString()],
 						operator: EOperatorType.BETWEEN,
 					},
+					{
+						active: true,
+						field: 'trangThai',
+						values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+						operator: EOperatorType.INCLUDE,
+					},
 				];
 				break;
 			case '3':
@@ -129,6 +135,12 @@ const GhiTraPage = () => {
 						field: 'expired',
 						values: [dayjs().startOf('d').toISOString()],
 						operator: EOperatorType.LESS_THAN,
+					},
+					{
+						active: true,
+						field: 'trangThai',
+						values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+						operator: EOperatorType.INCLUDE,
 					},
 				];
 				break;

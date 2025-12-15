@@ -40,6 +40,7 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 					</Link>
 				) : null
 			}
+			variant='borderless'
 		>
 			<Space style={{ marginBottom: 12 }}>
 				<MyDatePicker

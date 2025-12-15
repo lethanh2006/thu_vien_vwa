@@ -67,6 +67,12 @@ const MuonTraSachPage = (props: any) => {
 				values: [dayjs().startOf('d').toISOString(), dayjs().add(7, 'day').endOf('d').toISOString()],
 				operator: EOperatorType.BETWEEN,
 			},
+			{
+				active: true,
+				field: 'trangThai',
+				values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+				operator: EOperatorType.INCLUDE,
+			},
 		];
 	} else if (activeKey === '3') {
 		filter = [
@@ -75,6 +81,12 @@ const MuonTraSachPage = (props: any) => {
 				field: 'expired',
 				values: [dayjs().startOf('d').toISOString()],
 				operator: EOperatorType.LESS_THAN,
+			},
+			{
+				active: true,
+				field: 'trangThai',
+				values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+				operator: EOperatorType.INCLUDE,
 			},
 		];
 	} else if (activeKey === '4') {
@@ -188,7 +200,7 @@ const MuonTraSachPage = (props: any) => {
 		// 	title: 'Thời gian dự kiến mượn',
 		// 	dataIndex: 'thoiGianMuonDuKien',
 		// 	width: 130,
-		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		// 	filterType: 'date',
 		// 	sortable: true,
 		// 	onCell,
@@ -198,7 +210,7 @@ const MuonTraSachPage = (props: any) => {
 		// 	title: 'Thời gian dự kiến trả',
 		// 	dataIndex: 'thoiGianTraDuKien',
 		// 	width: 130,
-		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		// 	filterType: 'date',
 		// 	sortable: true,
 		// 	onCell,
@@ -218,7 +230,7 @@ const MuonTraSachPage = (props: any) => {
 		// 	align: 'center',
 		// 	dataIndex: 'thoiGianGiaHan',
 		// 	width: 130,
-		// 	render: (val, rec) => val && moment(val).format('DD/MM/YYYY'),
+		// 	render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		// 	filterType: 'date',
 		// 	sortable: true,
 		// 	onCell,

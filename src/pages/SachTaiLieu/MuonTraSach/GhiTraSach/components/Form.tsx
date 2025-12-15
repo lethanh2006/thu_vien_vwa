@@ -37,8 +37,8 @@ const FormGhiTraSach = (props: any) => {
 		setSelectedIds,
 		ghiTraThueMuonAnPhamModel,
 	} = useModel('sachtailieu.muontra.muontra');
-	const { record: recSinhVien, setRecord: setRecSinhVien } = useModel('sinhvien.sinhvien');
-	const { record: recCanBo, setRecord: setRecCanBo } = useModel('tochucnhansu.nhansu');
+	const { setRecord: setRecSinhVien } = useModel('sinhvien.sinhvien');
+	const { setRecord: setRecCanBo } = useModel('tochucnhansu.nhansu');
 	const { getAllModel } = useModel('sachtailieu.anpham.thongtinanpham');
 	const { visibleForm: visibleAnPham, setVisibleForm: setVisibleAnPham } = useModel('sachtailieu.anpham.anpham');
 
@@ -50,63 +50,66 @@ const FormGhiTraSach = (props: any) => {
 	const vaiTro = Form.useWatch('vaiTro', form) as EVaiTroMuonTra;
 
 	const isSinhVien = vaiTro === EVaiTroMuonTra.SINHVIEN;
-	const borrowerInfo = isSinhVien ? recSinhVien : recCanBo;
 	const setBorrowerInfo = isSinhVien ? setRecSinhVien : setRecCanBo;
 
 	const soTheInputRef = useRef<any>(null);
 	const dkcbInputRef = useRef<any>(null);
 
-	const getAnPhanThueMuon = async () => {
-		if (!borrowerInfo?.ssoId) return;
-
-		const res = await getModel(
-			undefined,
-			[
+	const getBorrower = async () => {
+		try {
+			const filter = [
 				{
 					active: true,
-					field: 'trangThai',
-					operator: EOperatorType.INCLUDE,
-					values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+					field: isSinhVien ? 'ma' : 'maCanBo',
+					values: [soThe],
+					operator: EOperatorType.CONTAIN,
 				},
-			],
-			undefined,
-			undefined,
-			100,
-			`nguoi-muon/${borrowerInfo.ssoId}/page`,
-			undefined,
-			false,
-		);
+			];
 
-		setDanhSach(res || []);
-	};
+			const nguoiMuon: any = await getModel(
+				undefined,
+				filter as any,
+				undefined,
+				undefined,
+				undefined,
+				`thong-ke/${isSinhVien ? 'sinh-vien' : 'can-bo'}`,
+				undefined,
+				false,
+			);
 
-	const getBorrower = async () => {
-		const filter = [
-			{
-				active: true,
-				field: isSinhVien ? 'ma' : 'maCanBo',
-				values: [soThe],
-				operator: EOperatorType.CONTAIN,
-			},
-		];
+			if (!nguoiMuon?.length) {
+				message.error('Không tìm thấy người mượn!');
+				setBorrowerInfo(undefined);
+				setDanhSach([]);
+				return;
+			}
 
-		const nguoiMuon = await getModel(
-			undefined,
-			filter as any,
-			undefined,
-			undefined,
-			undefined,
-			`thong-ke/${isSinhVien ? 'sinh-vien' : 'can-bo'}`,
-			undefined,
-			false,
-		);
+			const info = nguoiMuon[0];
+			setBorrowerInfo(info);
 
-		if (!nguoiMuon?.length) {
-			message.error('Không tìm thấy người mượn!');
-			return;
+			const res = await getModel(
+				undefined,
+				[
+					{
+						active: true,
+						field: 'trangThai',
+						operator: EOperatorType.INCLUDE,
+						values: [ETrangThaiMuonSach.DANG_THUE_MUON],
+					},
+				],
+				undefined,
+				undefined,
+				100,
+				`nguoi-muon/${info?.ssoId}/page`,
+				undefined,
+				false,
+			);
+
+			setDanhSach(res || []);
+		} catch (err) {
+			console.error(err);
+			message.error('Có lỗi xảy ra khi lấy thông tin người mượn!');
 		}
-
-		setBorrowerInfo(nguoiMuon[0] as any);
 	};
 
 	const handleLuuDKCB = async () => {
@@ -165,7 +168,6 @@ const FormGhiTraSach = (props: any) => {
 
 			message.success(`Đã ghi trả ${idsToProcess.length} ấn phẩm.`);
 			getData();
-			getAnPhanThueMuon();
 			getBorrower();
 		} catch (err) {
 			message.error('Có lỗi xảy ra khi ghi trả.');
@@ -283,10 +285,6 @@ const FormGhiTraSach = (props: any) => {
 	];
 
 	useEffect(() => {
-		getAnPhanThueMuon();
-	}, [borrowerInfo?.ssoId]);
-
-	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 			setDanhSach([]);
@@ -352,7 +350,7 @@ const FormGhiTraSach = (props: any) => {
 					</Col>
 
 					<Col span={24} md={18}>
-						<Row gutter={[12, 0]}>
+						<Row gutter={[12, 12]}>
 							<Col span={24}>
 								<Spin spinning={loading}>
 									<InforNguoiMuon isSinhVien={isSinhVien} />
@@ -414,7 +412,6 @@ const FormGhiTraSach = (props: any) => {
 				setVisible={setVisibleGhiTra}
 				getData={() => {
 					getData();
-					getAnPhanThueMuon();
 					getBorrower();
 				}}
 				isThongTin

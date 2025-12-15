@@ -1,6 +1,5 @@
 import { Namespaces } from '@/pages/TienIch/AuditLog/Modal';
-import { TableProps } from 'antd';
-import type { ColumnType } from 'antd/lib/table';
+import type { ColumnType, TableProps } from 'antd/lib/table';
 import React, { JSX } from 'react';
 import { type EOperatorType } from './constant';
 
@@ -155,12 +154,14 @@ export type TableBaseProps = {
 	 * @default getData
 	 */
 	onReload?: (params?: any) => void;
+
+	extra?: any;
 };
 
 export type TFilter<T> = {
 	field?: keyof T | [keyof T, string];
 	operator?: EOperatorType;
-	values?: (string | number)[];
+	values: (string | number | boolean)[];
 	active?: boolean;
 	filters?: TFilter<T>[];
 	logicOperator?: 'or' | 'and';
@@ -236,6 +237,8 @@ export type TableStaticProps = Pick<
 	hasCreate?: boolean;
 	hasTotal?: boolean;
 	size?: 'small' | 'middle';
+
+	totalComponent?: any;
 };
 
 // IMPORT HEADER
