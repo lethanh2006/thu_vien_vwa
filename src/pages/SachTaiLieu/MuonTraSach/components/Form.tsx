@@ -185,7 +185,7 @@ const FormMuonTraSach = (props: any) => {
 		},
 		{
 			title: 'Nhan đề',
-			width: 350,
+			width: 250,
 			render: (val, rec) => (
 				<ExpandText>
 					<ButtonExtend
@@ -207,14 +207,14 @@ const FormMuonTraSach = (props: any) => {
 			title: 'Nhà xuất bản',
 			align: 'center',
 			render: (val, rec) => rec?.anPham?.nhaXuatBan,
-			width: 120,
+			width: 140,
 			filterType: 'string',
 		},
 		{
 			title: 'Năm xuất bản',
 			align: 'center',
 			render: (val, rec) => rec?.anPham?.namXuatBan,
-			width: 120,
+			width: 90,
 			filterType: 'string',
 		},
 		{
@@ -335,9 +335,9 @@ const FormMuonTraSach = (props: any) => {
 		form.resetFields(['dkcb']);
 
 		// Giữ focus ở input đăng ký cá biệt sau khi thêm
-		if (dkcbInputRef.current) {
-			dkcbInputRef.current.focus();
-		}
+		requestAnimationFrame(() => {
+			dkcbInputRef.current?.focus();
+		});
 	};
 
 	const handleLuuSinhVien = async () => {
@@ -379,7 +379,7 @@ const FormMuonTraSach = (props: any) => {
 		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} sinh viên mượn sách`}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
-					<Col span={24} md={6}>
+					<Col span={24} md={4}>
 						<Row gutter={[12, 0]}>
 							<Col span={24}>
 								<Form.Item name='vaiTro'>
@@ -457,7 +457,7 @@ const FormMuonTraSach = (props: any) => {
 						</Row>
 					</Col>
 
-					<Col span={24} md={18}>
+					<Col span={24} md={20}>
 						<Row gutter={[12, 0]}>
 							<Col span={24}>
 								<Spin spinning={loading}>

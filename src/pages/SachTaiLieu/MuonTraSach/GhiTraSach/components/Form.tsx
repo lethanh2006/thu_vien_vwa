@@ -184,7 +184,7 @@ const FormGhiTraSach = (props: any) => {
 		},
 		{
 			title: 'Nhan đề',
-			width: 350,
+			width: 250,
 			render: (val, rec) => (
 				<ExpandText>
 					<ButtonExtend
@@ -206,14 +206,14 @@ const FormGhiTraSach = (props: any) => {
 			title: 'Nhà xuất bản',
 			align: 'center',
 			render: (val, rec) => rec?.anPham?.nhaXuatBan,
-			width: 120,
+			width: 140,
 			filterType: 'string',
 		},
 		{
 			title: 'Năm xuất bản',
 			align: 'center',
 			render: (val, rec) => rec?.anPham?.namXuatBan,
-			width: 120,
+			width: 90,
 			filterType: 'string',
 		},
 		{
@@ -299,7 +299,7 @@ const FormGhiTraSach = (props: any) => {
 		<Card title='Ghi trả sách'>
 			<Form form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
-					<Col span={24} md={6}>
+					<Col span={24} md={4}>
 						<Row gutter={[12, 0]}>
 							<Col span={24}>
 								<Form.Item name='vaiTro'>
@@ -349,7 +349,7 @@ const FormGhiTraSach = (props: any) => {
 						</Row>
 					</Col>
 
-					<Col span={24} md={18}>
+					<Col span={24} md={20}>
 						<Row gutter={[12, 12]}>
 							<Col span={24}>
 								<Spin spinning={loading}>
