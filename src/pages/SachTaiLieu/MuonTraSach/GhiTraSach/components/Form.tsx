@@ -381,28 +381,27 @@ const FormGhiTraSach = (props: any) => {
 											columnWidth: 40,
 										},
 									}}
-								>
-									<Popconfirm
-										title={
-											selectedIds?.length
-												? `Bạn có chắc chắn muốn ghi trả ${selectedIds.length} ấn phẩm đã chọn?`
-												: 'Không có bản ghi nào được chọn. Bạn có muốn ghi trả tất cả?'
-										}
-										onConfirm={handleGhiTra}
-										okText='Đồng ý'
-										cancelText='Hủy'
-									>
-										<ButtonExtend disabled={!danhSach.length} type='primary'>
-											Ghi trả {selectedIds?.length ? `(${selectedIds.length})` : ''}
-										</ButtonExtend>
-									</Popconfirm>
-								</TableStaticData>
+								/>
 							</Col>
 						</Row>
 					</Col>
 				</Row>
 
 				<div className='form-footer'>
+					<Popconfirm
+						title={
+							selectedIds?.length
+								? `Bạn có chắc chắn muốn ghi trả ${selectedIds.length} ấn phẩm đã chọn?`
+								: 'Không có bản ghi nào được chọn. Bạn có muốn ghi trả tất cả?'
+						}
+						onConfirm={handleGhiTra}
+						okText='Đồng ý'
+						cancelText='Hủy'
+					>
+						<ButtonExtend disabled={!danhSach.length} type='primary'>
+							Ghi trả {selectedIds?.length ? `(${selectedIds.length})` : ''}
+						</ButtonExtend>
+					</Popconfirm>
 					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
