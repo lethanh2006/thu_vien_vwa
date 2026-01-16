@@ -79,28 +79,36 @@ const FormMuonTraSach = (props: any) => {
 
 	useEffect(() => {
 		form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
-		soTheInputRef.current?.focus();
+		setTimeout(() => {
+			if (soTheInputRef.current) {
+				soTheInputRef.current.focus();
+			}
+		}, 100);
 	}, []);
 
 	useEffect(() => {
 		if (!visibleForm) {
-			resetFieldsForm(form);
+			resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
 			setDanhSach([]);
 			setRecSinhVien(undefined);
 			setRecCanBo(undefined);
-		} else {
-			form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
-			soTheInputRef.current?.focus();
 		}
+
+		form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
+		setTimeout(() => {
+			if (soTheInputRef.current) {
+				soTheInputRef.current.focus();
+			}
+		}, 100);
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: PhieuMuonTra.IRecord) => {
-		if (!recSinhVien?.ssoId && isSinhVien) {
+		if (isSinhVien && !recSinhVien?.ssoId) {
 			message.error('Không tồn tại thông tin sinh viên!');
 			return;
 		}
 
-		if (!recCanBo?.ssoId && isCanBo) {
+		if (isCanBo && !recCanBo?.ssoId) {
 			message.error('Không tồn tại thông tin cán bộ!');
 			return;
 		}
@@ -110,24 +118,29 @@ const FormMuonTraSach = (props: any) => {
 			return;
 		}
 
-		const data = {
-			danhSachAnPhamMuonTra: (danhSach as any)?.map((item: any) => ({
-				anPhamId: item?.anPhamId,
-				soDangKyCaBiet: item?.soDangKyCaBiet,
-				thoiGianMuon: item?.thoiGianMuon,
-				expired: item?.expired,
-				ghiChu: item?.ghiChu,
-			})),
+		const nguoiMuon = isSinhVien ? recSinhVien : recCanBo;
 
-			hoTenNguoiMuon: isSinhVien ? recSinhVien?.ten : [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' '),
+		const hoTenNguoiMuon = isSinhVien ? recSinhVien?.ten : [recCanBo?.hoDem, recCanBo?.ten].filter(Boolean).join(' ');
+
+		const danhSachAnPhamMuonTra = danhSach.map((item: any) => ({
+			anPhamId: item?.anPhamId,
+			soDangKyCaBiet: item?.soDangKyCaBiet,
+			thoiGianMuon: item?.thoiGianMuon,
+			expired: item?.expired,
+			ghiChu: item?.ghiChu,
+		}));
+
+		const data = {
+			danhSachAnPhamMuonTra,
+
+			hoTenNguoiMuon,
 			maDinhDanhNguoiMuon: isSinhVien ? recSinhVien?.ma : recCanBo?.maCanBo,
-			ssoIdNguoiMuon: isSinhVien ? recSinhVien?.ssoId : recCanBo?.ssoId,
-			ngaySinh: isSinhVien ? recSinhVien?.ngaySinh : recCanBo?.ngaySinh,
+			ssoIdNguoiMuon: nguoiMuon?.ssoId,
+			ngaySinh: nguoiMuon?.ngaySinh,
 			trangThaiDuyet: ETrangThaiDuyetMuonSach.DA_DUYET,
 
 			vaiTro: values?.vaiTro,
 
-			//Sinh Viên
 			maNganhNguoiMuon: recSinhVien?.maNganh ?? '',
 			tenNganhNguoiMuon: recSinhVien?.nganh?.ten ?? '',
 			maKhoaSinhVienNguoiMuon: recSinhVien?.maKhoaSinhVien ?? '',
@@ -136,28 +149,28 @@ const FormMuonTraSach = (props: any) => {
 			tenKhoaNguoiMuon: recSinhVien?.khoaNganh?.ten ?? '',
 			tenLopHanhChinh: recSinhVien?.tenLopHanhChinhVirtual ?? '',
 
-			//Cán bộ, giảng viên
 			maDonViNguoiMuon: recCanBo?.maDonVi ?? '',
 			tenDonViNguoiMuon: recCanBo?.donViChinh?.ten ?? '',
 		};
 
-		postPhieuMuonTraSachModel(data as any, () => {
+		try {
+			await postPhieuMuonTraSachModel(data as any);
+
+			resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
+			setDanhSach([]);
+			setRecSinhVien(undefined);
+			setRecCanBo(undefined);
+			setTimeout(() => {
+				if (soTheInputRef.current) {
+					soTheInputRef.current.focus();
+				}
+			}, 100);
+
 			thongKeMuonTraSachModel();
 			getData();
-		})
-			.then(() => {
-				resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
-				setRecSinhVien(undefined);
-				setRecCanBo(undefined);
-				setDanhSach([]);
-
-				setTimeout(() => {
-					if (soTheInputRef.current) {
-						soTheInputRef.current.focus();
-					}
-				}, 100);
-			})
-			.catch((err) => console.log(err));
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	const handleDeleteItem = (sodkcb: string) => {

@@ -168,12 +168,12 @@ const FormGhiTraSach = (props: any) => {
 		try {
 			const idsToProcess = selectedIds?.length ? selectedIds : danhSach.map((item) => item._id);
 			await Promise.all(idsToProcess.map((id) => ghiTraThueMuonAnPhamModel(id)));
-
 			message.success(`Đã ghi trả ${idsToProcess.length} ấn phẩm.`);
+
 			getData();
 			getBorrower();
 		} catch (err) {
-			message.error('Có lỗi xảy ra khi ghi trả.');
+			console.log(err);
 		}
 	};
 
@@ -289,18 +289,26 @@ const FormGhiTraSach = (props: any) => {
 
 	useEffect(() => {
 		form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
-		soTheInputRef.current?.focus();
+		setTimeout(() => {
+			if (soTheInputRef.current) {
+				soTheInputRef.current.focus();
+			}
+		}, 100);
 	}, []);
 
 	useEffect(() => {
 		if (!visibleForm) {
-			resetFieldsForm(form);
+			resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
 			setBorrowerInfo(undefined);
 			setDanhSach([]);
-		} else {
-			form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
-			soTheInputRef.current?.focus();
 		}
+
+		form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
+		setTimeout(() => {
+			if (soTheInputRef.current) {
+				soTheInputRef.current.focus();
+			}
+		}, 100);
 	}, [visibleForm]);
 
 	const content = (
@@ -389,6 +397,7 @@ const FormGhiTraSach = (props: any) => {
 												},
 											}}
 											otherButtons={[<div className='fw500'>Danh sách ấn phẩm đang mượn</div>]}
+											onReload={getBorrower}
 										/>
 									</Col>
 								</Row>
