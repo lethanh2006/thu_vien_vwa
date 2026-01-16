@@ -83,7 +83,7 @@ const FormDangKyCaBiet = (props: any) => {
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
+						<Form.Item name='thoiGianMuon' label='Ngày mượn' rules={[...rules.required]}>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>

@@ -80,7 +80,7 @@ const ChiTietMuonTraSach = (props: any) => {
 						{/* {trangThai !== ETrangThaiMuonSach.CHO_XU_LY && ( */}
 						<>
 							<Descriptions.Item label='Đăng ký cá biệt'>{record?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Thời gian mượn'>
+							<Descriptions.Item label='Ngày mượn'>
 								{record?.thoiGianMuon ? dayjs(record?.thoiGianMuon).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
 							<Descriptions.Item label='Hạn trả'>

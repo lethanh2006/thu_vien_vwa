@@ -10,21 +10,23 @@ import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
 import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PrinterOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, message, Modal, Popconfirm, Row, Segmented, Space, Spin } from 'antd';
+import { Button, Card, Col, Form, Input, message, Modal, Popconfirm, Row, Segmented, Space, Spin, Tabs } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { useIntl, useModel } from 'umi';
 import ChiTietAnPham from '../../AnPham/components/ChiTiet';
+import FormGhiTraSach from '../GhiTraSach/components/Form';
 import InforNguoiMuon from '../GhiTraSach/components/Infor';
 import StatNguoiDungAnPham from '../GhiTraSach/components/Stat';
 import ModalNguoiMuon from '../NguoiMuon';
+import '../style.less';
 import ConfirmMuonQuaHan from './ConfirmQuaHan';
 import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
 import TitlePrintMuonTra from './TitlePrintMuonTra';
 
 const FormMuonTraSach = (props: any) => {
-	const { getData } = props;
+	const { getData, hideCard } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { visibleForm, setVisibleForm, formSubmiting, edit, postPhieuMuonTraSachModel, record } = useModel(
@@ -51,6 +53,7 @@ const FormMuonTraSach = (props: any) => {
 	const isCanBo = vaiTro === EVaiTroMuonTra.CANBO;
 	const setBorrowerInfo = isSinhVien ? setRecSinhVien : setRecCanBo;
 	const [visibleTimTen, setVisibleTimTen] = useState<boolean>(false);
+	const [tabActive, setTabActive] = useState<string>('1');
 
 	const componentRef = useRef(null);
 	const soTheInputRef = useRef<any>(null);
@@ -75,19 +78,19 @@ const FormMuonTraSach = (props: any) => {
 	);
 
 	useEffect(() => {
+		form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
+		soTheInputRef.current?.focus();
+	}, []);
+
+	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
+			setDanhSach([]);
 			setRecSinhVien(undefined);
 			setRecCanBo(undefined);
-			setDanhSach([]);
 		} else {
 			form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
-
-			setTimeout(() => {
-				if (soTheInputRef.current) {
-					soTheInputRef.current.focus();
-				}
-			}, 100);
+			soTheInputRef.current?.focus();
 		}
 	}, [record?._id, visibleForm]);
 
@@ -147,6 +150,12 @@ const FormMuonTraSach = (props: any) => {
 				setRecSinhVien(undefined);
 				setRecCanBo(undefined);
 				setDanhSach([]);
+
+				setTimeout(() => {
+					if (soTheInputRef.current) {
+						soTheInputRef.current.focus();
+					}
+				}, 100);
 			})
 			.catch((err) => console.log(err));
 	};
@@ -218,7 +227,7 @@ const FormMuonTraSach = (props: any) => {
 			filterType: 'string',
 		},
 		{
-			title: 'Thời gian mượn',
+			title: 'Ngày mượn',
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
@@ -375,135 +384,139 @@ const FormMuonTraSach = (props: any) => {
 		}
 	};
 
-	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} sinh viên mượn sách`}>
-			<Form onFinish={onFinish} form={form} layout='vertical'>
-				<Row gutter={[12, 0]}>
-					<Col span={24} md={4}>
-						<Row gutter={[12, 0]}>
-							<Col span={24}>
-								<Form.Item name='vaiTro'>
-									<Segmented
-										options={Object.values(EVaiTroMuonTra)?.map((item) => ({
-											value: item,
-											label: item,
-										}))}
-										onChange={() => {
-											form.resetFields(['soThe']);
-											// Focus lại vào input mã định danh khi thay đổi vai trò
-											setTimeout(() => {
-												if (soTheInputRef.current) {
-													soTheInputRef.current.focus();
-												}
-											}, 100);
-										}}
-									/>
-								</Form.Item>
-							</Col>
-							<Col span={24}>
-								<Form.Item
-									name='soThe'
-									label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}
-									extra={
-										<a type='link' onClick={() => setVisibleTimTen(true)}>
-											Tìm kiếm theo tên
-										</a>
-									}
-								>
-									<Input
-										ref={soTheInputRef}
-										placeholder='Nhập mã định danh'
-										allowClear
-										onPressEnter={(e) => {
-											e.preventDefault();
-											handleLuuSinhVien();
-										}}
-										onChange={(e) => {
-											if (e.target.value === '') {
-												setBorrowerInfo(undefined);
-												setDanhSach([]);
+	const content = (
+		<>
+			{tabActive === '1' ? (
+				<Form onFinish={onFinish} form={form} layout='vertical'>
+					<div className='borrow-form-body'>
+						<Row gutter={[12, 0]} wrap>
+							<Col span={24} md={5}>
+								<Row gutter={[12, 0]}>
+									<Col span={24}>
+										<Form.Item name='vaiTro'>
+											<Segmented
+												options={Object.values(EVaiTroMuonTra)?.map((item) => ({
+													value: item,
+													label: item,
+												}))}
+												onChange={() => {
+													form.resetFields(['soThe']);
+													// Focus lại vào input mã định danh khi thay đổi vai trò
+													setTimeout(() => {
+														if (soTheInputRef.current) {
+															soTheInputRef.current.focus();
+														}
+													}, 100);
+												}}
+											/>
+										</Form.Item>
+									</Col>
+									<Col span={24}>
+										<Form.Item
+											name='soThe'
+											label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}
+											extra={
+												<a type='link' onClick={() => setVisibleTimTen(true)}>
+													Tìm kiếm theo tên
+												</a>
 											}
-										}}
-									/>
-								</Form.Item>
-							</Col>
-							<Col span={24}>
-								<Form.Item
-									name='dkcb'
-									label='Đăng ký cá biệt'
-									extra={
-										<Space>
-											<a type='link' onClick={handleLuuDKCB}>
-												Thêm
-											</a>{' '}
-											{/* |{' '}
+										>
+											<Input
+												ref={soTheInputRef}
+												placeholder='Nhập mã định danh'
+												allowClear
+												onPressEnter={(e) => {
+													e.preventDefault();
+													handleLuuSinhVien();
+												}}
+												onChange={(e) => {
+													if (e.target.value === '') {
+														setBorrowerInfo(undefined);
+														setDanhSach([]);
+													}
+												}}
+											/>
+										</Form.Item>
+									</Col>
+									<Col span={24}>
+										<Form.Item
+											name='dkcb'
+											label='Đăng ký cá biệt'
+											extra={
+												<Space>
+													<a type='link' onClick={handleLuuDKCB}>
+														Thêm
+													</a>{' '}
+													{/* |{' '}
 											<a type='link' onClick={() => setVisibleTimKiem(true)}>
 												Tìm
 											</a> */}
-										</Space>
-									}
-								>
-									<Input
-										ref={dkcbInputRef}
-										placeholder='Nhập đăng ký cá biệt'
-										onPressEnter={(e) => {
-											e.preventDefault();
-											handleLuuDKCB();
-										}}
-										allowClear
-									/>
-								</Form.Item>
+												</Space>
+											}
+										>
+											<Input
+												ref={dkcbInputRef}
+												placeholder='Nhập đăng ký cá biệt'
+												onPressEnter={(e) => {
+													e.preventDefault();
+													handleLuuDKCB();
+												}}
+												allowClear
+											/>
+										</Form.Item>
+									</Col>
+								</Row>
+							</Col>
+
+							<Col span={24} md={19}>
+								<Row gutter={[12, 12]}>
+									<Col span={24}>
+										<Spin spinning={loading}>
+											<InforNguoiMuon isSinhVien={isSinhVien} />
+										</Spin>
+									</Col>
+
+									<Col xs={24}>
+										<StatNguoiDungAnPham isSinhVien={isSinhVien} />
+									</Col>
+
+									<Col span={24}>
+										<TableStaticData
+											loading={loadDKCB}
+											columns={columns}
+											data={danhSach ?? []}
+											size='small'
+											addStt
+											hasTotal
+											otherButtons={[<div className='fw500'>Danh sách ấn phẩm ghi mượn</div>]}
+										/>
+									</Col>
+								</Row>
 							</Col>
 						</Row>
-					</Col>
+					</div>
 
-					<Col span={24} md={20}>
-						<Row gutter={[12, 0]}>
-							<Col span={24}>
-								<Spin spinning={loading}>
-									<InforNguoiMuon isSinhVien={isSinhVien} />
-								</Spin>
-							</Col>
+					<div className='form-footerthuivien'>
+						{isOverLimit ? (
+							<Button type='primary' onClick={() => setVisibleQuaHan(true)}>
+								Ghi mượn
+							</Button>
+						) : (
+							<Button loading={formSubmiting} onClick={() => form.submit()} type='primary'>
+								Ghi mượn
+							</Button>
+						)}
 
-							<Col xs={24}>
-								<StatNguoiDungAnPham isSinhVien={isSinhVien} />
-							</Col>
-							<Col span={24}>
-								<div className='fw500' style={{ marginTop: 12 }}>
-									Danh sách ấn phẩm ghi mượn
-								</div>
+						<ButtonExtend icon={<PrinterOutlined />} tooltip='Phiếu' onClick={() => handlePrintPhieu()}>
+							Phiếu
+						</ButtonExtend>
 
-								<TableStaticData
-									loading={loadDKCB}
-									columns={columns}
-									data={danhSach ?? []}
-									size='small'
-									addStt
-									hasTotal
-								/>
-							</Col>
-						</Row>
-					</Col>
-				</Row>
-
-				<div className='form-footer'>
-					{isOverLimit ? (
-						<Button type='primary' onClick={() => setVisibleQuaHan(true)}>
-							Ghi mượn
-						</Button>
-					) : (
-						<Button loading={formSubmiting} onClick={() => form.submit()} type='primary'>
-							Ghi mượn
-						</Button>
-					)}
-
-					<ButtonExtend icon={<PrinterOutlined />} tooltip='Phiếu' onClick={() => handlePrintPhieu()}>
-						Phiếu
-					</ButtonExtend>
-
-					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
-				</div>
-			</Form>
+						<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+					</div>
+				</Form>
+			) : (
+				<FormGhiTraSach hideCard />
+			)}
 
 			<PrintTemplate
 				ref={componentRef}
@@ -556,6 +569,31 @@ const FormMuonTraSach = (props: any) => {
 			>
 				<ChiTietAnPham />
 			</Modal>
+		</>
+	);
+
+	return hideCard ? (
+		content
+	) : (
+		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} sinh viên mượn sách`}>
+			<Tabs
+				onChange={(tab) => {
+					setTabActive(tab);
+					resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
+
+					setTimeout(() => {
+						if (soTheInputRef.current) {
+							soTheInputRef.current.focus();
+						}
+					}, 100);
+				}}
+				activeKey={tabActive}
+				style={{ marginTop: -23 }}
+			>
+				<Tabs.TabPane tab='Ghi mượn' key='1' />
+				<Tabs.TabPane tab='Ghi trả' key='2' />
+			</Tabs>
+			{content}
 		</Card>
 	);
 };

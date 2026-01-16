@@ -14,16 +14,18 @@ import {
 import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import { CheckOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, message, Modal, Popconfirm, Row, Segmented, Space, Spin, Tag } from 'antd';
+import { Button, Card, Col, Form, Input, message, Modal, Row, Segmented, Space, Spin, Tabs, Tag } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import FormMuonTraSach from '../../components/Form';
 import GhiTraAnPham from '../../components/GhiTraSach';
 import RenderHanTra from '../../components/RenderHanTra';
+import '../../style.less';
 import InforNguoiMuon from './Infor';
 import StatNguoiDungAnPham from './Stat';
 
 const FormGhiTraSach = (props: any) => {
-	const { getData } = props;
+	const { getData, hideCard } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 
@@ -44,6 +46,7 @@ const FormGhiTraSach = (props: any) => {
 
 	const [danhSach, setDanhSach] = useState<MuonSach.IRecord[]>([]);
 	const [visibleGhiTra, setVisibleGhiTra] = useState(false);
+	const [tabActive, setTabActive] = useState<string>('1');
 
 	const dkcb = Form.useWatch('dkcb', form);
 	const soThe = Form.useWatch('soThe', form);
@@ -217,7 +220,7 @@ const FormGhiTraSach = (props: any) => {
 			filterType: 'string',
 		},
 		{
-			title: 'Thời gian mượn',
+			title: 'Ngày mượn',
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
@@ -285,126 +288,135 @@ const FormGhiTraSach = (props: any) => {
 	];
 
 	useEffect(() => {
+		form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
+		soTheInputRef.current?.focus();
+	}, []);
+
+	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
-			setDanhSach([]);
 			setBorrowerInfo(undefined);
+			setDanhSach([]);
 		} else {
 			form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
 			soTheInputRef.current?.focus();
 		}
 	}, [visibleForm]);
 
-	return (
-		<Card title='Ghi trả sách'>
-			<Form form={form} layout='vertical'>
-				<Row gutter={[12, 0]}>
-					<Col span={24} md={4}>
-						<Row gutter={[12, 0]}>
-							<Col span={24}>
-								<Form.Item name='vaiTro'>
-									<Segmented
-										options={Object.values(EVaiTroMuonTra).map((item) => ({
-											value: item,
-											label: item,
-										}))}
-										onChange={() => {
-											form.resetFields(['soThe']);
-											setTimeout(() => soTheInputRef.current?.focus(), 100);
-										}}
-									/>
-								</Form.Item>
+	const content = (
+		<>
+			{tabActive === '1' ? (
+				<Form form={form} layout='vertical'>
+					<div className='borrow-form-body'>
+						<Row gutter={[12, 0]} wrap>
+							<Col span={24} md={5}>
+								<Row gutter={[12, 0]}>
+									<Col span={24}>
+										<Form.Item name='vaiTro'>
+											<Segmented
+												options={Object.values(EVaiTroMuonTra).map((item) => ({
+													value: item,
+													label: item,
+												}))}
+												onChange={() => {
+													form.resetFields(['soThe']);
+													setTimeout(() => soTheInputRef.current?.focus(), 100);
+												}}
+											/>
+										</Form.Item>
+									</Col>
+
+									<Col span={24}>
+										<Form.Item name='soThe' label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}>
+											<Input
+												ref={soTheInputRef}
+												placeholder='Nhập mã định danh'
+												onPressEnter={() => getBorrower()}
+												allowClear
+												onChange={(e) => {
+													if (e.target.value === '') {
+														setBorrowerInfo(undefined);
+														setDanhSach([]);
+													}
+												}}
+											/>
+										</Form.Item>
+									</Col>
+
+									<Col span={24}>
+										<Form.Item name='dkcb' label='Đăng ký cá biệt'>
+											<Input
+												ref={dkcbInputRef}
+												placeholder='Nhập đăng ký cá biệt'
+												onPressEnter={handleLuuDKCB}
+												allowClear
+											/>
+										</Form.Item>
+										<Space>
+											<a onClick={handleLuuDKCB}>Ghi trả</a>
+										</Space>
+									</Col>
+								</Row>
 							</Col>
 
-							<Col span={24}>
-								<Form.Item name='soThe' label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}>
-									<Input
-										ref={soTheInputRef}
-										placeholder='Nhập mã định danh'
-										onPressEnter={() => getBorrower()}
-										allowClear
-										onChange={(e) => {
-											if (e.target.value === '') {
-												setBorrowerInfo(undefined);
-												setDanhSach([]);
-											}
-										}}
-									/>
-								</Form.Item>
-							</Col>
+							<Col span={24} md={19}>
+								<Row gutter={[12, 12]}>
+									<Col span={24}>
+										<Spin spinning={loading}>
+											<InforNguoiMuon isSinhVien={isSinhVien} />
+										</Spin>
+									</Col>
 
-							<Col span={24}>
-								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
-									<Input
-										ref={dkcbInputRef}
-										placeholder='Nhập đăng ký cá biệt'
-										onPressEnter={handleLuuDKCB}
-										allowClear
-									/>
-								</Form.Item>
-								<Space>
-									<a onClick={handleLuuDKCB}>Ghi trả</a>
-								</Space>
+									<Col xs={24}>
+										<StatNguoiDungAnPham isSinhVien={isSinhVien} />
+									</Col>
+
+									<Col span={24}>
+										<TableStaticData
+											columns={columns}
+											data={danhSach}
+											loading={loading}
+											size='small'
+											addStt
+											hasTotal
+											otherProps={{
+												rowKey: (rec: MuonSach.IRecord) => rec._id,
+												rowSelection: {
+													type: 'checkbox',
+													selectedRowKeys: selectedIds ?? [],
+													onChange: (selectedRowKeys: any[]) => setSelectedIds(selectedRowKeys),
+													columnWidth: 40,
+												},
+											}}
+											otherButtons={[<div className='fw500'>Danh sách ấn phẩm đang mượn</div>]}
+										/>
+									</Col>
+								</Row>
 							</Col>
 						</Row>
-					</Col>
+					</div>
 
-					<Col span={24} md={20}>
-						<Row gutter={[12, 12]}>
-							<Col span={24}>
-								<Spin spinning={loading}>
-									<InforNguoiMuon isSinhVien={isSinhVien} />
-								</Spin>
-							</Col>
-
-							<Col xs={24}>
-								<StatNguoiDungAnPham isSinhVien={isSinhVien} />
-							</Col>
-
-							<Col span={24}>
-								<div className='fw500' style={{ marginTop: 12, marginBottom: 12 }}>
-									Danh sách ấn phẩm đang mượn
-								</div>
-
-								<TableStaticData
-									columns={columns}
-									data={danhSach}
-									loading={loading}
-									addStt
-									hasTotal
-									otherProps={{
-										rowKey: (rec: MuonSach.IRecord) => rec._id,
-										rowSelection: {
-											type: 'checkbox',
-											selectedRowKeys: selectedIds ?? [],
-											onChange: (selectedRowKeys: any[]) => setSelectedIds(selectedRowKeys),
-											columnWidth: 40,
-										},
-									}}
-								/>
-							</Col>
-						</Row>
-					</Col>
-				</Row>
-
-				<div className='form-footer'>
-					<Popconfirm
-						title={
-							selectedIds?.length
-								? `Bạn có chắc chắn muốn ghi trả ${selectedIds.length} ấn phẩm đã chọn?`
-								: 'Không có bản ghi nào được chọn. Bạn có muốn ghi trả tất cả?'
-						}
-						onConfirm={handleGhiTra}
-						okText='Đồng ý'
-						cancelText='Hủy'
-					>
-						<ButtonExtend disabled={!danhSach.length} type='primary'>
+					<div className='form-footerthuivien'>
+						{/* <Popconfirm
+							title={
+								selectedIds?.length
+									? `Bạn có chắc chắn muốn ghi trả ${selectedIds.length} ấn phẩm đã chọn?`
+									: 'Không có bản ghi nào được chọn. Bạn có muốn ghi trả tất cả?'
+							}
+							onConfirm={handleGhiTra}
+							okText='Đồng ý'
+							cancelText='Hủy'
+						> */}
+						<ButtonExtend disabled={!danhSach.length} type='primary' onClick={handleGhiTra}>
 							Ghi trả {selectedIds?.length ? `(${selectedIds.length})` : ''}
 						</ButtonExtend>
-					</Popconfirm>
-					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
-				</div>
-			</Form>
+						{/* </Popconfirm> */}
+						<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+					</div>
+				</Form>
+			) : (
+				<FormMuonTraSach hideCard />
+			)}
 
 			<GhiTraAnPham
 				visible={visibleGhiTra}
@@ -429,6 +441,31 @@ const FormGhiTraSach = (props: any) => {
 			>
 				<ChiTietAnPham />
 			</Modal>
+		</>
+	);
+
+	return hideCard ? (
+		content
+	) : (
+		<Card title='Ghi trả sách'>
+			<Tabs
+				onChange={(tab) => {
+					setTabActive(tab);
+					resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
+
+					setTimeout(() => {
+						if (soTheInputRef.current) {
+							soTheInputRef.current.focus();
+						}
+					}, 100);
+				}}
+				activeKey={tabActive}
+				style={{ marginTop: -23 }}
+			>
+				<Tabs.TabPane tab='Ghi trả' key='1' />
+				<Tabs.TabPane tab='Ghi mượn' key='2' />
+			</Tabs>
+			{content}
 		</Card>
 	);
 };

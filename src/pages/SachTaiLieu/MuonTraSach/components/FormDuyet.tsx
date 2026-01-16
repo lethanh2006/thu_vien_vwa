@@ -89,7 +89,7 @@ const FormDuyet = (props: { form: FormInstance }) => {
 				/>
 			</Col>
 			<Col xs={24} md={12}>
-				<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
+				<Form.Item name='thoiGianMuon' label='Ngày mượn' rules={[...rules.required]}>
 					<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
 				</Form.Item>
 			</Col>

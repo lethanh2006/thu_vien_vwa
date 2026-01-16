@@ -47,6 +47,12 @@ export enum ETrangThaiDangKyCaBiet {
 	// THANH_LY = 'Đã Thanh lý',
 }
 
+export const nameTrangThaiDangKyCaBietV2: Record<ETrangThaiDangKyCaBiet, string> = {
+	[ETrangThaiDangKyCaBiet.RANH]: 'Rảnh',
+	[ETrangThaiDangKyCaBiet.BAN]: 'Đang mượn',
+	// [ETrangThaiDangKyCaBiet.THANH_LY]: 'Đã thanh lý',
+};
+
 export const nameTrangThaiDangKyCaBiet: Record<ETrangThaiDangKyCaBiet, string> = {
 	[ETrangThaiDangKyCaBiet.RANH]: 'ĐKCB khả dụng',
 	[ETrangThaiDangKyCaBiet.BAN]: 'ĐKCB cho mượn',

@@ -131,7 +131,7 @@ const ModalXepGia = () => {
 								label='Sổ đăng ký tổng quát'
 								// rules={[...rules.required]}
 							>
-								<SelectDotNhapSach />
+								<SelectDotNhapSach allowClear />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
@@ -193,7 +193,10 @@ const ModalXepGia = () => {
 						</Col>
 						<Col xs={24} md={12}>
 							<Form.Item name='soDangKyCaBiet' label='Đăng ký cá biệt' rules={[...rules.required]}>
-								<Input placeholder='Đăng ký cá biệt' disabled />
+								<Input
+									placeholder='Đăng ký cá biệt'
+									// disabled
+								/>
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>

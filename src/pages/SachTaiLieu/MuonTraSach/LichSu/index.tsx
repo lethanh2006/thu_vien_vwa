@@ -147,7 +147,7 @@ const LichSuThueMuonPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Thời gian mượn',
+			title: 'Ngày mượn',
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,

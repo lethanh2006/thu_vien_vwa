@@ -39,7 +39,7 @@ const FormMuonTra = () => {
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col xs={24}>
-						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
+						<Form.Item name='thoiGianMuon' label='Ngày mượn' rules={[...rules.required]}>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>

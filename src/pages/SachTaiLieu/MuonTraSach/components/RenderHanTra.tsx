@@ -23,14 +23,34 @@ const RenderHanTra = (props: { rec: MuonSach.IRecord }) => {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='red'>Đã trả muộn {soNgayQuaHan} ngày</Tag>
+					<Tag
+						color='red'
+						style={{
+							maxWidth: 120,
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							textAlign: 'center',
+						}}
+					>
+						Đã trả muộn {soNgayQuaHan} ngày
+					</Tag>
 				</div>
 			);
 		} else {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='green'>Đã trả đúng hạn</Tag>
+					<Tag
+						color='green'
+						style={{
+							maxWidth: 120,
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							textAlign: 'center',
+						}}
+					>
+						Đã trả đúng hạn
+					</Tag>
 				</div>
 			);
 		}
@@ -42,21 +62,51 @@ const RenderHanTra = (props: { rec: MuonSach.IRecord }) => {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='red'>Quá hạn {soNgayQuaHan} ngày</Tag>
+					<Tag
+						color='red'
+						style={{
+							maxWidth: 120,
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							textAlign: 'center',
+						}}
+					>
+						Quá hạn {soNgayQuaHan} ngày
+					</Tag>
 				</div>
 			);
 		} else if (soNgayConLai <= 7) {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='orange'>Sắp đến hạn</Tag>
+					<Tag
+						color='orange'
+						style={{
+							maxWidth: 120,
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							textAlign: 'center',
+						}}
+					>
+						Sắp đến hạn
+					</Tag>
 				</div>
 			);
 		} else {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='green'>Còn {soNgayConLai} ngày</Tag>
+					<Tag
+						color='green'
+						style={{
+							maxWidth: 120,
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							textAlign: 'center',
+						}}
+					>
+						Còn {soNgayConLai} ngày
+					</Tag>
 				</div>
 			);
 		}

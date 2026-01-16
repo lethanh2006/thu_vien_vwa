@@ -84,7 +84,7 @@ const ThongKeMuonTraPage = () => {
 			filterType: 'string',
 		},
 		{
-			title: 'Thời gian mượn',
+			title: 'Ngày mượn',
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
@@ -143,7 +143,7 @@ const ThongKeMuonTraPage = () => {
 
 				<div style={{ display: 'flex', alignItems: 'center' }}>
 					<span style={{ marginRight: 8, whiteSpace: 'nowrap' }}>
-						{trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'Thời gian mượn:' : 'Thời gian trả:'}
+						{trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'Ngày mượn:' : 'Thời gian trả:'}
 					</span>
 					<MyDateRangePicker
 						value={datePicker}

@@ -177,7 +177,7 @@ const GhiTraAnPham = (props: {
 					</Descriptions.Item>
 					<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
 					<Descriptions.Item label='Đăng ký cá biệt'>{record?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
-					<Descriptions.Item label='Thời gian mượn'>
+					<Descriptions.Item label='Ngày mượn'>
 						{record?.thoiGianMuon ? dayjs(record?.thoiGianMuon).format('DD/MM/YYYY') : '--'}
 					</Descriptions.Item>
 					<Descriptions.Item label='Hạn trả'>

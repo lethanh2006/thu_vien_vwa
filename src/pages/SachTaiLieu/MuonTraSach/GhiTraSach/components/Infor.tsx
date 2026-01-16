@@ -11,7 +11,7 @@ const InforNguoiMuon = (props: { isSinhVien: boolean }) => {
 
 	return (
 		<Row gutter={16}>
-			<Col xs={24} sm={6} md={4} style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+			<Col xs={24} sm={6} md={4}>
 				<Avatar
 					size={128}
 					src={isSinhVien ? recSinhVien?.anhDaiDienUrl : recCanBo?.urlAnhDaiDien}
@@ -26,7 +26,7 @@ const InforNguoiMuon = (props: { isSinhVien: boolean }) => {
 
 			{/* Cột thông tin */}
 			<Col xs={24} sm={18} md={20}>
-				<Descriptions column={{ xs: 1, sm: 1, md: 3 }} title='Thông tin người mượn'>
+				<Descriptions column={{ xs: 1, sm: 1, md: 3 }} title='Thông tin người mượn' size='small'>
 					{isSinhVien ? (
 						<>
 							<Descriptions.Item label='Họ tên'>
