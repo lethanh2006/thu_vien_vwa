@@ -1,4 +1,3 @@
-import ExpandText from '@/components/ExpandText';
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
@@ -64,6 +63,12 @@ const ThongKeMuonTraPage = () => {
 			filterType: 'string',
 		},
 		{
+			title: 'ĐKCB',
+			dataIndex: 'soDangKyCaBiet',
+			width: 120,
+			filterType: 'string',
+		},
+		{
 			title: 'Nhan đề',
 			dataIndex: ['anPham', 'nhanDe'],
 			width: 220,
@@ -78,46 +83,44 @@ const ThongKeMuonTraPage = () => {
 			filterType: 'string',
 		},
 		{
-			title: 'ĐKCB',
-			dataIndex: 'soDangKyCaBiet',
-			width: 120,
-			filterType: 'string',
-		},
-		{
 			title: 'Ngày mượn',
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
-			width: 150,
+			width: 120,
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
+			hide: trangThai === ETrangThaiMuonSach.DA_TRA,
+			fixed: 'right',
 		},
 		{
 			title: 'Thời gian trả',
 			dataIndex: 'thoiGianTra',
-			width: 150,
+			align: 'center',
+			width: 120,
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			filterType: 'date',
 			sortable: true,
+			hide: trangThai === ETrangThaiMuonSach.DANG_THUE_MUON,
+			fixed: 'right',
 		},
-		{
-			title: 'Ghi chú',
-			dataIndex: 'ghiChu',
-			width: 220,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
-		},
-		{
-			title: 'Ghi chú trả',
-			dataIndex: 'ghiChuTra',
-			width: 220,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
-		},
+		// {
+		// 	title: 'Ghi chú',
+		// 	dataIndex: 'ghiChu',
+		// 	width: 220,
+		// 	render: (val, rec) => <ExpandText>{val}</ExpandText>,
+		// },
+		// {
+		// 	title: 'Ghi chú trả',
+		// 	dataIndex: 'ghiChuTra',
+		// 	width: 220,
+		// 	render: (val, rec) => <ExpandText>{val}</ExpandText>,
+		// },
 		{
 			title: 'Trạng thái',
 			align: 'center',
 			width: 140,
 			render: (_, rec) => <RenderHanTra rec={rec} />,
-
 			fixed: 'right',
 		},
 	];
