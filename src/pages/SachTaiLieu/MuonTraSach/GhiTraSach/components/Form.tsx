@@ -170,8 +170,8 @@ const FormGhiTraSach = (props: any) => {
 			await Promise.all(idsToProcess.map((id) => ghiTraThueMuonAnPhamModel(id)));
 			message.success(`Đã ghi trả ${idsToProcess.length} ấn phẩm.`);
 
-			getData();
 			getBorrower();
+			getData();
 		} catch (err) {
 			console.log(err);
 		}
