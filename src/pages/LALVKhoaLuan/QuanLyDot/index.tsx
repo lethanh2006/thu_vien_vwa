@@ -10,10 +10,11 @@ import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Card, Popconfirm, Space } from 'antd';
 import { useState } from 'react';
-import { history, useModel } from 'umi';
+import { history, useIntl, useModel } from 'umi';
 import ModalFormQuanLyDot from './components/ModalForm';
 
 const QuanLyDotPage = () => {
+	const intl = useIntl();
 	const { getModel, page, limit, handleEdit, deleteModel } = useModel('quanlythuvien.quanlydot');
 	const { setLoai } = useModel('quanlythuvien.danhsachdot');
 	const [datePicker, setDatePicker] = useState<any>();
@@ -38,14 +39,14 @@ const QuanLyDotPage = () => {
 
 	const columns: IColumn<QuanLyThuVien.IQuanLyDot>[] = [
 		{
-			title: 'Tên đợt',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.tenDot' }),
 			dataIndex: 'tenDot',
 			width: 150,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Thời gian',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.thoiGian' }),
 			dataIndex: 'thoiGianBatDau',
 			align: 'center',
 			width: 200,
@@ -60,7 +61,7 @@ const QuanLyDotPage = () => {
 			onCell,
 		},
 		{
-			title: 'Loại',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.loai' }),
 			dataIndex: 'loai',
 			align: 'center',
 			width: 150,
@@ -69,21 +70,21 @@ const QuanLyDotPage = () => {
 			onCell,
 		},
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.ghiChu' }),
 			dataIndex: 'ghiChu',
 			width: 150,
 			onCell,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
 					<ButtonExtend
-						tooltip='Chi tiết'
+						tooltip={intl.formatMessage({ id: 'luananluanvankhoaluan.card.title.chiTiet' })}
 						onClick={() => {
 							setLoai(rec?.loai);
 							history.push('/la-lv-kl-sinh-vien/danh-sach-sinh-vien');
@@ -91,13 +92,23 @@ const QuanLyDotPage = () => {
 						type='link'
 						icon={<EyeOutlined />}
 					/>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						title={intl.formatMessage({ id: 'luananluanvankhoaluan.confirm.banCoChacChanMuonXoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -105,7 +116,7 @@ const QuanLyDotPage = () => {
 	];
 
 	return (
-		<Card title='Quản lý đợt luận án, luận văn, khóa luận'>
+		<Card title={intl.formatMessage({ id: 'luananluanvankhoaluan.title.quanLyDotLuanAnLuanVanKhoaLuan' })}>
 			<Space style={{ marginBottom: 12 }}>
 				<MyDateRangePicker
 					value={datePicker}
@@ -123,7 +134,7 @@ const QuanLyDotPage = () => {
 				hideCard
 				formProps={{ getData }}
 				Form={ModalFormQuanLyDot}
-				title='Quản lý đợt'
+				title={intl.formatMessage({ id: 'luananluanvankhoaluan.title.quanLyDot' })}
 				widthDrawer={1000}
 			/>
 		</Card>

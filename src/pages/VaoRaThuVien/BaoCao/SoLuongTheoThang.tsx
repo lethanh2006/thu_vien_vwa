@@ -8,9 +8,10 @@ import { ArrowRightOutlined, ExportOutlined } from '@ant-design/icons';
 import { Card, Space, Spin } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
-import { Link, useModel } from 'umi';
+import { Link, useIntl, useModel } from 'umi';
 
 const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
+	const intl = useIntl();
 	const { isDashBoard } = props;
 	const { loadingThang, getSoLuotCheckInThangModel, dataThongKeCheckInThang } = useModel('quanlythuvien.vaorathuvien');
 	const [currentMonth, setCurrentMonth] = useState<dayjs.Dayjs>(dayjs());
@@ -32,11 +33,11 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 
 	return (
 		<Card
-			title='Số lượt vào/ra thư viện theo tháng'
+			title={intl.formatMessage({ id: 'vaorathuvien.card.title.danhSachVaoRaThuVienTheoThang' })}
 			extra={
 				isDashBoard ? (
 					<Link to='/vao-ra-thu-vien/tong-hop'>
-						Xem thêm <ArrowRightOutlined />
+						{intl.formatMessage({ id: 'vaorathuvien.label.xemThem' })} <ArrowRightOutlined />
 					</Link>
 				) : null
 			}
@@ -52,7 +53,7 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 					}}
 				/>
 				<ButtonExtend icon={<ExportOutlined />} onClick={() => handleExport()}>
-					Xuất dữ liệu
+					{intl.formatMessage({ id: 'vaorathuvien.button.xuatDuLieu' })}
 				</ButtonExtend>
 			</Space>
 
@@ -63,9 +64,12 @@ const SoLuongVaoRaThuVienTheoThang = (props: { isDashBoard?: boolean }) => {
 						dataThongKeCheckInThang.map((item) => item.tongSoLuotCheckIn),
 						dataThongKeCheckInThang.map((item) => item.tongSoLuotCheckOut),
 					]}
-					yLabel={['Số lượng vào', 'Số lượng ra']}
+					yLabel={[
+						intl.formatMessage({ id: 'vaorathuvien.label.soluongvao' }),
+						intl.formatMessage({ id: 'vaorathuvien.label.soluongra' }),
+					]}
 					colors={['#0982c9', '#18b903']}
-					title='Số lượt'
+					title={intl.formatMessage({ id: 'vaorathuvien.label.soLuot' })}
 					height={450}
 					formatY={(val) => `${val}`}
 					otherOptions={{

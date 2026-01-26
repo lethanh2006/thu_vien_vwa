@@ -31,25 +31,25 @@ const ModalBienMucTaiLieu = (props: any) => {
 
 	return (
 		<Card
-			title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()} ${'ấn phẩm vật lý'}`}
+			title={`${edit ? intl.formatMessage({ id: 'global.button.chinhsua' }) : isView ? intl.formatMessage({ id: 'global.button.chitiet' }) : intl.formatMessage({ id: 'global.button.themmoimoi' })} ${title?.toLowerCase()} ${intl.formatMessage({ id: 'sachtailieu.anpham.anPhamVatLy' })}`}
 			loading={loading}
 		>
 			{isView ? (
 				<>
 					<Tabs tabPosition={isTabletOrMobile ? 'top' : 'left'}>
-						<Tabs.TabPane tab='Thông tin chung' key='1'>
+						<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.thongTinChung' })} key='1'>
 							<ChiTietBienMuc />
 						</Tabs.TabPane>
-						<Tabs.TabPane tab='Biên mục chi tiết' key='2'>
+						<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.bienmuc.chiMucChiTiet' })} key='2'>
 							<ChiTietAnPham />
 						</Tabs.TabPane>
 						{record?.online ? (
-							<Tabs.TabPane tab='File ấn phẩm số' key='3'>
+							<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.fileAnPhamSo' })} key='3'>
 								<FormItemTaiLieuSo disabled value={record?.thongTinAnPhamTrucTuyen} />
 							</Tabs.TabPane>
 						) : null}
 						{record?.isSachHay ? (
-							<Tabs.TabPane tab='Nội dung sách hay' key='4'>
+							<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.noiDungSachHay' })} key='4'>
 								<NoiDungSachHay />
 							</Tabs.TabPane>
 						) : null}

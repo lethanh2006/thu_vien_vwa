@@ -7,9 +7,11 @@ import { Button, Card, Col, Form, Input, Modal, Radio, Row, Space } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { useIntl } from 'umi';
 import TimKiemInMaVach from './components/TimKiem';
 
 const InMaVachPage = () => {
+	const intl = useIntl();
 	const [form] = Form.useForm();
 	const kieuIn: 'maTaiLieu' | 'dkcb' | 'cuThe' = Form.useWatch('kieuIn', form);
 	const tuMaTaiLieu: string = Form.useWatch('tuMaTaiLieu', form);
@@ -64,7 +66,7 @@ const InMaVachPage = () => {
 		setLoadingExport(true);
 
 		if (listBarcodes.length === 0) {
-			return Promise.reject('Không có mã vạch để in');
+			return Promise.reject(intl.formatMessage({ id: 'sachtailieu.inmavach.khongCoMaVachDeIn' }));
 		} else {
 			return exportNhanMaGay(
 				kieuIn === 'maTaiLieu'
@@ -82,16 +84,16 @@ const InMaVachPage = () => {
 	};
 
 	return (
-		<Card title='In mã vạch cho tài liệu'>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.inMaVach' })}>
 			<Form form={form} layout='vertical'>
 				<Row gutter={[12, 12]}>
 					<Col span={24}>
 						<Form.Item name='kieuIn'>
 							<Radio.Group
 								options={[
-									{ value: 'maTaiLieu', label: 'Mã tài liệu' },
-									{ value: 'dkcb', label: 'Đăng ký cá biệt' },
-									{ value: 'cuThe', label: 'Cụ thể' },
+									{ value: 'maTaiLieu', label: intl.formatMessage({ id: 'sachtailieu.maTaiLieu' }) },
+									{ value: 'dkcb', label: intl.formatMessage({ id: 'sachtailieu.dkcb' }) },
+									{ value: 'cuThe', label: intl.formatMessage({ id: 'sachtailieu.cuThe' }) },
 								]}
 							/>
 						</Form.Item>
@@ -102,7 +104,7 @@ const InMaVachPage = () => {
 								<Col span={12}>
 									<Form.Item
 										name='tuMaTaiLieu'
-										label='Từ mã tài liệu'
+										label={intl.formatMessage({ id: 'sachtailieu.inmavach.tuMaTaiLieu' })}
 										extra={
 											<a
 												onClick={() => {
@@ -110,17 +112,17 @@ const InMaVachPage = () => {
 													setVisibleTimKiem(true);
 												}}
 											>
-												Tìm kiếm
+												{intl.formatMessage({ id: 'sachtailieu.anpham.timKiem' })}
 											</a>
 										}
 									>
-										<Input placeholder='Nhập mã tài liệu' />
+										<Input placeholder={intl.formatMessage({ id: 'sachtailieu.inmavach.nhapMaTaiLieu' })} />
 									</Form.Item>
 								</Col>
 								<Col span={12}>
 									<Form.Item
 										name='denMaTaiLieu'
-										label='Đến mã tài liệu'
+										label={intl.formatMessage({ id: 'sachtailieu.inmavach.denMaTaiLieu' })}
 										extra={
 											<a
 												onClick={() => {
@@ -128,11 +130,11 @@ const InMaVachPage = () => {
 													setVisibleTimKiem(true);
 												}}
 											>
-												Tìm kiếm
+												{intl.formatMessage({ id: 'sachtailieu.anpham.timKiem' })}
 											</a>
 										}
 									>
-										<Input placeholder='Nhập mã tài liệu' />
+										<Input placeholder={intl.formatMessage({ id: 'sachtailieu.inmavach.nhapMaTaiLieu' })} />
 									</Form.Item>
 								</Col>
 							</Row>
@@ -141,7 +143,7 @@ const InMaVachPage = () => {
 								<Col span={12}>
 									<Form.Item
 										name='tudkcb'
-										label='Từ ĐKCB'
+										label={intl.formatMessage({ id: 'sachtailieu.inmavach.tuDangKyCaBiet' })}
 										extra={
 											<a
 												onClick={() => {
@@ -149,17 +151,17 @@ const InMaVachPage = () => {
 													setVisibleTimKiem(true);
 												}}
 											>
-												Tìm kiếm
+												{intl.formatMessage({ id: 'sachtailieu.anpham.timKiem' })}
 											</a>
 										}
 									>
-										<Input placeholder='Nhập đăng ký cá biệt' />
+										<Input placeholder={intl.formatMessage({ id: 'sachtailieu.inmavach.nhapDangKyCaBiet' })} />
 									</Form.Item>
 								</Col>
 								<Col span={12}>
 									<Form.Item
 										name='dendkcb'
-										label='Đến ĐKCB'
+										label={intl.formatMessage({ id: 'sachtailieu.inmavach.denDangKyCaBiet' })}
 										extra={
 											<a
 												onClick={() => {
@@ -167,21 +169,24 @@ const InMaVachPage = () => {
 													setVisibleTimKiem(true);
 												}}
 											>
-												Tìm kiếm
+												{intl.formatMessage({ id: 'sachtailieu.anpham.timKiem' })}
 											</a>
 										}
 									>
-										<Input placeholder='Nhập đăng ký cá biệt' />
+										<Input placeholder={intl.formatMessage({ id: 'sachtailieu.inmavach.nhapDangKyCaBiet' })} />
 									</Form.Item>
 								</Col>
 							</Row>
 						) : (
 							<Form.Item
 								name='madkcb'
-								label='In theo các đăng ký cá biệt nhập dưới đây'
-								extra='Lưu ý các phần tử cách nhau bằng dấu phẩy (,)'
+								label={intl.formatMessage({ id: 'sachtailieu.inmavach.inTheoDangKyCaBiet' })}
+								extra={intl.formatMessage({ id: 'sachtailieu.inmavach.luuY' })}
 							>
-								<Input.TextArea rows={3} placeholder='Nhập thông tin' />
+								<Input.TextArea
+									rows={3}
+									placeholder={intl.formatMessage({ id: 'sachtailieu.inmavach.nhapThongTin' })}
+								/>
 							</Form.Item>
 						)}
 					</Col>
@@ -196,15 +201,15 @@ const InMaVachPage = () => {
 							});
 						}}
 					>
-						Làm mới
+						{intl.formatMessage({ id: 'sachtailieu.button.lamMoi' })}
 					</Button>
 
 					<ButtonExtend type='primary' onClick={() => handlePrintBarcord()}>
-						In Barcode
+						{intl.formatMessage({ id: 'sachtailieu.button.inBarcode' })}
 					</ButtonExtend>
 
 					<ButtonExtend type='primary' loading={loadingExport} onClick={handleExport}>
-						In nhãn gáy
+						{intl.formatMessage({ id: 'sachtailieu.button.inNhanGay' })}
 					</ButtonExtend>
 				</Space>
 			</Form>
@@ -212,16 +217,16 @@ const InMaVachPage = () => {
 			<PrintBarcode ref={componentRef} listBarcodes={listBarcodes?.map((item) => item)} />
 
 			<Modal
-				title={`Thông tin ${kieuIn === 'maTaiLieu' ? 'mã tài liệu' : 'đăng ký cá biệt'}`}
+				title={`Thông tin ${kieuIn === 'maTaiLieu' ? intl.formatMessage({ id: 'sachtailieu.maTaiLieu' }) : intl.formatMessage({ id: 'sachtailieu.dkcb' })}`}
 				open={visibleTimKiem}
 				onCancel={() => setVisibleTimKiem(false)}
 				width={1000}
 				footer={
 					<div className='form-footer'>
-						<Button onClick={() => setVisibleTimKiem(false)}>Đóng</Button>
+						<Button onClick={() => setVisibleTimKiem(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 					</div>
 				}
-				destroyOnHidden
+				destroyOnClose
 			>
 				<TimKiemInMaVach field={field} form={form} setVisibleTimKiem={setVisibleTimKiem} />
 			</Modal>

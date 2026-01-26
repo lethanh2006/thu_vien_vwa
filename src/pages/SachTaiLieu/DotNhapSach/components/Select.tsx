@@ -1,7 +1,7 @@
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -16,6 +16,7 @@ const SelectDotNhapSach = (props: {
 	condition?: Partial<AnPham.IDotNhapSach>;
 	disabled?: boolean;
 }) => {
+	const intl = useIntl();
 	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled } = props;
 	const { danhSach, getAllModel } = useModel('sachtailieu.anpham.dotnhapsach');
 
@@ -37,7 +38,7 @@ const SelectDotNhapSach = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn đợt nhập sách'
+			placeholder={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.chonDot' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

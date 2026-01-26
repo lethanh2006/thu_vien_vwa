@@ -20,7 +20,7 @@ const ModalBienMucZ3950 = (props: any) => {
 
 	return (
 		<Modal
-			title='Biên mục qua Z39.50'
+			title={intl.formatMessage({ id: 'sachtailieu.bienmuc.z3950' })}
 			width={1200}
 			open={visibleZ3950}
 			onCancel={() => setVisibleZ3950(false)}

@@ -9,8 +9,10 @@ import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import SelectDotNhapSach from '@/pages/SachTaiLieu/DotNhapSach/components/Select';
 import rules from '@/utils/rules';
 import { Alert, Checkbox, Col, Form, type FormInstance, Input, Row, Select } from 'antd';
+import { useIntl } from 'umi';
 
 const BienMucSoLuoc = (props: { form: FormInstance }) => {
+	const intl = useIntl();
 	const { form } = props;
 	const isSachHay: boolean = Form.useWatch('isSachHay', form);
 
@@ -21,7 +23,7 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 					style={{ marginBottom: 12 }}
 					type='info'
 					showIcon
-					message='Để tránh mất dữ liệu khi biên mục, lưu ý không tắt form hoặc tải lại trang trong khi chưa hoàn thành biên mục chi tiết!'
+					message={intl.formatMessage({ id: 'sachtailieu.label.noSave' })}
 				/>
 			</Col>
 			<Col span={24}>
@@ -30,33 +32,54 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 						<Row gutter={[12, 0]}>
 							<Col xs={24} md={6}>
 								<Form.Item name='urlScanBia' label=''>
-									<UploadFile isPortraitAvatar buttonDescription='Thêm ảnh bìa' />
+									<UploadFile
+										isPortraitAvatar
+										buttonDescription={intl.formatMessage({ id: 'sachtailieu.bienmuc.themAnhBia' })}
+									/>
 								</Form.Item>
 							</Col>
 							<Col xs={24} md={18}>
 								<Row gutter={[12, 0]}>
 									<Col xs={24} md={12}>
-										<Form.Item name='dotNhapSachId' label='Sổ đăng ký tổng quát'>
+										<Form.Item
+											name='dotNhapSachId'
+											label={intl.formatMessage({ id: 'sachtailieu.anpham.soDangKyTongQuat' })}
+										>
 											<SelectDotNhapSach allowClear />
 										</Form.Item>
 									</Col>
 									<Col xs={24} md={12}>
-										<Form.Item name='canBoBienMuc' label='Cán bộ biên mục [911]'>
-											<Input placeholder='Nhập tên cán bộ' />
+										<Form.Item
+											name='canBoBienMuc'
+											label={intl.formatMessage({ id: 'sachtailieu.bienmuc.canBoBienMuc' })}
+										>
+											<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapCanBoBienMuc' })} />
 										</Form.Item>
 									</Col>
 									<Col xs={24} md={12}>
-										<Form.Item name='maKieuBanGhi' label='Kiểu bản ghi' rules={[...rules.required]}>
+										<Form.Item
+											name='maKieuBanGhi'
+											label={intl.formatMessage({ id: 'sachtailieu.bienmuc.kieuBanGhi' })}
+											rules={[...rules.required]}
+										>
 											<SelectKieuBanGhi selectMa />
 										</Form.Item>
 									</Col>
 									<Col xs={24} md={12}>
-										<Form.Item name='maDangTaiLieu' label='Dạng tài liệu [927]' rules={[...rules.required]}>
+										<Form.Item
+											name='maDangTaiLieu'
+											label={intl.formatMessage({ id: 'sachtailieu.bienmuc.dangTaiLieu' })}
+											rules={[...rules.required]}
+										>
 											<SelectDangTaiLieu selectMa />
 										</Form.Item>
 									</Col>
 									<Col xs={24} md={12}>
-										<Form.Item name='maCapThuMuc' label='Cấp thư mục' rules={[...rules.required]}>
+										<Form.Item
+											name='maCapThuMuc'
+											label={intl.formatMessage({ id: 'sachtailieu.bienmuc.capThuMuc' })}
+											rules={[...rules.required]}
+										>
 											<SelectCapThuMuc selectMa />
 										</Form.Item>
 									</Col>
@@ -66,18 +89,33 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 					</Col>
 
 					<Col xs={24} md={12}>
-						<Form.Item name='maVatMangTin' label='Vật mang tin [925]' rules={[...rules.required]}>
+						<Form.Item
+							name='maVatMangTin'
+							label={intl.formatMessage({ id: 'sachtailieu.bienmuc.vatMangTin' })}
+							rules={[...rules.required]}
+						>
 							<SelectVatMangTin selectMa />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='mauBienMucId' label='Mẫu biên mục' rules={[...rules.required]}>
+						<Form.Item
+							name='mauBienMucId'
+							label={intl.formatMessage({ id: 'sachtailieu.bienmuc.mauBienMuc' })}
+							rules={[...rules.required]}
+						>
 							<SelectMauBienMuc />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='doMat' label='Độ mật [926]' rules={[...rules.required]}>
-							<Select placeholder='Chọn độ mật' style={{ width: '100%' }}>
+						<Form.Item
+							name='doMat'
+							label={intl.formatMessage({ id: 'sachtailieu.bienmuc.doMat' })}
+							rules={[...rules.required]}
+						>
+							<Select
+								placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.chonDoMat' })}
+								style={{ width: '100%' }}
+							>
 								{Array.from({ length: 11 }, (_, i) => (
 									<Select.Option key={i} value={i}>
 										{i}
@@ -87,7 +125,11 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='maNgonNgu' label='Mã ngôn ngữ [041$a]' rules={[...rules.required]}>
+						<Form.Item
+							name='maNgonNgu'
+							label={intl.formatMessage({ id: 'sachtailieu.bienmuc.maNgonNgu' })}
+							rules={[...rules.required]}
+						>
 							<SelectNgonNgu selectMa />
 						</Form.Item>
 					</Col>
@@ -97,63 +139,74 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 			<Col span={24}>
 				<Row gutter={[12, 0]}>
 					<Col xs={24} md={12}>
-						<Form.Item name='ISBN' label='ISBN [020$a]'>
-							<Input placeholder='Nhập ISBN' />
+						<Form.Item name='ISBN' label={intl.formatMessage({ id: 'sachtailieu.anpham.isbn' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapIsbn' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='ISSN' label='ISSN [022$a]'>
-							<Input placeholder='Nhập ISSN' />
+						<Form.Item name='ISSN' label={intl.formatMessage({ id: 'sachtailieu.anpham.issn' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapIssn' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='tacGia' label='Tác giả [100$a]' rules={[...rules.required]}>
-							<Input placeholder='Nhập tác giả' />
+						<Form.Item
+							name='tacGia'
+							label={intl.formatMessage({ id: 'sachtailieu.bienmuc.tacGia' })}
+							rules={[...rules.required]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapTacGia' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='nhanDe' label='Nhan đề chính [245$a]' rules={[...rules.required]}>
-							<Input placeholder='Nhập nhan đề chính' />
+						<Form.Item
+							name='nhanDe'
+							label={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhanDeChinh' })}
+							rules={[...rules.required]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapNhanDeChinh' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='soThuTuCuaTap' label='Số thứ tự của tập [245$n]'>
-							<Input placeholder='Nhập số thứ tự của tập' />
+						<Form.Item name='soThuTuCuaTap' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.soThuTuCuaTap' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapSoThuTuCuaTap' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='tenTap' label='Tên tập [245$p]'>
-							<Input placeholder='Nhập tên tập' />
+						<Form.Item name='tenTap' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.tenTap' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapTenTap' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='phuDe' label='Phụ đề [245$b]'>
-							<Input placeholder='Nhập phụ đề' />
+						<Form.Item name='phuDe' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.phuDe' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapPhuDe' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='thongTinTrachNhiem' label='Thông tin trách nhiệm [245$c]'>
-							<Input placeholder='Nhập thông tin trách nhiệm' />
+						<Form.Item
+							name='thongTinTrachNhiem'
+							label={intl.formatMessage({ id: 'sachtailieu.bienmuc.thongTinTrachNhiem' })}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapThongTinTrachNhiem' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={8}>
-						<Form.Item name='lanXuatBan' label='Lần xuất bản [250$a]'>
-							<Input placeholder='Nhập lần xuất bản' />
+						<Form.Item name='lanXuatBan' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.lanXuatBan' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapLanXuatBan' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={8}>
-						<Form.Item name='noiXuatBan' label='Nơi xuất bản [260$a]'>
-							<Input placeholder='Nhập nơi xuất bản' />
+						<Form.Item name='noiXuatBan' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.noiXuatBan' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapNoiXuatBan' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={8}>
-						<Form.Item name='namXuatBan' label='Năm xuất bản [260$c]'>
-							<Input placeholder='Nhập năm xuất bản' />
+						<Form.Item name='namXuatBan' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.namXuatBan' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapNamXuatBan' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='nhaXuatBan' label='Nhà xuất bản [260$b]'>
-							<Input placeholder='Nhập nhà xuất bản' />
+						<Form.Item name='nhaXuatBan' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhaXuatBan' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapNhaXuatBan' })} />
 						</Form.Item>
 					</Col>
 				</Row>
@@ -162,28 +215,28 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 			<Col span={24}>
 				<Row gutter={[12, 0]}>
 					<Col xs={24} md={12}>
-						<Form.Item name='soTrang' label='Số trang [300$a]'>
-							<Input placeholder='Nhập số trang' />
+						<Form.Item name='soTrang' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.soTrang' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapSoTrang' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='dacDiemVatLy' label='Đặc điểm vật lý [300$b]'>
-							<Input placeholder='Nhập đặc điểm vật lý' />
+						<Form.Item name='dacDiemVatLy' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.dacDiemVatLy' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapDacDiemVatLy' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='khuonKho' label='Khuôn khổ [300$c]'>
-							<Input placeholder='Nhập khuôn khổ' />
+						<Form.Item name='khuonKho' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.khuonKho' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapKhuonKho' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='tuLieuDiKem' label='Tư liệu đi kèm [300$e]'>
-							<Input placeholder='Nhập tư liệu đi kèm' />
+						<Form.Item name='tuLieuDiKem' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.tuLieuDiKem' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapTuLieuDiKem' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='chiSoPhanLoai' label='Chi số phân loại [082$a]'>
-							<Input placeholder='Nhập chi số phân loại' />
+						<Form.Item name='chiSoPhanLoai' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.chiSoPhanLoai' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapChiSoPhanLoai' })} />
 						</Form.Item>
 					</Col>
 				</Row>
@@ -193,7 +246,7 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 				<Row gutter={[12, 0]}>
 					<Col xs={24} md={12}>
 						<Form.Item name='isSachHay' valuePropName='checked' initialValue={false}>
-							<Checkbox>Sách hay</Checkbox>
+							<Checkbox>{intl.formatMessage({ id: 'sachtailieu.anpham.sachHay' })}</Checkbox>
 						</Form.Item>
 					</Col>
 				</Row>
@@ -201,7 +254,11 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 
 			{isSachHay && (
 				<Col xs={24}>
-					<Form.Item name='moTa' label='Nội dung sách hay' rules={[...rules.text]}>
+					<Form.Item
+						name='moTa'
+						label={intl.formatMessage({ id: 'sachtailieu.anpham.noiDungSachHay' })}
+						rules={[...rules.text]}
+					>
 						<TinyEditor height={300} hideMenubar miniToolbar stickyToolbar={false} />
 					</Form.Item>
 				</Col>

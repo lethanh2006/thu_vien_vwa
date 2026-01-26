@@ -2,7 +2,7 @@ import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { Empty, Select, Spin } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const SelectAnPhamDebounce = (props: {
 	value?: string | string[];
@@ -14,6 +14,7 @@ const SelectAnPhamDebounce = (props: {
 	allowClear?: boolean;
 	condition?: Partial<AnPham.IThongTinAnPham>;
 }) => {
+	const intl = useIntl();
 	const { value, onChange, multiple, disabled, style, allowClear, condition } = props;
 	const { danhSach, getModel, loading, searchAnPhamModel } = useModel('sachtailieu.anpham.anpham');
 	const [keyword, setKeyword] = useState<string>();
@@ -42,18 +43,25 @@ const SelectAnPhamDebounce = (props: {
 			onSearch={(val) => searchDebounceAnPham(val)}
 			notFoundContent={
 				loading ? (
-					<Spin spinning={true} tip='Đang tìm kiếm...' style={{ width: '100%', margin: 10 }} />
+					<Spin
+						spinning={true}
+						tip={intl.formatMessage({ id: 'sachtailieu.label.searching' })}
+						style={{ width: '100%', margin: 10 }}
+					/>
 				) : (
-					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='Không có dữ liệu, hãy thử nhập từ khóa khác!' />
+					<Empty
+						image={Empty.PRESENTED_IMAGE_SIMPLE}
+						description={intl.formatMessage({ id: 'sachtailieu.label.noData' })}
+					/>
 				)
 			}
 			options={danhSach.map((item) => ({
 				value: item?._id,
-				label: item?.nhanDe ?? 'Không có thông tin',
+				label: item?.nhanDe ?? intl.formatMessage({ id: 'sachtailieu.label.noInfo' }),
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn ấn phẩm'
+			placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.chonAnPham' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

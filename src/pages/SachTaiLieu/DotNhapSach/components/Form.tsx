@@ -47,26 +47,44 @@ const FormDotNhapSach = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'global.button.chinhsua' }) : intl.formatMessage({ id: 'global.button.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item name='maHocKy' label='Học kỳ' rules={[...rules.required]}>
+						<Form.Item
+							name='maHocKy'
+							label={intl.formatMessage({ id: 'sachtailieu.hocky.hocKy' })}
+							rules={[...rules.required]}
+						>
 							<SelectHocKy selectMa />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Tên đợt' name='ten' rules={[...rules.required, ...rules.text, ...rules.length(100)]}>
-							<Input placeholder='Nhập tên đợt' />
+						<Form.Item
+							label={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.tenDot' })}
+							name='ten'
+							rules={[...rules.required, ...rules.text, ...rules.length(100)]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.nhapTenDot' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Nguồn bổ sung' name='nguonBoSungId' rules={[...rules.required]}>
+						<Form.Item
+							label={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.nguonBoSung' })}
+							name='nguonBoSungId'
+							rules={[...rules.required]}
+						>
 							<SelectNguonBoSung />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='thoiGianBatDau' label='Thời gian bắt đầu' rules={[...rules.required]}>
+						<Form.Item
+							name='thoiGianBatDau'
+							label={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.thoiGianBatDau' })}
+							rules={[...rules.required]}
+						>
 							<MyDatePicker
 								onChange={(val) => {
 									form.validateFields(['thoiGianKetThuc']);
@@ -77,26 +95,33 @@ const FormDotNhapSach = (props: any) => {
 					<Col xs={24} md={12}>
 						<Form.Item
 							name='thoiGianKetThuc'
-							label='Thời gian kết thúc'
-							rules={[...rules.required, ...rules.sauNgay(thoiGianBatDau, 'Thời gian bắt đầu')]}
+							label={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.thoiGianKetThuc' })}
+							rules={[
+								...rules.required,
+								...rules.sauNgay(thoiGianBatDau, intl.formatMessage({ id: 'sachtailieu.dotnhapsach.thoiGianBatDau' })),
+							]}
 						>
 							<MyDatePicker disabledDate={(cur) => dayjs(cur).isBefore(thoiGianBatDau)} />
 						</Form.Item>
 					</Col>
 
 					<Col xs={24} md={12}>
-						<Form.Item name='soChungTu' label='Số chứng từ' rules={[...rules.text, ...rules.length(100)]}>
-							<Input placeholder='Nhập số chứng từ' />
+						<Form.Item
+							name='soChungTu'
+							label={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.soChungTu' })}
+							rules={[...rules.text, ...rules.length(100)]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.nhapSoChungTu' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='ngayChungTu' label='Ngày chứng từ'>
+						<Form.Item name='ngayChungTu' label={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.ngayChungTu' })}>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Mô tả' name='moTa'>
-							<Input.TextArea rows={2} placeholder='Nhập mô tả' />
+						<Form.Item label={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.moTa' })} name='moTa'>
+							<Input.TextArea rows={2} placeholder={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.nhapMoTa' })} />
 						</Form.Item>
 					</Col>
 				</Row>

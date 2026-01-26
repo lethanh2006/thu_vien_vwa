@@ -62,61 +62,74 @@ const FormDanhSachNop = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'global.button.chinhsua' }) : intl.formatMessage({ id: 'global.button.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col span={24}>
-						<Form.Item label='Tên Khoá luận/Đồ án' name='tenDeTai' rules={[...rules.required, ...rules.text]}>
-							<Input.TextArea rows={3} placeholder='Nhập tên khóa luận, đồ án' />
+						<Form.Item
+							label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.tenKhoaLuan' })}
+							name='tenDeTai'
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input.TextArea
+								rows={3}
+								placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.nhapTenKhoaLuan' })}
+							/>
 						</Form.Item>
 					</Col>
 					<Col span={24} md={8}>
 						<Form.Item
-							label='Người hướng dẫn'
+							label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.nguoiHuongDan' })}
 							name='nguoiHuongDan'
 							rules={[...rules.required, ...rules.text, ...rules.length(200)]}
 						>
-							<Input placeholder='Nhập người hướng dẫn' />
+							<Input placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.nhapNguoiHuongDan' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24} md={8}>
-						<Form.Item label='Học viên' name='maSinhVien' rules={[...rules.required]}>
+						<Form.Item
+							label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.sinhVien' })}
+							name='maSinhVien'
+							rules={[...rules.required]}
+						>
 							<SelectSinhVienDebounce selectMa onChange={(val) => onChangeSinhVien(val as string)} />
 						</Form.Item>
 					</Col>
 					<Col span={8}>
 						<Form.Item name='ssoId' hidden />
-						<Form.Item label='Họ và tên' name='hoTenTacGia'>
-							<Input placeholder='Nhập họ và tên' disabled />
+						<Form.Item label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.hoVaTen' })} name='hoTenTacGia'>
+							<Input placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.nhapHoVaTen' })} disabled />
 						</Form.Item>
 					</Col>
 					<Col span={8}>
-						<Form.Item label='Ngày sinh' name='ngaySinh'>
+						<Form.Item label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.ngaySinh' })} name='ngaySinh'>
 							<MyDatePicker disabled />
 						</Form.Item>
 					</Col>
 					<Col span={8}>
-						<Form.Item label='Số điện thoại' name='soDienThoai'>
-							<Input placeholder='Nhập số điện thoại' disabled />
+						<Form.Item label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.soDienThoai' })} name='soDienThoai'>
+							<Input placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.nhapSoDienThoai' })} disabled />
 						</Form.Item>
 					</Col>
 					<Col span={8}>
-						<Form.Item label='Chức danh' name='chucDanh'>
-							<Input placeholder='Nhập chức danh' disabled />
+						<Form.Item label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.chucDanh' })} name='chucDanh'>
+							<Input placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.nhapChucDanh' })} disabled />
 						</Form.Item>
 					</Col>
 					<Col span={8}>
-						<Form.Item label='Nơi công tác' name='noiCongTac'>
-							<Input placeholder='Nhập nơi công tác' disabled />
+						<Form.Item label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.noiCongTac' })} name='noiCongTac'>
+							<Input placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.nhapNoiCongTac' })} disabled />
 						</Form.Item>
 					</Col>
 					<Col span={8}>
-						<Form.Item label='Học vị' name='hocVi'>
-							<Input placeholder='Nhập học vị' disabled />
+						<Form.Item label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.hocVi' })} name='hocVi'>
+							<Input placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.nhapHocVi' })} disabled />
 						</Form.Item>
 					</Col>
 					<Col span={8}>
-						<Form.Item label='Chuyên ngành' name='maNganh'>
+						<Form.Item label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.chuyenNganh' })} name='maNganh'>
 							<SelectNganhCoSo selectMa disabled />
 						</Form.Item>
 					</Col>

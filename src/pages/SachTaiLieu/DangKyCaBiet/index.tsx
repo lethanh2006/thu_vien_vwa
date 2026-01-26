@@ -13,12 +13,13 @@ import { inputFormat } from '@/utils/utils';
 import { HistoryOutlined } from '@ant-design/icons';
 import { Card, Tabs, Tag } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
 import FormDangKyCaBiet from './components/Form';
 import StatDanhSachDKCB from './components/Stat';
 
 const DangKyCaBietPage = () => {
+	const intl = useIntl();
 	const { getSettingModel, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
 	const { getModel, page, limit, record, setRecord } = useModel('sachtailieu.anpham.anphamxepgia');
 
@@ -46,19 +47,19 @@ const DangKyCaBietPage = () => {
 
 	const columns: IColumn<AnPham.IAnPhamXepGia>[] = [
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			width: 180,
 			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
 			onCell,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' }),
 			width: 150,
 			render: (val, rec) => rec?.anPham?.tacGia,
 			onCell,
 		},
 		{
-			title: 'ĐKCB',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.soDangKyCaBiet' }),
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			width: 120,
@@ -66,7 +67,7 @@ const DangKyCaBietPage = () => {
 			onCell,
 		},
 		{
-			title: 'Thời gian xếp giá',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.thoiGianXepGia' }),
 			dataIndex: 'thoiGianXepGia',
 			align: 'center',
 			width: 130,
@@ -76,14 +77,14 @@ const DangKyCaBietPage = () => {
 			onCell,
 		},
 		{
-			title: 'Đơn giá',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.donGia' }),
 			width: 120,
 			align: 'right',
 			render: (val, rec) => `${inputFormat(rec?.thongTinXepGia?.donGia ?? 0)} VNĐ`,
 			onCell,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.trangThai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 90,
@@ -93,13 +94,13 @@ const DangKyCaBietPage = () => {
 			// hide: trangThai === ETrangThaiDangKyCaBiet.THANH_LY,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<ButtonExtend
-					tooltip='Lịch sử đăng ký'
+					tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.lichSuDangKy' })}
 					onClick={() => {
 						setRecord(rec);
 						setVisibleModal(true);
@@ -140,11 +141,11 @@ const DangKyCaBietPage = () => {
 	];
 
 	return (
-		<Card title='Danh sách đăng ký cá biệt'>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.anpham.danhSachDangKyCaBiet' })}>
 			<StatDanhSachDKCB />
 
 			<Tabs activeKey={trangThai} onChange={(tab) => setTrangThai(tab)}>
-				<Tabs.TabPane key='ALL' tab='Tất cả' />
+				<Tabs.TabPane key='ALL' tab={intl.formatMessage({ id: 'sachtailieu.dkcb.tatCa' })} />
 				{Object.values(ETrangThaiDangKyCaBiet).map((tab) => (
 					<Tabs.TabPane key={tab} tab={nameTrangThaiDangKyCaBiet[tab]} />
 				))}
@@ -163,7 +164,7 @@ const DangKyCaBietPage = () => {
 			/>
 
 			<LichSuThueMuonPage
-				title='Lịch sử thuê mượn'
+				title={intl.formatMessage({ id: 'sachtailieu.lichSuThueMuon' })}
 				visible={visibleModal}
 				setVisible={setVisibleModal}
 				width={1100}

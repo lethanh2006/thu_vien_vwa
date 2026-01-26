@@ -5,10 +5,11 @@ import type { ToChucNhanSu } from '@/services/ToChucNhanSu/typing';
 import dayjs from '@/utils/dayjs';
 import { Segmented } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
 
 const DanhSachBanDocPage = () => {
+	const intl = useIntl();
 	const { getModel, page, limit, record, setRecord } = useModel('sachtailieu.muontra.danhsachbandoc');
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const [activeKey, setActiveKey] = useState<string>('sinh-vien');
@@ -27,7 +28,7 @@ const DanhSachBanDocPage = () => {
 
 	const columns: IColumn<SinhVien.IRecord & ToChucNhanSu.INhanSu>[] = [
 		{
-			title: 'Mã SV',
+			title: intl.formatMessage({ id: 'sachtailieu.sinhVien.maSV' }),
 			dataIndex: 'ma',
 			align: 'center',
 			width: 120,
@@ -36,7 +37,7 @@ const DanhSachBanDocPage = () => {
 			hide: activeKey !== 'sinh-vien',
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'sachtailieu.sinhVien.hoTen' }),
 			dataIndex: 'ten',
 			width: 150,
 			filterType: 'string',
@@ -44,7 +45,7 @@ const DanhSachBanDocPage = () => {
 			hide: activeKey !== 'sinh-vien',
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'sachtailieu.sinhVien.ngaySinh' }),
 			dataIndex: 'ngaySinh',
 			width: 100,
 			align: 'center',
@@ -55,7 +56,7 @@ const DanhSachBanDocPage = () => {
 			hide: activeKey !== 'sinh-vien',
 		},
 		{
-			title: 'Khóa ngành',
+			title: intl.formatMessage({ id: 'sachtailieu.sinhVien.khoaNganh' }),
 			dataIndex: 'maKhoaNganh',
 			width: 180,
 			render: (val, rec) => rec.khoaNganh?.ten ?? val,
@@ -63,7 +64,7 @@ const DanhSachBanDocPage = () => {
 			hide: activeKey !== 'sinh-vien',
 		},
 		{
-			title: 'Mã cán bộ',
+			title: intl.formatMessage({ id: 'sachtailieu.canBo.maCB' }),
 			dataIndex: 'maCanBo',
 			align: 'center',
 			width: 120,
@@ -72,14 +73,14 @@ const DanhSachBanDocPage = () => {
 			hide: activeKey !== 'can-bo',
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'sachtailieu.canBo.hoTen' }),
 			width: 150,
 			render: (val, rec: any) => [rec?.hoDem, rec?.ten]?.filter(Boolean).join(' '),
 			onCell,
 			hide: activeKey !== 'can-bo',
 		},
 		{
-			title: 'Đơn vị',
+			title: intl.formatMessage({ id: 'sachtailieu.canBo.donVi' }),
 			dataIndex: 'donViChinhId' as any,
 			width: 150,
 			render: (val, rec) => rec?.donViChinh?.ten,
@@ -87,28 +88,28 @@ const DanhSachBanDocPage = () => {
 			hide: activeKey !== 'can-bo',
 		},
 		{
-			title: 'SL chờ xử lý',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.soLuongChoXuLy' }),
 			align: 'center',
 			render: (val, rec) => rec?.thongKe?.choXuLy,
 			width: 80,
 			onCell,
 		},
 		{
-			title: 'SL đang thuê mượn',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.soLuongDangThueMuon' }),
 			align: 'center',
 			render: (val, rec) => rec?.thongKe?.dangThueMuon,
 			width: 80,
 			onCell,
 		},
 		{
-			title: 'SL đã trả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.soLuongDaTra' }),
 			align: 'center',
 			render: (val, rec) => rec?.thongKe?.daTra,
 			width: 80,
 			onCell,
 		},
 		{
-			title: 'SL quá hạn',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.soLuongQuaHan' }),
 			align: 'center',
 			render: (val, rec) => rec?.thongKe?.quaHan,
 			width: 80,
@@ -124,7 +125,7 @@ const DanhSachBanDocPage = () => {
 				dependencies={[page, limit, activeKey]}
 				modelName='sachtailieu.muontra.danhsachbandoc'
 				widthDrawer={1100}
-				title='Danh sách bạn đọc'
+				title={intl.formatMessage({ id: 'sachtailieu.danhSachBanDoc' })}
 				buttons={{ create: false }}
 				otherButtons={[
 					<Segmented
@@ -132,15 +133,15 @@ const DanhSachBanDocPage = () => {
 						value={activeKey}
 						onChange={(value) => setActiveKey(value.toString())}
 						options={[
-							{ value: 'sinh-vien', label: 'Sinh viên' },
-							{ value: 'can-bo', label: 'Cán bộ/Giảng viên' },
+							{ value: 'sinh-vien', label: intl.formatMessage({ id: 'sachtailieu.sinhVien.title' }) },
+							{ value: 'can-bo', label: intl.formatMessage({ id: 'sachtailieu.canBo.title' }) },
 						]}
 					/>,
 				]}
 			/>
 
 			<LichSuThueMuonPage
-				title={`Danh sách lịch sử mượn trả sách người mượn ${
+				title={`${intl.formatMessage({ id: 'sachtailieu.anpham.danhSachLichSu' })} ${
 					activeKey === 'sinh-vien' ? record?.ten : [record?.hoDem, record?.ten]?.filter(Boolean).join(' ')
 				}`}
 				visible={visibleModal}

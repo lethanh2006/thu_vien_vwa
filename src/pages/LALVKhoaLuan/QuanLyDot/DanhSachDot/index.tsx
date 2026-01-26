@@ -7,11 +7,12 @@ import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Alert, Popconfirm, Tag } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ChiTietDanhSach from './components/ChiTiet';
 import FormDanhSachNop from './components/Form';
 
 const DanhSachDot = () => {
+	const intl = useIntl();
 	const { record: recDot } = useModel('quanlythuvien.quanlydot');
 	const { getModel, page, limit, handleEdit, handleView, isView, deleteModel } = useModel('quanlythuvien.danhsachdot');
 	const isNgoaiThoiGian = dayjs(recDot?.thoiGianKetThuc).isBefore(dayjs());
@@ -22,39 +23,39 @@ const DanhSachDot = () => {
 
 	const columns: IColumn<QuanLyThuVien.IQuanLyDanhSachNop>[] = [
 		{
-			title: 'Mã học viên',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.maSinhVien' }),
 			dataIndex: 'maSinhVien',
 			align: 'center',
 			filterType: 'string',
 			width: 180,
 		},
 		{
-			title: 'Họ và tên',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.hoVaTen' }),
 			dataIndex: 'hoTenTacGia',
 			filterType: 'string',
 			render: (val, rec) => val ?? rec?.sinhVien?.ten,
 			width: 180,
 		},
 		{
-			title: 'Số điện thoại',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.soDienThoai' }),
 			width: 180,
 			render: (val, rec) => rec?.sinhVien?.soDienThoai,
 		},
 		{
-			title: 'Tên đề tài',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.tenDeTai' }),
 			dataIndex: 'tenDeTai',
 			width: 250,
 			render: (val: any) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},
 		{
-			title: 'Người hướng dẫn',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.nguoiHuongDan' }),
 			dataIndex: 'nguoiHuongDan',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.trangThai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 130,
@@ -64,16 +65,21 @@ const DanhSachDot = () => {
 			fixed: 'right',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.table.column.thaoTac' }),
 			align: 'center',
 			fixed: 'right',
 			width: 120,
 			render: (val, rec) => {
 				return (
 					<>
-						<ButtonExtend title='Xem chi tiết' type='link' icon={<EyeOutlined />} onClick={() => handleView(rec)} />
 						<ButtonExtend
-							title='Chỉnh sửa'
+							title={intl.formatMessage({ id: 'luananluanvankhoaluan.button.xemChiTiet' })}
+							type='link'
+							icon={<EyeOutlined />}
+							onClick={() => handleView(rec)}
+						/>
+						<ButtonExtend
+							title={intl.formatMessage({ id: 'global.button.chinhsua' })}
 							type='link'
 							icon={<EditOutlined />}
 							onClick={() => handleEdit(rec)}
@@ -81,7 +87,7 @@ const DanhSachDot = () => {
 						/>
 
 						<Popconfirm
-							title='Bạn có chắc chắn xoá?'
+							title={intl.formatMessage({ id: 'luananluanvankhoaluan.confirm.xoa' })}
 							onConfirm={() => {
 								deleteModel(rec?._id);
 							}}
@@ -101,7 +107,7 @@ const DanhSachDot = () => {
 					style={{ marginBottom: 12 }}
 					type='error'
 					showIcon
-					message='Đợt đã quá thời gian không được thêm danh sách nộp!'
+					message={intl.formatMessage({ id: 'luananluanvankhoaluan.alert.quaThoiGian' })}
 				/>
 			)}
 
@@ -115,7 +121,7 @@ const DanhSachDot = () => {
 				Form={isView ? ChiTietDanhSach : FormDanhSachNop}
 				formProps={{ getData }}
 				hideChildrenRows
-				title='Quản lý nộp'
+				title={intl.formatMessage({ id: 'luananluanvankhoaluan.title.quanLyNop' })}
 				widthDrawer={900}
 				buttons={{
 					create: isNgoaiThoiGian ? false : true,

@@ -13,12 +13,13 @@ import { inputFormat } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined } from '@ant-design/icons';
 import { Button, Modal, Popconfirm, Popover, Tag } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import FormLichSuXepGia from '../AnPham/LichSuXepGia/components/Form';
 import SelectDotNhapSach from '../DotNhapSach/components/Select';
 import ChiTietXepGia from './components/ChiTiet';
 
 const XepGiaPage = () => {
+	const intl = useIntl();
 	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('sachtailieu.anpham.dotnhapsach');
 	const { getModel, page, limit, handleEdit, setRecord, visibleForm, setVisibleForm, deleteModel } =
 		useModel('sachtailieu.anpham.xepgia');
@@ -38,19 +39,19 @@ const XepGiaPage = () => {
 
 	const columns: IColumn<AnPham.IXepGia>[] = [
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			width: 180,
 			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
 			onCell,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' }),
 			width: 120,
 			render: (val, rec) => rec?.anPham?.tacGia,
 			onCell,
 		},
 		{
-			title: 'Nguồn bổ sung',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nguonBoSung' }),
 			dataIndex: 'maNguonBoSung',
 			width: 130,
 			render: (val, rec) => rec?.nguonBoSung?.ten,
@@ -59,7 +60,7 @@ const XepGiaPage = () => {
 			onCell,
 		},
 		{
-			title: 'Kiểu tư liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.kieuTuLieu' }),
 			dataIndex: 'maKieuTuLieu',
 			width: 130,
 			render: (val, rec) => rec?.kieuTuLieu?.ten,
@@ -68,7 +69,7 @@ const XepGiaPage = () => {
 			onCell,
 		},
 		{
-			title: 'Thư viện',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.thuVien' }),
 			dataIndex: 'thuVienId',
 			width: 130,
 			render: (val, rec) => rec?.thuVien?.ten,
@@ -77,7 +78,7 @@ const XepGiaPage = () => {
 			onCell,
 		},
 		{
-			title: 'Kho',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.kho' }),
 			dataIndex: 'maKhoSach',
 			width: 130,
 			render: (val, rec) => rec?.khoSach?.ten,
@@ -86,7 +87,7 @@ const XepGiaPage = () => {
 			onCell,
 		},
 		{
-			title: 'Giá sách',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.giaSach' }),
 			dataIndex: 'giaSachId',
 			width: 130,
 			render: (val, rec) => rec?.giaSach?.ten,
@@ -95,7 +96,7 @@ const XepGiaPage = () => {
 			onCell,
 		},
 		{
-			title: 'Ngày bổ sung',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.ngayBoSung' }),
 			dataIndex: 'ngayBoSung',
 			align: 'center',
 			width: 120,
@@ -105,7 +106,7 @@ const XepGiaPage = () => {
 			onCell,
 		},
 		{
-			title: 'Số lượng',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.soLuong' }),
 			dataIndex: 'soLuong',
 			width: 80,
 			align: 'center',
@@ -114,7 +115,7 @@ const XepGiaPage = () => {
 			onCell,
 		},
 		{
-			title: 'Đơn giá',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.donGia' }),
 			dataIndex: 'donGia',
 			width: 120,
 			align: 'right',
@@ -124,27 +125,32 @@ const XepGiaPage = () => {
 			onCell,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.trangThai' }),
 			dataIndex: 'daXepGia',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => (val ? <Tag color='green'>Đã xếp giá</Tag> : <Tag color='blue'>Đang xếp giá</Tag>),
+			render: (val, rec) =>
+				val ? (
+					<Tag color='green'>{intl.formatMessage({ id: 'sachtailieu.anpham.daXepGia' })}</Tag>
+				) : (
+					<Tag color='blue'>{intl.formatMessage({ id: 'sachtailieu.anpham.dangXepGia' })}</Tag>
+				),
 			filterType: 'select',
 			filterData: [
 				{
 					value: true as any,
-					label: 'Đã xếp giá',
+					label: intl.formatMessage({ id: 'sachtailieu.anpham.daXepGia' }),
 				},
 				{
 					value: false as any,
-					label: 'Đang xếp giá',
+					label: intl.formatMessage({ id: 'sachtailieu.anpham.dangXepGia' }),
 				},
 			],
 			fixed: 'right',
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -154,7 +160,7 @@ const XepGiaPage = () => {
 					content={
 						<>
 							<ButtonExtend
-								tooltip='Chi tiết'
+								tooltip={intl.formatMessage({ id: 'global.button.chitiet' })}
 								onClick={() => {
 									setRecord(rec);
 									setVisibleChiTiet(true);
@@ -162,13 +168,23 @@ const XepGiaPage = () => {
 								type='link'
 								icon={<EyeOutlined />}
 							/>
-							<ButtonExtend tooltip='Xếp giá' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+							<ButtonExtend
+								tooltip={intl.formatMessage({ id: 'sachtailieu.button.xepGia' })}
+								onClick={() => handleEdit(rec)}
+								type='link'
+								icon={<EditOutlined />}
+							/>
 							<Popconfirm
 								onConfirm={() => deleteModel(rec._id, getData)}
-								title='Bạn có chắc chắn muốn xóa thông tin này?'
+								title={intl.formatMessage({ id: 'sachtailieu.confirm.xoa' })}
 								placement='topRight'
 							>
-								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+								<ButtonExtend
+									tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+									danger
+									type='link'
+									icon={<DeleteOutlined />}
+								/>
 							</Popconfirm>
 						</>
 					}
@@ -186,7 +202,7 @@ const XepGiaPage = () => {
 				columns={columns}
 				dependencies={[page, limit, recDot?._id]}
 				modelName='sachtailieu.anpham.xepgia'
-				title='Thông tin xếp giá'
+				title={intl.formatMessage({ id: 'sachtailieu.thongTinXepGia' })}
 				buttons={{ create: false }}
 				otherButtons={[
 					<SelectDotNhapSach
@@ -203,7 +219,7 @@ const XepGiaPage = () => {
 			<ChiTietXepGia visible={visibleChiTiet} setVisible={setVisibleChiTiet} />
 
 			<Modal
-				title='Chỉnh sửa xếp giá'
+				title={intl.formatMessage({ id: 'sachtailieu.chinhSuaXepGia' })}
 				open={visibleForm}
 				onCancel={() => setVisibleForm(false)}
 				width={800}

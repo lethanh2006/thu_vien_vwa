@@ -29,7 +29,7 @@ const FormZ3950 = (props: { afterAddNew: (rec: AnPham.IRecord) => void; getData:
 
 	const fullName = initialState?.currentUser?.family_name
 		? `${initialState?.currentUser.family_name} ${initialState?.currentUser?.given_name ?? ''}`
-		: initialState?.currentUser?.name ?? (initialState?.currentUser?.preferred_username || '');
+		: (initialState?.currentUser?.name ?? (initialState?.currentUser?.preferred_username || ''));
 
 	useEffect(() => {
 		if (!visibleZ3950) {
@@ -69,7 +69,7 @@ const FormZ3950 = (props: { afterAddNew: (rec: AnPham.IRecord) => void; getData:
 			<BienMucSoLuoc form={form} />
 			<div className='form-footer'>
 				<Button loading={formSubmiting} htmlType='submit' type='primary'>
-					Biên mục
+					{intl.formatMessage({ id: 'sachtailieu.anpham.bienMuc' })}
 				</Button>
 				<Button onClick={() => setVisibleZ3950(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>

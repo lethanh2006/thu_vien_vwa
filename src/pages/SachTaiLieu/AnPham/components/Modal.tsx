@@ -25,33 +25,33 @@ const ModalAnPham = () => {
 	}, [recAnPham?._id]);
 
 	return (
-		<Card title='Chi tiết ấn phẩm' loading={loading}>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.anpham.chiTiet' })} loading={loading}>
 			<Tabs tabPosition={isTabletOrMobile ? 'top' : 'left'}>
-				<Tabs.TabPane tab='Thông tin chung' key='1'>
+				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.thongTinChung' })} key='1'>
 					<ChiTietBienMuc />
 				</Tabs.TabPane>
-				<Tabs.TabPane tab='Thông tin chi tiết' key='2'>
+				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.thongTinChiTiet' })} key='2'>
 					<ChiTietAnPham />
 				</Tabs.TabPane>
-				<Tabs.TabPane tab='Danh sách đăng ký cá biệt' key='3'>
+				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.danhSachDangKyCaBiet' })} key='3'>
 					<DanhSachDKCB />
 				</Tabs.TabPane>
 				{recAnPham?.online ? (
-					<Tabs.TabPane tab='File ấn phẩm số' key='4'>
+					<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.fileAnPhamSo' })} key='4'>
 						<FormItemTaiLieuSo disabled value={recAnPham?.thongTinAnPhamTrucTuyen} />
 					</Tabs.TabPane>
 				) : (
-					<Tabs.TabPane tab='Lịch sử mượn trả' key='5'>
+					<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.lichSuMuonTra' })} key='5'>
 						<LichSuThueMuonPage condition={{ anPhamId: recAnPham?._id }} hideModal />
 					</Tabs.TabPane>
 				)}
 				{recAnPham?.isSachHay ? (
-					<Tabs.TabPane tab='Nội dung sách hay' key='6'>
+					<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.noiDungSachHay' })} key='6'>
 						<NoiDungSachHay />
 					</Tabs.TabPane>
 				) : null}
 
-				<Tabs.TabPane tab='Lịch sử xếp giá' key='7'>
+				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.lichSuXepGia' })} key='7'>
 					<LichSuXepGia />
 				</Tabs.TabPane>
 			</Tabs>

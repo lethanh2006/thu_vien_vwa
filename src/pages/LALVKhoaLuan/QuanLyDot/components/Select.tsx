@@ -1,7 +1,7 @@
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -16,6 +16,7 @@ const SelectDotThuVien = (props: {
 	condition?: Partial<QuanLyThuVien.IQuanLyDot>;
 	disabled?: boolean;
 }) => {
+	const intl = useIntl();
 	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled } = props;
 	const { danhSach, getAllModel } = useModel('quanlythuvien.quanlydot');
 
@@ -37,7 +38,7 @@ const SelectDotThuVien = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn đợt quản lý thư viện'
+			placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.chonDot' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

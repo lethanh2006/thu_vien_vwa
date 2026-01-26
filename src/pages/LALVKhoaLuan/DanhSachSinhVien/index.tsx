@@ -27,11 +27,12 @@ import {
 import { Button, Card, InputNumber, Popconfirm, Popover, Space, Tabs, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useRef, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ChiTietThuVien from './components/ChiTiet';
 import FormQuanLyThuVien from './components/Form';
 
 const QuanLyThuVienPage = () => {
+	const intl = useIntl();
 	const {
 		getModel,
 		page,
@@ -111,86 +112,86 @@ const QuanLyThuVienPage = () => {
 
 	const columns: IColumn<QuanLyThuVien.IQuanLyDanhSachNop>[] = [
 		{
-			title: 'Số lưu chiểu',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.soLuuChieu' }),
 			dataIndex: 'soLuuChieu',
 			align: 'center',
 			width: 150,
 		},
 		{
-			title: 'Mã học viên',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.maSinhVien' }),
 			dataIndex: 'maSinhVien',
 			filterType: 'string',
 			width: 180,
 		},
 		{
-			title: 'Họ và tên tác giả',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.hoTenTacGia' }),
 			dataIndex: 'hoTenTacGia',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.ngaySinh' }),
 			align: 'center',
 			width: 150,
 			render: (val, rec) => rec?.sinhVien?.ngaySinh && dayjs(rec?.sinhVien?.ngaySinh)?.format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Số điện thoại',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.soDienThoai' }),
 			align: 'center',
 			width: 150,
 			render: (val, rec) => rec?.sinhVien?.soDienThoai,
 		},
 		{
-			title: 'Tên đề tài',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.tenDeTai' }),
 			dataIndex: 'tenDeTai',
 			width: 200,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Người hướng dẫn',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.nguoiHuongDan' }),
 			dataIndex: 'nguoiHuongDan',
 			align: 'center',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Tài liệu toàn bộ đề tài',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.taiLieuToanBoDeTai' }),
 			dataIndex: 'urlTaiLieu',
 			align: 'center',
 			width: 150,
 			render: (val, rec) =>
 				val && (
 					<a href={val} target='_blank' rel='noreferrer'>
-						Xem tài liệu
+						{intl.formatMessage({ id: 'luananluanvankhoaluan.button.xemTaiLieu' })}
 					</a>
 				),
 		},
 		{
-			title: 'Tài liệu tóm tắt đề tài',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.taiLieuTomTat' }),
 			dataIndex: 'urlTomTat',
 			align: 'center',
 			width: 150,
 			render: (val, rec) =>
 				val && (
 					<a href={val} target='_blank' rel='noreferrer'>
-						Xem tài liệu
+						{intl.formatMessage({ id: 'luananluanvankhoaluan.button.xemTaiLieu' })}
 					</a>
 				),
 		},
 		{
-			title: 'Tài liệu minh chứng đề tài',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.taiLieuMinhChung' }),
 			dataIndex: 'urlTaiLieuMinhChung',
 			align: 'center',
 			width: 150,
 			render: (val, rec) =>
 				val && (
 					<a href={val} target='_blank' rel='noreferrer'>
-						Xem tài liệu
+						{intl.formatMessage({ id: 'luananluanvankhoaluan.button.xemTaiLieu' })}
 					</a>
 				),
 		},
 		{
-			title: 'Thời gian nộp',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.thoiGianNop' }),
 			dataIndex: 'thoiGianNop',
 			align: 'center',
 			width: 150,
@@ -199,25 +200,25 @@ const QuanLyThuVienPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Chức danh',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.chucDanh' }),
 			dataIndex: 'chucDanh',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Nơi công tác',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.noiCongTac' }),
 			dataIndex: 'noiCongTac',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Học vị',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.hocVi' }),
 			dataIndex: 'hocVi',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Ngành',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.nganh' }),
 			dataIndex: 'maNganh',
 			width: 180,
 			render: (val, rec) => rec?.nganh?.ten,
@@ -225,13 +226,13 @@ const QuanLyThuVienPage = () => {
 			filterCustomSelect: <SelectNganhCoSo multiple selectMa />,
 		},
 		{
-			title: 'Mã ngành',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.maChuyenNganh' }),
 			align: 'center',
 			width: 180,
 			render: (val, rec) => rec?.maNganh,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.label.trangThai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			fixed: 'right',
@@ -241,7 +242,7 @@ const QuanLyThuVienPage = () => {
 			filterData: Object.values(ETrangThaiNopThuVien),
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'luananluanvankhoaluan.table.column.thaoTac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -250,14 +251,19 @@ const QuanLyThuVienPage = () => {
 					placement='topLeft'
 					content={
 						<>
-							<ButtonExtend tooltip='Xem chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} />
+							<ButtonExtend
+								tooltip={intl.formatMessage({ id: 'luananluanvankhoaluan.button.xemChiTiet' })}
+								onClick={() => handleView(rec)}
+								type='link'
+								icon={<EyeOutlined />}
+							/>
 
 							<ButtonExtend
 								onClick={() => handleEdit(rec)}
 								disabled={
 									rec?.trangThai === ETrangThaiNopThuVien.DA_DUYET || rec?.trangThai === ETrangThaiNopThuVien.TU_CHOI
 								}
-								tooltip='Chỉnh sửa'
+								tooltip={intl.formatMessage({ id: 'luananluanvankhoaluan.button.xemChiTiet' })}
 								type='link'
 								icon={<EditOutlined />}
 							/>
@@ -272,13 +278,13 @@ const QuanLyThuVienPage = () => {
 										getData,
 									)
 								}
-								title='Bạn có chắc chắn muốn duyệt?'
+								title={intl.formatMessage({ id: 'luananluanvankhoaluan.confirm.duyet' })}
 								placement='topRight'
 							>
 								<ButtonExtend
 									loading={loadingTrangThai}
 									disabled={rec?.trangThai !== ETrangThaiNopThuVien.CHO_XY_LY}
-									tooltip='Duyệt'
+									tooltip={intl.formatMessage({ id: 'luananluanvankhoaluan.button.duyet' })}
 									type='link'
 									className='text-success'
 									icon={<CheckOutlined />}
@@ -295,13 +301,13 @@ const QuanLyThuVienPage = () => {
 										getData,
 									)
 								}
-								title='Bạn có chắc chắn muốn từ chối?'
+								title={intl.formatMessage({ id: 'luananluanvankhoaluan.confirm.tuChoi' })}
 								placement='topRight'
 							>
 								<ButtonExtend
 									loading={loadingTrangThai}
 									disabled={rec?.trangThai !== ETrangThaiNopThuVien.CHO_XY_LY}
-									tooltip='Từ chối'
+									tooltip={intl.formatMessage({ id: 'luananluanvankhoaluan.button.tuChoi' })}
 									type='link'
 									danger
 									icon={<CloseOutlined />}
@@ -312,18 +318,18 @@ const QuanLyThuVienPage = () => {
 								disabled={rec?.trangThai !== ETrangThaiNopThuVien.DA_DUYET}
 								type='link'
 								icon={<PrinterOutlined />}
-								tooltip='Export giấy biên nhận'
+								tooltip={intl.formatMessage({ id: 'luananluanvankhoaluan.button.exportGiayBienNhan' })}
 								onClick={() => onExportNhuCau(rec?._id)}
 							/>
 
 							<Popconfirm
 								onConfirm={() => deleteModel(rec?._id, getData)}
-								title='Bạn có chắc chắn muốn xóa thông tin này?'
+								title={intl.formatMessage({ id: 'luananluanvankhoaluan.confirm.banCoChacChanMuonXoa' })}
 								placement='topRight'
 							>
 								<ButtonExtend
 									disabled={rec?.trangThai === ETrangThaiNopThuVien.DA_DUYET}
-									tooltip='Xóa'
+									tooltip={intl.formatMessage({ id: 'luananluanvankhoaluan.button.xoa' })}
 									danger
 									type='link'
 									icon={<DeleteOutlined />}
@@ -339,7 +345,7 @@ const QuanLyThuVienPage = () => {
 	];
 
 	return (
-		<Card title='Danh sách sinh viên'>
+		<Card title={intl.formatMessage({ id: 'luananluanvankhoaluan.card.title.danhSachSinhVien' })}>
 			<div style={{ marginBottom: 12 }}>
 				<MyDateRangePicker
 					value={datePicker}
@@ -356,7 +362,7 @@ const QuanLyThuVienPage = () => {
 			</Tabs>
 			<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginBottom: 12 }}>
 				<Space>
-					<span>Số lưu chiểu hiện tại:</span>
+					<span>{intl.formatMessage({ id: 'luananluanvankhoaluan.label.soLuuChieuHienTai' })}</span>
 					<InputNumber
 						style={{ width: 150 }}
 						addonBefore={
@@ -376,7 +382,7 @@ const QuanLyThuVienPage = () => {
 						onChange={(val) => handleChange(Number(val))}
 					/>
 					<Button loading={formSubmiting} type='primary' onClick={handleSave}>
-						Lưu
+						{intl.formatMessage({ id: 'global.button.luulai' })}
 					</Button>
 				</Space>
 			</div>
@@ -390,10 +396,10 @@ const QuanLyThuVienPage = () => {
 				formProps={{ getData, loai }}
 				title={
 					loai === ELoaiDotQuanLyThuvien.LUAN_AN
-						? 'Quản lý luận án'
+						? intl.formatMessage({ id: 'luananluanvankhoaluan.title.quanLyLuanAn' })
 						: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-							? 'Quản lý luận văn'
-							: 'Quản lý khóa luận/đồ án'
+							? intl.formatMessage({ id: 'luananluanvankhoaluan.title.quanLyLuanVan' })
+							: intl.formatMessage({ id: 'luananluanvankhoaluan.title.quanLyKhoaLuanDoAn' })
 				}
 				widthDrawer={1000}
 				hideCard

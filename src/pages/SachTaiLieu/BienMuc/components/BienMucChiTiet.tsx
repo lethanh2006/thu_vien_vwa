@@ -6,10 +6,11 @@ import SelectHocPhan from '@/pages/DaoTao/HocPhan/Select';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Col, Form, type FormInstance, Input, Row, Select, Space, Table } from 'antd';
 import _ from 'lodash';
+import { useIntl } from 'umi';
 
 const BienMucChiTiet = (props: { form: FormInstance }) => {
+	const intl = useIntl();
 	const { form } = props;
-
 	const handleAddRepeatableTag = (
 		addOperation: (defaultValue?: any, insertIndex?: number) => void,
 		fieldIndex: number,
@@ -38,7 +39,7 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 		removeOperation: (index: number | number[]) => void,
 	) => [
 		{
-			title: 'Tên trường',
+			title: intl.formatMessage({ id: 'sachtailieu.bienmuc.tenTruong' }),
 			key: 'tag',
 			width: 200,
 			render: (val: any, field: any, index: number) => {
@@ -47,29 +48,29 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 			},
 		},
 		{
-			title: 'Chỉ mục 1',
+			title: intl.formatMessage({ id: 'sachtailieu.bienmuc.chiMuc1' }),
 			dataIndex: 'ind1',
 			key: 'ind1',
 			width: 80,
 			render: (val: any, field: any) => (
 				<Form.Item name={[field.name, 'ind1']} noStyle>
-					<Input placeholder='Nhập chỉ mục 1' />
+					<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapChiMuc1' })} />
 				</Form.Item>
 			),
 		},
 		{
-			title: 'Chỉ mục 2',
+			title: intl.formatMessage({ id: 'sachtailieu.bienmuc.chiMuc2' }),
 			dataIndex: 'ind2',
 			key: 'ind2',
 			width: 80,
 			render: (val: any, field: any) => (
 				<Form.Item name={[field.name, 'ind2']} noStyle>
-					<Input placeholder='Nhập chỉ mục 2' />
+					<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapChiMuc2' })} />
 				</Form.Item>
 			),
 		},
 		{
-			title: 'Trường con',
+			title: intl.formatMessage({ id: 'sachtailieu.bienmuc.truongCon' }),
 			key: 'data',
 			width: 320,
 			render: (val: any, field: any, rowIndex: number) => {
@@ -135,10 +136,19 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 												}
 
 												if (fieldCode === '913$b') {
-													return <Input placeholder='Tên học phần (tự động)' disabled />;
+													return (
+														<Input
+															placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.tenHocPhanTuDong' })}
+															disabled
+														/>
+													);
 												}
 
-												return <Input placeholder={`Nhập ${item.ten || ''}`} />;
+												return (
+													<Input
+														placeholder={`${intl.formatMessage({ id: 'sachtailieu.bienmuc.nhap' })} ${item.ten || ''}`}
+													/>
+												);
 											})()}
 										</Form.Item>
 									</Col>
@@ -153,7 +163,10 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 						{tagCode === '925' ? (
 							<SelectVatMangTin selectMa />
 						) : tagCode === '926' ? (
-							<Select placeholder='Chọn độ mật' style={{ width: '100%' }}>
+							<Select
+								placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.chonDoMat' })}
+								style={{ width: '100%' }}
+							>
 								{Array.from({ length: 11 }, (__, i) => (
 									<Select.Option key={i} value={i}>
 										{i}
@@ -163,14 +176,14 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 						) : tagCode === '927' ? (
 							<SelectDangTaiLieu selectMa />
 						) : (
-							<Input placeholder='Nhập thông tin' />
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapThongTin' })} />
 						)}
 					</Form.Item>
 				);
 			},
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			key: 'action',
 			width: 60,
 			align: 'center' as const,
@@ -182,7 +195,7 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 						{canRepeat && (
 							<ButtonExtend
 								type='link'
-								tooltip={`Bổ sung trường "${currentTagData?.ten}"`}
+								tooltip={`${intl.formatMessage({ id: 'sachtailieu.button.boSungTruong' })} "${currentTagData?.ten}"`}
 								icon={<PlusOutlined />}
 								size='small'
 								onClick={() => handleAddRepeatableTag(addOperation, field.name)}
@@ -191,7 +204,7 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 						{currentTagData?.isNewTag && (
 							<ButtonExtend
 								type='link'
-								tooltip='Xóa trường lặp'
+								tooltip={intl.formatMessage({ id: 'sachtailieu.button.xoaTruongLap' })}
 								danger
 								icon={<DeleteOutlined />}
 								size='small'
@@ -216,7 +229,7 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 						bordered
 						size='small'
 						locale={{
-							emptyText: 'Không có dữ liệu trường biên mục',
+							emptyText: intl.formatMessage({ id: 'sachtailieu.label.noDataBienMuc' }),
 						}}
 					/>
 				);

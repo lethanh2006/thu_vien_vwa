@@ -11,12 +11,13 @@ import { ExportOutlined, EyeOutlined, QrcodeOutlined, SettingOutlined, SmileOutl
 import { Card, Space, Tag } from 'antd';
 import fileDownload from 'js-file-download';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import CauHinhVaoRaThuVien from './CauHinh';
 import ChiTietSinhVien from './components/ChiTiet';
 import Form from './components/Form';
 
 const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
+	const intl = useIntl();
 	const { maSinhVien, dateRange: dateRangeProps } = props;
 	const { getModel, page, limit, setRecord } = useModel('quanlythuvien.vaorathuvien');
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
@@ -70,7 +71,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 
 	const columns: IColumn<QuanLyThuVien.IVaoRaThuVien>[] = [
 		{
-			title: 'Mã SV',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.maSinhVien' }),
 			align: 'center',
 			dataIndex: 'maSv',
 			width: 120,
@@ -79,7 +80,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			onCell,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.hoTen' }),
 			dataIndex: 'hoTen',
 			width: 160,
 			filterType: 'string',
@@ -87,34 +88,40 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			onCell,
 		},
 		{
-			title: 'Thời gian vào',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.thoiGianVao' }),
 			dataIndex: 'thoiGianCheckIn',
 			align: 'center',
 			width: 150,
 			render: (val, rec) =>
 				val ? (
 					<>
-						Buổi {rec?.buoi ?? '--'}, {dayjs(val).format('HH:mm DD/MM/YYYY')}
+						{intl.formatMessage({ id: 'vaorathuvien.label.buoi' })} {rec?.buoi ?? '--'},{' '}
+						{dayjs(val).format('HH:mm DD/MM/YYYY')}
 					</>
 				) : (
-					<Tag color='red'>Chưa vào</Tag>
+					<Tag color='red'>{intl.formatMessage({ id: 'vaorathuvien.label.chuaVao' })}</Tag>
 				),
 			filterType: 'date',
 			sortable: true,
 			onCell,
 		},
 		{
-			title: 'Thời gian ra',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.thoiGianRa' }),
 			dataIndex: 'thoiGianCheckOut',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => (val ? dayjs(val).format('HH:mm DD/MM/YYYY') : <Tag color='red'>Chưa ra</Tag>),
+			render: (val, rec) =>
+				val ? (
+					dayjs(val).format('HH:mm DD/MM/YYYY')
+				) : (
+					<Tag color='red'>{intl.formatMessage({ id: 'vaorathuvien.label.chuaRa' })}</Tag>
+				),
 			filterType: 'date',
 			sortable: true,
 			onCell,
 		},
 		{
-			title: 'SĐT',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.soDienThoai' }),
 			dataIndex: 'soDienThoai',
 			align: 'center',
 			width: 120,
@@ -123,7 +130,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			onCell,
 		},
 		{
-			title: 'Ngày sinh',
+			title: intl.formatMessage({ id: 'vaorathuvien.label.ngaySinh' }),
 			dataIndex: 'ngaySinh',
 			align: 'center',
 			width: 120,
@@ -134,7 +141,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			onCell,
 		},
 		{
-			title: 'Khóa sinh viên',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.khoaSinhVien' }),
 			dataIndex: 'tenKhoaSinhVien',
 			width: 120,
 			filterType: 'string',
@@ -142,7 +149,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			onCell,
 		},
 		{
-			title: 'Ngành đào tạo',
+			title: intl.formatMessage({ id: 'vaorathuvien.label.nganhDaoTao' }),
 			dataIndex: 'tenNganh',
 			width: 180,
 			render: (val, rec) => `${val} - ${rec?.maNganh}`,
@@ -151,7 +158,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			onCell,
 		},
 		{
-			title: 'Lớp hành chính',
+			title: intl.formatMessage({ id: 'vaorathuvien.label.lopHanhChinh' }),
 			dataIndex: 'tenLopHanhChinh',
 			width: 120,
 			filterType: 'string',
@@ -159,13 +166,13 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.thaoTac' }),
 			align: 'center',
 			fixed: 'right',
 			width: 60,
 			render: (val, rec) => (
 				<ButtonExtend
-					tooltip='Chi tiết'
+					tooltip={intl.formatMessage({ id: 'vaorathuvien.button.xemChiTiet' })}
 					type='link'
 					icon={<EyeOutlined />}
 					onClick={() => {
@@ -192,7 +199,7 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 
 	return (
 		<Card
-			title='Lịch sử sinh viên vào ra thư viện'
+			title={intl.formatMessage({ id: 'vaorathuvien.card.title.lichSuSinhVienVaoRaThuVien' })}
 			extra={<ButtonExtend icon={<SettingOutlined />} onClick={() => setVisibleSetting(true)} />}
 		>
 			<Space style={{ marginBottom: 12 }}>
@@ -200,9 +207,12 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 					value={dateRange?.length ? [dayjs(dateRange[0]), dayjs(dateRange[1])] : null}
 					onChange={(val: any) => setDateRange(val ?? [])}
 					ranges={{
-						'Hôm nay': [dayjs().startOf('date'), dayjs().endOf('date')],
-						'Tuần này': [dayjs().startOf('week'), dayjs().endOf('week')],
-						'Tháng này': [dayjs().startOf('M'), dayjs().endOf('M')],
+						[intl.formatMessage({ id: 'vaorathuvien.label.homNay' })]: [dayjs().startOf('date'), dayjs().endOf('date')],
+						[intl.formatMessage({ id: 'vaorathuvien.label.tuanNay' })]: [
+							dayjs().startOf('week'),
+							dayjs().endOf('week'),
+						],
+						[intl.formatMessage({ id: 'vaorathuvien.label.thangNay' })]: [dayjs().startOf('M'), dayjs().endOf('M')],
 					}}
 					allowClear
 				/>
@@ -212,16 +222,16 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 					onClick={() => {
 						window.open(`${APP_CONFIG_URL_THU_VIEN}qr-thu-vien.jpg`, '_blank');
 					}}
-					tooltip='Mã QR checkin vào/ra thư viện'
+					tooltip={intl.formatMessage({ id: 'vaorathuvien.button.maQR' })}
 				>
-					Mã QR
+					{intl.formatMessage({ id: 'vaorathuvien.button.maQR' })}
 				</ButtonExtend>
 				<ButtonExtend
 					icon={<SmileOutlined />}
 					onClick={() => setVisibleFaceReg(true)}
-					tooltip='Cập nhật ảnh nhận diện khuôn mặt sinh viên'
+					tooltip={intl.formatMessage({ id: 'vaorathuvien.button.capNhatAnhNhanDien' })}
 				>
-					Cập nhật nhận diện khuôn mặt
+					{intl.formatMessage({ id: 'vaorathuvien.button.capNhatAnhNhanDien' })}
 				</ButtonExtend>
 			</Space>
 
@@ -233,10 +243,10 @@ const VaoRaThuVienPage = (props: { maSinhVien?: string; dateRange?: any }) => {
 				hideCard
 				Form={Form}
 				formProps={{ getData }}
-				title='Lịch sử vào ra thư viện'
+				title={intl.formatMessage({ id: 'vaorathuvien.card.title.lichSuVaoRaThuVien' })}
 				otherButtons={[
 					<ButtonExtend loading={loadingExport} key='1' icon={<ExportOutlined />} onClick={() => handlExport()}>
-						Xuất dữ liệu
+						{intl.formatMessage({ id: 'vaorathuvien.button.xuatDuLieu' })}
 					</ButtonExtend>,
 				]}
 			/>

@@ -2,9 +2,10 @@ import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { inputFormat } from '@/utils/utils';
 import { Card, Col, Row, Spin } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const StatAnPham = () => {
+	const intl = useIntl();
 	const { getThongKeAnPhamModel, loadingThongKe } = useModel('sachtailieu.anpham.anpham');
 	const [recThongKe, setRecThongKe] = useState<AnPham.IThongKeAnPham>();
 
@@ -20,7 +21,7 @@ const StatAnPham = () => {
 						<span className='num' style={{ color: 'blue' }}>
 							{inputFormat(recThongKe?.tongSoAnPham ?? 0)}
 						</span>
-						<span>Tổng số ấn phẩm</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.anpham.tongSoAnPham' })}</span>
 					</Card>
 				</Col>
 				<Col span={24} md={6}>
@@ -28,7 +29,7 @@ const StatAnPham = () => {
 						<span className='num' style={{ color: 'orange' }}>
 							{inputFormat(recThongKe?.tongAnPham ?? 0)}
 						</span>
-						<span>Tổng đăng ký cá biệt</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.anpham.tongDangKyCaBiet' })}</span>
 					</Card>
 				</Col>
 				<Col span={24} md={6}>
@@ -36,7 +37,7 @@ const StatAnPham = () => {
 						<span className='num' style={{ color: 'rec' }}>
 							{inputFormat(recThongKe?.tongAnPhamDangThueMuon ?? 0)}
 						</span>
-						<span>Số ĐKCB cho mượn</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.anpham.soDKCBChoMuon' })}</span>
 					</Card>
 				</Col>
 				<Col span={24} md={6}>
@@ -44,7 +45,7 @@ const StatAnPham = () => {
 						<span className='num' style={{ color: 'green' }}>
 							{inputFormat((recThongKe?.tongAnPham ?? 0) - (recThongKe?.tongAnPhamDangThueMuon ?? 0))}
 						</span>
-						<span>Số ĐKCB khả dụng</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.anpham.soDKCBKhaDung' })}</span>
 					</Card>
 				</Col>
 			</Row>

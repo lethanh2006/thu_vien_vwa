@@ -2,11 +2,12 @@ import { resetFieldsForm } from '@/utils/utils';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Button, Checkbox, Form, Modal } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const ConfirmXoaAnPham = (props: { visible: boolean; setVisible: (val: boolean) => void; getData: () => void }) => {
 	const [form] = Form.useForm();
 	const { visible, setVisible, getData } = props;
+	const intl = useIntl();
 
 	const { record, formSubmiting, deleteModel, deleteAnPhamSoModel } = useModel('sachtailieu.anpham.anpham');
 
@@ -38,7 +39,7 @@ const ConfirmXoaAnPham = (props: { visible: boolean; setVisible: (val: boolean) 
 			onCancel={() => setVisible(false)}
 			width={600}
 			footer={null}
-			title='Xác nhận ấn phẩm'
+			title={intl.formatMessage({ id: 'sachtailieu.anpham.xacNhan' })}
 			maskClosable={false}
 		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
@@ -54,18 +55,20 @@ const ConfirmXoaAnPham = (props: { visible: boolean; setVisible: (val: boolean) 
 					<div style={{ color: 'orange', fontSize: 48 }}>
 						<ExclamationCircleFilled />
 					</div>
-					<div style={{ fontSize: 18, fontWeight: 600 }}>Xác nhận xóa ấn phẩm?</div>
+					<div style={{ fontSize: 18, fontWeight: 600 }}>
+						{intl.formatMessage({ id: 'sachtailieu.confirm.xoaAnPhamSo2' })}
+					</div>
 				</div>
 
 				<Form.Item name='anPhamSo' valuePropName='checked' initialValue={false}>
-					<Checkbox>Xác nhận xóa đồng thời tài liệu trên DSpace</Checkbox>
+					<Checkbox>{intl.formatMessage({ id: 'sachtailieu.confirm.xoaDongThoiTaiLieu' })}</Checkbox>
 				</Form.Item>
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						Xác nhận
+						{intl.formatMessage({ id: 'global.button.xacnhan' })}
 					</Button>
-					<Button onClick={() => setVisible(false)}>Hủy</Button>
+					<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
 		</Modal>

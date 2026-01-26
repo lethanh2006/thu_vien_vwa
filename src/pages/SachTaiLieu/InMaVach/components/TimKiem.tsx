@@ -7,35 +7,36 @@ import dayjs from '@/utils/dayjs';
 import { inputFormat } from '@/utils/utils';
 import { CheckOutlined } from '@ant-design/icons';
 import { type FormInstance } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const TimKiemInMaVach = (props: { field: string; form: FormInstance; setVisibleTimKiem: (val: boolean) => void }) => {
 	const { field, form, setVisibleTimKiem } = props;
 	const { page, limit } = useModel('sachtailieu.anpham.anpham');
 	const { page: pageDKCB, limit: limitDKCB } = useModel('sachtailieu.anpham.anphamxepgia');
+	const intl = useIntl();
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
-			title: 'Mã tài liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.maTaiLieu' }),
 			dataIndex: 'maTaiLieu',
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			dataIndex: 'nhanDe',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' }),
 			dataIndex: 'tacGia',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -47,7 +48,7 @@ const TimKiemInMaVach = (props: { field: string; form: FormInstance; setVisibleT
 						});
 						setVisibleTimKiem(false);
 					}}
-					tooltip='Xác nhận'
+					tooltip={intl.formatMessage({ id: 'global.button.xacnhan' })}
 					className='text-success'
 					type='link'
 					icon={<CheckOutlined />}
@@ -58,13 +59,13 @@ const TimKiemInMaVach = (props: { field: string; form: FormInstance; setVisibleT
 
 	const columnsĐKCB: IColumn<AnPham.IAnPhamXepGia>[] = [
 		{
-			title: 'Mã tài liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.maTaiLieu' }),
 			dataIndex: ['anPham', 'maTaiLieu'],
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			dataIndex: ['anPham', 'nhanDe'],
 
 			width: 180,
@@ -72,33 +73,33 @@ const TimKiemInMaVach = (props: { field: string; form: FormInstance; setVisibleT
 			filterType: 'string',
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' }),
 			dataIndex: ['anPham', 'tacGia'],
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'ĐKCB',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.soDangKyCaBiet' }),
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			filterType: 'string',
 			width: 120,
 		},
 		{
-			title: 'Thời gian xếp giá',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.thoiGianXepGia' }),
 			dataIndex: 'thoiGianXepGia',
 			align: 'center',
 			width: 130,
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Đơn giá',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.donGia' }),
 			width: 120,
 			align: 'right',
 			render: (val, rec) => rec?.thongTinXepGia?.donGia && `${inputFormat(rec?.thongTinXepGia?.donGia)} VNĐ`,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -110,7 +111,7 @@ const TimKiemInMaVach = (props: { field: string; form: FormInstance; setVisibleT
 						});
 						setVisibleTimKiem(false);
 					}}
-					tooltip='Xác nhận'
+					tooltip={intl.formatMessage({ id: 'global.button.xacnhan' })}
 					className='text-success'
 					type='link'
 					icon={<CheckOutlined />}
