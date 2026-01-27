@@ -1,7 +1,7 @@
 import { ELoaiMauDinhDang } from '@/services/DanhMuc/constant';
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -19,6 +19,7 @@ const SelectDinhDangMaVach = (props: {
 }) => {
 	const { value, onChange, multiple, allowClear, style, isSetRecord, disabled, selectMa } = props;
 	const { danhSach, getAllModel } = useModel('danhmuc.maudinhdang');
+	const intl = useIntl();
 
 	useEffect(() => {
 		getAllModel(!!isSetRecord, undefined, {
@@ -40,7 +41,7 @@ const SelectDinhDangMaVach = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn mẫu mã vạch'
+			placeholder={intl.formatMessage({ id: 'danhmuc.maudinhdang.select.placeholder' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

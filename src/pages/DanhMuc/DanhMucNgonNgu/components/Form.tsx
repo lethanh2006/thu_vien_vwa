@@ -29,22 +29,40 @@ const FormNgonNgu = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.danhmucngonngu.form.title.chinhsua' }) : intl.formatMessage({ id: 'danhmuc.danhmucngonngu.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item label='Mã ngôn ngữ' name='ma' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
-							<Input placeholder='Nhập mã ngôn ngữ' disabled={edit} />
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.danhmucngonngu.form.label.mangonngu' })}
+							name='ma'
+							rules={[...rules.required, ...rules.text, ...rules.length(20)]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.danhmucngonngu.form.placeholder.nhapmangonngu' })}
+								disabled={edit}
+							/>
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Tên ngôn ngữ' name='ten' rules={[...rules.required, ...rules.text, ...rules.length(250)]}>
-							<Input placeholder='Nhập tên ngôn ngữ' />
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.danhmucngonngu.form.label.tenngonngu' })}
+							name='ten'
+							rules={[...rules.required, ...rules.text, ...rules.length(250)]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.danhmucngonngu.form.placeholder.nhaptenngonngu' })}
+							/>
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Nội dung' name='noiDung'>
-							<Input.TextArea rows={3} placeholder='Nhập nội dung' />
+						<Form.Item label={intl.formatMessage({ id: 'danhmuc.danhmucngonngu.form.label.noidung' })} name='noiDung'>
+							<Input.TextArea
+								rows={3}
+								placeholder={intl.formatMessage({ id: 'danhmuc.danhmucngonngu.form.placeholder.nhapnoidung' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

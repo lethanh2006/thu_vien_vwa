@@ -1,11 +1,11 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { EOperatorType } from '@/components/Table/constant';
 import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
-import { EOperatorType } from '@/components/Table/constant';
 
 const DanhSachTruongCon = () => {
 	const intl = useIntl();
@@ -26,37 +26,47 @@ const DanhSachTruongCon = () => {
 
 	const columns: IColumn<TruongCon.IRecord>[] = [
 		{
-			title: 'Code',
+			title: intl.formatMessage({ id: 'danhmuc.truongcon.table.column.code' }),
 			dataIndex: 'code',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Tag Code',
+			title: intl.formatMessage({ id: 'danhmuc.truongcon.table.column.tagcode' }),
 			dataIndex: 'tagCode',
 			width: 100,
 			filterType: 'string',
 		},
 		{
-			title: 'Tiêu đề',
+			title: intl.formatMessage({ id: 'danhmuc.truongcon.table.column.tieude' }),
 			dataIndex: 'tieuDe',
 			width: 220,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.truongcon.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, record) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.truongcon.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(record)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(record._id, getData)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						title={intl.formatMessage({ id: 'danhmuc.truongcon.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.truongcon.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

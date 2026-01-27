@@ -12,32 +12,42 @@ const DanhMucNgonNgu = () => {
 
 	const columns: IColumn<DanhMucNgonNgu.IRecord>[] = [
 		{
-			title: 'Mã ngôn ngữ',
+			title: intl.formatMessage({ id: 'danhmuc.danhmucngonngu.table.column.mangonngu' }),
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên ngôn ngữ',
+			title: intl.formatMessage({ id: 'danhmuc.danhmucngonngu.table.column.tenngonngu' }),
 			dataIndex: 'ten',
 			width: 220,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.danhmucngonngu.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.danhmucngonngu.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa ngôn ngữ này?'
+						title={intl.formatMessage({ id: 'danhmuc.danhmucngonngu.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.danhmucngonngu.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

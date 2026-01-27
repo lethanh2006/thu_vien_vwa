@@ -12,7 +12,7 @@ import { Button, Form, Input, Modal, Space, Tree, message, type TreeProps } from
 import { type DataNode } from 'antd/lib/tree';
 import { useEffect, useMemo, useState } from 'react';
 import Highlighter from 'react-highlight-words';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import FormLinhVuc from './Form';
 import styles from './style.less';
 
@@ -31,6 +31,7 @@ const TreeDonViSo = (props: any) => {
 		setVisibleForm,
 		deleteManyModel,
 	} = useModel('danhmuc.donviso');
+	const intl = useIntl();
 	const [form] = Form.useForm();
 	const [dialog, setDialog] = useState<boolean>(false);
 	const [selectedKey, setselectedKeys] = useState<any>([]);
@@ -157,8 +158,8 @@ const TreeDonViSo = (props: any) => {
 
 	const handleDeleteDonvi = () => {
 		setDialog(false);
-		if (record?.id) {
-			deleteModel(record.id, getAllModel);
+		if (record?._id) {
+			deleteModel(record._id, getAllModel);
 			setTreeData(groupByMaDonViCha(danhSach));
 			setIsChangeTree(!isChangeTree);
 		}
@@ -182,13 +183,13 @@ const TreeDonViSo = (props: any) => {
 		}
 	};
 
-	useEffect(() => {}, [record?.id]);
+	useEffect(() => {}, [record?._id]);
 
 	const onSelect: TreeProps['onSelect'] = (selectedKeys) => {
 		// Tránh việc click lại item đang select thì phải select về root
 		if (selectedKeys.length) {
 			setselectedKeys(selectedKeys);
-			const res = danhSach.find((item: DonViSo.IRecord) => item.id === selectedKeys[0]);
+			const res = danhSach.find((item: DonViSo.IRecord) => item._id === selectedKeys[0]);
 			setRecord(res);
 		}
 	};
@@ -223,15 +224,18 @@ const TreeDonViSo = (props: any) => {
 	const onClickConfirmDelete = () => {
 		if (checkedKey.length > 0) {
 			Modal.confirm({
-				title: 'Xác nhận xóa',
-				content: `Xác nhận xóa ${checkedKey.length} lĩnh vực đã chọn, thao tác này không thể hoàn tác?`,
+				title: intl.formatMessage({ id: 'danhmuc.donviso.tree.modal.title.xacnhanxoa' }),
+				content: intl.formatMessage(
+					{ id: 'danhmuc.donviso.tree.modal.content.xacnhanxoanhieu' },
+					{ count: checkedKey.length },
+				),
 				onOk: () => {
 					deleteManyModel(checkedKey, getAllModel);
 					setTreeData(groupByMaDonViCha(danhSach));
 					setIsChangeTree(!isChangeTree);
 				},
 			});
-		} else message.warning('Vui lòng chọn lĩnh vực cần xóa');
+		} else message.warning(intl.formatMessage({ id: 'danhmuc.donviso.tree.message.warning.chonxoa' }));
 	};
 
 	useEffect(() => {
@@ -252,13 +256,13 @@ const TreeDonViSo = (props: any) => {
 					>
 						<li className={styles.action}>
 							<span onClick={AddnewDonVi}>
-								<FileAddOutlined /> Thêm lĩnh vực con
+								<FileAddOutlined /> {intl.formatMessage({ id: 'danhmuc.donviso.tree.contextmenu.themcon' })}
 							</span>
 						</li>
 						{!isCheckNode && (
 							<li className={styles.action}>
 								<span onClick={EditDonVi}>
-									<EditOutlined /> Chỉnh sửa
+									<EditOutlined /> {intl.formatMessage({ id: 'danhmuc.donviso.tree.contextmenu.chinhsua' })}
 								</span>
 							</li>
 						)}
@@ -271,7 +275,7 @@ const TreeDonViSo = (props: any) => {
 										setDialog(true);
 									}}
 								>
-									<DeleteOutlined /> Xóa lĩnh vực
+									<DeleteOutlined /> {intl.formatMessage({ id: 'danhmuc.donviso.tree.contextmenu.xoa' })}
 								</span>
 							</li>
 						)}
@@ -288,17 +292,17 @@ const TreeDonViSo = (props: any) => {
 						icon={<PlusCircleOutlined />}
 						type='primary'
 						notHideText
-						tooltip='Thêm mới dữ liệu'
+						tooltip={intl.formatMessage({ id: 'danhmuc.donviso.tree.tooltip.themmoidulieu' })}
 					>
-						Thêm mới
+						{intl.formatMessage({ id: 'danhmuc.donviso.tree.button.themmoi' })}
 					</ButtonExtend>
 					{statusDelete ? (
 						<>
 							<Button danger type='default' onClick={onClickConfirmDelete}>
-								Xác nhận xóa
+								{intl.formatMessage({ id: 'danhmuc.donviso.tree.button.xacnhanxoa' })}
 							</Button>
 							<Button onClick={() => setStatusDelete(false)} type='link'>
-								Hủy
+								{intl.formatMessage({ id: 'danhmuc.donviso.tree.button.huy' })}
 							</Button>
 						</>
 					) : (
@@ -310,7 +314,7 @@ const TreeDonViSo = (props: any) => {
 								setStatusDelete(true);
 							}}
 						>
-							Xóa lĩnh vực
+							{intl.formatMessage({ id: 'danhmuc.donviso.tree.button.xoalinhvuc' })}
 						</Button>
 					)}
 				</Space>
@@ -318,7 +322,7 @@ const TreeDonViSo = (props: any) => {
 					<Input.Search
 						value={includeSearch}
 						style={{ marginBottom: 8 }}
-						placeholder='Tìm kiếm lĩnh vực'
+						placeholder={intl.formatMessage({ id: 'danhmuc.donviso.tree.search.placeholder' })}
 						onChange={onChange}
 						allowClear
 					/>
@@ -337,7 +341,7 @@ const TreeDonViSo = (props: any) => {
 					checkedKeys={checkedKey}
 					selectedKeys={selectedKey}
 					onRightClick={(e: any) => {
-						const res = danhSach.find((item: DonViSo.IRecord) => item.id === e.node.key);
+						const res = danhSach.find((item: DonViSo.IRecord) => item._id === e.node.key);
 						setRecord(res);
 						setIsCheckNode(false);
 						setStartPosition({
@@ -366,12 +370,16 @@ const TreeDonViSo = (props: any) => {
 			</div>
 
 			<Modal
-				destroyOnHidden
+				destroyOnClose
 				open={visibleForm}
 				onOk={handleCancel}
 				onCancel={handleCancel}
 				footer={null}
-				title={(edit ? 'Chỉnh sửa' : 'Thêm mới') + ' lĩnh vực'}
+				title={
+					(edit
+						? intl.formatMessage({ id: 'danhmuc.donviso.tree.modal.title.chinhsua' })
+						: intl.formatMessage({ id: 'danhmuc.donviso.tree.modal.title.themmoi' })) + ' lĩnh vực'
+				}
 			>
 				<FormLinhVuc
 					onCancel={handleCancel}
@@ -387,15 +395,17 @@ const TreeDonViSo = (props: any) => {
 				onCancel={handleCancelDialog}
 				footer={
 					<>
-						<Button onClick={handleCancelDialog}>Hủy</Button>
+						<Button onClick={handleCancelDialog}>
+							{intl.formatMessage({ id: 'danhmuc.donviso.tree.button.huy' })}
+						</Button>
 						<Button danger onClick={handleDeleteDonvi}>
-							Xác nhận
+							{intl.formatMessage({ id: 'danhmuc.donviso.tree.button.xacnhan' })}
 						</Button>
 					</>
 				}
-				title='Xác nhận xóa'
+				title={intl.formatMessage({ id: 'danhmuc.donviso.tree.modal.title.xacnhanxoa' })}
 			>
-				Bạn có chắc chắn muốn xóa lĩnh vực này?
+				{intl.formatMessage({ id: 'danhmuc.donviso.tree.modal.content.xacnhanxoa' })}
 			</Modal>
 		</>
 	);

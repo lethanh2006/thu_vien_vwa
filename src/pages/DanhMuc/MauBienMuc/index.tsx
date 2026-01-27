@@ -12,20 +12,20 @@ const BieuMauPhuLucPage = () => {
 
 	const columns: IColumn<MauBienMuc.IRecord>[] = [
 		{
-			title: 'Mã',
+			title: intl.formatMessage({ id: 'danhmuc.maubienmuc.table.column.ma' }),
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên biểu mẫu',
+			title: intl.formatMessage({ id: 'danhmuc.maubienmuc.table.column.tenbieumau' }),
 			dataIndex: 'ten',
 			width: 220,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.maubienmuc.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
@@ -33,18 +33,32 @@ const BieuMauPhuLucPage = () => {
 				<>
 					<Popconfirm
 						onConfirm={() => saoChepMauBienMucModel(rec._id, getModel)}
-						title='Bạn có chắc chắn muốn sao chép mẫu biên mục này?'
+						title={intl.formatMessage({ id: 'danhmuc.maubienmuc.table.popconfirm.saochep' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Sao chép' type='link' icon={<CopyOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.maubienmuc.table.tooltip.saochep' })}
+							type='link'
+							icon={<CopyOutlined />}
+						/>
 					</Popconfirm>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.maubienmuc.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa biểu mẫu này?'
+						title={intl.formatMessage({ id: 'danhmuc.maubienmuc.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.maubienmuc.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

@@ -12,32 +12,42 @@ const KhoSachPage = () => {
 
 	const columns: IColumn<KieuTuLieu.IRecord>[] = [
 		{
-			title: 'Mã kiểu tư liệu',
+			title: intl.formatMessage({ id: 'danhmuc.kieutulieu.table.column.makieutulieu' }),
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên kiểu tư liệu',
+			title: intl.formatMessage({ id: 'danhmuc.kieutulieu.table.column.tenkieutulieu' }),
 			dataIndex: 'ten',
 			width: 220,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.kieutulieu.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.kieutulieu.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa kiểu tư liệu này?'
+						title={intl.formatMessage({ id: 'danhmuc.kieutulieu.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.kieutulieu.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

@@ -4,8 +4,8 @@ import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
-import Form from './components/Form';
 import SelectPhongDoc from '../PhongDoc/components/Select';
+import Form from './components/Form';
 
 const KhoSachPage = () => {
 	const intl = useIntl();
@@ -13,20 +13,20 @@ const KhoSachPage = () => {
 
 	const columns: IColumn<KhoSach.IRecord>[] = [
 		{
-			title: 'Mã kho',
+			title: intl.formatMessage({ id: 'danhmuc.khosach.table.column.makho' }),
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên kho',
+			title: intl.formatMessage({ id: 'danhmuc.khosach.table.column.tenkho' }),
 			dataIndex: 'ten',
 			width: 220,
 			filterType: 'string',
 		},
 		{
-			title: 'Phòng đọc',
+			title: intl.formatMessage({ id: 'danhmuc.khosach.table.column.phongdoc' }),
 			dataIndex: 'maPhongDoc',
 			width: 180,
 			render: (val, rec) => rec?.phongDoc?.ten,
@@ -34,26 +34,36 @@ const KhoSachPage = () => {
 			filterCustomSelect: <SelectPhongDoc multiple selectMa />,
 		},
 		{
-			title: 'Số ĐKCB cuối',
+			title: intl.formatMessage({ id: 'danhmuc.khosach.table.column.sodkcbcuoi' }),
 			dataIndex: 'soLuongAnPhamDaXepGia',
 			width: 80,
 			filterType: 'number',
 			sortable: true,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.khosach.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.khosach.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa kho sách này?'
+						title={intl.formatMessage({ id: 'danhmuc.khosach.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.khosach.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

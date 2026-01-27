@@ -12,38 +12,48 @@ const KhoSachPage = () => {
 
 	const columns: IColumn<PhongDoc.IRecord>[] = [
 		{
-			title: 'Mã phòng đọc',
+			title: intl.formatMessage({ id: 'danhmuc.phongdoc.table.column.maphongdoc' }),
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên phòng đọc',
+			title: intl.formatMessage({ id: 'danhmuc.phongdoc.table.column.tenphongdoc' }),
 			dataIndex: 'ten',
 			width: 220,
 			filterType: 'string',
 		},
 		{
-			title: 'Địa chỉ',
+			title: intl.formatMessage({ id: 'danhmuc.phongdoc.table.column.diachi' }),
 			dataIndex: 'diaChi',
 			width: 220,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.phongdoc.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.phongdoc.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa phòng đọc này?'
+						title={intl.formatMessage({ id: 'danhmuc.phongdoc.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.phongdoc.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

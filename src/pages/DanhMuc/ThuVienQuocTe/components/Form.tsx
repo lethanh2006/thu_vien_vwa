@@ -27,27 +27,45 @@ const FormThuVienQuocTe = (props: any) => {
 				.catch((er) => console.log(er));
 	};
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.title.chitiet' }) : intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col xs={24}>
-						<Form.Item name='name' label='Tên máy chủ' rules={[...rules.required]}>
-							<Input placeholder='Nhập tên máy chủ' />
+						<Form.Item
+							name='name'
+							label={intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.label.tenmaychu' })}
+							rules={[...rules.required]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.placeholder.tenmaychu' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='port' label='Cổng (Port)' rules={[...rules.required]}>
-							<Input placeholder='Nhập cổng (Port)' />
+						<Form.Item
+							name='port'
+							label={intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.label.cong' })}
+							rules={[...rules.required]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.placeholder.cong' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='host' label='Máy chủ (Host)' rules={[...rules.required]}>
-							<Input placeholder='Nhập máy chủ (Host)' />
+						<Form.Item
+							name='host'
+							label={intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.label.maychu' })}
+							rules={[...rules.required]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.placeholder.maychu' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='database' label='Cơ sở dữ liệu' rules={[...rules.required]}>
-							<Input placeholder='Nhập cơ sở dữ liệu' />
+						<Form.Item
+							name='database'
+							label={intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.label.cosodulieu' })}
+							rules={[...rules.required]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.thuvienquocte.form.placeholder.cosodulieu' })} />
 						</Form.Item>
 					</Col>
 				</Row>

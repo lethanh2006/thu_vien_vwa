@@ -27,17 +27,30 @@ const FormCapThuMuc = (props: any) => {
 				.catch((er) => console.log(er));
 	};
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.capthumuc.form.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'danhmuc.capthumuc.form.title.chitiet' }) : intl.formatMessage({ id: 'danhmuc.capthumuc.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col xs={24}>
-						<Form.Item name='ma' label='Mã cấp thư mục' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập mã cấp thư mục' disabled={edit || isView} />
+						<Form.Item
+							name='ma'
+							label={intl.formatMessage({ id: 'danhmuc.capthumuc.form.label.macapthumuc' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.capthumuc.form.placeholder.nhapmacapthumuc' })}
+								disabled={edit || isView}
+							/>
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='ten' label='Tên cấp thư mục' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên cấp thư mục' />
+						<Form.Item
+							name='ten'
+							label={intl.formatMessage({ id: 'danhmuc.capthumuc.form.label.tencapthumuc' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.capthumuc.form.placeholder.nhaptencapthumuc' })} />
 						</Form.Item>
 					</Col>
 				</Row>

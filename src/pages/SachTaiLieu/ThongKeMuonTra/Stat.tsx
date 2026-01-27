@@ -2,12 +2,14 @@ import { ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
 import { Card, Col, Row, Spin, Tooltip } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const StatThongKeMuonTra = (props: { filter?: any; trangThai: ETrangThaiMuonSach }) => {
 	const { filter, trangThai } = props;
 	const { thongKeTongSoMuonTraAnPhamModel, loadingThongKe, dataTheMuonAnPham } =
 		useModel('sachtailieu.muontra.muontra');
+
+	const intl = useIntl();
 
 	useEffect(() => {
 		thongKeTongSoMuonTraAnPhamModel(undefined, filter?.filter(Boolean)?.length ? filter?.filter(Boolean) : undefined);
@@ -34,24 +36,39 @@ const StatThongKeMuonTra = (props: { filter?: any; trangThai: ETrangThaiMuonSach
 					{renderCard(
 						dataTheMuonAnPham?.theoDkcb ?? 0,
 						'orange',
-						'Theo ĐKCB',
-						`Thống kê tổng số ĐKCB ${trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'ghi mượn' : 'ghi trả'}`,
+						intl.formatMessage({ id: 'sachtailieu.thongke.stat.theodkcb' }),
+						intl.formatMessage({
+							id:
+								trangThai === ETrangThaiMuonSach.DANG_THUE_MUON
+									? 'sachtailieu.thongke.stat.tooltip.theodkcb.muon'
+									: 'sachtailieu.thongke.stat.tooltip.theodkcb.tra',
+						}),
 					)}
 				</Col>
 				<Col span={24} md={8}>
 					{renderCard(
 						dataTheMuonAnPham?.theoBanDoc ?? 0,
 						'red',
-						'Theo bạn đọc',
-						`Thống kê số bạn đọc ${trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'đang mượn' : 'đã trả'}`,
+						intl.formatMessage({ id: 'sachtailieu.thongke.stat.theobandoc' }),
+						intl.formatMessage({
+							id:
+								trangThai === ETrangThaiMuonSach.DANG_THUE_MUON
+									? 'sachtailieu.thongke.stat.tooltip.theobandoc.muon'
+									: 'sachtailieu.thongke.stat.tooltip.theobandoc.tra',
+						}),
 					)}
 				</Col>
 				<Col span={24} md={8}>
 					{renderCard(
 						dataTheMuonAnPham?.theoDauAnPham ?? 0,
 						'green',
-						'Theo ấn phẩm',
-						`Thống kê số đầu ấn phẩm ${trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'ghi mượn' : 'ghi trả'}`,
+						intl.formatMessage({ id: 'sachtailieu.thongke.stat.theoanhpham' }),
+						intl.formatMessage({
+							id:
+								trangThai === ETrangThaiMuonSach.DANG_THUE_MUON
+									? 'sachtailieu.thongke.stat.tooltip.theoanhpham.muon'
+									: 'sachtailieu.thongke.stat.tooltip.theoanhpham.tra',
+						}),
 					)}
 				</Col>
 			</Row>

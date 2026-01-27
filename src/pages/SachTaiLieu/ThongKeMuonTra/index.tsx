@@ -10,7 +10,7 @@ import dayjs from '@/utils/dayjs';
 import { ExportOutlined } from '@ant-design/icons';
 import { Card, Select, Space, Tabs } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import RenderHanTra from '../MuonTraSach/components/RenderHanTra';
 import ModalExportAnPham from '../ThongKeAnPham/ModalExport';
 import StatThongKeMuonTra from './Stat';
@@ -21,6 +21,8 @@ const ThongKeMuonTraPage = () => {
 	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
 	const [datePicker, setDatePicker] = useState<any>();
 	const [modalExport, setModalExport] = useState<boolean>(false);
+
+	const intl = useIntl();
 
 	const filter = [
 		{
@@ -49,7 +51,7 @@ const ThongKeMuonTraPage = () => {
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
-			title: 'Mã định danh',
+			title: intl.formatMessage({ id: 'sachtailieu.thongke.column.madinhdanh' }),
 			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
 			align: 'center',
 			width: 120,
@@ -57,34 +59,34 @@ const ThongKeMuonTraPage = () => {
 			filterType: 'string',
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'sachtailieu.thongke.column.hoten' }),
 			dataIndex: ['phieuMuonTra', 'hoTenNguoiMuon'],
 			width: 180,
 			render: (val, rec) => rec?.phieuMuonTra?.hoTenNguoiMuon,
 			filterType: 'string',
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.thongke.column.nhande' }),
 			dataIndex: ['anPham', 'nhanDe'],
 			width: 220,
 			render: (val, rec) => rec?.anPham?.nhanDe,
 			filterType: 'string',
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.thongke.column.tacgia' }),
 			dataIndex: ['anPham', 'tacGia'],
 			width: 180,
 			render: (val, rec) => rec?.anPham?.tacGia,
 			filterType: 'string',
 		},
 		{
-			title: 'ĐKCB',
+			title: intl.formatMessage({ id: 'sachtailieu.thongke.column.dkcb' }),
 			dataIndex: 'soDangKyCaBiet',
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Thời gian mượn',
+			title: intl.formatMessage({ id: 'sachtailieu.thongke.column.thoigianmuon' }),
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
@@ -93,7 +95,7 @@ const ThongKeMuonTraPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Thời gian trả',
+			title: intl.formatMessage({ id: 'sachtailieu.thongke.column.thoigiantra' }),
 			dataIndex: 'thoiGianTra',
 			width: 150,
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
@@ -101,19 +103,19 @@ const ThongKeMuonTraPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'sachtailieu.thongke.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Ghi chú trả',
+			title: intl.formatMessage({ id: 'sachtailieu.thongke.column.ghichutra' }),
 			dataIndex: 'ghiChuTra',
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.thongke.column.trangthai' }),
 			align: 'center',
 			width: 140,
 			render: (_, rec) => <RenderHanTra rec={rec} />,
@@ -123,17 +125,23 @@ const ThongKeMuonTraPage = () => {
 	];
 
 	return (
-		<Card title='Thống kê mượn trả'>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.thongke.title' })}>
 			<Tabs onChange={(tab) => setTrangThai(tab as ETrangThaiMuonSach)} activeKey={trangThai}>
-				<Tabs.TabPane tab='Lịch sử đang mượn' key={ETrangThaiMuonSach.DANG_THUE_MUON} />
-				<Tabs.TabPane tab='Lịch sử đã trả' key={ETrangThaiMuonSach.DA_TRA} />
+				<Tabs.TabPane
+					tab={intl.formatMessage({ id: 'sachtailieu.thongke.tab.lichsudangmuon' })}
+					key={ETrangThaiMuonSach.DANG_THUE_MUON}
+				/>
+				<Tabs.TabPane
+					tab={intl.formatMessage({ id: 'sachtailieu.thongke.tab.lichsudatra' })}
+					key={ETrangThaiMuonSach.DA_TRA}
+				/>
 			</Tabs>
 
 			<Space style={{ marginBottom: 12 }} align='center'>
 				<Select
 					style={{ width: 250 }}
 					value={vaiTro}
-					placeholder='Chọn đối tượng'
+					placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.placeholder.chondoituong' })}
 					options={Object.values(EVaiTroMuonTra).map((item) => ({
 						value: item,
 						label: item,
@@ -143,18 +151,35 @@ const ThongKeMuonTraPage = () => {
 
 				<div style={{ display: 'flex', alignItems: 'center' }}>
 					<span style={{ marginRight: 8, whiteSpace: 'nowrap' }}>
-						{trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'Thời gian mượn:' : 'Thời gian trả:'}
+						{intl.formatMessage({
+							id:
+								trangThai === ETrangThaiMuonSach.DANG_THUE_MUON
+									? 'sachtailieu.thongke.label.thoigianmuon'
+									: 'sachtailieu.thongke.label.thoigiantra',
+						})}
 					</span>
 					<MyDateRangePicker
 						value={datePicker}
 						onChange={(val) => setDatePicker(val)}
 						allowClear
 						style={{ width: 300 }}
-						placeholder={['Từ ngày', 'Đến ngày']}
+						placeholder={[
+							intl.formatMessage({ id: 'sachtailieu.thongke.datepicker.tungay' }),
+							intl.formatMessage({ id: 'sachtailieu.thongke.datepicker.denngay' }),
+						]}
 						ranges={{
-							'Hôm nay': [dayjs().startOf('date'), dayjs().endOf('date')],
-							'Tuần này': [dayjs().startOf('week'), dayjs().endOf('week')],
-							'Tháng này': [dayjs().startOf('M'), dayjs().endOf('M')],
+							[intl.formatMessage({ id: 'sachtailieu.thongke.datepicker.homnay' })]: [
+								dayjs().startOf('date'),
+								dayjs().endOf('date'),
+							],
+							[intl.formatMessage({ id: 'sachtailieu.thongke.datepicker.tuannay' })]: [
+								dayjs().startOf('week'),
+								dayjs().endOf('week'),
+							],
+							[intl.formatMessage({ id: 'sachtailieu.thongke.datepicker.thangnay' })]: [
+								dayjs().startOf('M'),
+								dayjs().endOf('M'),
+							],
 						}}
 						format='DD/MM/YYYY'
 					/>
@@ -176,13 +201,13 @@ const ThongKeMuonTraPage = () => {
 				hideCard
 				otherButtons={[
 					<ButtonExtend key={'1'} icon={<ExportOutlined />} onClick={() => setModalExport(true)}>
-						Xuất dữ liệu
+						{intl.formatMessage({ id: 'sachtailieu.thongke.button.xuatdulieu' })}
 					</ButtonExtend>,
 				]}
 			/>
 
 			<ModalExportAnPham
-				title='Xuất dữ liệu thống kê mượn trả'
+				title={intl.formatMessage({ id: 'sachtailieu.thongke.modal.title' })}
 				visible={modalExport}
 				setVisible={setModalExport}
 				trangThai={trangThai}

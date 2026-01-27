@@ -30,7 +30,7 @@ const FormMuonTra = () => {
 
 	return (
 		<Modal
-			title='Thông tin ấn phẩm tìm kiếm'
+			title={intl.formatMessage({ id: 'sachtailieu.formmuontra.title' })}
 			open={visibleForm}
 			onCancel={() => setVisibleForm(false)}
 			width={600}
@@ -39,18 +39,26 @@ const FormMuonTra = () => {
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col xs={24}>
-						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
+						<Form.Item
+							name='thoiGianMuon'
+							label={intl.formatMessage({ id: 'sachtailieu.dkcb.thoiGianMuon' })}
+							rules={[...rules.required]}
+						>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='expired' label='Hạn trả' rules={[...rules.required]}>
+						<Form.Item
+							name='expired'
+							label={intl.formatMessage({ id: 'sachtailieu.dkcb.hanTra' })}
+							rules={[...rules.required]}
+						>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='ghiChu' label='Ghi chú'>
-							<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
+						<Form.Item name='ghiChu' label={intl.formatMessage({ id: 'sachtailieu.anpham.ghiChu' })}>
+							<Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.nhapGhiChu' })} />
 						</Form.Item>
 					</Col>
 				</Row>

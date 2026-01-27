@@ -1,7 +1,7 @@
 import { Select } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -22,6 +22,7 @@ const SelectBoSuuTap = (props: {
 	const { value, onChange, multiple, allowClear, placeholder, disabled, style, idDonViSo } = props;
 	const { getAllModel } = useModel('sachtailieu.anpham.anpham');
 	const [danhSach, setDanhSach] = useState<DonViSo.IRecord[]>();
+	const intl = useIntl();
 
 	useEffect(() => {
 		if (idDonViSo)
@@ -45,7 +46,7 @@ const SelectBoSuuTap = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder={placeholder ?? 'Chọn bộ sưu tập'}
+			placeholder={placeholder ?? intl.formatMessage({ id: 'danhmuc.donviso.select.bosuutap.placeholder' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

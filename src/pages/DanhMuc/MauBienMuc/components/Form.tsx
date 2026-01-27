@@ -35,17 +35,21 @@ const FormMauBienMuc = (props: { afterAddNew?: (rec: MauBienMuc.IRecord) => void
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
 				<Col span={24} md={12}>
-					<Form.Item label='Mã mẫu biên mục' name='ma' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
-						<Input placeholder='Nhập mã mẫu biên mục' />
+					<Form.Item
+						label={intl.formatMessage({ id: 'danhmuc.maubienmuc.form.label.mamaubienmuc' })}
+						name='ma'
+						rules={[...rules.required, ...rules.text, ...rules.length(20)]}
+					>
+						<Input placeholder={intl.formatMessage({ id: 'danhmuc.maubienmuc.form.placeholder.nhapmamaubienmuc' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24} md={12}>
 					<Form.Item
-						label='Tên mẫu biên mục'
+						label={intl.formatMessage({ id: 'danhmuc.maubienmuc.form.label.tenmaubienmuc' })}
 						name='ten'
 						rules={[...rules.required, ...rules.text, ...rules.length(250)]}
 					>
-						<Input placeholder='Nhập tên mẫu biên mục' />
+						<Input placeholder={intl.formatMessage({ id: 'danhmuc.maubienmuc.form.placeholder.nhaptenmaubienmuc' })} />
 					</Form.Item>
 				</Col>
 			</Row>

@@ -4,11 +4,12 @@ import { resetFieldsForm } from '@/utils/utils';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Button, Col, Form, Modal, Row } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const ConfirmGiaHan = (props: { visible: boolean; setVisible: (val: boolean) => void; getData?: () => void }) => {
 	const { visible, setVisible, getData } = props;
 	const [form] = Form.useForm();
+	const intl = useIntl();
 
 	const { record, giaHanThueMuonAnPhamModel, formSubmiting } = useModel('sachtailieu.muontra.muontra');
 
@@ -30,7 +31,7 @@ const ConfirmGiaHan = (props: { visible: boolean; setVisible: (val: boolean) => 
 		<Modal
 			open={visible}
 			onCancel={() => setVisible(false)}
-			title='Xác nhận gia hạn mượn sách'
+			title={intl.formatMessage({ id: 'sachtailieu.modalgiahan.title' })}
 			footer={null}
 			width={600}
 		>
@@ -49,12 +50,15 @@ const ConfirmGiaHan = (props: { visible: boolean; setVisible: (val: boolean) => 
 							<div style={{ color: 'orange', fontSize: 48 }}>
 								<ExclamationCircleFilled />
 							</div>
-							<div>Bạn có chắc chắn xác nhận gia hạn mượn sách?</div>
+							<div>{intl.formatMessage({ id: 'sachtailieu.modalgiahan.message' })}</div>
 						</div>
 					</Col>
 
 					<Col xs={24} md={24}>
-						<Form.Item name='thoiGianGiaHan' label='Thời gian gia hạn'>
+						<Form.Item
+							name='thoiGianGiaHan'
+							label={intl.formatMessage({ id: 'sachtailieu.modalgiahan.form.thoigiangiahan' })}
+						>
 							<MyDatePicker disabledDate={(cur) => dayjs(cur).isBefore(record?.expired)} />
 						</Form.Item>
 					</Col>
@@ -62,9 +66,9 @@ const ConfirmGiaHan = (props: { visible: boolean; setVisible: (val: boolean) => 
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						Xác nhận
+						{intl.formatMessage({ id: 'global.button.xacnhan' })}
 					</Button>
-					<Button onClick={() => setVisible(false)}>Hủy</Button>
+					<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
 		</Modal>

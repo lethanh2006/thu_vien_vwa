@@ -3,10 +3,10 @@ import type { IColumn } from '@/components/Table/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Row } from 'antd';
+import _ from 'lodash';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectTruongBienMuc from '../../TruongBienMuc/components/Select';
-import _ from 'lodash';
 
 const FormMauBienMuc = (props: any) => {
 	const { getData: getDataExternal, title } = props;
@@ -59,13 +59,13 @@ const FormMauBienMuc = (props: any) => {
 
 	const columns: IColumn<TruongCon.IRecord>[] = [
 		{
-			title: 'Code',
+			title: intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.table.column.code' }),
 			dataIndex: 'code',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Tiêu đề',
+			title: intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.table.column.tieude' }),
 			dataIndex: 'tieuDe',
 			width: 220,
 			filterType: 'string',
@@ -73,18 +73,24 @@ const FormMauBienMuc = (props: any) => {
 	];
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.form.title.chinhsua' }) : intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item label='Trường biên mục' name='tag' rules={[...rules.required]}>
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.form.label.truongbienmuc' })}
+							name='tag'
+							rules={[...rules.required]}
+						>
 							<SelectTruongBienMuc selectMa />
 						</Form.Item>
 					</Col>
 					{tag ? (
 						<Col span={24}>
 							<div className='fw500' style={{ marginBottom: 8 }}>
-								Danh sách trường con
+								{intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.form.label.danhsachtruongcon' })}
 							</div>
 							<TableStaticData
 								columns={columns}

@@ -1,9 +1,10 @@
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Button, Modal } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const ConfirmMuonQuaHan = (props: { visible: boolean; setVisible: (val: boolean) => void; onOk: () => void }) => {
 	const { visible, setVisible, onOk } = props;
+	const intl = useIntl();
 
 	const { formSubmiting } = useModel('sachtailieu.muontra.phieumuontra');
 
@@ -17,7 +18,7 @@ const ConfirmMuonQuaHan = (props: { visible: boolean; setVisible: (val: boolean)
 			onCancel={() => setVisible(false)}
 			width={600}
 			footer={null}
-			title='Xác nhận ghi mượn'
+			title={intl.formatMessage({ id: 'sachtailieu.muontra.confirm.title' })}
 			maskClosable={false}
 		>
 			<div
@@ -32,14 +33,16 @@ const ConfirmMuonQuaHan = (props: { visible: boolean; setVisible: (val: boolean)
 				<div style={{ color: 'orange', fontSize: 48 }}>
 					<ExclamationCircleFilled />
 				</div>
-				<div style={{ fontSize: 18, fontWeight: 600 }}>Đã quá hạn ngạch mượn. Bạn có chắc chắn muốn ghi mượn?</div>
+				<div style={{ fontSize: 18, fontWeight: 600 }}>
+					{intl.formatMessage({ id: 'sachtailieu.muontra.confirm.message' })}
+				</div>
 			</div>
 
 			<div className='form-footer'>
 				<Button type='primary' loading={formSubmiting} onClick={() => handleXacNhan()}>
-					Xác nhận
+					{intl.formatMessage({ id: 'global.button.xacnhan' })}
 				</Button>
-				<Button onClick={() => setVisible(false)}>Hủy</Button>
+				<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Modal>
 	);

@@ -64,14 +64,14 @@ const ModalTimKiem = (props: {
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
-			title: 'Mã tài liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.modaltimkiem.column.matailieu' }),
 			dataIndex: 'maTaiLieu',
 			width: 120,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.modaltimkiem.column.nhande' }),
 			dataIndex: 'nhanDe',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
@@ -79,7 +79,7 @@ const ModalTimKiem = (props: {
 			onCell,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.modaltimkiem.column.tacgia' }),
 			dataIndex: 'tacGia',
 			width: 150,
 			filterType: 'string',
@@ -89,27 +89,27 @@ const ModalTimKiem = (props: {
 
 	const columnsĐKCB: IColumn<AnPham.IAnPhamXepGia>[] = [
 		{
-			title: 'ĐKCB',
+			title: intl.formatMessage({ id: 'sachtailieu.modaltimkiem.column.dkcb' }),
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			filterType: 'string',
 			width: 120,
 		},
 		{
-			title: 'Thời gian xếp giá',
+			title: intl.formatMessage({ id: 'sachtailieu.modaltimkiem.column.thoigianxepgia' }),
 			dataIndex: 'thoiGianXepGia',
 			align: 'center',
 			width: 130,
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Đơn giá',
+			title: intl.formatMessage({ id: 'sachtailieu.modaltimkiem.column.dongia' }),
 			width: 120,
 			align: 'right',
 			render: (val, rec) => rec?.thongTinXepGia?.donGia && `${inputFormat(rec?.thongTinXepGia?.donGia)} VNĐ`,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.modaltimkiem.column.thaoTac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -117,7 +117,7 @@ const ModalTimKiem = (props: {
 				<ButtonExtend
 					onClick={() => {
 						if (danhSach?.find((i) => i?._id === rec?._id)) {
-							message.error('Ấn phẩm đã tồn tại trong danh sách!');
+							message.error(intl.formatMessage({ id: 'sachtailieu.modaltimkiem.message.error' }));
 							return;
 						}
 
@@ -134,13 +134,16 @@ const ModalTimKiem = (props: {
 												: (settingMuonTra?.thoiHanMuonTraSachCanBo ?? 7),
 											'd',
 										),
-										ghiChu: danhSach?.length >= slConMuonDuoc ? 'Mượn vượt quá hạn ngạch cho phép' : '',
+										ghiChu:
+											danhSach?.length >= slConMuonDuoc
+												? intl.formatMessage({ id: 'sachtailieu.modaltimkiem.message.ghichu' })
+												: '',
 									},
 								] as any,
 						);
 						setVisibleForm(false);
 					}}
-					tooltip='Xác nhận'
+					tooltip={intl.formatMessage({ id: 'global.button.xacnhan' })}
 					className='text-success'
 					type='link'
 					icon={<CheckOutlined />}
@@ -151,16 +154,20 @@ const ModalTimKiem = (props: {
 
 	return (
 		<Modal
-			title='Thông tin ấn phẩm tìm kiếm'
+			title={intl.formatMessage({ id: 'sachtailieu.modaltimkiem.title' })}
 			open={visibleForm}
 			onCancel={() => setVisibleForm(false)}
 			width={1000}
 			footer={null}
-			destroyOnHidden
+			destroyOnClose
 		>
 			<SplitPane split={isMobile ? 'horizontal' : 'vertical'} onChange={handlePaneSizeChange}>
 				<Pane initialSize={paneSize} minSize='30%'>
-					<Card title='Danh sách ấn phẩm' variant='borderless' styles={{ body: { padding: '8px 0 0' } }}>
+					<Card
+						title={intl.formatMessage({ id: 'sachtailieu.modaltimkiem.card.danhsachanpham' })}
+						variant='borderless'
+						styles={{ body: { padding: '8px 0 0' } }}
+					>
 						<TableBase
 							getData={getDataExternal}
 							columns={columns}
@@ -175,7 +182,11 @@ const ModalTimKiem = (props: {
 
 				<Pane minSize='30%'>
 					{record?._id ? (
-						<Card title='Danh sách đăng ký cá biệt' variant='borderless' styles={{ body: { padding: '8px 0 0' } }}>
+						<Card
+							title={intl.formatMessage({ id: 'sachtailieu.modaltimkiem.card.danhsachdkcb' })}
+							variant='borderless'
+							styles={{ body: { padding: '8px 0 0' } }}
+						>
 							<TableBase
 								getData={getData}
 								columns={columnsĐKCB}
@@ -187,7 +198,10 @@ const ModalTimKiem = (props: {
 							/>
 						</Card>
 					) : (
-						<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='Không có thông tin ấn phẩm' />
+						<Empty
+							image={Empty.PRESENTED_IMAGE_SIMPLE}
+							description={intl.formatMessage({ id: 'sachtailieu.modaltimkiem.empty' })}
+						/>
 					)}
 				</Pane>
 			</SplitPane>

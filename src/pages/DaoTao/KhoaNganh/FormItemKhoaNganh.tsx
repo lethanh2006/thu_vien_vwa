@@ -5,7 +5,7 @@ import type { KhoaNganh } from '@/services/DaoTao/KhoaNganh/typings';
 import { Col, Form, Row } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import SelectHinhThuc from '../HinhThuc/Select';
 import SelectKhoaSinhVien from '../KhoaSinhVien/Select';
 import SelectNganhCoSo from '../Nganh/Select';
@@ -25,6 +25,7 @@ const FormItemKhoaNganh = (props: {
 	const [maKhoaList, setMaKhoaList] = useState<string[] | undefined>();
 	const [maNganhList, setMaNganhList] = useState<string[] | undefined>();
 	const { value, onChange, khoaNganhCondition } = props;
+	const intl = useIntl();
 
 	useEffect(() => {
 		if (!maKhoaList?.length && !maNganhList?.length) {
@@ -57,30 +58,30 @@ const FormItemKhoaNganh = (props: {
 		// 	width: 120,
 		// },
 		{
-			title: 'Khóa sinh viên',
+			title: intl.formatMessage({ id: 'daotao.khoanganh.column.khoasinhvien' }),
 			dataIndex: 'maKhoaSinhVien',
 			width: 100,
 			render: (val, rec) => rec.khoaSinhVien.ten ?? val,
 		},
 		{
-			title: 'Ngành đào tạo',
+			title: intl.formatMessage({ id: 'daotao.khoanganh.column.nganhdaotao' }),
 			dataIndex: 'maNganh',
 			width: 180,
 			render: (val, rec) => rec?.nganh?.ten ?? val,
 		},
 		{
-			title: 'Mã ngành',
+			title: intl.formatMessage({ id: 'daotao.khoanganh.column.manganh' }),
 			dataIndex: 'maNganh',
 			width: 100,
 		},
 		{
-			title: 'CSĐT',
+			title: intl.formatMessage({ id: 'daotao.khoanganh.column.csdt' }),
 			dataIndex: 'maCSDT',
 			filterType: 'string',
 			width: 80,
 		},
 		{
-			title: 'Tính chất',
+			title: intl.formatMessage({ id: 'daotao.khoanganh.column.tinhchat' }),
 			dataIndex: 'maTinhChatCt',
 			filterType: 'string',
 			width: 80,
@@ -104,7 +105,7 @@ const FormItemKhoaNganh = (props: {
 	return (
 		<Row gutter={[12, 0]}>
 			<Col span={24} md={6}>
-				<Form.Item label='Trình độ'>
+				<Form.Item label={intl.formatMessage({ id: 'daotao.khoanganh.label.trinhdo' })}>
 					<SelectTrinhDo
 						// allowClear
 						value={recTrinhDo?.ma}
@@ -115,7 +116,7 @@ const FormItemKhoaNganh = (props: {
 				</Form.Item>
 			</Col>
 			<Col span={24} md={6}>
-				<Form.Item label='Hình thức'>
+				<Form.Item label={intl.formatMessage({ id: 'daotao.khoanganh.label.hinhthuc' })}>
 					<SelectHinhThuc
 						// allowClear
 						value={recHinhThuc?.ma}
@@ -126,7 +127,7 @@ const FormItemKhoaNganh = (props: {
 				</Form.Item>
 			</Col>
 			<Col span={24} md={6}>
-				<Form.Item label='Khóa sinh viên'>
+				<Form.Item label={intl.formatMessage({ id: 'daotao.khoanganh.label.khoasinhvien' })}>
 					<SelectKhoaSinhVien
 						condition={{ maTrinhDoDaoTao: recTrinhDo?.ma, maHinhThucDaoTao: recHinhThuc?.ma }}
 						onChange={(val) =>
@@ -139,7 +140,7 @@ const FormItemKhoaNganh = (props: {
 						allowClear
 						selectMa
 						multiple
-						placeholder='Lọc theo khóa sinh viên'
+						placeholder={intl.formatMessage({ id: 'daotao.khoanganh.placeholder.khoasinhvien' })}
 					/>
 				</Form.Item>
 			</Col>

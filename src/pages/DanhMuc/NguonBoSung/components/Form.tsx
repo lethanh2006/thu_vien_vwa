@@ -29,25 +29,32 @@ const FormKhoSach = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.nguonbosung.form.title.chinhsua' }) : intl.formatMessage({ id: 'danhmuc.nguonbosung.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
 						<Form.Item
-							label='Mã nguồn bổ sung'
+							label={intl.formatMessage({ id: 'danhmuc.nguonbosung.form.label.manguonbosung' })}
 							name='ma'
 							rules={[...rules.required, ...rules.text, ...rules.length(20)]}
 						>
-							<Input placeholder='Nhập mã nguồn bổ sung' disabled={edit} />
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.nguonbosung.form.placeholder.nhapmanguonbosung' })}
+								disabled={edit}
+							/>
 						</Form.Item>
 					</Col>
 					<Col span={24}>
 						<Form.Item
-							label='Tên nguồn bổ sung'
+							label={intl.formatMessage({ id: 'danhmuc.nguonbosung.form.label.tennguonbosung' })}
 							name='ten'
 							rules={[...rules.required, ...rules.text, ...rules.length(250)]}
 						>
-							<Input placeholder='Nhập tên nguồn bổ sung' />
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.nguonbosung.form.placeholder.nhaptennguonbosung' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

@@ -129,7 +129,7 @@ const MuonTraSachPage = (props: any) => {
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
-			title: 'Mã định danh',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.madinhdanh' }),
 			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
 			align: 'center',
 			width: 120,
@@ -139,7 +139,7 @@ const MuonTraSachPage = (props: any) => {
 			hide: !tatCaLichSu,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.hoten' }),
 			dataIndex: ['phieuMuonTra', 'hoTenNguoiMuon'],
 			width: 180,
 			render: (val, rec) => rec?.phieuMuonTra?.hoTenNguoiMuon,
@@ -148,7 +148,7 @@ const MuonTraSachPage = (props: any) => {
 			hide: !tatCaLichSu,
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			dataIndex: ['anPham', 'nhanDe'],
 			width: 220,
 			render: (val, rec) => (
@@ -170,7 +170,7 @@ const MuonTraSachPage = (props: any) => {
 			onCell,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' }),
 			dataIndex: ['anPham', 'tacGia'],
 			width: 180,
 			render: (val, rec) => rec?.anPham?.tacGia,
@@ -178,7 +178,7 @@ const MuonTraSachPage = (props: any) => {
 			onCell,
 		},
 		{
-			title: 'ĐKCB',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.soDangKyCaBiet' }),
 			dataIndex: 'soDangKyCaBiet',
 			width: 120,
 			filterType: 'string',
@@ -186,7 +186,7 @@ const MuonTraSachPage = (props: any) => {
 			// hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
 		},
 		{
-			title: 'Thời gian mượn',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.thoiGianMuon' }),
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
@@ -237,7 +237,7 @@ const MuonTraSachPage = (props: any) => {
 		// 	// hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
 		// },
 		{
-			title: 'Thời gian trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.chitiet.thoigiantra' }),
 			dataIndex: 'thoiGianTra',
 			width: 150,
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
@@ -254,7 +254,7 @@ const MuonTraSachPage = (props: any) => {
 		// 	onCell,
 		// },
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.ghiChu' }),
 			dataIndex: 'ghiChu',
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
@@ -262,7 +262,7 @@ const MuonTraSachPage = (props: any) => {
 			// hide: trangThai === ETrangThaiMuonSach.CHO_XU_LY,
 		},
 		{
-			title: 'Ghi chú trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.chitiet.ghichutra' }),
 			dataIndex: 'ghiChuTra',
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
@@ -270,7 +270,7 @@ const MuonTraSachPage = (props: any) => {
 			hide: trangThai !== ETrangThaiMuonSach.DA_TRA,
 		},
 		{
-			title: 'Hạn trả',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.hanTra' }),
 			align: 'center',
 			width: 140,
 			render: (_, rec) => <RenderHanTra rec={rec} />,
@@ -278,7 +278,7 @@ const MuonTraSachPage = (props: any) => {
 			fixed: 'right',
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.trangthai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
@@ -297,7 +297,7 @@ const MuonTraSachPage = (props: any) => {
 			fixed: 'right',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
@@ -305,7 +305,7 @@ const MuonTraSachPage = (props: any) => {
 				<>
 					<ButtonExtend
 						disabled={rec?.trangThai === ETrangThaiMuonSach.DA_TRA}
-						tooltip='Chỉnh sửa'
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
 						type='link'
 						icon={<EditOutlined />}
 						onClick={() => handleEdit(rec)}
@@ -333,7 +333,7 @@ const MuonTraSachPage = (props: any) => {
 													setRecord(rec);
 													setVisibleGhiTra(true);
 												}}
-												tooltip='Ghi trả'
+												tooltip={intl.formatMessage({ id: 'sachtailieu.ghitra.tooltip.ghitra' })}
 												className='text-success'
 												type='link'
 												icon={<CheckOutlined />}
@@ -351,7 +351,7 @@ const MuonTraSachPage = (props: any) => {
 											/>
 										</Popconfirm> */}
 											<ButtonExtend
-												tooltip='Gia hạn'
+												tooltip={intl.formatMessage({ id: 'sachtailieu.ghitra.tooltip.giahan' })}
 												type='link'
 												icon={<RetweetOutlined />}
 												onClick={() => {
@@ -366,10 +366,15 @@ const MuonTraSachPage = (props: any) => {
 
 								<Popconfirm
 									onConfirm={() => deleteModel(rec._id, getData)}
-									title='Bạn có chắc chắn muốn xóa thông tin này?'
+									title={intl.formatMessage({ id: 'sachtailieu.confirm.xoa' })}
 									placement='topRight'
 								>
-									<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+									<ButtonExtend
+										tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+										danger
+										type='link'
+										icon={<DeleteOutlined />}
+									/>
 								</Popconfirm>
 							</>
 						}
@@ -405,9 +410,9 @@ const MuonTraSachPage = (props: any) => {
 								value={activeKey}
 								onChange={(value) => setActiveKey(value.toString())}
 								options={[
-									{ value: '1', label: 'Tất cả' },
-									{ value: '2', label: 'Sắp đến hạn' },
-									{ value: '3', label: 'Quá hạn' },
+									{ value: '1', label: intl.formatMessage({ id: 'sachtailieu.muontra.segmented.tatca' }) },
+									{ value: '2', label: intl.formatMessage({ id: 'sachtailieu.muontra.segmented.sapdenhan' }) },
+									{ value: '3', label: intl.formatMessage({ id: 'sachtailieu.muontra.segmented.quahan' }) },
 									// { value: '4', label: 'Chưa lấy sách' },
 								]}
 							/>
@@ -418,7 +423,7 @@ const MuonTraSachPage = (props: any) => {
 				/>
 
 				<Modal
-					title='Chi tiết ấn phẩm'
+					title={intl.formatMessage({ id: 'sachtailieu.muontra.modal.chitietanpham' })}
 					open={visibleForm}
 					onCancel={() => setVisibleAnPham(false)}
 					width={900}
@@ -457,7 +462,7 @@ const MuonTraSachPage = (props: any) => {
 	if (tatCaLichSu) return content();
 
 	return (
-		<Card title='Chi tiết phiếu mượn'>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.muontra.card.chitietphieumuon' })}>
 			<Row gutter={[12, 0]}>
 				<Col span={24}>
 					<Col xs={24}>
@@ -465,33 +470,51 @@ const MuonTraSachPage = (props: any) => {
 							column={{ xs: 1, sm: 1, md: 2 }}
 							bordered
 							style={{ marginBottom: 18 }}
-							title='Thông tin người mượn'
+							title={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.thongtinnguoimuon' })}
 						>
-							<Descriptions.Item label='Vai trò'>{recPhieu?.vaiTro ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label={recPhieu?.vaiTro === EVaiTroMuonTra.SINHVIEN ? 'Mã sinh viên' : 'Mã cán bộ'}>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.vaitro' })}>
+								{recPhieu?.vaiTro ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item
+								label={
+									recPhieu?.vaiTro === EVaiTroMuonTra.SINHVIEN
+										? intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.masinhvien' })
+										: intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.macanbo' })
+								}
+							>
 								{recPhieu?.maDinhDanhNguoiMuon ?? '--'}
 							</Descriptions.Item>
-							<Descriptions.Item label='Họ tên'>{recPhieu?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Ngày sinh'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.hoten' })}>
+								{recPhieu?.hoTenNguoiMuon ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.ngaysinh' })}>
 								{recPhieu?.ngaySinhNguoiMuon ? dayjs(recPhieu?.ngaySinhNguoiMuon).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
-							<Descriptions.Item label='Thời gian đăng ký'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.thoigiandangky' })}>
 								{recPhieu?.thoiGianDangKy ? dayjs(recPhieu?.thoiGianDangKy).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
 
 							{recPhieu?.vaiTro === EVaiTroMuonTra.SINHVIEN ? (
 								<>
-									<Descriptions.Item label='Khóa sinh viên'>
+									<Descriptions.Item
+										label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.khoasinhvien' })}
+									>
 										{recPhieu?.tenKhoaSinhVienNguoiMuon ?? '--'}
 									</Descriptions.Item>
-									<Descriptions.Item label='Khóa ngành'>{recPhieu?.tenNganhNguoiMuon ?? '--'}</Descriptions.Item>
-									<Descriptions.Item label='Lớp hành chính'>
+									<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.khoanganh' })}>
+										{recPhieu?.tenNganhNguoiMuon ?? '--'}
+									</Descriptions.Item>
+									<Descriptions.Item
+										label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.lophanhchinh' })}
+									>
 										{recPhieu?.tenLopHanhChinh ?? recPhieu?.tenLopHanhChinhNguoiMuon}
 									</Descriptions.Item>
 								</>
 							) : (
 								<>
-									<Descriptions.Item label='Đơn vị'>{recPhieu?.tenDonViNguoiMuon ?? '--'}</Descriptions.Item>
+									<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.donvi' })}>
+										{recPhieu?.tenDonViNguoiMuon ?? '--'}
+									</Descriptions.Item>
 								</>
 							)}
 						</Descriptions>

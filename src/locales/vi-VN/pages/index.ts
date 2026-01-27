@@ -1,4 +1,5 @@
 import danhmuc from './danhmuc';
+import daotao from './daotao';
 import login from './login';
 import luananluanvankhoaluan from './luananluanvankhoaluan';
 import sachtailieu from './sachtailieu';
@@ -10,4 +11,5 @@ export default {
 	...sachtailieu,
 	...vaorathuvien,
 	...luananluanvankhoaluan,
+	...daotao,
 };

@@ -13,7 +13,7 @@ const TruongBienMucPage = () => {
 
 	const columns: IColumn<TruongBienMuc.IRecord>[] = [
 		{
-			title: 'Mã',
+			title: intl.formatMessage({ id: 'danhmuc.truongbienmuc.table.column.ma' }),
 			dataIndex: 'ma',
 			align: 'center',
 			width: 100,
@@ -21,7 +21,7 @@ const TruongBienMucPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Nội dung',
+			title: intl.formatMessage({ id: 'danhmuc.truongbienmuc.table.column.noidung' }),
 			dataIndex: 'noiDung',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
@@ -29,25 +29,35 @@ const TruongBienMucPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'danhmuc.truongbienmuc.table.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 220,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.truongbienmuc.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, record) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.truongbienmuc.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(record)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(record._id)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						title={intl.formatMessage({ id: 'danhmuc.truongbienmuc.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.truongbienmuc.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

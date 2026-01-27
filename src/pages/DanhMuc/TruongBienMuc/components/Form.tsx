@@ -35,18 +35,31 @@ const FormTruongBienMuc = (props: { afterAddNew?: (rec: TruongBienMuc.IRecord) =
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]}>
 				<Col xs={24}>
-					<Form.Item name='ma' label='Mã trường biên mục' rules={[...rules.required, ...rules.text]}>
-						<Input placeholder='Nhập mã ' disabled={edit || isView} />
+					<Form.Item
+						name='ma'
+						label={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.label.matrongbienmuc' })}
+						rules={[...rules.required, ...rules.text]}
+					>
+						<Input
+							placeholder={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.placeholder.nhapma' })}
+							disabled={edit || isView}
+						/>
 					</Form.Item>
 				</Col>
 				<Col xs={24}>
-					<Form.Item name='noiDung' label='Nội dung trường biên mục' rules={[...rules.required, ...rules.text]}>
-						<Input placeholder='Nhập nội cung' />
+					<Form.Item
+						name='noiDung'
+						label={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.label.noidungtruongbienmuc' })}
+						rules={[...rules.required, ...rules.text]}
+					>
+						<Input placeholder={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.placeholder.nhapnoidung' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24}>
 					<div className='ant-col ant-form-item-label'>
-						<label className='ant-form-item'>Chỉ mục 1</label>
+						<label className='ant-form-item'>
+							{intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.label.chimuc1' })}
+						</label>
 					</div>
 					<div className='ant-col ant-form-item-control'>
 						<Form.List name='thongTinChiMuc1'>
@@ -55,13 +68,31 @@ const FormTruongBienMuc = (props: { afterAddNew?: (rec: TruongBienMuc.IRecord) =
 									{fields.map((field, index) => (
 										<Row gutter={[12, 12]} key={field.key}>
 											<Col span={7}>
-												<Form.Item label='Tên hiển thị' name={[index, 'value']} rules={[...rules.required]}>
-													<Input disabled={isView} placeholder='Nhập tên hiển thị' />
+												<Form.Item
+													label={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.placeholder.nhaptenhienthi' })}
+													name={[index, 'value']}
+													rules={[...rules.required]}
+												>
+													<Input
+														disabled={isView}
+														placeholder={intl.formatMessage({
+															id: 'danhmuc.truongbienmuc.form.placeholder.nhaptenhienthi',
+														})}
+													/>
 												</Form.Item>
 											</Col>
 											<Col span={14}>
-												<Form.Item label='Tên thuộc tính' name={[index, 'chuThich']} rules={[...rules.required]}>
-													<Input disabled={isView} placeholder='Nhập tên thuộc tính' />
+												<Form.Item
+													label={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.placeholder.nhaptenchutinh' })}
+													name={[index, 'chuThich']}
+													rules={[...rules.required]}
+												>
+													<Input
+														disabled={isView}
+														placeholder={intl.formatMessage({
+															id: 'danhmuc.truongbienmuc.form.placeholder.nhaptenchutinh',
+														})}
+													/>
 												</Form.Item>
 											</Col>
 
@@ -70,7 +101,7 @@ const FormTruongBienMuc = (props: { afterAddNew?: (rec: TruongBienMuc.IRecord) =
 													disabled={isView}
 													danger
 													type='link'
-													title='Xóa thuộc tính'
+													title={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.button.xoathuoctinh' })}
 													icon={<DeleteOutlined />}
 													onClick={() => remove(field.name)}
 													style={{ marginTop: 30 }}
@@ -81,7 +112,7 @@ const FormTruongBienMuc = (props: { afterAddNew?: (rec: TruongBienMuc.IRecord) =
 									))}
 									<Form.ErrorList errors={errors} />
 									<Button disabled={isView} onClick={() => add()} icon={<PlusOutlined />} size='small' type='default'>
-										Thêm thuộc tính
+										{intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.button.themthuoctinh' })}
 									</Button>
 								</>
 							)}
@@ -90,7 +121,9 @@ const FormTruongBienMuc = (props: { afterAddNew?: (rec: TruongBienMuc.IRecord) =
 				</Col>
 				<Col span={24}>
 					<div className='ant-col ant-form-item-label'>
-						<label className='ant-form-item'>Chỉ mục 2</label>
+						<label className='ant-form-item'>
+							{intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.label.chimuc2' })}
+						</label>
 					</div>
 					<div className='ant-col ant-form-item-control'>
 						<Form.List name='thongTinChiMuc2'>
@@ -100,12 +133,24 @@ const FormTruongBienMuc = (props: { afterAddNew?: (rec: TruongBienMuc.IRecord) =
 										<Row gutter={[12, 12]} key={field.key}>
 											<Col span={7}>
 												<Form.Item label={`Phần tử ${index + 1}`} name={[index, 'value']} rules={[...rules.required]}>
-													<Input placeholder='Nhập phần tử' />
+													<Input
+														placeholder={intl.formatMessage({
+															id: 'danhmuc.truongbienmuc.form.placeholder.nhapphantu',
+														})}
+													/>
 												</Form.Item>
 											</Col>
 											<Col span={14}>
-												<Form.Item label='Nội dung' name={[index, 'chuThich']} rules={[...rules.required]}>
-													<Input placeholder='Nhập nội dung' />
+												<Form.Item
+													label={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.placeholder.nhapnoidung' })}
+													name={[index, 'chuThich']}
+													rules={[...rules.required]}
+												>
+													<Input
+														placeholder={intl.formatMessage({
+															id: 'danhmuc.truongbienmuc.form.placeholder.nhapnoidung',
+														})}
+													/>
 												</Form.Item>
 											</Col>
 
@@ -113,7 +158,7 @@ const FormTruongBienMuc = (props: { afterAddNew?: (rec: TruongBienMuc.IRecord) =
 												<Button
 													danger
 													type='link'
-													title='Xóa thuộc tính'
+													title={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.button.xoathuoctinh' })}
 													icon={<DeleteOutlined />}
 													onClick={() => remove(field.name)}
 													style={{ marginTop: 30 }}
@@ -124,7 +169,7 @@ const FormTruongBienMuc = (props: { afterAddNew?: (rec: TruongBienMuc.IRecord) =
 									))}
 									<Form.ErrorList errors={errors} />
 									<Button disabled={isView} onClick={() => add()} icon={<PlusOutlined />} size='small' type='default'>
-										Thêm thuộc tính
+										{intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.button.themthuoctinh' })}
 									</Button>
 								</>
 							)}
@@ -132,8 +177,15 @@ const FormTruongBienMuc = (props: { afterAddNew?: (rec: TruongBienMuc.IRecord) =
 					</div>
 				</Col>
 				<Col xs={24}>
-					<Form.Item name='ghiChu' label='Ghi chú' rules={[...rules.text]}>
-						<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
+					<Form.Item
+						name='ghiChu'
+						label={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.label.ghichu' })}
+						rules={[...rules.text]}
+					>
+						<Input.TextArea
+							rows={3}
+							placeholder={intl.formatMessage({ id: 'danhmuc.truongbienmuc.form.placeholder.nhapghichu' })}
+						/>
 					</Form.Item>
 				</Col>
 			</Row>

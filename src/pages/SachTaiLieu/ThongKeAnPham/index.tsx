@@ -10,7 +10,7 @@ import { inputFormat } from '@/utils/utils';
 import { ExportOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Card, Col, Empty, Row, Segmented, Select, Space, Spin, Tabs } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ModalExportAnPham from './ModalExport';
 
 const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
@@ -31,6 +31,8 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
 
 	const [readyToFetch, setReadyToFetch] = useState(false);
+
+	const intl = useIntl();
 
 	useEffect(() => {
 		const startOfMonth = dayjs().year(yearSelect).month(monthSelect).startOf('month');
@@ -105,12 +107,18 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 	}, [filteredData]);
 
 	return (
-		<Card title={isBanDoc ? 'Thống kê bạn đọc' : 'Thống kê mượn trả ấn phẩm'}>
+		<Card
+			title={
+				isBanDoc
+					? intl.formatMessage({ id: 'sachtailieu.thongkeanpham.title.bandoc' })
+					: intl.formatMessage({ id: 'sachtailieu.thongkeanpham.title.anpham' })
+			}
+		>
 			<div>
 				<Select
 					style={{ width: 250, marginBottom: 12 }}
 					value={vaiTro}
-					placeholder='Chọn đối tượng'
+					placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.placeholder.chondoituong' })}
 					options={Object.values(EVaiTroMuonTra).map((item) => ({
 						value: item,
 						label: item,
@@ -133,11 +141,14 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 						value={dateRange}
 						onChange={(val) => setDateRange(val || [])}
 						style={{ width: 180 }}
-						placeholder={['Từ ngày', 'Đến ngày']}
+						placeholder={[
+							intl.formatMessage({ id: 'sachtailieu.thongkeanpham.datepicker.tungay' }),
+							intl.formatMessage({ id: 'sachtailieu.thongkeanpham.datepicker.denngay' })
+						]}
 						ranges={{
-							'Hôm nay': [dayjs().startOf('date'), dayjs().endOf('date')],
-							'Tuần này': [dayjs().startOf('week'), dayjs().endOf('week')],
-							'Tháng này': [dayjs().startOf('M'), dayjs().endOf('M')],
+							[intl.formatMessage({ id: 'sachtailieu.thongkeanpham.datepicker.homnay' })]: [dayjs().startOf('date'), dayjs().endOf('date')],
+							[intl.formatMessage({ id: 'sachtailieu.thongkeanpham.datepicker.tuannay' })]: [dayjs().startOf('week'), dayjs().endOf('week')],
+							[intl.formatMessage({ id: 'sachtailieu.thongkeanpham.datepicker.thangnay' })]: [dayjs().startOf('M'), dayjs().endOf('M')],
 						}}
 						format='DD/MM'
 					/>
@@ -154,16 +165,22 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 				) : null}
 
 				<ButtonExtend icon={<ReloadOutlined />} onClick={getData}>
-					Tải lại
+					{intl.formatMessage({ id: 'sachtailieu.thongkeanpham.button.tailai' })}
 				</ButtonExtend>
 			</Space>
 			<Tabs onChange={(tab) => setTrangThai(tab as ETrangThaiMuonSach)} activeKey={trangThai}>
-				<Tabs.TabPane tab='Ấn phẩm đang mượn' key={ETrangThaiMuonSach.DANG_THUE_MUON} />
-				<Tabs.TabPane tab='Ấn phẩm đã trả' key={ETrangThaiMuonSach.DA_TRA} />
+				<Tabs.TabPane
+					tab={intl.formatMessage({ id: 'sachtailieu.thongkeanpham.tab.dangmuon' })}
+					key={ETrangThaiMuonSach.DANG_THUE_MUON}
+				/>
+				<Tabs.TabPane
+					tab={intl.formatMessage({ id: 'sachtailieu.thongkeanpham.tab.datra' })}
+					key={ETrangThaiMuonSach.DA_TRA}
+				/>
 			</Tabs>
 			<div style={{ marginBottom: 12 }}>
 				<ButtonExtend icon={<ExportOutlined />} onClick={() => setModalExport(true)}>
-					Xuất dữ liệu
+					{intl.formatMessage({ id: 'sachtailieu.thongkeanpham.button.xuatdulieu' })}
 				</ButtonExtend>
 			</div>
 
@@ -172,13 +189,13 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 					<Row gutter={[12, 0]}>
 						<Col span={24} md={16}>
 							<ColumnChart
-								yLabel={['Số lượt']}
+								yLabel={[intl.formatMessage({ id: 'sachtailieu.thongkeanpham.chart.ylabel' })]}
 								xAxis={filteredData.map((item) => {
 									if (kieuHienThi === EKieuHienThi.NGAY) {
 										return dayjs(item.title, 'YYYY-MM-DD').format('DD/MM');
 									}
-									if (kieuHienThi === EKieuHienThi.THANG) return `Tháng ${item.title ?? ''}`;
-									return item.title ?? 'Không có thông tin';
+									if (kieuHienThi === EKieuHienThi.THANG) return `${intl.formatMessage({ id: 'sachtailieu.thongkeanpham.chart.thang' })} ${item.title ?? ''}`;
+									return item.title ?? intl.formatMessage({ id: 'sachtailieu.thongkeanpham.chart.khongcothongtin' });
 								})}
 								yAxis={[filteredData.map((item) => Number(item.soLuong) || 0)]}
 								showTotal
@@ -247,22 +264,22 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 							<DonutChart
 								xAxis={chartData?.map((item) => {
 									if (kieuHienThi === EKieuHienThi.NGAY) {
-										return dayjs(item.x, undefined, true).isValid() ? dayjs(item.x).format('DD/MM/YYYY') : 'Không rõ';
+										return dayjs(item.x, undefined, true).isValid() ? dayjs(item.x).format('DD/MM/YYYY') : intl.formatMessage({ id: 'sachtailieu.thongkeanpham.chart.khongro' });
 									}
-									if (kieuHienThi === EKieuHienThi.THANG) return `Tháng ${item.x}`;
+									if (kieuHienThi === EKieuHienThi.THANG) return `${intl.formatMessage({ id: 'sachtailieu.thongkeanpham.chart.thang' })} ${item.x}`;
 									return item.x;
 								})}
 								yAxis={[chartData?.map((item) => item.soLuong)]}
-								yLabel={['Số lượt']}
+								yLabel={[intl.formatMessage({ id: 'sachtailieu.thongkeanpham.chart.ylabel' })]}
 								showTotal
-								formatY={(val) => `${inputFormat(val)} lượt`}
+								formatY={(val) => `${inputFormat(val)} ${intl.formatMessage({ id: 'sachtailieu.thongkeanpham.chart.luot' })}`}
 								otherOptions={{
 									legend: { position: 'bottom' },
 									tooltip: {
 										y: {
 											formatter: function (val, { dataPointIndex }) {
 												const value = chartData?.[dataPointIndex]?.soLuong ?? 0;
-												return `${inputFormat(value)} lượt`;
+												return `${inputFormat(value)} ${intl.formatMessage({ id: 'sachtailieu.thongkeanpham.chart.luot' })}`;
 											},
 										},
 									},
@@ -271,12 +288,19 @@ const ThongKeAnPham = (props: { isBanDoc?: boolean }) => {
 						</Col>
 					</Row>
 				) : (
-					<Empty description='Không có dữ liệu' style={{ marginBottom: 32, marginTop: 32 }} />
+					<Empty
+						description={intl.formatMessage({ id: 'sachtailieu.thongkeanpham.empty.nodata' })}
+						style={{ marginBottom: 32, marginTop: 32 }}
+					/>
 				)}
 			</Spin>
 
 			<ModalExportAnPham
-				title={isBanDoc ? 'Xuất dữ liệu thống kê bạn đọc' : 'Xuất dữ liệu thống kê ấn phẩm'}
+				title={
+					isBanDoc
+						? intl.formatMessage({ id: 'sachtailieu.thongkeanpham.modal.title.bandoc' })
+						: intl.formatMessage({ id: 'sachtailieu.thongkeanpham.modal.title.anpham' })
+				}
 				visible={modalExport}
 				setVisible={setModalExport}
 				trangThai={trangThai}

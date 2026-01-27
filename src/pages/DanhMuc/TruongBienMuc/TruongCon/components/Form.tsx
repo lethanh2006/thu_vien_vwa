@@ -36,22 +36,35 @@ const FormTruongCon = (props: any) => {
 				.catch((er) => console.log(er));
 	};
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.truongcon.form.title.chinhsua' }) : intl.formatMessage({ id: 'danhmuc.truongcon.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col xs={24}>
-						<Form.Item name='code' label='Code' rules={[...rules.required]}>
-							<Input placeholder='Nhập code' />
+						<Form.Item
+							name='code'
+							label={intl.formatMessage({ id: 'danhmuc.truongcon.form.label.code' })}
+							rules={[...rules.required]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.truongcon.form.placeholder.nhapcode' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='tagCode' label='Tag Code' rules={[...rules.required]}>
-							<Input placeholder='Nhập tag code' disabled />
+						<Form.Item
+							name='tagCode'
+							label={intl.formatMessage({ id: 'danhmuc.truongcon.form.label.tagcode' })}
+							rules={[...rules.required]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.truongcon.form.placeholder.nhaptagcode' })}
+								disabled
+							/>
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='tieuDe' label='Tiêu đề'>
-							<Input placeholder='Nhập tiêu đề' />
+						<Form.Item name='tieuDe' label={intl.formatMessage({ id: 'danhmuc.truongcon.form.label.tieude' })}>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.truongcon.form.placeholder.nhaptieude' })} />
 						</Form.Item>
 					</Col>
 				</Row>

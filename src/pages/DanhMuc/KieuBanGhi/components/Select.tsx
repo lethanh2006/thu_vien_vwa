@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import React, { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -18,6 +18,7 @@ const SelectKieuBanGhi = (props: {
 }) => {
 	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, selectMa, disabled } = props;
 	const { danhSach, getAllModel } = useModel('danhmuc.kieubanghi');
+	const intl = useIntl();
 
 	useEffect(() => {
 		if (!danhSach?.length) getAllModel(!!isSetRecord, undefined, condition);
@@ -37,7 +38,7 @@ const SelectKieuBanGhi = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn kiểu bản ghi'
+			placeholder={intl.formatMessage({ id: 'danhmuc.kieubanghi.select.placeholder' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

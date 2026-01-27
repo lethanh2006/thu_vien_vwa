@@ -2,12 +2,12 @@ import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
-import SelectLinhVucChiTiet from './SelectBoSuuTap';
+import { useIntl, useModel } from 'umi';
 
 const FormDonViSo = (props: any) => {
 	const { form, onCancel, setIsChangeTree, isChangeTree } = props;
 	const { record, edit, postModel, putModel, formSubmiting, visibleForm, getAllModel } = useModel('danhmuc.donviso');
+	const intl = useIntl();
 
 	useEffect(() => {
 		const initvalue = record?.parentId;
@@ -50,22 +50,32 @@ const FormDonViSo = (props: any) => {
 				) : null} */}
 
 				<Col span={24}>
-					<Form.Item name='ma' label='Mã lĩnh vực' rules={[...rules.required, ...rules.length(80)]}>
-						<Input placeholder='Nhập mã lĩnh vực' />
+					<Form.Item
+						name='ma'
+						label={intl.formatMessage({ id: 'danhmuc.donviso.form.label.malinhvuc' })}
+						rules={[...rules.required, ...rules.length(80)]}
+					>
+						<Input placeholder={intl.formatMessage({ id: 'danhmuc.donviso.form.placeholder.nhapmalinhvuc' })} />
 					</Form.Item>
 				</Col>
 				<Col span={24}>
-					<Form.Item name='ten' label='Tên lĩnh vực' rules={[...rules.required, ...rules.length(250)]}>
-						<Input placeholder='Nhập tên lĩnh vực' />
+					<Form.Item
+						name='ten'
+						label={intl.formatMessage({ id: 'danhmuc.donviso.form.label.tenlinhvuc' })}
+						rules={[...rules.required, ...rules.length(250)]}
+					>
+						<Input placeholder={intl.formatMessage({ id: 'danhmuc.donviso.form.placeholder.nhaptenlinhvuc' })} />
 					</Form.Item>
 				</Col>
 			</Row>
 
 			<div className='form-footer'>
 				<Button loading={formSubmiting} htmlType='submit' type='primary'>
-					{!edit ? 'Thêm mới' : 'Lưu lại'}
+					{!edit
+						? intl.formatMessage({ id: 'danhmuc.donviso.form.button.themmoi' })
+						: intl.formatMessage({ id: 'danhmuc.donviso.form.button.luu' })}
 				</Button>
-				<Button onClick={() => onCancel()}>Hủy</Button>
+				<Button onClick={() => onCancel()}>{intl.formatMessage({ id: 'danhmuc.donviso.form.button.huy' })}</Button>
 			</div>
 		</Form>
 	);

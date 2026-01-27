@@ -31,27 +31,47 @@ const FormMauDinhDang = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.maudinhdang.form.title.chinhsua' }) : intl.formatMessage({ id: 'danhmuc.maudinhdang.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item label='Mẫu in'>
+						<Form.Item label={intl.formatMessage({ id: 'danhmuc.maudinhdang.form.label.mauin' })}>
 							<Input value={tabActive} disabled />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Mã định dạng' name='ma' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
-							<Input placeholder='Nhập mã kho' disabled={edit} />
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.maudinhdang.form.label.madinhdang' })}
+							name='ma'
+							rules={[...rules.required, ...rules.text, ...rules.length(20)]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.maudinhdang.form.placeholder.nhapmadinhdang' })}
+								disabled={edit}
+							/>
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Tên mẫu' name='ten' rules={[...rules.required, ...rules.text, ...rules.length(250)]}>
-							<Input placeholder='Nhập tên kho' />
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.maudinhdang.form.label.tenmau' })}
+							name='ten'
+							rules={[...rules.required, ...rules.text, ...rules.length(250)]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.maudinhdang.form.placeholder.nhaptenmau' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Nội dung' name='noiDungMau' rules={[...rules.required]}>
-							<Input.TextArea rows={3} placeholder='Nhập nội dung' />
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.maudinhdang.form.label.noidung' })}
+							name='noiDungMau'
+							rules={[...rules.required]}
+						>
+							<Input.TextArea
+								rows={3}
+								placeholder={intl.formatMessage({ id: 'danhmuc.maudinhdang.form.placeholder.nhapnoidung' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

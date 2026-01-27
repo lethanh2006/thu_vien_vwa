@@ -86,7 +86,9 @@ const ModalExportAnPham = (props: {
 			.then((res) => {
 				fileDownload(
 					res.data,
-					trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? 'Thống kê mượn ấn phẩm.xlsx' : 'Thống kê trả ấn phẩm.xlsx',
+					trangThai === ETrangThaiMuonSach.DANG_THUE_MUON
+						? intl.formatMessage({ id: 'sachtailieu.thongkeanpham.filename.muon' })
+						: intl.formatMessage({ id: 'sachtailieu.thongkeanpham.filename.tra' }),
 				);
 			})
 			.finally(() => {
@@ -96,7 +98,7 @@ const ModalExportAnPham = (props: {
 
 	return (
 		<Modal
-			title={title ?? 'Xuất dữ liệu thống kê ấn phẩm'}
+			title={title ?? intl.formatMessage({ id: 'sachtailieu.thongkeanpham.modal.title.anpham' })}
 			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
@@ -105,19 +107,32 @@ const ModalExportAnPham = (props: {
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col xs={24}>
-						<Form.Item name='kieuXuatDuLieu' label='Kiểu xuất dữ liệu' rules={[...rules.required]}>
+						<Form.Item
+							name='kieuXuatDuLieu'
+							label={intl.formatMessage({ id: 'sachtailieu.thongkeanpham.modal.label.kieuxuat' })}
+							rules={[...rules.required]}
+						>
 							<Radio.Group
 								options={[
-									{ value: EKieuHienThi.NAM, label: 'Năm' },
-									{ value: EKieuHienThi.THANG, label: 'Tháng' },
-									{ value: EKieuHienThi.NGAY, label: 'Ngày' },
+									{ value: EKieuHienThi.NAM, label: intl.formatMessage({ id: 'sachtailieu.thongkeanpham.radio.nam' }) },
+									{
+										value: EKieuHienThi.THANG,
+										label: intl.formatMessage({ id: 'sachtailieu.thongkeanpham.radio.thang' }),
+									},
+									{
+										value: EKieuHienThi.NGAY,
+										label: intl.formatMessage({ id: 'sachtailieu.thongkeanpham.radio.ngay' }),
+									},
 								]}
 								onChange={() => form.resetFields(['thoiGianXuat'])}
 							/>
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={vaiTro === EVaiTroMuonTra.SINHVIEN ? 12 : 24}>
-						<Form.Item name='thoiGianXuat' label='Thời gian'>
+						<Form.Item
+							name='thoiGianXuat'
+							label={intl.formatMessage({ id: 'sachtailieu.thongkeanpham.modal.label.thoigian' })}
+						>
 							{kieuXuatDuLieu === EKieuHienThi.NAM ? (
 								<MyDatePicker pickerStyle={'year'} format={'YYYY'} allowClear />
 							) : kieuXuatDuLieu === EKieuHienThi.THANG ? (
@@ -130,7 +145,10 @@ const ModalExportAnPham = (props: {
 
 					{vaiTro === EVaiTroMuonTra.SINHVIEN ? (
 						<Col xs={24} md={12}>
-							<Form.Item name='tenLopHanhChinh' label='Lớp hành chính'>
+							<Form.Item
+								name='tenLopHanhChinh'
+								label={intl.formatMessage({ id: 'sachtailieu.thongkeanpham.modal.label.lophanhchinh' })}
+							>
 								<SelectLopHanhChinhDebounce multiple selectMa />
 							</Form.Item>
 						</Col>
@@ -139,14 +157,21 @@ const ModalExportAnPham = (props: {
 					{trangThai === ETrangThaiMuonSach.DANG_THUE_MUON ? (
 						<Col xs={24}>
 							<Form.Item name='quaHan' valuePropName='checked' initialValue={false}>
-								<Checkbox>Chỉ xuất dữ liệu ấn phẩm quá hạn</Checkbox>
+								<Checkbox>{intl.formatMessage({ id: 'sachtailieu.thongkeanpham.modal.checkbox.quahan' })}</Checkbox>
 							</Form.Item>
 						</Col>
 					) : null}
 
 					{vaiTro === EVaiTroMuonTra.SINHVIEN ? (
 						<Col xs={24}>
-							<Form.Item name='maKhoaNganh' label={<div className='fw500'>Danh sách khóa ngành áp dụng</div>}>
+							<Form.Item
+								name='maKhoaNganh'
+								label={
+									<div className='fw500'>
+										{intl.formatMessage({ id: 'sachtailieu.thongkeanpham.modal.label.danhsachkhoanganh' })}
+									</div>
+								}
+							>
 								<FormItemKhoaNganh />
 							</Form.Item>
 						</Col>
@@ -155,7 +180,7 @@ const ModalExportAnPham = (props: {
 
 				<div className='form-footer'>
 					<Button loading={loadingExport} htmlType='submit' type='primary'>
-						Xác nhận
+						{intl.formatMessage({ id: 'sachtailieu.thongkeanpham.button.xacnhan' })}
 					</Button>
 					<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>

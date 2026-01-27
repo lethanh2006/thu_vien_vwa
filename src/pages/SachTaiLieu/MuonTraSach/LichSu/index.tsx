@@ -93,7 +93,7 @@ const LichSuThueMuonPage = (props: {
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
-			title: 'Vai trò',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.vaitro' }),
 			dataIndex: ['phieuMuonTra', 'vaiTro'],
 			align: 'center',
 			width: 90,
@@ -104,7 +104,7 @@ const LichSuThueMuonPage = (props: {
 			hide: !!ssoId,
 		},
 		{
-			title: 'Mã định danh',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.madinhdanh' }),
 			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
 			align: 'center',
 			width: 120,
@@ -114,7 +114,7 @@ const LichSuThueMuonPage = (props: {
 			hide: !!ssoId,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.hoten' }),
 			dataIndex: ['phieuMuonTra', 'hoTenNguoiMuon'],
 			width: 150,
 			render: (val, rec) => rec?.phieuMuonTra?.hoTenNguoiMuon,
@@ -123,7 +123,7 @@ const LichSuThueMuonPage = (props: {
 			hide: !!ssoId,
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.nhande' }),
 			dataIndex: ['anPham', 'nhanDe'],
 			width: 220,
 			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
@@ -131,7 +131,7 @@ const LichSuThueMuonPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.tacgia' }),
 			dataIndex: ['anPham', 'tacGia'],
 			width: 180,
 			render: (val, rec) => rec?.anPham?.tacGia,
@@ -139,7 +139,7 @@ const LichSuThueMuonPage = (props: {
 			onCell,
 		},
 		{
-			title: 'ĐKCB',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.dkcb' }),
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			width: 120,
@@ -147,7 +147,7 @@ const LichSuThueMuonPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Thời gian mượn',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thoigianmuon' }),
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
@@ -193,7 +193,7 @@ const LichSuThueMuonPage = (props: {
 		// 	onCell,
 		// },
 		{
-			title: 'Thời gian trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thoigiantra' }),
 			dataIndex: 'thoiGianTra',
 			width: 150,
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
@@ -210,21 +210,21 @@ const LichSuThueMuonPage = (props: {
 		// 	onCell,
 		// },
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			onCell,
 		},
 		{
-			title: 'Ghi chú trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.ghichutra' }),
 			dataIndex: 'ghiChuTra',
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			onCell,
 		},
 		{
-			title: 'Hạn trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.hantra' }),
 			align: 'center',
 			width: 140,
 			render: (_, rec) => <RenderHanTra rec={rec} />,
@@ -232,7 +232,7 @@ const LichSuThueMuonPage = (props: {
 			fixed: 'right',
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.trangthai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 130,
@@ -250,7 +250,7 @@ const LichSuThueMuonPage = (props: {
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thaoTac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -261,7 +261,7 @@ const LichSuThueMuonPage = (props: {
 						setRecord(rec);
 						setVisibleGhiTra(true);
 					}}
-					tooltip='Ghi trả'
+					tooltip={intl.formatMessage({ id: 'sachtailieu.ghitra.tooltip.ghitra' })}
 					className='text-success'
 					type='link'
 					icon={<CheckOutlined />}
@@ -288,9 +288,9 @@ const LichSuThueMuonPage = (props: {
 						value={activeKey}
 						onChange={(value) => setActiveKey(value.toString())}
 						options={[
-							{ value: '1', label: 'Tất cả' },
-							{ value: '2', label: 'Sắp đến hạn' },
-							{ value: '3', label: 'Quá hạn' },
+							{ value: '1', label: intl.formatMessage({ id: 'sachtailieu.muontra.lichsu.segmented.all' }) },
+							{ value: '2', label: intl.formatMessage({ id: 'sachtailieu.muontra.lichsu.segmented.upcoming' }) },
+							{ value: '3', label: intl.formatMessage({ id: 'sachtailieu.muontra.lichsu.segmented.overdue' }) },
 						]}
 					/>,
 				]}
@@ -316,7 +316,7 @@ const LichSuThueMuonPage = (props: {
 			onCancel={() => setVisible && setVisible(false)}
 			width={width}
 			footer={null}
-			destroyOnHidden
+			destroyOnClose
 		>
 			{main()}
 

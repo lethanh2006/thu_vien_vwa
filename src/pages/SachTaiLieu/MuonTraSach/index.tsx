@@ -9,7 +9,7 @@ import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, PlusCircleOutlined, SettingOutlined } from '@ant-design/icons';
 import { Card, Popconfirm, Select, Tabs, Tag } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import CauHinhThoiHanMuonTra from './components/CauHinh';
 import Form from './components/Form';
 import StatMuonTraSach from './components/Stat';
@@ -35,6 +35,8 @@ const PhieuMuonTraSachPage = () => {
 	const [visibleImport, setVisibleImport] = useState(false);
 	const [tabActive, setTabActive] = useState<string>('1');
 	const [vaiTro, setVaiTro] = useState<EVaiTroMuonTra>(EVaiTroMuonTra.SINHVIEN);
+
+	const intl = useIntl();
 
 	// useEffect(() => {
 	// 	if (ngoaiThoiGian) {
@@ -93,7 +95,7 @@ const PhieuMuonTraSachPage = () => {
 
 	const columns: IColumn<PhieuMuonTra.IRecord>[] = [
 		{
-			title: 'Mã định danh',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.madinhdanh' }),
 			dataIndex: 'maDinhDanhNguoiMuon',
 			align: 'center',
 			width: 120,
@@ -101,14 +103,14 @@ const PhieuMuonTraSachPage = () => {
 			onCell,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.hoten' }),
 			dataIndex: 'hoTenNguoiMuon',
 			width: 150,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Khóa sinh viên',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.khoasinhvien' }),
 			dataIndex: 'tenKhoaSinhVienNguoiMuon',
 			width: 90,
 			filterType: 'string',
@@ -116,7 +118,7 @@ const PhieuMuonTraSachPage = () => {
 			hide: vaiTro === EVaiTroMuonTra.CANBO,
 		},
 		{
-			title: 'Khóa ngành',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.khoanganh' }),
 			dataIndex: 'tenNganhNguoiMuon',
 			width: 120,
 			filterType: 'string',
@@ -124,7 +126,7 @@ const PhieuMuonTraSachPage = () => {
 			hide: vaiTro === EVaiTroMuonTra.CANBO,
 		},
 		{
-			title: 'Lớp hành chính',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.lophanhchinh' }),
 			dataIndex: 'tenLopHanhChinh',
 			width: 120,
 			render: (val, rec) => val ?? rec?.tenLopHanhChinhNguoiMuon,
@@ -133,7 +135,7 @@ const PhieuMuonTraSachPage = () => {
 			hide: vaiTro === EVaiTroMuonTra.CANBO,
 		},
 		{
-			title: 'Đơn vị',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.donvi' }),
 			dataIndex: 'tenDonViNguoiMuon',
 			width: 120,
 			filterType: 'string',
@@ -141,7 +143,7 @@ const PhieuMuonTraSachPage = () => {
 			hide: vaiTro === EVaiTroMuonTra.SINHVIEN,
 		},
 		{
-			title: 'Thời gian đăng ký',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thoigiandangky' }),
 			dataIndex: 'thoiGianDangKy',
 			align: 'center',
 			width: 120,
@@ -151,7 +153,7 @@ const PhieuMuonTraSachPage = () => {
 			onCell,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.trangthai' }),
 			dataIndex: 'trangThaiDuyet',
 			align: 'center',
 			width: 120,
@@ -161,7 +163,7 @@ const PhieuMuonTraSachPage = () => {
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thaoTac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -172,10 +174,15 @@ const PhieuMuonTraSachPage = () => {
 							thongKeMuonTraSachModel();
 						})
 					}
-					title='Bạn có chắc chắn muốn xóa thông tin này?'
+					title={intl.formatMessage({ id: 'sachtailieu.confirm.xoa' })}
 					placement='topRight'
 				>
-					<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+						danger
+						type='link'
+						icon={<DeleteOutlined />}
+					/>
 				</Popconfirm>
 			),
 		},
@@ -183,10 +190,10 @@ const PhieuMuonTraSachPage = () => {
 
 	return (
 		<Card
-			title='Danh sách phiếu mượn'
+			title={intl.formatMessage({ id: 'sachtailieu.muontra.title' })}
 			extra={
 				<ButtonExtend
-					tooltip='Cấu hình'
+					tooltip={intl.formatMessage({ id: 'sachtailieu.muontra.tooltip.cauhinh' })}
 					onClick={() => setVisibleCauHinh(true)}
 					icon={<SettingOutlined />}
 					type='link'
@@ -194,15 +201,15 @@ const PhieuMuonTraSachPage = () => {
 			}
 		>
 			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
-				<Tabs.TabPane tab='Phiếu mượn' key='1' />
-				<Tabs.TabPane tab='Lịch sử mượn' key='2' />
+				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.muontra.tab.phieumuon' })} key='1' />
+				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.muontra.tab.lichsumuon' })} key='2' />
 			</Tabs>
 
 			<div style={{ marginBottom: 12 }}>
 				<Select
 					style={{ width: 250 }}
 					value={vaiTro}
-					placeholder='Chọn đối tượng'
+					placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.placeholder.chondoituong' })}
 					options={Object.values(EVaiTroMuonTra).map((item) => ({
 						value: item,
 						label: item,
@@ -237,9 +244,9 @@ const PhieuMuonTraSachPage = () => {
 								icon={<PlusCircleOutlined />}
 								type='primary'
 								notHideText
-								tooltip='Ghi mượn'
+								tooltip={intl.formatMessage({ id: 'sachtailieu.muontra.button.ghimuon' })}
 							>
-								Ghi mượn
+								{intl.formatMessage({ id: 'sachtailieu.muontra.button.ghimuon' })}
 							</ButtonExtend>,
 							// <ButtonExtend key={'import'} icon={<ImportOutlined />} onClick={() => setVisibleImport(true)}>
 							// 	Nhập dữ liệu
@@ -262,7 +269,7 @@ const PhieuMuonTraSachPage = () => {
 				visible={visibleImport}
 				modelName='sachtailieu.muontra.phieumuontra'
 				onCancel={() => setVisibleImport(false)}
-				titleTemplate={'Biểu mẫu phiếu mượn.xlsx'}
+				titleTemplate={intl.formatMessage({ id: 'sachtailieu.muontra.template.phieumuon' })}
 				onOk={() => getData()}
 			/>
 		</Card>

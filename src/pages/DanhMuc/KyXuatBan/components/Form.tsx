@@ -33,28 +33,44 @@ const FormKyXuatBan = (props: any) => {
 				.catch((er) => console.log(er));
 	};
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.kyxuatban.form.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'danhmuc.kyxuatban.form.title.chitiet' }) : intl.formatMessage({ id: 'danhmuc.kyxuatban.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col span={24}>
-						<Form.Item name='ten' label='Tên kỳ xuất bản' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên kỳ xuất bản' />
+						<Form.Item
+							name='ten'
+							label={intl.formatMessage({ id: 'danhmuc.kyxuatban.form.label.tenkyxuatban' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.kyxuatban.form.placeholder.nhaptenkyxuatban' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item name='moTa' label='Mô tả' rules={[...rules.text]}>
-							<Input.TextArea rows={3} placeholder='Nhập mô tả' />
+						<Form.Item
+							name='moTa'
+							label={intl.formatMessage({ id: 'danhmuc.kyxuatban.form.label.mota' })}
+							rules={[...rules.text]}
+						>
+							<Input.TextArea
+								rows={3}
+								placeholder={intl.formatMessage({ id: 'danhmuc.kyxuatban.form.placeholder.nhapmota' })}
+							/>
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item name='thoiGianBatDau' label='Thời gian bắt đầu'>
+						<Form.Item
+							name='thoiGianBatDau'
+							label={intl.formatMessage({ id: 'danhmuc.kyxuatban.form.label.thoigianbatdau' })}
+						>
 							<MyDatePicker format='DD/MM/YYYY' />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
 						<Form.Item
 							name='thoiGianKetThuc'
-							label='Thời gian kết thúc'
+							label={intl.formatMessage({ id: 'danhmuc.kyxuatban.form.label.thoigianketthuc' })}
 							rules={[...rules.sauNgay(dayjs(thoiGianBatDau))]}
 						>
 							<MyDatePicker disabledDate={(cur) => (thoiGianBatDau ? dayjs(cur).isBefore(thoiGianBatDau) : false)} />
