@@ -29,26 +29,37 @@ const FormPhongDoc = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.phongdoc.form.title.chinhsua' }) : intl.formatMessage({ id: 'danhmuc.phongdoc.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item label='Mã phòng đọc' name='ma' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
-							<Input placeholder='Nhập mã kho' disabled={edit} />
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.phongdoc.form.label.maphongdoc' })}
+							name='ma'
+							rules={[...rules.required, ...rules.text, ...rules.length(20)]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.phongdoc.form.placeholder.nhapmakho' })}
+								disabled={edit}
+							/>
 						</Form.Item>
 					</Col>
 					<Col span={24}>
 						<Form.Item
-							label='Tên phòng đọc'
+							label={intl.formatMessage({ id: 'danhmuc.phongdoc.form.label.tenphongdoc' })}
 							name='ten'
 							rules={[...rules.required, ...rules.text, ...rules.length(250)]}
 						>
-							<Input placeholder='Nhập tên kho' />
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.phongdoc.form.placeholder.nhaptenkho' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Địa chỉ' name='diaChi'>
-							<Input.TextArea placeholder='Nhập dịa chỉ' />
+						<Form.Item label={intl.formatMessage({ id: 'danhmuc.phongdoc.form.label.diachi' })} name='diaChi'>
+							<Input.TextArea
+								placeholder={intl.formatMessage({ id: 'danhmuc.phongdoc.form.placeholder.nhapdiachi' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

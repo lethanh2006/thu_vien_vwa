@@ -5,9 +5,10 @@ import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Card, Col, Form, Row } from 'antd';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const FormVaoRaThuVien = (props: any) => {
+	const intl = useIntl();
 	const { title, getData } = props;
 	const [form] = Form.useForm();
 	const { formSubmiting, record, setVisibleForm, edit, visibleForm, postRaVaoThuVienModel } =
@@ -38,11 +39,17 @@ const FormVaoRaThuVien = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'global.button.chinhsua' }) : intl.formatMessage({ id: 'global.button.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form layout='vertical' onFinish={onFinish} form={form}>
 				<Row gutter={[12, 0]}>
 					<Col xs={24} md={24}>
-						<Form.Item name='maSinhVien' label='Sinh viên' rules={[...rules.required]}>
+						<Form.Item
+							name='maSinhVien'
+							label={intl.formatMessage({ id: 'vaorathuvien.label.sinhVien' })}
+							rules={[...rules.required]}
+						>
 							<SelectSinhVienDebounce
 								selectMa
 								onChange={(val) => {
@@ -54,7 +61,11 @@ const FormVaoRaThuVien = (props: any) => {
 						<Form.Item name='hoTen' hidden />
 					</Col>
 					<Col xs={24} md={24}>
-						<Form.Item name='thoiGianVao' label='Thời gian vào' rules={[...rules.required]}>
+						<Form.Item
+							name='thoiGianVao'
+							label={intl.formatMessage({ id: 'vaorathuvien.label.thoiGianVao' })}
+							rules={[...rules.required]}
+						>
 							<MyDatePicker
 								format='DD/MM/YYYY HH:mm'
 								showTime={{ minuteStep: 1 }}
@@ -66,7 +77,7 @@ const FormVaoRaThuVien = (props: any) => {
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={24}>
-						<Form.Item name='thoiGianRa' label='Thời gian ra'>
+						<Form.Item name='thoiGianRa' label={intl.formatMessage({ id: 'vaorathuvien.label.thoiGianRa' })}>
 							<MyDatePicker
 								format='DD/MM/YYYY HH:mm'
 								showTime={{ minuteStep: 1 }}
@@ -81,9 +92,11 @@ const FormVaoRaThuVien = (props: any) => {
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						{edit ? 'Lưu lại' : 'Thêm mới'}
+						{edit
+							? intl.formatMessage({ id: 'global.button.luulai' })
+							: intl.formatMessage({ id: 'global.button.themmoi' })}
 					</Button>
-					<Button onClick={() => setVisibleForm(false)}>Hủy</Button>
+					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
 		</Card>

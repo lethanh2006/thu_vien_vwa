@@ -1,7 +1,7 @@
 import type { GiaSach } from '@/services/DanhMuc/GiaSach/typing';
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -18,6 +18,7 @@ const SelectGiaSach = (props: {
 }) => {
 	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, disabled } = props;
 	const { danhSach, getAllModel } = useModel('danhmuc.giasach');
+	const intl = useIntl();
 
 	useEffect(() => {
 		getAllModel(!!isSetRecord, undefined, condition);
@@ -37,7 +38,7 @@ const SelectGiaSach = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn giá sách'
+			placeholder={intl.formatMessage({ id: 'danhmuc.giasach.select.placeholder' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

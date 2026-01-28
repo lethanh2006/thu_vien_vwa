@@ -27,22 +27,30 @@ const FormThoiGianMuonTra = (props: any) => {
 	};
 
 	return (
-		<Card title='Chỉnh sửa thời gian mượn trả'>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.formthoigian.title' })}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col xs={24}>
-						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
+						<Form.Item
+							name='thoiGianMuon'
+							label={intl.formatMessage({ id: 'sachtailieu.dkcb.thoiGianMuon' })}
+							rules={[...rules.required]}
+						>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='expired' label='Hạn trả' rules={[...rules.required]}>
+						<Form.Item
+							name='expired'
+							label={intl.formatMessage({ id: 'sachtailieu.dkcb.hanTra' })}
+							rules={[...rules.required]}
+						>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='ghiChu' label='Ghi chú'>
-							<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
+						<Form.Item name='ghiChu' label={intl.formatMessage({ id: 'sachtailieu.anpham.ghiChu' })}>
+							<Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.nhapGhiChu' })} />
 						</Form.Item>
 					</Col>
 				</Row>

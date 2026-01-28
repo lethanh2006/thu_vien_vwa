@@ -2,10 +2,11 @@ import { colorTrangThaiHocSv, type ETrangThaiHocSv } from '@/services/SinhVien/c
 import { type ETrangThaiNhanSu, MapColorETrangThaiNhanSu } from '@/services/ToChucNhanSu/constant';
 import dayjs from '@/utils/dayjs';
 import { Avatar, Col, Descriptions, Row, Tag } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const InforNguoiMuon = (props: { isSinhVien: boolean }) => {
 	const { isSinhVien } = props;
+	const intl = useIntl();
 	const { record: recSinhVien } = useModel('sinhvien.sinhvien');
 	const { record: recCanBo } = useModel('tochucnhansu.nhansu');
 
@@ -26,50 +27,53 @@ const InforNguoiMuon = (props: { isSinhVien: boolean }) => {
 
 			{/* Cột thông tin */}
 			<Col xs={24} sm={18} md={20}>
-				<Descriptions column={{ xs: 1, sm: 1, md: 3 }} title='Thông tin người mượn'>
+				<Descriptions
+					column={{ xs: 1, sm: 1, md: 3 }}
+					title={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.thongtinnguoimuon' })}
+				>
 					{isSinhVien ? (
 						<>
-							<Descriptions.Item label='Họ tên'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.hoten' })}>
 								<b>{recSinhVien?.ten ?? '--'}</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Mã SV'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.masinhvien' })}>
 								<b>{recSinhVien?.ma ?? '--'}</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Ngày sinh'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.ngaysinh' })}>
 								<b>{recSinhVien?.ngaySinh ? dayjs(recSinhVien?.ngaySinh).format('DD/MM/YYYY') : '--'}</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Lớp'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.lophanhchinh' })}>
 								<b>{recSinhVien?.tenLopHanhChinhVirtual ?? '--'}</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Khóa sinh viên'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.khoasinhvien' })}>
 								<b>{recSinhVien?.khoaSinhVien?.ten ?? '--'}</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Trạng thái học'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.sinhvien.trangthaihoc' })}>
 								<b>
 									<Tag color={colorTrangThaiHocSv[recSinhVien?.trangThaiHoc as ETrangThaiHocSv]}>
 										{recSinhVien?.trangThaiHoc ?? '--'}
 									</Tag>
 								</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Ngành'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.khoanganh' })}>
 								<b>{recSinhVien?.nganh?.ten ?? '--'}</b>
 							</Descriptions.Item>
 						</>
 					) : (
 						<>
-							<Descriptions.Item label='Họ tên'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.hoten' })}>
 								<b>{[recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' ')}</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Mã cán bộ'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.macanbo' })}>
 								<b>{recCanBo?.maCanBo ?? '--'}</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Ngày sinh'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.ngaysinh' })}>
 								<b>{recCanBo?.ngaySinh ? dayjs(recCanBo?.ngaySinh).format('DD/MM/YYYY') : '--'}</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Đơn vị'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.donvi' })}>
 								<b>{recCanBo?.donViChinh?.ten ?? '--'}</b>
 							</Descriptions.Item>
-							<Descriptions.Item label='Trạng thái'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.trangthai' })}>
 								<b>
 									<Tag color={MapColorETrangThaiNhanSu[recCanBo?.trangThai as ETrangThaiNhanSu]}>
 										{recCanBo?.trangThai ?? '--'}

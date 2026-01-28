@@ -177,14 +177,14 @@ const FormMuonTraSach = (props: any) => {
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
-			title: 'ĐKCB',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.dkcb' }),
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			width: 100,
 			filterType: 'string',
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.nhande' }),
 			width: 350,
 			render: (val, rec) => (
 				<ExpandText>
@@ -204,41 +204,41 @@ const FormMuonTraSach = (props: any) => {
 			filterType: 'string',
 		},
 		{
-			title: 'Nhà xuất bản',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.nhaxuatban' }),
 			align: 'center',
 			render: (val, rec) => rec?.anPham?.nhaXuatBan,
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Năm xuất bản',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.namxuatban' }),
 			align: 'center',
 			render: (val, rec) => rec?.anPham?.namXuatBan,
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Thời gian mượn',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thoigianmuon' }),
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			width: 120,
 		},
 		{
-			title: 'Hạn trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.hantra' }),
 			dataIndex: 'expired',
 			align: 'center',
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 			width: 120,
 		},
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 180,
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
@@ -253,7 +253,7 @@ const FormMuonTraSach = (props: any) => {
 
 					<Popconfirm
 						onConfirm={() => handleDeleteItem(rec?.soDangKyCaBiet)}
-						title='Bạn có chắc chắn muốn xóa ấn phẩm này?'
+						title={intl.formatMessage({ id: 'sachtailieu.confirm.xoaAnPham' })}
 						placement='topRight'
 					>
 						<ButtonExtend tooltip='Xóa' type='link' danger icon={<DeleteOutlined />} />
@@ -267,7 +267,7 @@ const FormMuonTraSach = (props: any) => {
 
 	const handleLuuDKCB = async () => {
 		if (!dkcb) {
-			message.error('Vui lòng nhập đăng ký cá biệt trước khi thêm!');
+			message.error(intl.formatMessage({ id: 'sachtailieu.muontra.form.error.nhapdkcb' }));
 			return;
 		}
 
@@ -289,7 +289,7 @@ const FormMuonTraSach = (props: any) => {
 		const anPhamData = await getAnPhamXepGia(undefined, filter as any, undefined, 1, 50, undefined, undefined, false);
 
 		if (!anPhamData?.length) {
-			message.error('Không tồn tại ấn phẩm!');
+			message.error(intl.formatMessage({ id: 'sachtailieu.error.khongtontai.anpham' }));
 			form.resetFields(['dkcb']);
 			return;
 		}
@@ -305,7 +305,7 @@ const FormMuonTraSach = (props: any) => {
 		if (!itemChon) itemChon = anPhamData[0];
 
 		if (itemChon?.trangThai === ETrangThaiDangKyCaBiet.BAN) {
-			message.error('Ấn phẩm đang được mượn!');
+			message.error(intl.formatMessage({ id: 'sachtailieu.error.anphamdangmuon' }));
 			return;
 		}
 
@@ -314,7 +314,7 @@ const FormMuonTraSach = (props: any) => {
 				(i) => i?.soDangKyCaBiet.toLocaleUpperCase().trim() === itemChon.soDangKyCaBiet.toLocaleUpperCase().trim(),
 			)
 		) {
-			message.error('Ấn phẩm đã tồn tại trong danh sách!');
+			message.error(intl.formatMessage({ id: 'sachtailieu.error.anphamtontai.danhsach' }));
 			return;
 		}
 
@@ -362,7 +362,7 @@ const FormMuonTraSach = (props: any) => {
 		);
 
 		if (!nguoiMuon?.length) {
-			message.error('Không tìm thấy người mượn!');
+			message.error(intl.formatMessage({ id: 'sachtailieu.muontra.form.error.khongtimthaynguoimuon' }));
 			return;
 		}
 
@@ -376,7 +376,9 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} sinh viên mượn sách`}>
+		<Card
+			title={`${intl.formatMessage({ id: edit ? 'global.button.chinhsua' : 'global.button.themmoi' })} ${intl.formatMessage({ id: 'sachtailieu.muontra.form.title' })}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={6}>
@@ -386,7 +388,9 @@ const FormMuonTraSach = (props: any) => {
 									<Segmented
 										options={Object.values(EVaiTroMuonTra)?.map((item) => ({
 											value: item,
-											label: item,
+											label: intl.formatMessage({
+												id: item === EVaiTroMuonTra.SINHVIEN ? 'sachtailieu.sinhVien.title' : 'sachtailieu.canBo.title',
+											}),
 										}))}
 										onChange={() => {
 											form.resetFields(['soThe']);
@@ -403,16 +407,20 @@ const FormMuonTraSach = (props: any) => {
 							<Col span={24}>
 								<Form.Item
 									name='soThe'
-									label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}
+									label={intl.formatMessage({
+										id: isSinhVien
+											? 'sachtailieu.muontra.form.label.masinhvien'
+											: 'sachtailieu.muontra.form.label.macanbo',
+									})}
 									extra={
 										<a type='link' onClick={() => setVisibleTimTen(true)}>
-											Tìm kiếm theo tên
+											{intl.formatMessage({ id: 'sachtailieu.muontra.form.extra.timkiemtheoten' })}
 										</a>
 									}
 								>
 									<Input
 										ref={soTheInputRef}
-										placeholder='Nhập mã định danh'
+										placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.form.placeholder.nhapmadinhdanh' })}
 										allowClear
 										onPressEnter={(e) => {
 											e.preventDefault();
@@ -430,11 +438,11 @@ const FormMuonTraSach = (props: any) => {
 							<Col span={24}>
 								<Form.Item
 									name='dkcb'
-									label='Đăng ký cá biệt'
+									label={intl.formatMessage({ id: 'sachtailieu.muontra.form.label.dangkycabiet' })}
 									extra={
 										<Space>
 											<a type='link' onClick={handleLuuDKCB}>
-												Thêm
+												{intl.formatMessage({ id: 'sachtailieu.muontra.form.extra.them' })}
 											</a>{' '}
 											{/* |{' '}
 											<a type='link' onClick={() => setVisibleTimKiem(true)}>
@@ -445,7 +453,7 @@ const FormMuonTraSach = (props: any) => {
 								>
 									<Input
 										ref={dkcbInputRef}
-										placeholder='Nhập đăng ký cá biệt'
+										placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.form.placeholder.nhapdkcb' })}
 										onPressEnter={(e) => {
 											e.preventDefault();
 											handleLuuDKCB();
@@ -470,7 +478,7 @@ const FormMuonTraSach = (props: any) => {
 							</Col>
 							<Col span={24}>
 								<div className='fw500' style={{ marginTop: 12 }}>
-									Danh sách ấn phẩm ghi mượn
+									{intl.formatMessage({ id: 'sachtailieu.muontra.danhsach.ghimuon' })}
 								</div>
 
 								<TableStaticData
@@ -489,16 +497,16 @@ const FormMuonTraSach = (props: any) => {
 				<div className='form-footer'>
 					{isOverLimit ? (
 						<Button type='primary' onClick={() => setVisibleQuaHan(true)}>
-							Ghi mượn
+							{intl.formatMessage({ id: 'sachtailieu.muontra.button.ghimuon' })}
 						</Button>
 					) : (
 						<Button loading={formSubmiting} onClick={() => form.submit()} type='primary'>
-							Ghi mượn
+							{intl.formatMessage({ id: 'sachtailieu.muontra.button.ghimuon' })}
 						</Button>
 					)}
 
 					<ButtonExtend icon={<PrinterOutlined />} tooltip='Phiếu' onClick={() => handlePrintPhieu()}>
-						Phiếu
+						{intl.formatMessage({ id: 'sachtailieu.muontra.button.phieu' })}
 					</ButtonExtend>
 
 					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
@@ -510,7 +518,7 @@ const FormMuonTraSach = (props: any) => {
 				footer={
 					<Row gutter={[5, 5]}>
 						<Col span={12} push={12} style={{ textAlign: 'center' }}>
-							<b>Chữ ký người mượn</b>
+							<b>{intl.formatMessage({ id: 'sachtailieu.muontra.print.chukynguoimuon' })}</b>
 						</Col>
 					</Row>
 				}
@@ -544,7 +552,7 @@ const FormMuonTraSach = (props: any) => {
 			/>
 
 			<Modal
-				title='Chi tiết ấn phẩm'
+				title={intl.formatMessage({ id: 'sachtailieu.modal.chitietanpham' })}
 				open={visibleAnPham}
 				onCancel={() => setVisibleAnPham(false)}
 				width={900}

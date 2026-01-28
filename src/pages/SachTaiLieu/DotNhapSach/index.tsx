@@ -25,20 +25,20 @@ const DotNhapSachPage = () => {
 
 	const columns: IColumn<AnPham.IDotNhapSach>[] = [
 		{
-			title: 'Học kỳ',
+			title: intl.formatMessage({ id: 'sachtailieu.hocky.hocKy' }),
 			dataIndex: 'maHocKy',
 			width: 150,
 			render: (val, rec) => rec?.hocKy?.ten ?? danhSachHocKy?.find((item) => item?.ma === val)?.ten,
 			hide: !!recHocKy?._id,
 		},
 		{
-			title: 'Tên đợt',
+			title: intl.formatMessage({ id: 'sachtailieu.dotnhapsach.tenDot' }),
 			dataIndex: 'ten',
 			width: 160,
 			filterType: 'string',
 		},
 		{
-			title: 'Nguồn bổ sung',
+			title: intl.formatMessage({ id: 'sachtailieu.dotnhapsach.nguonBoSung' }),
 			dataIndex: 'nguonBoSungId',
 			width: 120,
 			render: (val, rec) => rec?.nguonXuatNhap?.ten,
@@ -46,7 +46,7 @@ const DotNhapSachPage = () => {
 			filterCustomSelect: <SelectNguonBoSung multiple />,
 		},
 		{
-			title: 'Bắt đầu',
+			title: intl.formatMessage({ id: 'sachtailieu.dotnhapsach.thoiGianBatDau' }),
 			dataIndex: 'thoiGianBatDau',
 			width: 100,
 			align: 'center',
@@ -55,7 +55,7 @@ const DotNhapSachPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Kết thúc',
+			title: intl.formatMessage({ id: 'sachtailieu.dotnhapsach.thoiGianKetThuc' }),
 			dataIndex: 'thoiGianKetThuc',
 			width: 100,
 			align: 'center',
@@ -64,13 +64,13 @@ const DotNhapSachPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Số chứng từ',
+			title: intl.formatMessage({ id: 'sachtailieu.dotnhapsach.soChungTu' }),
 			dataIndex: 'soChungTu',
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Ngày chứng từ',
+			title: intl.formatMessage({ id: 'sachtailieu.dotnhapsach.ngayChungTu' }),
 			dataIndex: 'ngayChungTu',
 			width: 100,
 			align: 'center',
@@ -79,25 +79,35 @@ const DotNhapSachPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Mô tả',
+			title: intl.formatMessage({ id: 'sachtailieu.dotnhapsach.moTa' }),
 			dataIndex: 'moTa',
 			width: 200,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id, getData)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						title={intl.formatMessage({ id: 'sachtailieu.confirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -126,7 +136,7 @@ const DotNhapSachPage = () => {
 					allowClear
 				/>
 				<ButtonExtend onClick={() => setVisibleThongKe(true)} icon={<ExportOutlined />}>
-					Tổng hợp thông tin chung
+					{intl.formatMessage({ id: 'sachtailieu.dotnhapsach.tongHopThongTinChung' })}
 				</ButtonExtend>
 			</Space>
 

@@ -27,17 +27,32 @@ const FormCapThuMuc = (props: any) => {
 				.catch((er) => console.log(er));
 	};
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.kieubanghi.form.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'danhmuc.kieubanghi.form.title.chitiet' }) : intl.formatMessage({ id: 'danhmuc.kieubanghi.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col xs={24}>
-						<Form.Item name='ma' label='Mã kiểu bản ghi' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập mã kiểu bản ghi' disabled={edit || isView} />
+						<Form.Item
+							name='ma'
+							label={intl.formatMessage({ id: 'danhmuc.kieubanghi.form.label.makieubanghi' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.kieubanghi.form.placeholder.nhapmakieubanghi' })}
+								disabled={edit || isView}
+							/>
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='ten' label='Tên kiểu bản ghi' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên kiểu bản ghi' />
+						<Form.Item
+							name='ten'
+							label={intl.formatMessage({ id: 'danhmuc.kieubanghi.form.label.tenkieubanghi' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.kieubanghi.form.placeholder.nhaptenkieubanghi' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

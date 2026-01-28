@@ -12,33 +12,43 @@ const CapThuMucPage = () => {
 
 	const columns: IColumn<CapThuMuc.IRecord>[] = [
 		{
-			title: 'Mã cấp thu mục',
+			title: intl.formatMessage({ id: 'danhmuc.capthumuc.table.column.macapthumuc' }),
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên cấp thu mục',
+			title: intl.formatMessage({ id: 'danhmuc.capthumuc.table.column.tencapthumuc' }),
 			dataIndex: 'ten',
 			width: 180,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.capthumuc.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, record) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.capthumuc.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(record)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(record._id)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						title={intl.formatMessage({ id: 'danhmuc.capthumuc.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.capthumuc.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

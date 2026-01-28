@@ -1,3 +1,4 @@
+import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
@@ -5,7 +6,6 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
-import ExpandText from '@/components/ExpandText';
 
 const ThuVienPage = () => {
 	const intl = useIntl();
@@ -13,39 +13,49 @@ const ThuVienPage = () => {
 
 	const columns: IColumn<ThuVien.IRecord>[] = [
 		{
-			title: 'Tên thư viện (viết tắt)',
+			title: intl.formatMessage({ id: 'danhmuc.thuvien.table.column.tenviettat' }),
 			dataIndex: 'tenVietTat',
 			width: 120,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên thư viện (đầy đủ)',
+			title: intl.formatMessage({ id: 'danhmuc.thuvien.table.column.ten' }),
 			dataIndex: 'ten',
 			width: 150,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Địa chỉ',
+			title: intl.formatMessage({ id: 'danhmuc.thuvien.table.column.diachi' }),
 			dataIndex: 'diaChi',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.thuvien.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, record) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.thuvien.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(record)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(record._id)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						title={intl.formatMessage({ id: 'danhmuc.thuvien.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.thuvien.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

@@ -1,49 +1,61 @@
 import dayjs from '@/utils/dayjs';
 import { Button, Descriptions, Modal, Tag } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const ChiTietSinhVien = (props: { visible: boolean; setVisible: (val: boolean) => void }) => {
 	const { visible, setVisible } = props;
 	const { record } = useModel('quanlythuvien.vaorathuvien');
+	const intl = useIntl();
 
 	return (
 		<Modal
-			title='Chi tiết SV vào ra thư viện'
+			title={intl.formatMessage({ id: 'vaorathuvien.card.title.chiTietSVVaoRaThuVien' })}
 			open={visible}
 			width={800}
 			footer={null}
 			onCancel={() => setVisible(false)}
 		>
 			<Descriptions bordered column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}>
-				<Descriptions.Item label='Mã SV'>{record?.maSv ?? '--'}</Descriptions.Item>
-				<Descriptions.Item label='Họ tên'>{record?.hoTen ?? '--'}</Descriptions.Item>
-				<Descriptions.Item label='Ngày sinh'>
+				<Descriptions.Item label={intl.formatMessage({ id: 'vaorathuvien.label.maSinhVien' })}>
+					{record?.maSv ?? '--'}
+				</Descriptions.Item>
+				<Descriptions.Item label={intl.formatMessage({ id: 'vaorathuvien.label.hoTen' })}>
+					{record?.hoTen ?? '--'}
+				</Descriptions.Item>
+				<Descriptions.Item label={intl.formatMessage({ id: 'vaorathuvien.label.ngaySinh' })}>
 					{record?.ngaySinh ? dayjs(record?.ngaySinh).format('DD/MM/YYYY') : '--'}
 				</Descriptions.Item>
-				<Descriptions.Item label='Số điện thoại'>{record?.soDienThoai ?? '--'}</Descriptions.Item>
-				<Descriptions.Item label='Khóa sinh viên'>{record?.tenKhoaSinhVien ?? '--'}</Descriptions.Item>
-				<Descriptions.Item label='Ngành đào tạo'>{record?.tenNganh ?? '--'}</Descriptions.Item>
+				<Descriptions.Item label={intl.formatMessage({ id: 'vaorathuvien.label.soDienThoai' })}>
+					{record?.soDienThoai ?? '--'}
+				</Descriptions.Item>
+				<Descriptions.Item label={intl.formatMessage({ id: 'vaorathuvien.label.khoaSinhVien' })}>
+					{record?.tenKhoaSinhVien ?? '--'}
+				</Descriptions.Item>
+				<Descriptions.Item label={intl.formatMessage({ id: 'vaorathuvien.label.nganhDaoTao' })}>
+					{record?.tenNganh ?? '--'}
+				</Descriptions.Item>
 
-				<Descriptions.Item label='Thời gian vào'>
+				<Descriptions.Item label={intl.formatMessage({ id: 'vaorathuvien.label.thoiGianVao' })}>
 					{record?.thoiGianCheckIn ? (
 						<>
-							Buổi {record?.buoi ?? '--'}, {dayjs(record?.thoiGianCheckIn).format('HH:mm DD/MM/YYYY')}
+							{intl.formatMessage({ id: 'vaorathuvien.label.buoi' })} {record?.buoi ?? '--'},{' '}
+							{dayjs(record?.thoiGianCheckIn).format('HH:mm DD/MM/YYYY')}
 						</>
 					) : (
-						<Tag color='red'>Chưa vào</Tag>
+						<Tag color='red'>{intl.formatMessage({ id: 'vaorathuvien.label.chuaVao' })}</Tag>
 					)}
 				</Descriptions.Item>
-				<Descriptions.Item label='Thời gian ra'>
+				<Descriptions.Item label={intl.formatMessage({ id: 'vaorathuvien.label.thoiGianRa' })}>
 					{record?.thoiGianCheckOut ? (
 						dayjs(record?.thoiGianCheckOut).format('HH:mm DD/MM/YYYY')
 					) : (
-						<Tag color='red'>Chưa ra</Tag>
+						<Tag color='red'>{intl.formatMessage({ id: 'vaorathuvien.label.chuaRa' })}</Tag>
 					)}
 				</Descriptions.Item>
 			</Descriptions>
 
 			<div className='form-footer'>
-				<Button onClick={() => setVisible(false)}>Đóng</Button>
+				<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 			</div>
 		</Modal>
 	);

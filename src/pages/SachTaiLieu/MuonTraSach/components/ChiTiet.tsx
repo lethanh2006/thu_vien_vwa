@@ -50,40 +50,52 @@ const ChiTietMuonTraSach = (props: any) => {
 	// };
 
 	return (
-		<Card title='Chi tiết sinh viên mượn sách'>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.muontra.chitiet.title' })}>
 			<Row gutter={[12, 0]}>
 				<Col xs={24}>
 					<Descriptions column={1}>
-						<Descriptions.Item label='Mã'>{record?.phieuMuonTra?.maDinhDanhNguoiMuon ?? '--'}</Descriptions.Item>
-						<Descriptions.Item label='Họ tên'>{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.chitiet.ma' })}>
+							{record?.phieuMuonTra?.maDinhDanhNguoiMuon ?? '--'}
+						</Descriptions.Item>
+						<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.sinhVien.hoTen' })}>
+							{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}
+						</Descriptions.Item>
 
 						{record?.phieuMuonTra?.vaiTro === EVaiTroMuonTra.SINHVIEN ? (
 							<>
-								<Descriptions.Item label='Khóa sinh viên'>
+								<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.column.khoasinhvien' })}>
 									{record?.phieuMuonTra?.tenKhoaSinhVienNguoiMuon ?? '--'}
 								</Descriptions.Item>
-								<Descriptions.Item label='Khóa ngành'>
+								<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.sinhVien.khoaNganh' })}>
 									{record?.phieuMuonTra?.tenNganhNguoiMuon ?? '--'}
 								</Descriptions.Item>
-								<Descriptions.Item label='Lớp hành chính'>
+								<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.column.lophanhchinh' })}>
 									{record?.phieuMuonTra?.tenLopHanhChinh ?? record?.phieuMuonTra?.tenLopHanhChinhNguoiMuon}
 								</Descriptions.Item>
 							</>
 						) : (
 							<>
-								<Descriptions.Item label='Đơn vị'>{record?.phieuMuonTra?.tenDonViNguoiMuon ?? '--'}</Descriptions.Item>
+								<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.column.donvi' })}>
+									{record?.phieuMuonTra?.tenDonViNguoiMuon ?? '--'}
+								</Descriptions.Item>
 							</>
 						)}
-						<Descriptions.Item label='Nhan đề'>{record?.anPham?.nhanDe ?? '--'}</Descriptions.Item>
-						<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
+						<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' })}>
+							{record?.anPham?.nhanDe ?? '--'}
+						</Descriptions.Item>
+						<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' })}>
+							{record?.anPham?.tacGia ?? '--'}
+						</Descriptions.Item>
 
 						{/* {trangThai !== ETrangThaiMuonSach.CHO_XU_LY && ( */}
 						<>
-							<Descriptions.Item label='Đăng ký cá biệt'>{record?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Thời gian mượn'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.dkcb.soDangKyCaBiet' })}>
+								{record?.soDangKyCaBiet ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.dkcb.thoiGianMuon' })}>
 								{record?.thoiGianMuon ? dayjs(record?.thoiGianMuon).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
-							<Descriptions.Item label='Hạn trả'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.dkcb.hanTra' })}>
 								{record?.expired ? dayjs(record?.expired).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
 
@@ -95,11 +107,11 @@ const ChiTietMuonTraSach = (props: any) => {
 								{record?.giaHan ? <Tag color='green'>Có gian hạn</Tag> : <Tag color='red'>Không gia hạn</Tag>}
 							</Descriptions.Item> */}
 
-							<Descriptions.Item label='Thời gian gia hạn'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.chitiet.thoigiangiahan' })}>
 								{record?.thoiGianGiaHan ? dayjs(record?.thoiGianGiaHan).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
 
-							<Descriptions.Item label='Thời gian trả'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.chitiet.thoigiantra' })}>
 								{record?.thoiGianTra ? dayjs(record?.thoiGianTra).format('DD/MM/YYYY') : '--'}
 							</Descriptions.Item>
 						</>
@@ -116,12 +128,16 @@ const ChiTietMuonTraSach = (props: any) => {
 
 						{/* {trangThai !== ETrangThaiMuonSach.CHO_XU_LY && ( */}
 						<>
-							<Descriptions.Item label='Ghi chú'>{record?.ghiChu ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Ghi chú trả'>{record?.ghiChuTra ?? '--'}</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.ghiChu' })}>
+								{record?.ghiChu ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.chitiet.ghichutra' })}>
+								{record?.ghiChuTra ?? '--'}
+							</Descriptions.Item>
 						</>
 						{/* )} */}
 
-						<Descriptions.Item label='Trạng thái'>
+						<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.trangThai' })}>
 							<Tag color={colorTrangThaiMuonSach[record?.trangThai as ETrangThaiMuonSach]}>
 								{mapNameTrangThaiMuonSach[record?.trangThai as ETrangThaiMuonSach]}
 							</Tag>
@@ -156,7 +172,7 @@ const ChiTietMuonTraSach = (props: any) => {
 							setVisibleGhiTra(true);
 						}}
 					>
-						Ghi trả
+						{intl.formatMessage({ id: 'sachtailieu.ghitra.tooltip.ghitra' })}
 					</Button>
 				) : null}
 

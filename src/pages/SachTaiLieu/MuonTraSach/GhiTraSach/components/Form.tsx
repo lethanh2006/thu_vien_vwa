@@ -78,7 +78,7 @@ const FormGhiTraSach = (props: any) => {
 			);
 
 			if (!nguoiMuon?.length) {
-				message.error('Không tìm thấy người mượn!');
+				message.error(intl.formatMessage({ id: 'sachtailieu.error.khongtontaisinhvien' }));
 				setBorrowerInfo(undefined);
 				setDanhSach([]);
 				return;
@@ -114,7 +114,7 @@ const FormGhiTraSach = (props: any) => {
 
 	const handleLuuDKCB = async () => {
 		if (!dkcb) {
-			message.error('Vui lòng nhập đăng ký cá biệt trước khi thêm!');
+			message.error(intl.formatMessage({ id: 'sachtailieu.muontra.form.error.nhapdkcb' }));
 			return;
 		}
 
@@ -176,14 +176,14 @@ const FormGhiTraSach = (props: any) => {
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
-			title: 'ĐKCB',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.dkcb' }),
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			width: 100,
 			filterType: 'string',
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.nhande' }),
 			width: 350,
 			render: (val, rec) => (
 				<ExpandText>
@@ -203,21 +203,21 @@ const FormGhiTraSach = (props: any) => {
 			filterType: 'string',
 		},
 		{
-			title: 'Nhà xuất bản',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.nhaxuatban' }),
 			align: 'center',
 			render: (val, rec) => rec?.anPham?.nhaXuatBan,
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Năm xuất bản',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.namxuatban' }),
 			align: 'center',
 			render: (val, rec) => rec?.anPham?.namXuatBan,
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Thời gian mượn',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thoigianmuon' }),
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
@@ -226,7 +226,7 @@ const FormGhiTraSach = (props: any) => {
 			sortable: true,
 		},
 		{
-			title: 'Thời gian trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thoigiantra' }),
 			dataIndex: 'thoiGianTra',
 			width: 150,
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
@@ -234,26 +234,26 @@ const FormGhiTraSach = (props: any) => {
 			sortable: true,
 		},
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 220,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Ghi chú trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.ghichutra' }),
 			dataIndex: 'ghiChuTra',
 			width: 220,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Hạn trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.hantra' }),
 			align: 'center',
 			width: 140,
 			render: (_, rec) => <RenderHanTra rec={rec} />,
 			fixed: 'right',
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.trangthai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 130,
@@ -265,7 +265,7 @@ const FormGhiTraSach = (props: any) => {
 			fixed: 'right',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thaoTac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -275,7 +275,7 @@ const FormGhiTraSach = (props: any) => {
 						setRecord(rec);
 						setVisibleGhiTra(true);
 					}}
-					tooltip='Ghi trả'
+					tooltip={intl.formatMessage({ id: 'sachtailieu.ghitra.tooltip.ghitra' })}
 					className='text-success'
 					type='link'
 					icon={<CheckOutlined />}
@@ -296,7 +296,7 @@ const FormGhiTraSach = (props: any) => {
 	}, [visibleForm]);
 
 	return (
-		<Card title='Ghi trả sách'>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.ghitra.title' })}>
 			<Form form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24} md={6}>
@@ -306,7 +306,12 @@ const FormGhiTraSach = (props: any) => {
 									<Segmented
 										options={Object.values(EVaiTroMuonTra).map((item) => ({
 											value: item,
-											label: item,
+											label: intl.formatMessage({
+												id:
+													item === EVaiTroMuonTra.SINHVIEN
+														? 'sachtailieu.muontra.segmented.sinhvien'
+														: 'sachtailieu.muontra.segmented.canbo',
+											}),
 										}))}
 										onChange={() => {
 											form.resetFields(['soThe']);
@@ -317,10 +322,17 @@ const FormGhiTraSach = (props: any) => {
 							</Col>
 
 							<Col span={24}>
-								<Form.Item name='soThe' label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}>
+								<Form.Item
+									name='soThe'
+									label={intl.formatMessage({
+										id: isSinhVien
+											? 'sachtailieu.muontra.form.label.masinhvien'
+											: 'sachtailieu.muontra.form.label.macanbo',
+									})}
+								>
 									<Input
 										ref={soTheInputRef}
-										placeholder='Nhập mã định danh'
+										placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.form.placeholder.nhapmadinhdanh' })}
 										onPressEnter={() => getBorrower()}
 										allowClear
 										onChange={(e) => {
@@ -334,16 +346,19 @@ const FormGhiTraSach = (props: any) => {
 							</Col>
 
 							<Col span={24}>
-								<Form.Item name='dkcb' label='Đăng ký cá biệt'>
+								<Form.Item
+									name='dkcb'
+									label={intl.formatMessage({ id: 'sachtailieu.muontra.form.label.dangkycabiet' })}
+								>
 									<Input
 										ref={dkcbInputRef}
-										placeholder='Nhập đăng ký cá biệt'
+										placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.form.placeholder.nhapdkcb' })}
 										onPressEnter={handleLuuDKCB}
 										allowClear
 									/>
 								</Form.Item>
 								<Space>
-									<a onClick={handleLuuDKCB}>Ghi trả</a>
+									<a onClick={handleLuuDKCB}>{intl.formatMessage({ id: 'sachtailieu.muontra.button.ghitra' })}</a>
 								</Space>
 							</Col>
 						</Row>
@@ -363,7 +378,7 @@ const FormGhiTraSach = (props: any) => {
 
 							<Col span={24}>
 								<div className='fw500' style={{ marginTop: 12, marginBottom: 12 }}>
-									Danh sách ấn phẩm đang mượn
+									{intl.formatMessage({ id: 'sachtailieu.muontra.danhsach.dangmuon' })}
 								</div>
 
 								<TableStaticData
@@ -385,15 +400,16 @@ const FormGhiTraSach = (props: any) => {
 									<Popconfirm
 										title={
 											selectedIds?.length
-												? `Bạn có chắc chắn muốn ghi trả ${selectedIds.length} ấn phẩm đã chọn?`
-												: 'Không có bản ghi nào được chọn. Bạn có muốn ghi trả tất cả?'
+												? `${intl.formatMessage({ id: 'sachtailieu.muontra.confirm.ghitra.title' })} ${selectedIds.length} ${intl.formatMessage({ id: 'sachtailieu.muontra.confirm.ghitra.selected' })}`
+												: intl.formatMessage({ id: 'sachtailieu.muontra.confirm.ghitra.all' })
 										}
 										onConfirm={handleGhiTra}
 										okText='Đồng ý'
 										cancelText='Hủy'
 									>
 										<ButtonExtend disabled={!danhSach.length} type='primary'>
-											Ghi trả {selectedIds?.length ? `(${selectedIds.length})` : ''}
+											{intl.formatMessage({ id: 'sachtailieu.muontra.button.ghitra' })}{' '}
+											{selectedIds?.length ? `(${selectedIds.length})` : ''}
 										</ButtonExtend>
 									</Popconfirm>
 								</TableStaticData>
@@ -418,7 +434,7 @@ const FormGhiTraSach = (props: any) => {
 			/>
 
 			<Modal
-				title='Chi tiết ấn phẩm'
+				title={intl.formatMessage({ id: 'sachtailieu.modal.chitietanpham' })}
 				open={visibleAnPham}
 				onCancel={() => setVisibleAnPham(false)}
 				width={900}

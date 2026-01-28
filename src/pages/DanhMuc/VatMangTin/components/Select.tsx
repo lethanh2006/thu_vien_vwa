@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -18,6 +18,8 @@ const SelectVatMangTin = (props: {
 }) => {
 	const { value, onChange, multiple, allowClear, style, isSetRecord, condition, selectMa, disabled } = props;
 	const { danhSach, getAllModel } = useModel('danhmuc.vatmangtin');
+
+	const intl = useIntl();
 
 	useEffect(() => {
 		if (!danhSach?.length) getAllModel(!!isSetRecord, undefined, condition);
@@ -37,7 +39,7 @@ const SelectVatMangTin = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn vật mạng tin'
+			placeholder={intl.formatMessage({ id: 'danhmuc.vatmangtin.select.placeholder' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

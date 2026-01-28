@@ -7,7 +7,7 @@ import { EditOutlined, PlusCircleFilled } from '@ant-design/icons';
 import { Modal } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import FormCauHinhVaoRaThuVien from './components/Form';
 
 const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolean) => void }) => {
@@ -15,6 +15,7 @@ const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolea
 	const { getAllModel, loading } = useModel('quanlythuvien.vaorathuvien');
 	const { visibleForm, setVisibleForm, edit, setEdit, handleEdit, setRecord } = useModel('quanlythuvien.cauhinh');
 	const [danhSach, setDanhSach] = useState<any>();
+	const intl = useIntl();
 
 	const getData = () => {
 		getAllModel(undefined, undefined, undefined, undefined, 'setting', false)
@@ -28,24 +29,24 @@ const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolea
 
 	const columns: IColumn<QuanLyThuVien.ICauHinhVaoRaThuVien>[] = [
 		{
-			title: 'Thời gian',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.thoiGian' }),
 			dataIndex: 'thu',
 			align: 'center',
 			width: 150,
 			render: (val) => mapNameThuTrongTuan[val as EThuTrongTuan],
 		},
 		{
-			title: 'Sáng',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.sang' }),
 			width: 240,
 			children: [
 				{
-					title: 'Thời gian vào',
+					title: intl.formatMessage({ id: 'vaorathuvien.table.column.thoiGianVao' }),
 					dataIndex: 'thoiGianMoCuaBuoiSang',
 					align: 'center',
 					width: 120,
 				},
 				{
-					title: 'Thời gian ra',
+					title: intl.formatMessage({ id: 'vaorathuvien.table.column.thoiGianRa' }),
 					dataIndex: 'thoiGianDongCuaBuoiSang',
 					align: 'center',
 					width: 120,
@@ -53,17 +54,17 @@ const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolea
 			],
 		},
 		{
-			title: 'Chiều',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.chieu' }),
 			width: 240,
 			children: [
 				{
-					title: 'Thời gian vào',
+					title: intl.formatMessage({ id: 'vaorathuvien.table.column.thoiGianVao' }),
 					dataIndex: 'thoiGianMoCuaBuoiChieu',
 					align: 'center',
 					width: 120,
 				},
 				{
-					title: 'Thời gian ra',
+					title: intl.formatMessage({ id: 'vaorathuvien.table.column.thoiGianRa' }),
 					dataIndex: 'thoiGianDongCuaBuoiChieu',
 					align: 'center',
 					width: 120,
@@ -71,17 +72,17 @@ const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolea
 			],
 		},
 		{
-			title: 'Tối',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.toi' }),
 			width: 240,
 			children: [
 				{
-					title: 'Thời gian vào',
+					title: intl.formatMessage({ id: 'vaorathuvien.table.column.thoiGianVao' }),
 					dataIndex: 'thoiGianMoCuaBuoiToi',
 					align: 'center',
 					width: 120,
 				},
 				{
-					title: 'Thời gian ra',
+					title: intl.formatMessage({ id: 'vaorathuvien.table.column.thoiGianRa' }),
 					dataIndex: 'thoiGianDongCuaBuoiToi',
 					align: 'center',
 					width: 120,
@@ -89,19 +90,24 @@ const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolea
 			],
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.thaoTac' }),
 			align: 'center',
 			fixed: 'right',
 			width: 100,
 			render: (val, rec) => (
-				<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+				<ButtonExtend
+					tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+					onClick={() => handleEdit(rec)}
+					type='link'
+					icon={<EditOutlined />}
+				/>
 			),
 		},
 	];
 
 	return (
 		<Modal
-			title='Cấu hình vào ra thư viện trong tuần'
+			title={intl.formatMessage({ id: 'vaorathuvien.card.title.cauHinhVaoRaThuVienTrongTuan' })}
 			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
@@ -125,12 +131,16 @@ const CauHinhVaoRaThuVien = (props: { visible: boolean; setVisible: (val: boolea
 						setVisibleForm(true);
 					}}
 				>
-					Thêm mới
+					{intl.formatMessage({ id: 'global.button.themmoi' })}
 				</ButtonExtend>
 			</TableStaticData>
 
 			<Modal
-				title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} cấu hình`}
+				title={
+					`${edit ? intl.formatMessage({ id: 'global.button.chinhsua' }) : intl.formatMessage({ id: 'global.button.themmoi' })}` +
+					' ' +
+					intl.formatMessage({ id: 'vaorathuvien.label.cauhinh' })
+				}
 				open={visibleForm}
 				onCancel={() => setVisibleForm(false)}
 				footer={null}

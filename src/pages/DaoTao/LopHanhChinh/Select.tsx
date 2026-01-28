@@ -2,7 +2,7 @@ import { EOperatorType } from '@/components/Table/constant';
 import { Empty, Select, Spin } from 'antd';
 import _ from 'lodash';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -17,6 +17,7 @@ const SelectLopHanhChinhDebounce = (props: {
 }) => {
 	const { value, onChange, multiple, disabled, selectMa, allowClear } = props;
 	const { danhSach, getModel, setFilters, filters, loading } = useModel('daotao.lophanhchinh');
+	const intl = useIntl();
 
 	useEffect(() => {
 		// Nếu trong danh sách đã có 1 giá trị trong `value` rồi thì ko get lại data nữa
@@ -56,9 +57,16 @@ const SelectLopHanhChinhDebounce = (props: {
 			disabled={disabled}
 			notFoundContent={
 				loading ? (
-					<Spin spinning={true} tip='Đang tìm kiếm...' style={{ width: '100%', margin: 10 }} />
+					<Spin
+						spinning={true}
+						tip={intl.formatMessage({ id: 'daotao.lophanhchinh.searching' })}
+						style={{ width: '100%', margin: 10 }}
+					/>
 				) : (
-					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='Không có dữ liệu, hãy thử nhập từ khóa khác!' />
+					<Empty
+						image={Empty.PRESENTED_IMAGE_SIMPLE}
+						description={intl.formatMessage({ id: 'daotao.lophanhchinh.empty' })}
+					/>
 				)
 			}
 			onSearch={(val) => searchDebounceLopHanhChinh(val)}
@@ -69,7 +77,7 @@ const SelectLopHanhChinhDebounce = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn lớp hành chính (tìm kiếm theo tên)'
+			placeholder={intl.formatMessage({ id: 'daotao.lophanhchinh.placeholder' })}
 			showArrow
 			allowClear={allowClear}
 		/>

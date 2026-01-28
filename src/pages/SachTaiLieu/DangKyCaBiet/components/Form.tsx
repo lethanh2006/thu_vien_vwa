@@ -63,43 +63,65 @@ const FormDangKyCaBiet = (props: any) => {
 	};
 
 	return (
-		<Card title='Thêm mới sinh viên mượn sách'>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.dkcb.themMoiSinhVien' })}>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginTop: 12 }}>
 					<Col span={24}>
 						<Descriptions column={1}>
-							<Descriptions.Item label='Nhan đề'>{recDKCB?.anPham?.nhanDeConverse ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Tác giả'>{recDKCB?.anPham?.tacGiaConverse ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Đăng ký cá biệt'>{recDKCB?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Đơn giá'>{`${inputFormat(
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' })}>
+								{recDKCB?.anPham?.nhanDeConverse ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' })}>
+								{recDKCB?.anPham?.tacGiaConverse ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.dangKyCaBiet' })}>
+								{recDKCB?.soDangKyCaBiet ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.donGia' })}>{`${inputFormat(
 								recDKCB?.thongTinXepGia?.donGia ?? 0,
 							)} VNĐ`}</Descriptions.Item>
 						</Descriptions>
 					</Col>
 
 					<Col xs={24} md={12}>
-						<Form.Item name='ssoIdNguoiMuon' label='Sinh viên' rules={[...rules.required]}>
+						<Form.Item
+							name='ssoIdNguoiMuon'
+							label={intl.formatMessage({ id: 'sachtailieu.dkcb.sinhVien' })}
+							rules={[...rules.required]}
+						>
 							<SelectSinhVienDebounce />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
+						<Form.Item
+							name='thoiGianMuon'
+							label={intl.formatMessage({ id: 'sachtailieu.dkcb.thoiGianMuon' })}
+							rules={[...rules.required]}
+						>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='expired' label='Hạn trả' rules={[...rules.required]}>
+						<Form.Item
+							name='expired'
+							label={intl.formatMessage({ id: 'sachtailieu.dkcb.hanTra' })}
+							rules={[...rules.required]}
+						>
 							<MyDatePicker />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='ghiChu' label='Ghi chú' rules={[...rules.text]}>
-							<Input placeholder='Nhập ghi chú' />
+						<Form.Item
+							name='ghiChu'
+							label={intl.formatMessage({ id: 'sachtailieu.dkcb.ghiChu' })}
+							rules={[...rules.text]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.dkcb.nhapGhiChu' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
 						<Form.Item name='daLaySach' valuePropName='checked' initialValue={true}>
-							<Checkbox>Sinh viên đã lấy sách</Checkbox>
+							<Checkbox>{intl.formatMessage({ id: 'sachtailieu.dkcb.sinhVienDaLaySach' })}</Checkbox>
 						</Form.Item>
 					</Col>
 				</Row>

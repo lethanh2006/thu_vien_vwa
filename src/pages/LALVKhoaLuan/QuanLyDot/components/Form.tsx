@@ -40,14 +40,22 @@ const FormQuanLyDot = (props: { afterAddNew?: (rec: QuanLyThuVien.IQuanLyDot) =>
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 				<Col xs={24} md={24}>
-					<Form.Item name='tenDot' label='Tên đợt' rules={[...rules.required]}>
-						<Input placeholder='Nhập tên đợt' />
+					<Form.Item
+						name='tenDot'
+						label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.tenDot' })}
+						rules={[...rules.required]}
+					>
+						<Input placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.tenDot' })} />
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='loai' label='Loại' rules={[...rules.required]}>
+					<Form.Item
+						name='loai'
+						label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.loai' })}
+						rules={[...rules.required]}
+					>
 						<Select
-							placeholder='Chọn loại'
+							placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.loai' })}
 							options={Object.values([ELoaiDotQuanLyThuvien.LUAN_VAN, ELoaiDotQuanLyThuvien.KHOA_LUAN]).map((item) => ({
 								value: item,
 								label: item,
@@ -56,7 +64,11 @@ const FormQuanLyDot = (props: { afterAddNew?: (rec: QuanLyThuVien.IQuanLyDot) =>
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={12}>
-					<Form.Item name='thoiGianBatDau' label='Thời gian bắt đầu' rules={[...rules.required]}>
+					<Form.Item
+						name='thoiGianBatDau'
+						label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.thoiGianBatDau' })}
+						rules={[...rules.required]}
+					>
 						<MyDatePicker
 							onChange={() => form.validateFields(['thoiGianKetThuc'])}
 							format='DD/MM/YYYY HH:mm'
@@ -67,8 +79,14 @@ const FormQuanLyDot = (props: { afterAddNew?: (rec: QuanLyThuVien.IQuanLyDot) =>
 				<Col xs={24} md={12}>
 					<Form.Item
 						name='thoiGianKetThuc'
-						label='Thời gian kết thúc'
-						rules={[...rules.required, ...rules.sauNgay(thoiGianBatDau, 'Thời gian bắt đầu')]}
+						label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.thoiGianKetThuc' })}
+						rules={[
+							...rules.required,
+							...rules.sauNgay(
+								thoiGianBatDau,
+								intl.formatMessage({ id: 'luananluanvankhoaluan.label.thoiGianBatDau' }),
+							),
+						]}
 					>
 						<MyDatePicker
 							format='DD/MM/YYYY HH:mm'
@@ -78,8 +96,8 @@ const FormQuanLyDot = (props: { afterAddNew?: (rec: QuanLyThuVien.IQuanLyDot) =>
 					</Form.Item>
 				</Col>
 				<Col xs={24} md={24}>
-					<Form.Item name='ghiChu' label='Ghi chú'>
-						<Input.TextArea rows={3} placeholder='Nhập ghi chú' />
+					<Form.Item name='ghiChu' label={intl.formatMessage({ id: 'luananluanvankhoaluan.label.ghiChu' })}>
+						<Input.TextArea rows={3} placeholder={intl.formatMessage({ id: 'luananluanvankhoaluan.label.ghiChu' })} />
 					</Form.Item>
 				</Col>
 			</Row>

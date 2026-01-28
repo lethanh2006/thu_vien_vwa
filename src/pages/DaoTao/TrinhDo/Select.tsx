@@ -1,7 +1,7 @@
 import { initTrinhDo } from '@/utils/constants';
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -19,6 +19,7 @@ const SelectTrinhDo = (props: {
 }) => {
 	const { value, onChange, multiple, allowClear, placeholder, hasDefault, style, selectMa, disabled } = props;
 	const { danhSach, getAllModel, loading, record, setRecord } = useModel('daotao.trinhdo');
+	const intl = useIntl();
 
 	useEffect(() => {
 		if (!danhSach.length)
@@ -43,7 +44,7 @@ const SelectTrinhDo = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder={placeholder ?? 'Chọn trình độ đào tạo'}
+			placeholder={placeholder ?? intl.formatMessage({ id: 'daotao.trinhdo.placeholder' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>

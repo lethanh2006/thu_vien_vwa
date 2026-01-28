@@ -2,9 +2,11 @@ import { ETrangThaiMuonSach } from '@/services/SachTaiLieu/constant';
 import type { MuonSach } from '@/services/SachTaiLieu/MuonSach/typing';
 import dayjs from '@/utils/dayjs';
 import { Tag } from 'antd';
+import { useIntl } from 'umi';
 
 const RenderHanTra = (props: { rec: MuonSach.IRecord }) => {
 	const { rec } = props;
+	const intl = useIntl();
 
 	if (!rec?.expired) {
 		return <span>-</span>;
@@ -23,14 +25,14 @@ const RenderHanTra = (props: { rec: MuonSach.IRecord }) => {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='red'>Đã trả muộn {soNgayQuaHan} ngày</Tag>
+					<Tag color='red'>{intl.formatMessage({ id: 'sachtailieu.muontra.tag.datramuon' }, { 0: soNgayQuaHan })}</Tag>
 				</div>
 			);
 		} else {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='green'>Đã trả đúng hạn</Tag>
+					<Tag color='green'>{intl.formatMessage({ id: 'sachtailieu.muontra.tag.datradunghan' })}</Tag>
 				</div>
 			);
 		}
@@ -42,21 +44,21 @@ const RenderHanTra = (props: { rec: MuonSach.IRecord }) => {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='red'>Quá hạn {soNgayQuaHan} ngày</Tag>
+					<Tag color='red'>{intl.formatMessage({ id: 'sachtailieu.muontra.tag.quahan' }, { 0: soNgayQuaHan })}</Tag>
 				</div>
 			);
 		} else if (soNgayConLai <= 7) {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='orange'>Sắp đến hạn</Tag>
+					<Tag color='orange'>{intl.formatMessage({ id: 'sachtailieu.muontra.tag.sapdenhan' })}</Tag>
 				</div>
 			);
 		} else {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='green'>Còn {soNgayConLai} ngày</Tag>
+					<Tag color='green'>{intl.formatMessage({ id: 'sachtailieu.muontra.tag.conngay' }, { 0: soNgayConLai })}</Tag>
 				</div>
 			);
 		}

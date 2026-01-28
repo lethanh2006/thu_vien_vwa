@@ -1,8 +1,9 @@
 import { Empty } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const NoiDungSachHay = () => {
 	const { record } = useModel('sachtailieu.anpham.anpham');
+	const intl = useIntl();
 
 	return (
 		<div style={{ marginTop: 12 }}>
@@ -15,7 +16,7 @@ const NoiDungSachHay = () => {
 			) : (
 				<Empty
 					image={Empty.PRESENTED_IMAGE_SIMPLE}
-					description={<i>Không có thông tin</i>}
+					description={<i>{intl.formatMessage({ id: 'sachtailieu.label.noInfo' })}</i>}
 					style={{ margin: 'auto' }}
 				/>
 			)}

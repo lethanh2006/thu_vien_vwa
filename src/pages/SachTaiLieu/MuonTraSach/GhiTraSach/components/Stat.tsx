@@ -1,11 +1,12 @@
 import { Card, Col, Row } from 'antd';
-import { useState } from 'react';
-import { useModel } from 'umi';
-import LichSuThueMuonPage from '../../LichSu';
 import _ from 'lodash';
+import { useState } from 'react';
+import { useIntl, useModel } from 'umi';
+import LichSuThueMuonPage from '../../LichSu';
 
 const StatNguoiDungAnPham = (props: { isSinhVien: boolean }) => {
 	const { isSinhVien } = props;
+	const intl = useIntl();
 	const { settingMuonTra } = useModel('sachtailieu.muontra.muontra');
 
 	const { record: recSinhVien } = useModel('sinhvien.sinhvien');
@@ -17,8 +18,8 @@ const StatNguoiDungAnPham = (props: { isSinhVien: boolean }) => {
 
 	// Tính toán số lượng còn mượn được
 	const maxBorrowLimit = isSinhVien
-		? settingMuonTra?.soLuongMuonToiDa ?? 7
-		: settingMuonTra?.soLuongMuonToiDaCanBo ?? 5;
+		? (settingMuonTra?.soLuongMuonToiDa ?? 7)
+		: (settingMuonTra?.soLuongMuonToiDaCanBo ?? 5);
 	const currentBorrowed = Number(borrowerInfo?.thongKe?.dangThueMuon ?? 0);
 	const slConMuonDuoc = Math.max(0, maxBorrowLimit - currentBorrowed);
 
@@ -34,15 +35,15 @@ const StatNguoiDungAnPham = (props: { isSinhVien: boolean }) => {
 								? _.sum(Object.values(recSinhVien?.thongKe ?? {}).map(Number))
 								: _.sum(Object.values(recCanBo?.thongKe ?? {}).map(Number))}
 						</span>
-						<span>Tổng số</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.muontra.stat.tongso' })}</span>
 					</Card>
 				</Col>
 				<Col span={24} md={5}>
 					<Card className='card-stat-small pointer' onClick={() => setVisibleModal(true)}>
 						<span className='num' style={{ color: 'blue' }}>
-							{isSinhVien ? settingMuonTra?.soLuongMuonToiDa ?? 7 : settingMuonTra?.soLuongMuonToiDaCanBo ?? 5}
+							{isSinhVien ? (settingMuonTra?.soLuongMuonToiDa ?? 7) : (settingMuonTra?.soLuongMuonToiDaCanBo ?? 5)}
 						</span>
-						<span>Hạn ngạch mượn</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.muontra.stat.hanngachmuon' })}</span>
 					</Card>
 				</Col>
 				<Col span={24} md={5}>
@@ -50,7 +51,7 @@ const StatNguoiDungAnPham = (props: { isSinhVien: boolean }) => {
 						<span className='num' style={{ color: 'orange' }}>
 							{(isSinhVien ? recSinhVien : recCanBo)?.thongKe?.dangThueMuon ?? 0}
 						</span>
-						<span>Đang mượn</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.muontra.stat.dangmuon' })}</span>
 					</Card>
 				</Col>
 				<Col span={24} md={5}>
@@ -58,7 +59,7 @@ const StatNguoiDungAnPham = (props: { isSinhVien: boolean }) => {
 						<span className='num' style={{ color: 'green' }}>
 							{slConMuonDuoc}
 						</span>
-						<span>Còn mượn được</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.muontra.stat.conmuonduoc' })}</span>
 					</Card>
 				</Col>
 				<Col span={24} md={5}>
@@ -66,7 +67,7 @@ const StatNguoiDungAnPham = (props: { isSinhVien: boolean }) => {
 						<span className='num' style={{ color: 'red' }}>
 							{(isSinhVien ? recSinhVien : recCanBo)?.thongKe?.quaHan ?? 0}
 						</span>
-						<span>Quá hạn mượn</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.muontra.stat.quahanmuon' })}</span>
 					</Card>
 				</Col>
 			</Row>

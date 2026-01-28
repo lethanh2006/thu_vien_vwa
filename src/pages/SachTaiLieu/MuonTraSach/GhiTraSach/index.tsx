@@ -172,7 +172,7 @@ const GhiTraPage = () => {
 
 	const columns: IColumn<MuonSach.IRecord>[] = [
 		{
-			title: 'Mã định danh',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.madinhdanh' }),
 			dataIndex: ['phieuMuonTra', 'maDinhDanhNguoiMuon'],
 			align: 'center',
 			width: 120,
@@ -181,7 +181,7 @@ const GhiTraPage = () => {
 			onCell,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.hoten' }),
 			dataIndex: ['phieuMuonTra', 'hoTenNguoiMuon'],
 			width: 180,
 			render: (val, rec) => rec?.phieuMuonTra?.hoTenNguoiMuon,
@@ -189,7 +189,7 @@ const GhiTraPage = () => {
 			filterType: 'string',
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.nhande' }),
 			dataIndex: ['anPham', 'nhanDe'],
 			width: 220,
 			render: (val, rec) => (
@@ -211,7 +211,7 @@ const GhiTraPage = () => {
 			onCell,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.tacgia' }),
 			dataIndex: ['anPham', 'tacGia'],
 			width: 180,
 			render: (val, rec) => rec?.anPham?.tacGia,
@@ -219,14 +219,14 @@ const GhiTraPage = () => {
 			onCell,
 		},
 		{
-			title: 'ĐKCB',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.dkcb' }),
 			dataIndex: 'soDangKyCaBiet',
 			width: 120,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Thời gian mượn',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thoigianmuon' }),
 			dataIndex: 'thoiGianMuon',
 			align: 'center',
 			width: 150,
@@ -236,7 +236,7 @@ const GhiTraPage = () => {
 			onCell,
 		},
 		{
-			title: 'Thời gian trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thoigiantra' }),
 			align: 'center',
 			dataIndex: 'thoiGianTra',
 			width: 130,
@@ -246,7 +246,7 @@ const GhiTraPage = () => {
 			onCell,
 		},
 		{
-			title: 'Khóa sinh viên',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.khoasinhvien' }),
 			dataIndex: ['phieuMuonTra', 'tenKhoaSinhVienNguoiMuon'],
 			width: 120,
 			filterType: 'string',
@@ -254,7 +254,7 @@ const GhiTraPage = () => {
 			hide: vaiTro === EVaiTroMuonTra.CANBO,
 		},
 		{
-			title: 'Khóa ngành',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.khoanganh' }),
 			dataIndex: ['phieuMuonTra', 'tenNganhNguoiMuon'],
 			width: 150,
 			filterType: 'string',
@@ -262,7 +262,7 @@ const GhiTraPage = () => {
 			hide: vaiTro === EVaiTroMuonTra.CANBO,
 		},
 		{
-			title: 'Lớp hành chính',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.lophanhchinh' }),
 			dataIndex: ['phieuMuonTra', 'tenLopHanhChinh'],
 			width: 150,
 			render: (val, rec) => val ?? rec?.phieuMuonTra?.tenLopHanhChinhNguoiMuon,
@@ -271,7 +271,7 @@ const GhiTraPage = () => {
 			hide: vaiTro === EVaiTroMuonTra.CANBO,
 		},
 		{
-			title: 'Đơn vị',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.donvi' }),
 			dataIndex: ['phieuMuonTra', 'tenDonViNguoiMuon'],
 			width: 150,
 			filterType: 'string',
@@ -279,21 +279,21 @@ const GhiTraPage = () => {
 			hide: vaiTro === EVaiTroMuonTra.SINHVIEN,
 		},
 		{
-			title: 'Ghi chú',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.ghichu' }),
 			dataIndex: 'ghiChu',
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			onCell,
 		},
 		{
-			title: 'Ghi chú trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.ghichutra' }),
 			dataIndex: 'ghiChuTra',
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			onCell,
 		},
 		{
-			title: 'Hạn trả',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.hantra' }),
 			align: 'center',
 			width: 140,
 			render: (_, rec) => <RenderHanTra rec={rec} />,
@@ -301,7 +301,7 @@ const GhiTraPage = () => {
 			fixed: 'right',
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.trangthai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
@@ -314,7 +314,7 @@ const GhiTraPage = () => {
 			fixed: 'right',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
@@ -371,7 +371,7 @@ const GhiTraPage = () => {
 	];
 
 	return (
-		<Card title='Ghi trả sách'>
+		<Card title={intl.formatMessage({ id: 'sachtailieu.ghitra.title' })}>
 			<Select
 				style={{ width: 250, marginBottom: 12 }}
 				value={vaiTro}

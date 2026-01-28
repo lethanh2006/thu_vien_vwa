@@ -88,7 +88,7 @@ const CardAnPham = () => {
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
-			title: 'Ảnh',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.anh' }),
 			dataIndex: 'urlScanBia',
 			width: 80,
 			align: 'center',
@@ -103,19 +103,25 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Loại ấn phẩm',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.loaiAnPham' }),
 			dataIndex: 'online',
 			width: 120,
 			align: 'center',
-			render: (val) => <Tag color={val ? 'green' : 'blue'}>{val ? 'Ấn phẩm số' : 'Ấn phẩm vật lý'}</Tag>,
+			render: (val) => (
+				<Tag color={val ? 'green' : 'blue'}>
+					{val
+						? intl.formatMessage({ id: 'sachtailieu.anpham.anPhamSo' })
+						: intl.formatMessage({ id: 'sachtailieu.anpham.anPhamVatLy' })}
+				</Tag>
+			),
 			filterType: 'customselect',
 			filterCustomSelect: (
 				<Select
 					mode='multiple'
-					placeholder='Chọn loại ấn phẩm'
+					placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.chonLoai' })}
 					options={[
-						{ label: 'Ấn phẩm số', value: true },
-						{ label: 'Ấn phẩm vật lý', value: false },
+						{ label: intl.formatMessage({ id: 'sachtailieu.anpham.anPhamSo' }), value: true },
+						{ label: intl.formatMessage({ id: 'sachtailieu.anpham.anPhamVatLy' }), value: false },
 					]}
 					allowClear
 					showArrow
@@ -126,7 +132,7 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Mã tài liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.maTaiLieu' }),
 			dataIndex: 'maTaiLieu',
 			width: 150,
 			render: (val, rec) =>
@@ -139,7 +145,7 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			dataIndex: 'nhanDe',
 			width: 180,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
@@ -147,24 +153,24 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' }),
 			dataIndex: 'tacGia',
 			width: 150,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Sách hay',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.sachHay' }),
 			dataIndex: 'isSachHay',
 			align: 'center',
 			width: 80,
 			render: (val) =>
 				val ? (
-					<Tooltip title='Sách hay'>
+					<Tooltip title={intl.formatMessage({ id: 'sachtailieu.anpham.laSachHay' })}>
 						<StarTwoTone twoToneColor='#fadb14' style={{ fontSize: 20 }} />
 					</Tooltip>
 				) : (
-					<Tooltip title='Không phải sách hay'>
+					<Tooltip title={intl.formatMessage({ id: 'sachtailieu.anpham.khongPhaiSachHay' })}>
 						<StarOutlined style={{ color: '#ccc', fontSize: 20 }} />
 					</Tooltip>
 				),
@@ -172,10 +178,10 @@ const CardAnPham = () => {
 			filterCustomSelect: (
 				<Select
 					mode='multiple'
-					placeholder='Lọc sách hay'
+					placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.locSachHay' })}
 					options={[
-						{ label: 'Sách hay', value: true },
-						{ label: 'Không', value: false },
+						{ label: intl.formatMessage({ id: 'sachtailieu.anpham.laSachHay' }), value: true },
+						{ label: intl.formatMessage({ id: 'sachtailieu.anpham.khongPhaiSachHay' }), value: false },
 					]}
 					allowClear
 					showArrow
@@ -186,7 +192,7 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Kiểu bản ghi',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.kieuBanGhi' }),
 			dataIndex: 'maKieuBanGhi',
 			width: 150,
 			render: (val, rec) => rec?.kieuBanGhi?.ten,
@@ -195,7 +201,7 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Dạng tài liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.dangTaiLieu' }),
 			dataIndex: 'maDangTaiLieu',
 			width: 150,
 			render: (val, rec) => rec?.dangTaiLieu?.ten,
@@ -204,7 +210,7 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Cấp thư mục',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.capThuMuc' }),
 			dataIndex: 'maCapThuMuc',
 			width: 150,
 			render: (val, rec) => rec?.capThuMuc?.ten,
@@ -213,7 +219,7 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Vật mang tin',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.vatMangTin' }),
 			dataIndex: 'maVatMangTin',
 			width: 150,
 			render: (val, rec) => rec?.vatMangTin?.ten,
@@ -222,7 +228,7 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Mẫu biên mục',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.mauBienMuc' }),
 			dataIndex: 'mauBienMucId',
 			width: 150,
 			render: (val, rec) => rec?.mauBienMuc?.ten,
@@ -231,7 +237,7 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Độ mật',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.doMat' }),
 			align: 'center',
 			dataIndex: 'doMat',
 			width: 90,
@@ -240,7 +246,7 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.trangThai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
@@ -257,19 +263,24 @@ const CardAnPham = () => {
 			fixed: 'right',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popover
 						placement='topRight'
 						content={
 							<>
 								<ButtonExtend
-									tooltip='Ấn phẩm số'
+									tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.anPhamSo' })}
 									type='link'
 									icon={<FilePdfOutlined />}
 									onClick={() => {
@@ -280,15 +291,19 @@ const CardAnPham = () => {
 								{rec?.online ? (
 									<Popconfirm
 										onConfirm={() => deleteAnPhamSoModel(rec?._id, getData)}
-										title='Xác nhận xóa ấn phẩm số khỏi dspace?'
+										title={intl.formatMessage({ id: 'sachtailieu.confirm.xoaAnPhamSo' })}
 										placement='topRight'
 									>
-										<ButtonExtend tooltip='Xóa phẩm số' type='link' icon={<StopOutlined />} />
+										<ButtonExtend
+											tooltip={intl.formatMessage({ id: 'sachtailieu.button.xoaAnPhamSo' })}
+											type='link'
+											icon={<StopOutlined />}
+										/>
 									</Popconfirm>
 								) : null}
 								{!rec?.isSachHay ? (
 									<ButtonExtend
-										tooltip='Sách hay'
+										tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.sachHay' })}
 										type='link'
 										className='text-success'
 										icon={<StarOutlined />}
@@ -300,15 +315,20 @@ const CardAnPham = () => {
 								) : (
 									<Popconfirm
 										onConfirm={() => handleSachHay(rec, false)}
-										title='Xác nhận đây bỏ sách hay này?'
+										title={intl.formatMessage({ id: 'sachtailieu.confirm.boSachHay' })}
 										placement='topRight'
 									>
-										<ButtonExtend tooltip='Bỏ sách hay' type='link' danger icon={<StarTwoTone />} />
+										<ButtonExtend
+											tooltip={intl.formatMessage({ id: 'sachtailieu.button.boSachHay' })}
+											type='link'
+											danger
+											icon={<StarTwoTone />}
+										/>
 									</Popconfirm>
 								)}
 								{/* <ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} /> */}
 								<ButtonExtend
-									tooltip='Xếp giá'
+									tooltip={intl.formatMessage({ id: 'sachtailieu.button.xepGia' })}
 									onClick={() => {
 										setRecord(rec);
 										setVisibleForm(true);
@@ -321,7 +341,7 @@ const CardAnPham = () => {
 										setRecord(rec);
 										setVisibleXoa(true);
 									}}
-									tooltip='Xóa'
+									tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
 									danger
 									type='link'
 									icon={<DeleteOutlined />}
@@ -367,7 +387,7 @@ const CardAnPham = () => {
 						icon={<ExportOutlined />}
 						onClick={() => handleExport()}
 					>
-						Thống kê số ĐKCB
+						{intl.formatMessage({ id: 'sachtailieu.anpham.thongKeSoDKCB' })}
 					</ButtonExtend>,
 				]}
 			/>

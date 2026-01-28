@@ -1,7 +1,7 @@
 import { EOperatorType } from '@/components/Table/constant';
 import { Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -40,6 +40,7 @@ const SelectNganhCoSo = (props: {
 	} = props;
 	const { danhSach, getAllModel, loading } = useModel('daotao.nganhdaotao');
 	const { getAllModel: getKhoaNganh } = useModel('daotao.khoanganh');
+	const intl = useIntl();
 
 	const getData = async () => {
 		let allowList: string[] = [];
@@ -60,7 +61,7 @@ const SelectNganhCoSo = (props: {
 							values: allowList,
 							operator: EOperatorType.INCLUDE,
 						},
-				  ]
+					]
 				: undefined,
 		).then((data) => {
 			// Nếu chưa chọn giá trị và (sau khi thêm mới hoặc data chỉ có 1 phần tử)
@@ -88,7 +89,7 @@ const SelectNganhCoSo = (props: {
 				}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder={placeholder ?? 'Chọn ngành đào tạo'}
+			placeholder={placeholder ?? intl.formatMessage({ id: 'daotao.nganh.placeholder' })}
 			allowClear={allowClear ?? false}
 			style={{ width: '100%', ...style }}
 			showArrow

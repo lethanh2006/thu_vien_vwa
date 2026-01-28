@@ -4,13 +4,14 @@ import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
-import { useModel } from 'umi';
-import FormMauBienMuc from './Form';
 import _ from 'lodash';
+import { useIntl, useModel } from 'umi';
+import FormMauBienMuc from './Form';
 
 const ThongTinDuLieuBienMucPage = () => {
 	const { record: recMauBienMuc } = useModel('danhmuc.maubienmuc');
 	const { page, limit, deleteModel, getModel, handleEdit } = useModel('danhmuc.thongtindulieu');
+	const intl = useIntl();
 
 	const getData = () => {
 		if (recMauBienMuc?._id) getModel({ mauBienMucId: recMauBienMuc?._id });
@@ -18,7 +19,7 @@ const ThongTinDuLieuBienMucPage = () => {
 
 	const columns: IColumn<MauBienMuc.IThongTinKhaiBao>[] = [
 		{
-			title: 'Mã',
+			title: intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.table.column.ma' }),
 			dataIndex: 'tag',
 			align: 'center',
 			width: 100,
@@ -27,12 +28,12 @@ const ThongTinDuLieuBienMucPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Nội dung',
+			title: intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.table.column.noidung' }),
 			width: 180,
 			render: (val, rec) => <ExpandText>{rec?.thongTinTag?.noiDung}</ExpandText>,
 		},
 		{
-			title: 'DS trường con',
+			title: intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.table.column.dstruongcon' }),
 			width: 220,
 			render: (val, rec) => (
 				<ExpandText>
@@ -43,19 +44,29 @@ const ThongTinDuLieuBienMucPage = () => {
 			),
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec?._id, getData)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						title={intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -64,7 +75,7 @@ const ThongTinDuLieuBienMucPage = () => {
 
 	return (
 		<TableBase
-			title='Thông tin cấu hình mẫu biên mục'
+			title={intl.formatMessage({ id: 'danhmuc.maubienmuc.thongtindulieu.table.title' })}
 			getData={getData}
 			columns={columns}
 			dependencies={[page, limit, recMauBienMuc?._id]}

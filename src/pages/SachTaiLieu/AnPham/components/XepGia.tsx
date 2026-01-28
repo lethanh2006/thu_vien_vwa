@@ -80,12 +80,12 @@ const ModalXepGia = () => {
 
 	return (
 		<Modal
-			title='Xếp giá'
+			title={intl.formatMessage({ id: 'sachtailieu.xepGia.title' })}
 			open={visibleForm}
 			onCancel={() => setVisibleForm(false)}
 			footer={null}
 			width={1000}
-			destroyOnHidden
+			destroyOnClose
 		>
 			<Spin spinning={loadingThongKe}>
 				<Row gutter={[12, 12]} style={{ marginBottom: 12 }}>
@@ -94,7 +94,7 @@ const ModalXepGia = () => {
 							<span className='num' style={{ color: 'blue' }}>
 								{datathongKeXepGia?.chuaXepGia ?? '--'}
 							</span>
-							<span>Đang xếp giá</span>
+							<span>{intl.formatMessage({ id: 'sachtailieu.anpham.dangXepGia' })}</span>
 						</Card>
 					</Col>
 					<Col span={12} md={12}>
@@ -102,15 +102,15 @@ const ModalXepGia = () => {
 							<span className='num' style={{ color: 'green' }}>
 								{datathongKeXepGia?.daXepGia ?? '--'}
 							</span>
-							<span>Đã xếp giá</span>
+							<span>{intl.formatMessage({ id: 'sachtailieu.anpham.daXepGia' })}</span>
 						</Card>
 					</Col>
 				</Row>
 			</Spin>
 
 			<Tabs onChange={(tab) => setTabActive(tab)} activeKey={tabActive}>
-				<Tabs.TabPane tab='Xếp giá' key='1' />
-				<Tabs.TabPane tab='Lịch sử xếp giá' key='2' />
+				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.xepGia.title' })} key='1' />
+				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.lichSuXepGia' })} key='2' />
 			</Tabs>
 
 			{tabActive === '1' ? (
@@ -118,58 +118,82 @@ const ModalXepGia = () => {
 					<Row gutter={[12, 0]}>
 						<Col span={24}>
 							<Descriptions column={1}>
-								<Descriptions.Item label='Nhan đề'>{record?.nhanDe ?? recXepGia?.anPham?.nhanDe}</Descriptions.Item>
-								<Descriptions.Item label='Tác giả'>{record?.tacGia ?? recXepGia?.anPham?.tacGia}</Descriptions.Item>
+								<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' })}>
+									{record?.nhanDe ?? recXepGia?.anPham?.nhanDe}
+								</Descriptions.Item>
+								<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' })}>
+									{record?.tacGia ?? recXepGia?.anPham?.tacGia}
+								</Descriptions.Item>
 							</Descriptions>
 						</Col>
 						<Col span={24}>
-							<Divider>Thông tin xếp giá bổ sung</Divider>
+							<Divider>{intl.formatMessage({ id: 'sachtailieu.anpham.thongTinXepGiaBoSung' })}</Divider>
 						</Col>
 						<Col xs={24}>
 							<Form.Item
 								name='dotNhapSachId'
-								label='Sổ đăng ký tổng quát'
+								label={intl.formatMessage({ id: 'sachtailieu.anpham.soDangKyTongQuat' })}
 								// rules={[...rules.required]}
 							>
 								<SelectDotNhapSach />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='maNguonBoSung' label='Nguồn bổ sung' rules={[...rules.required]}>
+							<Form.Item
+								name='maNguonBoSung'
+								label={intl.formatMessage({ id: 'sachtailieu.anpham.nguonBoSung' })}
+								rules={[...rules.required]}
+							>
 								<SelectNguonBoSung selectMa />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='maKieuTuLieu' label='Kiểu tư liệu (lưu thông)' rules={[...rules.required]}>
+							<Form.Item
+								name='maKieuTuLieu'
+								label={intl.formatMessage({ id: 'sachtailieu.anpham.kieuTuLieu' })}
+								rules={[...rules.required]}
+							>
 								<SelectKieuTuLieu selectMa />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='ngayBoSung' label='Ngày bổ sung' rules={[...rules.required]}>
+							<Form.Item
+								name='ngayBoSung'
+								label={intl.formatMessage({ id: 'sachtailieu.anpham.ngayBoSung' })}
+								rules={[...rules.required]}
+							>
 								<MyDatePicker />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='donGia' label='Đơn giá (đ/bản)'>
+							<Form.Item name='donGia' label={intl.formatMessage({ id: 'sachtailieu.anpham.donGia' })}>
 								<InputNumber
 									formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 									style={{ width: '100%' }}
-									placeholder='Nhập đơn giá'
+									placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.nhapDonGia' })}
 									min={0}
 									addonAfter='VNĐ'
 								/>
 							</Form.Item>
 						</Col>
 						<Col span={24}>
-							<Divider>Thông tin vị trí xếp giá</Divider>
+							<Divider>{intl.formatMessage({ id: 'sachtailieu.anpham.thongTinViTriXepGia' })}</Divider>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='thuVienId' label='Thư viện' rules={[...rules.required]}>
+							<Form.Item
+								name='thuVienId'
+								label={intl.formatMessage({ id: 'sachtailieu.anpham.thuVien' })}
+								rules={[...rules.required]}
+							>
 								<SelectThuVien />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='maKhoSach' label='Kho' rules={[...rules.required]}>
+							<Form.Item
+								name='maKhoSach'
+								label={intl.formatMessage({ id: 'sachtailieu.anpham.kho' })}
+								rules={[...rules.required]}
+							>
 								<SelectKhoSach
 									selectMa
 									onChange={(val) => {
@@ -187,24 +211,35 @@ const ModalXepGia = () => {
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='giaSachId' label='Giá sách'>
+							<Form.Item name='giaSachId' label={intl.formatMessage({ id: 'sachtailieu.anpham.giaSach' })}>
 								<SelectGiaSach condition={{ maKhoSach: maKhoSach }} />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='soDangKyCaBiet' label='Đăng ký cá biệt' rules={[...rules.required]}>
-								<Input placeholder='Đăng ký cá biệt' disabled />
+							<Form.Item
+								name='soDangKyCaBiet'
+								label={intl.formatMessage({ id: 'sachtailieu.anpham.dangKyCaBiet' })}
+								rules={[...rules.required]}
+							>
+								<Input placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.dangKyCaBiet' })} disabled />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='soLuong' label='Số lượng' rules={[...rules.required]}>
-								<InputNumber style={{ width: '100%' }} placeholder='Nhập lượng' />
+							<Form.Item
+								name='soLuong'
+								label={intl.formatMessage({ id: 'sachtailieu.anpham.soLuong' })}
+								rules={[...rules.required]}
+							>
+								<InputNumber
+									style={{ width: '100%' }}
+									placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.nhapSoLuong' })}
+								/>
 							</Form.Item>
 						</Col>
 
 						<Col xs={24}>
-							<Form.Item name='ghiChu' label='Ghi chú'>
-								<Input placeholder='Nhập ghi chú' />
+							<Form.Item name='ghiChu' label={intl.formatMessage({ id: 'sachtailieu.anpham.ghiChu' })}>
+								<Input placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.nhapGhiChu' })} />
 							</Form.Item>
 						</Col>
 					</Row>
@@ -218,18 +253,18 @@ const ModalXepGia = () => {
 								form.submit();
 							}}
 						>
-							Lưu lại
+							{intl.formatMessage({ id: 'global.button.luulai' })}
 						</ButtonExtend>
 						<Popconfirm
 							onConfirm={() => {
 								setActionType('xep_gia');
 								form.submit();
 							}}
-							title='Xác nhận xếp giá, lưu ý khi hoàn thành sẽ không được chỉnh sửa lại giá?'
+							title={intl.formatMessage({ id: 'sachtailieu.confirm.xepGia' })}
 							placement='topRight'
 						>
 							<ButtonExtend loading={formSubmiting} type='primary'>
-								Xếp giá
+								{intl.formatMessage({ id: 'sachtailieu.button.xepGia' })}
 							</ButtonExtend>
 						</Popconfirm>
 						<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>

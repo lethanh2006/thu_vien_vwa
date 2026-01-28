@@ -30,21 +30,39 @@ const ModalAnPhamSo = (props: { visible: boolean; setVisible: (val: boolean) => 
 	};
 
 	return (
-		<Modal title='Thêm mới ấn phẩm số' open={visible} onCancel={() => setVisible(false)} footer={null} width={800}>
+		<Modal
+			title={intl.formatMessage({ id: 'sachtailieu.anpham.themMoi' })}
+			open={visible}
+			onCancel={() => setVisible(false)}
+			footer={null}
+			width={800}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col xs={24} md={12}>
-						<Form.Item name='communityId' label='Đơn vị số' rules={[...rules.required]}>
+						<Form.Item
+							name='communityId'
+							label={intl.formatMessage({ id: 'sachtailieu.anpham.donViSo' })}
+							rules={[...rules.required]}
+						>
 							<SelectDonViSo />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='collectionId' label='Bộ sưu tập' rules={[...rules.required]}>
+						<Form.Item
+							name='collectionId'
+							label={intl.formatMessage({ id: 'sachtailieu.anpham.boSuuTap' })}
+							rules={[...rules.required]}
+						>
 							<SelectBoSuuTap idDonViSo={communityId} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='thongTinAnPhamTrucTuyen' label='Danh sách tài liệu ấn phẩm số' rules={[...rules.required]}>
+						<Form.Item
+							name='thongTinAnPhamTrucTuyen'
+							label={intl.formatMessage({ id: 'sachtailieu.anpham.danhSachTaiLieuAnPhamSo' })}
+							rules={[...rules.required]}
+						>
 							<FormItemTaiLieuSo />
 						</Form.Item>
 					</Col>
@@ -52,7 +70,7 @@ const ModalAnPhamSo = (props: { visible: boolean; setVisible: (val: boolean) => 
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						Lưu lại
+						{intl.formatMessage({ id: 'global.button.luulai' })}
 					</Button>
 					<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>

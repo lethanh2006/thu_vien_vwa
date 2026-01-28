@@ -159,7 +159,7 @@ const FormBienMucChiTietZ3950 = (props: any) => {
 
 				<div className='form-footer'>
 					<ButtonExtend
-						tooltip='Nếu lưu lại ấn phẩm sẽ ở vẫn trạng thái chờ biên mục chi tiết'
+						tooltip={intl.formatMessage({ id: 'sachtailieu.label.neuLuuLai' })}
 						loading={formSubmiting}
 						type='primary'
 						onClick={() => {
@@ -167,11 +167,11 @@ const FormBienMucChiTietZ3950 = (props: any) => {
 							form.submit();
 						}}
 					>
-						Lưu lại
+						{intl.formatMessage({ id: 'global.button.luulai' })}
 					</ButtonExtend>
 
 					<ButtonExtend
-						tooltip='Nếu hoàn thành ấn phẩm sẽ chuyển trạng thái đã biên mục chi tiết'
+						tooltip={intl.formatMessage({ id: 'sachtailieu.label.neuHoanThanh' })}
 						loading={formSubmiting}
 						type='primary'
 						onClick={() => {
@@ -179,7 +179,7 @@ const FormBienMucChiTietZ3950 = (props: any) => {
 							form.submit();
 						}}
 					>
-						Hoàn thành
+						{intl.formatMessage({ id: 'sachtailieu.button.hoanthanh' })}
 					</ButtonExtend>
 
 					<Button onClick={() => setVisibleZ3950(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>

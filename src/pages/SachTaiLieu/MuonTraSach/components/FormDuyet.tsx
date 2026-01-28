@@ -8,13 +8,15 @@ import rules from '@/utils/rules';
 import { inputFormat } from '@/utils/utils';
 import { Col, Form, type FormInstance, Input, Row } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const FormDuyet = (props: { form: FormInstance }) => {
 	const { form } = props;
 	const { record: recMuonTra, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
 	const { getModel, page, limit, selectedIds, setSelectedIds } = useModel('sachtailieu.anpham.anpham');
 	const expired: Date = Form.useWatch('expired', form);
+
+	const intl = useIntl();
 
 	useEffect(() => {
 		form.setFieldsValue({
@@ -33,30 +35,30 @@ const FormDuyet = (props: { form: FormInstance }) => {
 
 	const columns: IColumn<AnPham.IAnPhamXepGia>[] = [
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			width: 180,
 			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' }),
 			width: 150,
 			render: (val, rec) => rec?.anPham?.tacGia,
 		},
 		{
-			title: 'Đăng ký cá biệt',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.soDangKyCaBiet' }),
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			width: 90,
 		},
 		{
-			title: 'Thời gian xếp giá',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.thoiGianXepGia' }),
 			dataIndex: 'thoiGianXepGia',
 			align: 'center',
 			width: 130,
 			render: (val, rec) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Đơn giá',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.donGia' }),
 			width: 120,
 			align: 'right',
 			render: (val, rec) => `${inputFormat(rec?.thongTinXepGia?.donGia ?? 0)} VNĐ`,
@@ -89,12 +91,20 @@ const FormDuyet = (props: { form: FormInstance }) => {
 				/>
 			</Col>
 			<Col xs={24} md={12}>
-				<Form.Item name='thoiGianMuon' label='Thời gian mượn' rules={[...rules.required]}>
+				<Form.Item
+					name='thoiGianMuon'
+					label={intl.formatMessage({ id: 'sachtailieu.dkcb.thoiGianMuon' })}
+					rules={[...rules.required]}
+				>
 					<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
 				</Form.Item>
 			</Col>
 			<Col xs={24} md={12}>
-				<Form.Item name='expired' label='Hạn trả' rules={[...rules.required]}>
+				<Form.Item
+					name='expired'
+					label={intl.formatMessage({ id: 'sachtailieu.dkcb.hanTra' })}
+					rules={[...rules.required]}
+				>
 					<MyDatePicker format='DD/MM/YYYY HH:mm' showTime={{ minuteStep: 5 }} />
 				</Form.Item>
 			</Col>

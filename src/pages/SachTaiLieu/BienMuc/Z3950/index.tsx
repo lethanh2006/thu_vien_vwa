@@ -8,13 +8,14 @@ import { resetFieldsForm } from '@/utils/utils';
 import { CheckOutlined } from '@ant-design/icons';
 import { Button, Col, Empty, Form, Input, InputNumber, Modal, Row, Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import SelectMayChu from '../../../DanhMuc/ThuVienQuocTe/components/Select';
 import ModalBienMucZ3950 from './components/Modal';
 
 const { Option } = Select;
 
 const Z3950Page = (props: { getData: () => void }) => {
+	const intl = useIntl();
 	const { getData } = props;
 	const [form] = Form.useForm();
 	const {
@@ -128,45 +129,45 @@ const Z3950Page = (props: { getData: () => void }) => {
 
 	const columns: IColumn<Z3950.IRecord>[] = [
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' }),
 			dataIndex: 'author',
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			dataIndex: 'title',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Mã ISBN',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.maISBN' }),
 			dataIndex: 'isbn',
 			width: 120,
 			render: (val, rec) => rec?.isbn?.map((item) => item).join('; '),
 		},
 		{
-			title: 'Mã ISSN',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.maISSN' }),
 			dataIndex: 'issn',
 			width: 120,
 			render: (val, rec) => rec?.isbn?.map((item) => item).join('; '),
 		},
 		{
-			title: 'Nhà xuất bản',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhaXuatBan' }),
 			dataIndex: 'publisher',
 			width: 120,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},
 		{
-			title: 'Năm xuất bản',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.namXuatBan' }),
 			dataIndex: 'publication_year',
 			align: 'center',
 			width: 90,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -178,7 +179,7 @@ const Z3950Page = (props: { getData: () => void }) => {
 						setRecord(anPhamRecord);
 						setVisibleZ3950(true);
 					}}
-					tooltip='Xác nhận'
+					tooltip={intl.formatMessage({ id: 'global.button.xacnhan' })}
 					className='text-success'
 					type='link'
 					icon={<CheckOutlined />}
@@ -189,7 +190,7 @@ const Z3950Page = (props: { getData: () => void }) => {
 
 	return (
 		<Modal
-			title='Tải dữ liệu qua giao thức Z39.50'
+			title={intl.formatMessage({ id: 'sachtailieu.bienmuc.taiDuLieuZ3950' })}
 			open={visibleTimKiemZ3950}
 			onCancel={() => setVisibleTimKiemZ3950(false)}
 			footer={null}
@@ -198,27 +199,34 @@ const Z3950Page = (props: { getData: () => void }) => {
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item name='mayChu' label='Thư viện' rules={[...rules.required]}>
+						<Form.Item
+							name='mayChu'
+							label={intl.formatMessage({ id: 'sachtailieu.anpham.thuVien' })}
+							rules={[...rules.required]}
+						>
 							<SelectMayChu />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Tìm kiếm' required>
+						<Form.Item label={intl.formatMessage({ id: 'sachtailieu.anpham.timKiem' })} required>
 							<Input.Group compact>
 								<Form.Item name='field' noStyle>
 									<Select style={{ width: '20%' }}>
 										{/* <Option value='any'>Tất cả trường</Option> */}
-										<Option value='title'>Nhan đề</Option>
-										<Option value='author'>Tác giả</Option>
-										<Option value='subject'>Chủ đề</Option>
-										<Option value='isbn'>ISBN</Option>
+										<Option value='title'>{intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' })}</Option>
+										<Option value='author'>{intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' })}</Option>
+										<Option value='subject'>{intl.formatMessage({ id: 'sachtailieu.anpham.chuDe' })}</Option>
+										<Option value='isbn'>{intl.formatMessage({ id: 'sachtailieu.anpham.maISBN' })}</Option>
 										{/* <Option value='issn'>ISSN</Option> */}
-										<Option value='publisher'>Nhà xuất bản</Option>
-										<Option value='date'>Năm xuất bản</Option>
+										<Option value='publisher'>{intl.formatMessage({ id: 'sachtailieu.anpham.nhaXuatBan' })}</Option>
+										<Option value='date'>{intl.formatMessage({ id: 'sachtailieu.anpham.namXuatBan' })}</Option>
 									</Select>
 								</Form.Item>
 								<Form.Item name='query' noStyle rules={[...rules.required]}>
-									<Input style={{ width: '80%' }} placeholder='Nhập từ khóa tìm kiếm' />
+									<Input
+										style={{ width: '80%' }}
+										placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.nhapTimKiem' })}
+									/>
 								</Form.Item>
 							</Input.Group>
 						</Form.Item>
@@ -226,21 +234,25 @@ const Z3950Page = (props: { getData: () => void }) => {
 					<Col span={24}>
 						<Form.Item
 							name='max_records'
-							label='Số lượng kết quả tối đa'
+							label={intl.formatMessage({ id: 'sachtailieu.anpham.soLuongBanGhi' })}
 							rules={[...rules.required, ...rules.number(undefined, 0)]}
 						>
-							<InputNumber style={{ width: '100%' }} placeholder='Nhập số lượng bản ghi' min={1} />
+							<InputNumber
+								style={{ width: '100%' }}
+								placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.nhapSoLuongBanGhi' })}
+								min={1}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>
 
 				<div className='form-footer'>
 					<Button loading={loading} htmlType='submit' type='primary'>
-						Tìm kiếm
+						{intl.formatMessage({ id: 'sachtailieu.anpham.timKiem' })}
 					</Button>
 				</div>
 
-				<div className='fw500'>Kết quả tìm kiếm</div>
+				<div className='fw500'>{intl.formatMessage({ id: 'sachtailieu.anpham.ketQuaTimKiem' })}</div>
 				{dsAnPhamZ3950?.length ? (
 					<TableStaticData
 						columns={columns}
@@ -251,7 +263,10 @@ const Z3950Page = (props: { getData: () => void }) => {
 						addStt
 					/>
 				) : (
-					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='Không tìm thấy kết quả nào' />
+					<Empty
+						image={Empty.PRESENTED_IMAGE_SIMPLE}
+						description={intl.formatMessage({ id: 'sachtailieu.anpham.khongTimThayKetQua' })}
+					/>
 				)}
 			</Form>
 

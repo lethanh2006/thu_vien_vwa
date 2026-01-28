@@ -21,39 +21,49 @@ const MauDinhDangPage = () => {
 
 	const columns: IColumn<MauDinhDang.IRecord>[] = [
 		{
-			title: 'Mã ',
+			title: intl.formatMessage({ id: 'danhmuc.maudinhdang.table.column.ma' }),
 			dataIndex: 'ma',
 			width: 100,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Tên mẫu',
+			title: intl.formatMessage({ id: 'danhmuc.maudinhdang.table.column.tenmau' }),
 			dataIndex: 'ten',
 			width: 180,
 			filterType: 'string',
 		},
 		{
-			title: 'Nội dung',
+			title: intl.formatMessage({ id: 'danhmuc.maudinhdang.table.column.noidung' }),
 			dataIndex: 'noiDungMau',
 			width: 220,
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 			filterType: 'string',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.maudinhdang.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.maudinhdang.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id, getData)}
-						title='Bạn có chắc chắn muốn xóa định dạng này?'
+						title={intl.formatMessage({ id: 'danhmuc.maudinhdang.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.maudinhdang.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

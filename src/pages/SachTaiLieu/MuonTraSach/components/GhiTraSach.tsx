@@ -89,7 +89,7 @@ const GhiTraAnPham = (props: {
 
 	return (
 		<Modal
-			title='Ghi trả ấn phẩm'
+			title={intl.formatMessage({ id: 'sachtailieu.ghitrasach.title' })}
 			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
@@ -114,23 +114,27 @@ const GhiTraAnPham = (props: {
 				<Descriptions column={isMobile ? 1 : 2}>
 					{isSinhVien ? (
 						<>
-							<Descriptions.Item label='Mã SV'>{record?.phieuMuonTra?.maDinhDanhNguoiMuon ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Họ tên'>{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Ngày sinh'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.sinhVien.maSV' })}>
+								{record?.phieuMuonTra?.maDinhDanhNguoiMuon ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.column.hoten' })}>
+								{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.ngaysinh' })}>
 								{record?.phieuMuonTra?.ngaySinhNguoiMuon
 									? dayjs(record?.phieuMuonTra?.ngaySinhNguoiMuon).format('DD/MM/YYYY')
 									: '--'}
 							</Descriptions.Item>
-							<Descriptions.Item label='Lớp'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.lophanhchinh' })}>
 								{record?.phieuMuonTra?.tenLopHanhChinhNguoiMuon ?? '--'}
 							</Descriptions.Item>
-							<Descriptions.Item label='Khóa sinh viên'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.khoasinhvien' })}>
 								{record?.phieuMuonTra?.tenKhoaNguoiMuon ?? '--'}
 							</Descriptions.Item>
-							<Descriptions.Item label='Khóa ngành'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.khoanganh' })}>
 								{record?.phieuMuonTra?.tenNganhNguoiMuon ?? '--'}
 							</Descriptions.Item>
-							<Descriptions.Item label='Trạng thái học'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.sinhvien.trangthaihoc' })}>
 								<Tag
 									color={
 										colorTrangThaiHocSv[
@@ -144,17 +148,21 @@ const GhiTraAnPham = (props: {
 						</>
 					) : (
 						<>
-							<Descriptions.Item label='Mã cán bộ'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.macanbo' })}>
 								{record?.phieuMuonTra?.maDinhDanhNguoiMuon ?? '--'}
 							</Descriptions.Item>
-							<Descriptions.Item label='Họ tên'>{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Ngày sinh'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.column.hoten' })}>
+								{record?.phieuMuonTra?.hoTenNguoiMuon ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.ngaysinh' })}>
 								{record?.phieuMuonTra?.ngaySinhNguoiMuon
 									? dayjs(record?.phieuMuonTra?.ngaySinhNguoiMuon).format('DD/MM/YYYY')
 									: '--'}
 							</Descriptions.Item>
-							<Descriptions.Item label='Đơn vị'>{record?.phieuMuonTra?.tenDonViNguoiMuon ?? '--'}</Descriptions.Item>
-							<Descriptions.Item label='Trạng thái'>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.descriptions.donvi' })}>
+								{record?.phieuMuonTra?.tenDonViNguoiMuon ?? '--'}
+							</Descriptions.Item>
+							<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.muontra.column.trangthai' })}>
 								<Tag
 									color={
 										MapColorETrangThaiNhanSu[
@@ -170,37 +178,54 @@ const GhiTraAnPham = (props: {
 				</Descriptions>
 			</div>
 
-			<Card title='Thông tin ấn phẩm' variant='borderless' style={{ marginBottom: '24px' }}>
+			<Card
+				title={intl.formatMessage({ id: 'sachtailieu.ghitrasach.cardtitle' })}
+				variant='borderless'
+				style={{ marginBottom: '24px' }}
+			>
 				<Descriptions column={isMobile ? 1 : 2}>
-					<Descriptions.Item label='Nhan đề' span={24}>
+					<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.ghitrasach.descriptions.nhande' })} span={24}>
 						{record?.anPham?.nhanDe ?? '--'}
 					</Descriptions.Item>
-					<Descriptions.Item label='Tác giả'>{record?.anPham?.tacGia ?? '--'}</Descriptions.Item>
-					<Descriptions.Item label='Đăng ký cá biệt'>{record?.soDangKyCaBiet ?? '--'}</Descriptions.Item>
-					<Descriptions.Item label='Thời gian mượn'>
+					<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.ghitrasach.descriptions.tacgia' })}>
+						{record?.anPham?.tacGia ?? '--'}
+					</Descriptions.Item>
+					<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.ghitrasach.descriptions.dangkycabiet' })}>
+						{record?.soDangKyCaBiet ?? '--'}
+					</Descriptions.Item>
+					<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.ghitrasach.descriptions.thoigianmuon' })}>
 						{record?.thoiGianMuon ? dayjs(record?.thoiGianMuon).format('DD/MM/YYYY') : '--'}
 					</Descriptions.Item>
-					<Descriptions.Item label='Hạn trả'>
+					<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.ghitrasach.descriptions.hantra' })}>
 						{record?.expired ? dayjs(record?.expired).format('DD/MM/YYYY') : '--'}
 					</Descriptions.Item>
-					<Descriptions.Item label='Thời gian gia hạn'>
+					<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.ghitrasach.descriptions.thoigiangiahan' })}>
 						{record?.thoiGianGiaHan ? dayjs(record?.thoiGianGiaHan).format('DD/MM/YYYY') : '--'}
 					</Descriptions.Item>
-					<Descriptions.Item label='Thời gian trả'>
+					<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.ghitrasach.descriptions.thoigiantra' })}>
 						{record?.thoiGianTra ? dayjs(record?.thoiGianTra).format('DD/MM/YYYY') : '--'}
 					</Descriptions.Item>
-					<Descriptions.Item label='Ghi chú'>{record?.ghiChu ?? '--'}</Descriptions.Item>
+					<Descriptions.Item label={intl.formatMessage({ id: 'sachtailieu.ghitrasach.descriptions.ghichu' })}>
+						{record?.ghiChu ?? '--'}
+					</Descriptions.Item>
 				</Descriptions>
 			</Card>
 
 			<Form form={form} onFinish={onFinish} layout='vertical'>
-				<Form.Item name='ghiChuTra' label={<span style={{ fontWeight: 'bold' }}>Ghi chú trả</span>}>
-					<Input placeholder='Nhập ghi chú (nếu có)' />
+				<Form.Item
+					name='ghiChuTra'
+					label={
+						<span style={{ fontWeight: 'bold' }}>
+							{intl.formatMessage({ id: 'sachtailieu.ghitrasach.form.ghichutra' })}
+						</span>
+					}
+				>
+					<Input placeholder={intl.formatMessage({ id: 'sachtailieu.ghitrasach.form.placeholder' })} />
 				</Form.Item>
 
 				<div className='form-footer'>
 					<Button loading={formSubmiting} htmlType='submit' type='primary'>
-						Ghi trả
+						{intl.formatMessage({ id: 'sachtailieu.ghitrasach.button.ghitra' })}
 					</Button>
 					<Button onClick={() => setVisible(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>

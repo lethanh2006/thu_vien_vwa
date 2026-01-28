@@ -27,17 +27,32 @@ const FormVatMangTin = (props: any) => {
 				.catch((er) => console.log(er));
 	};
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.vatmangtin.form.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'danhmuc.vatmangtin.form.title.chitiet' }) : intl.formatMessage({ id: 'danhmuc.vatmangtin.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col xs={24}>
-						<Form.Item name='ma' label='Mã vật mang tin' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập mã vật mang tin' disabled={edit || isView} />
+						<Form.Item
+							name='ma'
+							label={intl.formatMessage({ id: 'danhmuc.vatmangtin.form.label.mavatmangtin' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.vatmangtin.form.placeholder.nhapmavatmangtin' })}
+								disabled={edit || isView}
+							/>
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='ten' label='Tên vật mang tin' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên vật mang tin' />
+						<Form.Item
+							name='ten'
+							label={intl.formatMessage({ id: 'danhmuc.vatmangtin.form.label.tenvatmangtin' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.vatmangtin.form.placeholder.nhaptenvatmangtin' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

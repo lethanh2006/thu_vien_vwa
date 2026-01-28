@@ -8,10 +8,11 @@ import { ArrowRightOutlined, ExportOutlined } from '@ant-design/icons';
 import { Button, Card, Modal, Progress } from 'antd';
 import fileDownload from 'js-file-download';
 import { useEffect, useState } from 'react';
-import { Link, useModel } from 'umi';
+import { Link, useIntl, useModel } from 'umi';
 import VaoRaThuVienPage from '../DanhSachSinhVien';
 
 const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean }) => {
+	const intl = useIntl();
 	const { dateRange, isDashBoard } = props;
 	const { loadingTop, dataThongKeCheckInTop, getSoLuotCheckInTopModel } = useModel('quanlythuvien.vaorathuvien');
 	const [record, setRecord] = useState<QuanLyThuVien.IThongKeCheckInTop>();
@@ -42,21 +43,21 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 
 	const columns: IColumn<QuanLyThuVien.IThongKeCheckInTop>[] = [
 		{
-			title: 'Mã SV',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.maSinhVien' }),
 			dataIndex: 'maSv',
 			width: 120,
 			// filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Họ tên',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.hoTen' }),
 			dataIndex: 'hoTen',
 			width: 160,
 			// filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Tổng lượt',
+			title: intl.formatMessage({ id: 'vaorathuvien.table.column.tongLuot' }),
 			dataIndex: 'total',
 			width: 140,
 			render: (val, rec, index) => {
@@ -72,11 +73,11 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 
 	return (
 		<Card
-			title='Bạn đọc có số lượt vào thư viện nhiều nhất'
+			title={intl.formatMessage({ id: 'vaorathuvien.card.title.banDocCoSoLuotVaoThuVienNhieuNhat' })}
 			extra={
 				isDashBoard ? (
 					<Link to='/vao-ra-thu-vien/tong-hop'>
-						Xem thêm <ArrowRightOutlined />
+						{intl.formatMessage({ id: 'vaorathuvien.label.xemThem' })} <ArrowRightOutlined />
 					</Link>
 				) : null
 			}
@@ -91,12 +92,14 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 				addStt
 			>
 				<ButtonExtend icon={<ExportOutlined />} onClick={() => handleExport()}>
-					Xuất dữ liệu
+					{intl.formatMessage({ id: 'vaorathuvien.button.xuatDuLieu' })}
 				</ButtonExtend>
 			</TableStaticData>
 
 			<Modal
-				title={`Danh sách vào ra thư viện ${record?.maSv ?? ''} - ${record?.hoTen ?? ''}`}
+				title={`${intl.formatMessage({
+					id: 'vaorathuvien.card.title.danhSachVaoRaThuVien',
+				})} ${record?.maSv ?? ''} - ${record?.hoTen ?? ''}`}
 				open={visibleChiTiet}
 				onCancel={() => setVisibleChiTiet(false)}
 				footer={null}
@@ -105,7 +108,7 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 				<VaoRaThuVienPage maSinhVien={record?.maSv} dateRange={dateRange} />
 
 				<div className='form-footer'>
-					<Button onClick={() => setVisibleChiTiet(false)}>Đóng</Button>
+					<Button onClick={() => setVisibleChiTiet(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 				</div>
 			</Modal>
 		</Card>

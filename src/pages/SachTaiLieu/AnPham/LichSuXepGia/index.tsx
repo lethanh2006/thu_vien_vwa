@@ -13,11 +13,12 @@ import { inputFormat } from '@/utils/utils';
 import { CheckOutlined, DeleteOutlined, EditOutlined, EyeOutlined, MenuOutlined } from '@ant-design/icons';
 import { Button, Modal, Popconfirm, Popover, Tag } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import ChiTietXepGia from '../../XepGia/components/ChiTiet';
 import FormLichSuXepGia from './components/Form';
 
 const LichSuXepGia = () => {
+	const intl = useIntl();
 	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
 	const { getModel, page, limit, putModel, setRecord, deleteModel, thongKeXepGiaModel } =
 		useModel('sachtailieu.anpham.xepgia');
@@ -53,26 +54,26 @@ const LichSuXepGia = () => {
 
 	const columns: IColumn<AnPham.IXepGia>[] = [
 		{
-			title: 'Sổ đăng ký tổng quát',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.soDangKyTongQuat' }),
 			dataIndex: 'dotNhapSachId',
 			width: 120,
 			render: (val, rec) => rec?.dotNhapSach?.ten,
 			onCell,
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			width: 180,
 			render: (val, rec) => <ExpandText>{rec?.anPham?.nhanDe}</ExpandText>,
 			onCell,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' }),
 			width: 120,
 			render: (val, rec) => rec?.anPham?.tacGia,
 			onCell,
 		},
 		{
-			title: 'Nguồn bổ sung',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nguonBoSung' }),
 			dataIndex: 'maNguonBoSung',
 			width: 130,
 			render: (val, rec) => rec?.nguonBoSung?.ten,
@@ -81,7 +82,7 @@ const LichSuXepGia = () => {
 			onCell,
 		},
 		{
-			title: 'Kiểu tư liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.kieuTuLieu' }),
 			dataIndex: 'maKieuTuLieu',
 			width: 130,
 			render: (val, rec) => rec?.kieuTuLieu?.ten,
@@ -90,7 +91,7 @@ const LichSuXepGia = () => {
 			onCell,
 		},
 		{
-			title: 'Thư viện',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.thuVien' }),
 			dataIndex: 'thuVienId',
 			width: 130,
 			render: (val, rec) => rec?.thuVien?.ten,
@@ -99,7 +100,7 @@ const LichSuXepGia = () => {
 			onCell,
 		},
 		{
-			title: 'Kho',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.kho' }),
 			dataIndex: 'maKhoSach',
 			width: 130,
 			render: (val, rec) => rec?.khoSach?.ten,
@@ -108,7 +109,7 @@ const LichSuXepGia = () => {
 			onCell,
 		},
 		{
-			title: 'Giá sách',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.giaSach' }),
 			dataIndex: 'giaSachId',
 			width: 130,
 			render: (val, rec) => rec?.giaSach?.ten,
@@ -117,7 +118,7 @@ const LichSuXepGia = () => {
 			onCell,
 		},
 		{
-			title: 'Ngày bổ sung',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.ngayBoSung' }),
 			dataIndex: 'ngayBoSung',
 			align: 'center',
 			width: 120,
@@ -127,7 +128,7 @@ const LichSuXepGia = () => {
 			onCell,
 		},
 		{
-			title: 'Số lượng',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.soLuong' }),
 			dataIndex: 'soLuong',
 			width: 80,
 			align: 'center',
@@ -136,7 +137,7 @@ const LichSuXepGia = () => {
 			onCell,
 		},
 		{
-			title: 'Đơn giá',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.donGia' }),
 			dataIndex: 'donGia',
 			width: 120,
 			align: 'right',
@@ -146,16 +147,21 @@ const LichSuXepGia = () => {
 			onCell,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.ghiChu' }),
 			dataIndex: 'daXepGia',
 			align: 'center',
 			width: 120,
-			render: (val, rec) => (val ? <Tag color='green'>Đã xếp giá</Tag> : <Tag color='blue'>Đang xếp giá</Tag>),
+			render: (val, rec) =>
+				val ? (
+					<Tag color='green'>{intl.formatMessage({ id: 'sachtailieu.anpham.daXepGia' })}</Tag>
+				) : (
+					<Tag color='blue'>{intl.formatMessage({ id: 'sachtailieu.anpham.dangXepGia' })}</Tag>
+				),
 			fixed: 'right',
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
 			width: 60,
 			fixed: 'right',
@@ -165,7 +171,7 @@ const LichSuXepGia = () => {
 					content={
 						<>
 							<ButtonExtend
-								tooltip='Chi tiết'
+								tooltip={intl.formatMessage({ id: 'sachtailieu.button.xemChiTiet' })}
 								onClick={() => {
 									setRecord(rec);
 									setVisibleChiTiet(true);
@@ -175,19 +181,19 @@ const LichSuXepGia = () => {
 							/>
 							<Popconfirm
 								onConfirm={() => handleXepGia(rec)}
-								title='Xác nhận áp dụng xếp giá vào ấn phẩm này?'
+								title={intl.formatMessage({ id: 'sachtailieu.confirm.apDungXepGia' })}
 								placement='topRight'
 							>
 								<ButtonExtend
 									disabled={rec?.daXepGia}
-									tooltip='Áp dụng'
+									tooltip={intl.formatMessage({ id: 'sachtailieu.button.apDung' })}
 									type='link'
 									className='text-success'
 									icon={<CheckOutlined />}
 								/>
 							</Popconfirm>
 							<ButtonExtend
-								tooltip='Chinh sửa'
+								tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
 								onClick={() => {
 									setRecord(rec);
 									setVisibleModal(true);
@@ -201,10 +207,16 @@ const LichSuXepGia = () => {
 										thongKeXepGiaModel({ anPhamId: recAnPham?._id });
 									})
 								}
-								title='Bạn có chắc chắn muốn xóa thông tin này?'
+								title={intl.formatMessage({ id: 'sachtailieu.confirm.xoa' })}
 								placement='topRight'
 							>
-								<ButtonExtend disabled={rec?.daXepGia} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+								<ButtonExtend
+									disabled={rec?.daXepGia}
+									tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+									danger
+									type='link'
+									icon={<DeleteOutlined />}
+								/>
 							</Popconfirm>
 						</>
 					}
@@ -227,7 +239,7 @@ const LichSuXepGia = () => {
 			/>
 
 			<Modal
-				title='Chỉnh sửa xếp giá'
+				title={intl.formatMessage({ id: 'sachtailieu.xepGia.chinhSuaTitle' })}
 				open={visibleModal}
 				onCancel={() => setVisibleModal(false)}
 				width={800}

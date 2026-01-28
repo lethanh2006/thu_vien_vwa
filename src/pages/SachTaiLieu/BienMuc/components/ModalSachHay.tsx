@@ -34,7 +34,7 @@ const ModalSachHay = (props: { visible: boolean; setVisible: (val: boolean) => v
 
 	return (
 		<Modal
-			title='Chỉnh sửa nội dung sách hay'
+			title={intl.formatMessage({ id: 'sachtailieu.xepGia.chinhSuaNoiDungSachHay' })}
 			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
@@ -44,11 +44,18 @@ const ModalSachHay = (props: { visible: boolean; setVisible: (val: boolean) => v
 				<Row gutter={[16, 16]}>
 					<Col xs={24} md={6}>
 						<Form.Item name='urlScanBia' label=''>
-							<UploadFile isPortraitAvatar buttonDescription='Thêm ảnh bìa' />
+							<UploadFile
+								isPortraitAvatar
+								buttonDescription={intl.formatMessage({ id: 'sachtailieu.bienmuc.themAnhBia' })}
+							/>
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={18}>
-						<Form.Item name='moTa' label='Nội dung sách hay' rules={[...rules.text]}>
+						<Form.Item
+							name='moTa'
+							label={intl.formatMessage({ id: 'sachtailieu.anpham.noiDungSachHay' })}
+							rules={[...rules.text]}
+						>
 							<TinyEditor height={300} hideMenubar miniToolbar stickyToolbar={false} />
 						</Form.Item>
 					</Col>

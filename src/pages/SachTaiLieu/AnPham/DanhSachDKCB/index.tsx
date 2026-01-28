@@ -6,10 +6,11 @@ import { ETrangThaiDangKyCaBiet, nameTrangThaiDangKyCaBiet } from '@/services/Sa
 import { inputFormat } from '@/utils/utils';
 import { Tabs } from 'antd';
 import { useState } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import StatDanhSachDKCB from '../../DangKyCaBiet/components/Stat';
 
 const DanhSachDKCB = () => {
+	const intl = useIntl();
 	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
 	const { getModel, page, limit } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [trangThai, setTrangThai] = useState<string>('ALL');
@@ -23,25 +24,25 @@ const DanhSachDKCB = () => {
 
 	const columns: IColumn<AnPham.IAnPhamXepGia>[] = [
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.nhanDe' }),
 			width: 180,
 			render: (val, rec) => <ExpandText>{recAnPham?.nhanDe}</ExpandText>,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.tacGia' }),
 			width: 150,
 			render: (val, rec) => recAnPham?.tacGia,
 		},
 
 		{
-			title: 'ĐKCB',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.soDangKyCaBiet' }),
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			width: 120,
 			filterType: 'string',
 		},
 		{
-			title: 'Đơn giá',
+			title: intl.formatMessage({ id: 'sachtailieu.dkcb.donGia' }),
 			width: 120,
 			align: 'right',
 			render: (val, rec) => `${inputFormat(rec?.thongTinXepGia?.donGia ?? 0)} VNĐ`,
@@ -57,7 +58,7 @@ const DanhSachDKCB = () => {
 			/>
 
 			<Tabs activeKey={trangThai} onChange={(tab) => setTrangThai(tab)}>
-				<Tabs.TabPane key='ALL' tab='Tất cả' />
+				<Tabs.TabPane key='ALL' tab={intl.formatMessage({ id: 'sachtailieu.dkcb.tatCa' })} />
 				{Object.values(ETrangThaiDangKyCaBiet).map((tab) => (
 					<Tabs.TabPane key={tab} tab={nameTrangThaiDangKyCaBiet[tab]} />
 				))}

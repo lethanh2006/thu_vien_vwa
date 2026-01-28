@@ -29,27 +29,51 @@ const FormKhoSach = (props: any) => {
 	};
 
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.khosach.form.title.chinhsua' }) : intl.formatMessage({ id: 'danhmuc.khosach.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]}>
 					<Col span={24}>
-						<Form.Item label='Mã kho' name='ma' rules={[...rules.required, ...rules.text, ...rules.length(20)]}>
-							<Input placeholder='Nhập mã kho' disabled={edit} />
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.khosach.form.label.makho' })}
+							name='ma'
+							rules={[...rules.required, ...rules.text, ...rules.length(20)]}
+						>
+							<Input
+								placeholder={intl.formatMessage({ id: 'danhmuc.khosach.form.placeholder.nhapmakho' })}
+								disabled={edit}
+							/>
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Tên kho' name='ten' rules={[...rules.required, ...rules.text, ...rules.length(250)]}>
-							<Input placeholder='Nhập tên kho' />
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.khosach.form.label.tenkho' })}
+							name='ten'
+							rules={[...rules.required, ...rules.text, ...rules.length(250)]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.khosach.form.placeholder.nhaptenkho' })} />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Phòng đọc' name='maPhongDoc' rules={[...rules.required]}>
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.khosach.form.label.phongdoc' })}
+							name='maPhongDoc'
+							rules={[...rules.required]}
+						>
 							<SelectPhongDoc selectMa />
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Số đăng ký cá biệt cuối' name='soLuongAnPhamDaXepGia' rules={[...rules.required]}>
-							<InputNumber style={{ width: '100%' }} placeholder='Nhập số đăng ký cá biệt cuối' />
+						<Form.Item
+							label={intl.formatMessage({ id: 'danhmuc.khosach.form.label.sodangkycabietcuoi' })}
+							name='soLuongAnPhamDaXepGia'
+							rules={[...rules.required]}
+						>
+							<InputNumber
+								style={{ width: '100%' }}
+								placeholder={intl.formatMessage({ id: 'danhmuc.khosach.form.placeholder.nhapsodangkycabietcuoi' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

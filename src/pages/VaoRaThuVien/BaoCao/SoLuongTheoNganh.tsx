@@ -7,9 +7,10 @@ import { Spin } from 'antd';
 import fileDownload from 'js-file-download';
 import _ from 'lodash';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const SoLuongVaoRaThuVienTheoNganh = (props: { dateRange?: any }) => {
+	const intl = useIntl();
 	const { dateRange } = props;
 	const { getSoLuotCheckInNganhModel, loadingNganh, dataThongKeCheckInNganh } = useModel('quanlythuvien.vaorathuvien');
 
@@ -41,14 +42,14 @@ const SoLuongVaoRaThuVienTheoNganh = (props: { dateRange?: any }) => {
 		<Spin spinning={loadingNganh}>
 			<div style={{ marginBottom: 12 }}>
 				<ButtonExtend icon={<ExportOutlined />} onClick={() => handleExport()}>
-					Xuất dữ liệu
+					{intl.formatMessage({ id: 'vaorathuvien.button.xuatDuLieu' })}
 				</ButtonExtend>
 			</div>
 			<ColumnChart
 				height={450}
 				formatY={(val) => inputFormat(val ?? 0)}
-				yLabel={['Số lượt']}
-				xAxis={sortedData.map((i) => i?.nganh ?? 'Không có thông tin')}
+				yLabel={[intl.formatMessage({ id: 'vaorathuvien.label.soLuot' })]}
+				xAxis={sortedData.map((i) => i?.nganh ?? intl.formatMessage({ id: 'vaorathuvien.label.khongCoThongTin' }))}
 				yAxis={[sortedData.map((i) => i?.tongSoLuotCheckIn ?? 0)]}
 				otherOptions={{
 					plotOptions: { bar: { columnWidth: '20%' } },

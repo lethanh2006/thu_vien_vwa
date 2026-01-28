@@ -7,7 +7,7 @@ import { type IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Modal, Popconfirm } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import Form from './Form';
 
 const FormItemTaiLieuSo = (props: {
@@ -15,6 +15,7 @@ const FormItemTaiLieuSo = (props: {
 	onChange?: (data: AnPham.TDanhSachTaiLieuTrucTuyen[]) => void;
 	disabled?: boolean;
 }) => {
+	const intl = useIntl();
 	const { handleEdit, setVisibleForm, visibleForm, setEdit, edit, record, setRecord, isView, setIsView, handleView } =
 		useModel('sachtailieu.anpham.danhsachtailieu');
 	const { value = [], onChange, disabled } = props;
@@ -47,39 +48,49 @@ const FormItemTaiLieuSo = (props: {
 
 	const columns: IColumn<AnPham.TDanhSachTaiLieuTrucTuyen>[] = [
 		{
-			title: 'Tên tài liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.danhsachtailieu.tenTaiLieu' }),
 			dataIndex: 'ten',
 			width: 150,
 			onCell,
 		},
 		{
-			title: 'File tài liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.danhsachtailieu.fileTaiLieu' }),
 			dataIndex: 'url',
 			width: 120,
 			render: (val) => <BoxFile url={val} />,
 			onCell,
 		},
 		{
-			title: 'Mô tả',
+			title: intl.formatMessage({ id: 'sachtailieu.danhsachtailieu.moTa' }),
 			dataIndex: 'moTa',
 			width: 220,
 			render: (val) => <ExpandText>{val}</ExpandText>,
 			onCell,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' type='link' onClick={() => handleEdit(rec)} icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'global.button.chinhsua' })}
+						type='link'
+						onClick={() => handleEdit(rec)}
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => onDelete(rec.index - 1)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						title={intl.formatMessage({ id: 'sachtailieu.confirm.xoa' })}
 						placement='topLeft'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),
@@ -109,13 +120,20 @@ const FormItemTaiLieuSo = (props: {
 						size='small'
 						type='primary'
 					>
-						Thêm mới
+						{intl.formatMessage({ id: 'global.button.themmoi' })}
 					</Button>
 				)}
 			</TableStaticData>
 
 			<Modal
-				title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} tài liệu ấn phẩm số`}
+				title={`${
+					edit
+						? intl.formatMessage({ id: 'global.button.chinhsua' })
+						: isView
+							? intl.formatMessage({ id: 'global.button.chitiet' })
+							: intl.formatMessage({ id: 'global.button.themmoi' })
+				} 
+					${intl.formatMessage({ id: 'sachtailieu.taiLieuAnPhamSo' })}`}
 				open={visibleForm}
 				width={isView ? 1000 : 600}
 				footer={null}

@@ -14,20 +14,20 @@ const KyXuatBanPage = () => {
 
 	const columns: IColumn<KyXuatBan.IRecord>[] = [
 		{
-			title: 'Tên',
+			title: intl.formatMessage({ id: 'danhmuc.kyxuatban.table.column.ten' }),
 			dataIndex: 'ten',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Mô tả',
+			title: intl.formatMessage({ id: 'danhmuc.kyxuatban.table.column.mota' }),
 			dataIndex: 'moTa',
 			width: 180,
 			filterType: 'string',
 			render: (val, rec) => <ExpandText>{val}</ExpandText>,
 		},
 		{
-			title: 'Bắt đầu',
+			title: intl.formatMessage({ id: 'danhmuc.kyxuatban.table.column.batdau' }),
 			dataIndex: 'thoiGianBatDau',
 			align: 'center',
 			width: 100,
@@ -36,7 +36,7 @@ const KyXuatBanPage = () => {
 			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Kết thúc',
+			title: intl.formatMessage({ id: 'danhmuc.kyxuatban.table.column.ketthuc' }),
 			dataIndex: 'thoiGianKetThuc',
 			align: 'center',
 			width: 100,
@@ -45,19 +45,29 @@ const KyXuatBanPage = () => {
 			render: (val) => val && dayjs(val).format('DD/MM/YYYY'),
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.kyxuatban.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, record) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.kyxuatban.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(record)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(record._id)}
-						title='Bạn có chắc chắn muốn xóa thông tin này?'
+						title={intl.formatMessage({ id: 'danhmuc.kyxuatban.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.kyxuatban.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

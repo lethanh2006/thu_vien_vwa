@@ -11,7 +11,6 @@ import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu
 import {
 	DeleteOutlined,
 	EditOutlined,
-	EyeOutlined,
 	MenuOutlined,
 	PlusCircleOutlined,
 	StarOutlined,
@@ -65,7 +64,7 @@ const BienMucSachTaiLieuPage = () => {
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
-			title: 'Ảnh',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.anh' }),
 			dataIndex: 'urlScanBia',
 			width: 80,
 			align: 'center',
@@ -75,7 +74,7 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
-			title: 'Mã tài liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.maTaiLieu' }),
 			dataIndex: 'maTaiLieu',
 			width: 150,
 			render: (val, rec) =>
@@ -88,31 +87,31 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
-			title: 'Tác giả',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.tacGia' }),
 			dataIndex: 'tacGia',
 			width: 150,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Nhan đề',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			dataIndex: 'nhanDe',
 			width: 150,
 			filterType: 'string',
 			onCell,
 		},
 		{
-			title: 'Sách hay',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.sachHay' }),
 			dataIndex: 'isSachHay',
 			align: 'center',
 			width: 80,
 			render: (val) =>
 				val ? (
-					<Tooltip title='Sách hay'>
+					<Tooltip title={intl.formatMessage({ id: 'sachtailieu.anpham.sachHay' })}>
 						<StarTwoTone twoToneColor='#fadb14' style={{ fontSize: 20 }} />
 					</Tooltip>
 				) : (
-					<Tooltip title='Không phải sách hay'>
+					<Tooltip title={intl.formatMessage({ id: 'sachtailieu.anpham.khongPhaiSachHay' })}>
 						<StarOutlined style={{ color: '#ccc', fontSize: 20 }} />
 					</Tooltip>
 				),
@@ -120,10 +119,10 @@ const BienMucSachTaiLieuPage = () => {
 			filterCustomSelect: (
 				<Select
 					mode='multiple'
-					placeholder='Lọc sách hay'
+					placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.locSachHay' })}
 					options={[
-						{ label: 'Sách hay', value: true },
-						{ label: 'Không', value: false },
+						{ label: intl.formatMessage({ id: 'sachtailieu.anpham.sachHay' }), value: true },
+						{ label: intl.formatMessage({ id: 'sachtailieu.anpham.khongPhaiSachHay' }), value: false },
 					]}
 					allowClear
 					showArrow
@@ -134,7 +133,7 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
-			title: 'Kiểu bản ghi',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.kieuBanGhi' }),
 			dataIndex: 'maKieuBanGhi',
 			width: 150,
 			render: (val, rec) => rec?.kieuBanGhi?.ten,
@@ -143,7 +142,7 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
-			title: 'Dạng tài liệu',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.dangTaiLieu' }),
 			dataIndex: 'maDangTaiLieu',
 			width: 150,
 			render: (val, rec) => rec?.dangTaiLieu?.ten,
@@ -152,7 +151,7 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
-			title: 'Cấp thư mục',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.capThuMuc' }),
 			dataIndex: 'maCapThuMuc',
 			width: 150,
 			render: (val, rec) => rec?.capThuMuc?.ten,
@@ -161,7 +160,7 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
-			title: 'Vật mang tin',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.vatMangTin' }),
 			dataIndex: 'maVatMangTin',
 			width: 150,
 			render: (val, rec) => rec?.vatMangTin?.ten,
@@ -170,7 +169,7 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
-			title: 'Mẫu biên mục',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.mauBienMuc' }),
 			dataIndex: 'mauBienMucId',
 			width: 150,
 			render: (val, rec) => rec?.mauBienMuc?.ten,
@@ -179,7 +178,7 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
-			title: 'Độ mật',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.doMat' }),
 			align: 'center',
 			dataIndex: 'doMat',
 			width: 90,
@@ -188,7 +187,7 @@ const BienMucSachTaiLieuPage = () => {
 			onCell,
 		},
 		{
-			title: 'Trạng thái',
+			title: intl.formatMessage({ id: 'sachtailieu.anpham.trangThai' }),
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 120,
@@ -206,14 +205,14 @@ const BienMucSachTaiLieuPage = () => {
 			fixed: 'right',
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
 					<ButtonExtend
-						tooltip='Biên mục chi tiết'
+						tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.bienMucChiTiet' })}
 						onClick={() => handleEdit(rec)}
 						type='link'
 						icon={<EditOutlined />}
@@ -224,7 +223,7 @@ const BienMucSachTaiLieuPage = () => {
 							<>
 								{!rec?.isSachHay ? (
 									<ButtonExtend
-										tooltip='Sách hay'
+										tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.sachHay' })}
 										type='link'
 										className='text-success'
 										icon={<StarOutlined />}
@@ -236,10 +235,15 @@ const BienMucSachTaiLieuPage = () => {
 								) : (
 									<Popconfirm
 										onConfirm={() => handleSachHay(rec, false)}
-										title='Xác nhận đây bỏ sách hay này?'
+										title={intl.formatMessage({ id: 'sachtailieu.anpham.boSachHay' })}
 										placement='topRight'
 									>
-										<ButtonExtend tooltip='Bỏ sách hay' type='link' danger icon={<StarTwoTone />} />
+										<ButtonExtend
+											tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.boSachHay' })}
+											type='link'
+											danger
+											icon={<StarTwoTone />}
+										/>
 									</Popconfirm>
 								)}
 
@@ -247,10 +251,15 @@ const BienMucSachTaiLieuPage = () => {
 
 								<Popconfirm
 									onConfirm={() => deleteModel(rec._id, getData)}
-									title='Bạn có chắc chắn muốn xóa thông tin này?'
+									title={intl.formatMessage({ id: 'sachtailieu.confirm.xoa' })}
 									placement='topRight'
 								>
-									<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+									<ButtonExtend
+										tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
+										danger
+										type='link'
+										icon={<DeleteOutlined />}
+									/>
 								</Popconfirm>
 							</>
 						}
@@ -297,13 +306,17 @@ const BienMucSachTaiLieuPage = () => {
 						icon={<PlusCircleOutlined />}
 						type='primary'
 						notHideText
-						tooltip='Biên mục sơ lược'
+						tooltip={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}
 					>
-						Biên mục sơ lược
+						{intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}
 					</ButtonExtend>,
 
-					<ButtonExtend key='3' tooltip='Biên mục qua Z39.50' onClick={() => setVisibleTimKiemZ3950(true)}>
-						Biên mục qua Z39.50
+					<ButtonExtend
+						key='3'
+						tooltip={intl.formatMessage({ id: 'sachtailieu.bienmuc.z3950' })}
+						onClick={() => setVisibleTimKiemZ3950(true)}
+					>
+						{intl.formatMessage({ id: 'sachtailieu.bienmuc.z3950' })}
 					</ButtonExtend>,
 				]}
 			/>

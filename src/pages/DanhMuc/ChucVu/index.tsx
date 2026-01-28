@@ -3,15 +3,16 @@ import { type IColumn } from '@/components/Table/typing';
 import dayjs from '@/utils/dayjs';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Popconfirm, Tooltip } from 'antd';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import Form from './components/Form';
 
 const ChucVuPage = () => {
 	const { getModel, page, limit, deleteModel, handleEdit } = useModel('danhmuc.chucvu');
+	const intl = useIntl();
 
 	const columns: IColumn<ChucVu.IRecord>[] = [
 		{
-			title: 'Mã',
+			title: intl.formatMessage({ id: 'danhmuc.chucvu.table.column.ma' }),
 			dataIndex: 'ma',
 			width: 80,
 			filterType: 'select',
@@ -19,14 +20,14 @@ const ChucVuPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Tên chức vụ',
+			title: intl.formatMessage({ id: 'danhmuc.chucvu.table.column.tenchucvu' }),
 			dataIndex: 'ten',
 			width: 250,
 			filterType: 'string',
 			sortable: true,
 		},
 		{
-			title: 'Ngày tạo',
+			title: intl.formatMessage({ id: 'danhmuc.chucvu.table.column.ngaytao' }),
 			dataIndex: 'createdAt',
 			align: 'center',
 			width: 120,
@@ -35,19 +36,19 @@ const ChucVuPage = () => {
 			render: (val) => dayjs(val).format('HH:mm DD/MM/YYYY'),
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.chucvu.table.column.thaoTac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (record: ChucVu.IRecord) => (
 				<>
-					<Tooltip title='Chỉnh sửa'>
+					<Tooltip title={intl.formatMessage({ id: 'danhmuc.chucvu.table.tooltip.chinhsua' })}>
 						<Button onClick={() => handleEdit(record)} type='link' icon={<EditOutlined />} />
 					</Tooltip>
-					<Tooltip title='Xóa'>
+					<Tooltip title={intl.formatMessage({ id: 'danhmuc.chucvu.table.tooltip.xoa' })}>
 						<Popconfirm
 							onConfirm={() => deleteModel(record._id, getModel)}
-							title='Bạn có chắc chắn muốn xóa chức vụ này?'
+							title={intl.formatMessage({ id: 'danhmuc.chucvu.table.popconfirm.xoa' })}
 							placement='topLeft'
 						>
 							<Button danger type='link' icon={<DeleteOutlined />} />
@@ -63,7 +64,7 @@ const ChucVuPage = () => {
 			columns={columns}
 			dependencies={[page, limit]}
 			modelName='danhmuc.chucvu'
-			title='Chức vụ'
+			title={intl.formatMessage({ id: 'danhmuc.chucvu.title' })}
 			Form={Form}
 			buttons={{ import: true }}
 		/>

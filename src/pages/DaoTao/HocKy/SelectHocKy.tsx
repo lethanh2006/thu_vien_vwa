@@ -1,7 +1,7 @@
 import type { HocKy } from '@/services/DaoTao/HocKy/typing';
 import { Select } from 'antd';
 import React, { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Select học kỳ đưa vào FormItem
@@ -36,6 +36,7 @@ const SelectHocKy = (props: {
 	} = props;
 
 	const { danhSach, getAllModel, loading, record, setRecord } = useModel('daotao.hocky');
+	const intl = useIntl();
 
 	useEffect(() => {
 		if (loadData !== false) {
@@ -75,7 +76,7 @@ const SelectHocKy = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder='Chọn kỳ học'
+			placeholder={intl.formatMessage({ id: 'daotao.hocky.placeholder' })}
 			allowClear={allowClear ?? false}
 			style={{ width: '100%', ...style }}
 			loading={loading}

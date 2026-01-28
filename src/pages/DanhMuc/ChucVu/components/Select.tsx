@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Modal, Select } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 import FormChucVu from './Form';
 
 /**
@@ -15,6 +15,7 @@ const SelectChucVu = (props: {
 }) => {
 	const { value, onChange, multiple, hasCreate } = props;
 	const { danhSach, getAllModel, setVisibleForm, visibleForm, setEdit, setRecord } = useModel('danhmuc.chucvu');
+	const intl = useIntl();
 
 	useEffect(() => {
 		if (!visibleForm) getAllModel();
@@ -40,7 +41,7 @@ const SelectChucVu = (props: {
 					}))}
 					showSearch
 					optionFilterProp='label'
-					placeholder='Chọn chức vụ'
+					placeholder={intl.formatMessage({ id: 'danhmuc.chucvu.select.placeholder' })}
 				/>
 			</div>
 

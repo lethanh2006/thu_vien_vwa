@@ -14,13 +14,13 @@ const GiaSachPage = () => {
 
 	const columns: IColumn<GiaSach.IRecord>[] = [
 		{
-			title: 'Tên giá sách',
+			title: intl.formatMessage({ id: 'danhmuc.giasach.table.column.tengiasach' }),
 			dataIndex: 'ten',
 			width: 150,
 			filterType: 'string',
 		},
 		{
-			title: 'Kho sách',
+			title: intl.formatMessage({ id: 'danhmuc.giasach.table.column.khosach' }),
 			dataIndex: 'maKhoSach',
 			width: 120,
 			render: (val, rec) => rec?.khoSach?.ten ?? val,
@@ -28,7 +28,7 @@ const GiaSachPage = () => {
 			filterCustomSelect: <SelectKhoSach multiple selectMa />,
 		},
 		{
-			title: 'Chiều dài (m)',
+			title: intl.formatMessage({ id: 'danhmuc.giasach.table.column.chieudai' }),
 			dataIndex: 'chieuDai',
 			align: 'center',
 			width: 80,
@@ -36,7 +36,7 @@ const GiaSachPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Chiều rộng (m)',
+			title: intl.formatMessage({ id: 'danhmuc.giasach.table.column.chieurong' }),
 			dataIndex: 'chieuRong',
 			align: 'center',
 			width: 80,
@@ -44,38 +44,48 @@ const GiaSachPage = () => {
 			sortable: true,
 		},
 		{
-			title: 'Phương',
+			title: intl.formatMessage({ id: 'danhmuc.giasach.table.column.phuong' }),
 			dataIndex: 'phuong',
 			width: 100,
 		},
 		{
-			title: 'Tung độ',
+			title: intl.formatMessage({ id: 'danhmuc.giasach.table.column.tungdo' }),
 			dataIndex: 'tungDo',
 			width: 80,
 			filterType: 'number',
 			sortable: true,
 		},
 		{
-			title: 'Hoạch độ',
+			title: intl.formatMessage({ id: 'danhmuc.giasach.table.column.hoachdo' }),
 			dataIndex: 'hoachDo',
 			width: 80,
 			filterType: 'number',
 			sortable: true,
 		},
 		{
-			title: 'Thao tác',
+			title: intl.formatMessage({ id: 'danhmuc.giasach.table.column.thao_tac' }),
 			align: 'center',
 			width: 90,
 			fixed: 'right',
 			render: (val, rec) => (
 				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'danhmuc.giasach.table.tooltip.chinhsua' })}
+						onClick={() => handleEdit(rec)}
+						type='link'
+						icon={<EditOutlined />}
+					/>
 					<Popconfirm
 						onConfirm={() => deleteModel(rec._id)}
-						title='Bạn có chắc chắn muốn xóa giá sách này?'
+						title={intl.formatMessage({ id: 'danhmuc.giasach.table.popconfirm.xoa' })}
 						placement='topRight'
 					>
-						<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+						<ButtonExtend
+							tooltip={intl.formatMessage({ id: 'danhmuc.giasach.table.tooltip.xoa' })}
+							danger
+							type='link'
+							icon={<DeleteOutlined />}
+						/>
 					</Popconfirm>
 				</>
 			),

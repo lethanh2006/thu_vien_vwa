@@ -5,7 +5,7 @@ import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const FormTaiLieuSo = (props: { onOk: (val: AnPham.TDanhSachTaiLieuTrucTuyen) => void }) => {
 	const [form] = Form.useForm();
@@ -13,6 +13,7 @@ const FormTaiLieuSo = (props: { onOk: (val: AnPham.TDanhSachTaiLieuTrucTuyen) =>
 	const { setVisibleForm, visibleForm, record, edit, isView, setFormSubmiting } = useModel(
 		'sachtailieu.anpham.danhsachtailieu',
 	);
+	const intl = useIntl();
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
@@ -35,18 +36,33 @@ const FormTaiLieuSo = (props: { onOk: (val: AnPham.TDanhSachTaiLieuTrucTuyen) =>
 		<Form onFinish={onFinish} form={form} layout='vertical'>
 			<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 				<Col span={24}>
-					<Form.Item name='ten' label='Tên tài liệu' rules={[...rules.required]}>
-						<Input disabled={isView} placeholder='Nhập tên tài liệu' />
+					<Form.Item
+						name='ten'
+						label={intl.formatMessage({ id: 'sachtailieu.danhsachtailieu.tenTaiLieu' })}
+						rules={[...rules.required]}
+					>
+						<Input
+							disabled={isView}
+							placeholder={intl.formatMessage({ id: 'sachtailieu.danhsachtailieu.nhapTenTaiLieu' })}
+						/>
 					</Form.Item>
 				</Col>
 				<Col span={24}>
-					<Form.Item name='url' label='File đính kèm' rules={[...rules.required]}>
+					<Form.Item
+						name='url'
+						label={intl.formatMessage({ id: 'sachtailieu.danhsachtailieu.fileDinhKem' })}
+						rules={[...rules.required]}
+					>
 						<UploadFile />
 					</Form.Item>
 				</Col>
 				<Col span={24}>
-					<Form.Item name='moTa' label='Mô tả' rules={[...rules.text, ...rules.length(250)]}>
-						<Input.TextArea rows={2} placeholder='Nhập mô tả' />
+					<Form.Item
+						name='moTa'
+						label={intl.formatMessage({ id: 'sachtailieu.danhsachtailieu.moTa' })}
+						rules={[...rules.text, ...rules.length(250)]}
+					>
+						<Input.TextArea rows={2} placeholder={intl.formatMessage({ id: 'sachtailieu.danhsachtailieu.nhapMoTa' })} />
 					</Form.Item>
 				</Col>
 			</Row>
@@ -54,11 +70,13 @@ const FormTaiLieuSo = (props: { onOk: (val: AnPham.TDanhSachTaiLieuTrucTuyen) =>
 			<div className='form-footer'>
 				{!isView ? (
 					<Button htmlType='submit' type='primary'>
-						{!edit ? 'Thêm mới ' : 'Lưu lại'}
+						{!edit
+							? intl.formatMessage({ id: 'global.button.themmoi' })
+							: intl.formatMessage({ id: 'global.button.luulai' })}
 					</Button>
 				) : null}
 
-				<Button onClick={() => setVisibleForm(false)}>Hủy</Button>
+				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 			</div>
 		</Form>
 	);

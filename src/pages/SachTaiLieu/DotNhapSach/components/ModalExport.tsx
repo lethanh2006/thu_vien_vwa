@@ -4,7 +4,7 @@ import rules from '@/utils/rules';
 import { Button, Form, message, Modal } from 'antd';
 import fileDownload from 'js-file-download';
 import React from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 type TProps = {
 	visible: boolean;
@@ -12,6 +12,7 @@ type TProps = {
 };
 
 const ModalExportDangKyTongQuat: React.FC<TProps> = ({ visible, setVisible }) => {
+	const intl = useIntl();
 	const { record } = useModel('daotao.hocky');
 	const [loading, setLoading] = React.useState(false);
 	const [form] = Form.useForm();
@@ -22,7 +23,7 @@ const ModalExportDangKyTongQuat: React.FC<TProps> = ({ visible, setVisible }) =>
 
 	const handleExport = async (values: any) => {
 		if (!values.thoiGian) {
-			message.error('Vui lòng chọn thời gian thống kê');
+			message.error(intl.formatMessage({ id: 'sachtailieu.dotnhapsach.vuiLongNhapThoiGian' }));
 			return;
 		}
 		setLoading(true);
@@ -41,17 +42,26 @@ const ModalExportDangKyTongQuat: React.FC<TProps> = ({ visible, setVisible }) =>
 	};
 
 	return (
-		<Modal open={visible} onCancel={handleCancel} footer={null} title='Thống kê đăng ký tổng quát'>
+		<Modal
+			open={visible}
+			onCancel={handleCancel}
+			footer={null}
+			title={intl.formatMessage({ id: 'sachtailieu.thongKeDangKyMuon' })}
+		>
 			<Form form={form} layout='vertical' onFinish={handleExport}>
-				<Form.Item name='thoiGian' label='Thời gian cần thống kê' rules={[...rules.required]}>
+				<Form.Item
+					name='thoiGian'
+					label={intl.formatMessage({ id: 'sachtailieu.dotnhapsach.thoiGianCanThongKe' })}
+					rules={[...rules.required]}
+				>
 					<MyDateRangePicker format='DD/MM/YYYY' />
 				</Form.Item>
 
 				<div className='form-footer'>
 					<Button type='primary' htmlType='submit' loading={loading}>
-						Thống kê
+						{intl.formatMessage({ id: 'sachtailieu.button.thongke' })}
 					</Button>
-					<Button onClick={handleCancel}>Hủy</Button>
+					<Button onClick={handleCancel}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
 				</div>
 			</Form>
 		</Modal>

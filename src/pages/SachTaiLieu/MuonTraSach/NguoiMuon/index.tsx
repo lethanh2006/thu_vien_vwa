@@ -131,14 +131,20 @@ const ModalNguoiMuon = (props: {
 	];
 
 	return (
-		<Modal title='Tìm kiếm' open={visible} onCancel={() => setVisible(false)} footer={null} width={900}>
+		<Modal
+			title={intl.formatMessage({ id: 'sachtailieu.modal.timkiem' })}
+			open={visible}
+			onCancel={() => setVisible(false)}
+			footer={null}
+			width={900}
+		>
 			<TableBase
 				getData={getData}
 				columns={columns}
 				dependencies={[page, limit, activeKey]}
 				modelName='sachtailieu.muontra.danhsachbandoc'
 				widthDrawer={1100}
-				title='Danh sách bạn đọc'
+				title={intl.formatMessage({ id: 'sachtailieu.card.danhsachbandoc' })}
 				buttons={{ create: false }}
 				hideCard
 			/>

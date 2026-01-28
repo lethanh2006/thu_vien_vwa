@@ -3,10 +3,11 @@ import type { EVaiTroMuonTra } from '@/services/SachTaiLieu/constant';
 import { inputFormat } from '@/utils/utils';
 import { Card, Col, Row, Spin } from 'antd';
 import { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 const StatMuonTraSach = (props: { vaiTro?: EVaiTroMuonTra }) => {
 	const { vaiTro } = props;
+	const intl = useIntl();
 	const { thongKeMuonTraSachModel, dataThongKe, loadingThongKe } = useModel('sachtailieu.muontra.muontra');
 
 	const filter = [
@@ -30,7 +31,7 @@ const StatMuonTraSach = (props: { vaiTro?: EVaiTroMuonTra }) => {
 						<span className='num' style={{ color: 'blue' }}>
 							{inputFormat(dataThongKe?.choXuLy ?? 0)}
 						</span>
-						<span>Chờ xử lý</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.muontra.stat.choxuly' })}</span>
 					</Card>
 				</Col>
 				<Col span={24} md={6}>
@@ -38,7 +39,7 @@ const StatMuonTraSach = (props: { vaiTro?: EVaiTroMuonTra }) => {
 						<span className='num' style={{ color: 'orange' }}>
 							{inputFormat(dataThongKe?.dangThueMuon ?? 0)}
 						</span>
-						<span>Đang mượn</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.muontra.stat.dangmuon' })}</span>
 					</Card>
 				</Col>
 				<Col span={24} md={6}>
@@ -46,7 +47,7 @@ const StatMuonTraSach = (props: { vaiTro?: EVaiTroMuonTra }) => {
 						<span className='num' style={{ color: 'rec' }}>
 							{inputFormat(dataThongKe?.quaHan ?? 0)}
 						</span>
-						<span>Quá hạn mượn</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.muontra.stat.quahanmuon' })}</span>
 					</Card>
 				</Col>
 				<Col span={24} md={6}>
@@ -54,7 +55,7 @@ const StatMuonTraSach = (props: { vaiTro?: EVaiTroMuonTra }) => {
 						<span className='num' style={{ color: 'green' }}>
 							{inputFormat(dataThongKe?.daTra ?? 0)}
 						</span>
-						<span>Đã trả</span>
+						<span>{intl.formatMessage({ id: 'sachtailieu.muontra.stat.datra' })}</span>
 					</Card>
 				</Col>
 			</Row>

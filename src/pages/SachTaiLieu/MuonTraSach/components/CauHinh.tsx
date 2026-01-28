@@ -23,7 +23,7 @@ const CauHinhThoiHanMuonTra = (props: { visible: boolean; setVisible: (val: bool
 
 	return (
 		<Modal
-			title='Cấu hình thời hạn trả sách'
+			title={intl.formatMessage({ id: 'sachtailieu.muontra.cauhinh.title' })}
 			open={visible}
 			onCancel={() => setVisible(false)}
 			footer={null}
@@ -35,20 +35,31 @@ const CauHinhThoiHanMuonTra = (props: { visible: boolean; setVisible: (val: bool
 						<Col span={24} md={12}>
 							<Row gutter={[12, 0]}>
 								<Col span={24}>
-									<Divider>Sinh viên</Divider>
+									<Divider>{intl.formatMessage({ id: 'sachtailieu.sinhVien.title' })}</Divider>
 								</Col>
 								<Col span={24}>
 									<Form.Item
 										name='thoiHanMuonTraSach'
-										label='Thời hạn mượn trả sách mặc định'
+										label={intl.formatMessage({ id: 'sachtailieu.muontra.cauhinh.thoihanmuontra' })}
 										rules={[...rules.required]}
 									>
-										<InputNumber style={{ width: '100%' }} placeholder='Nhập hạn mượn trả sách' addonAfter='Ngày' />
+										<InputNumber
+											style={{ width: '100%' }}
+											placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.cauhinh.nhapthoihan' })}
+											addonAfter='Ngày'
+										/>
 									</Form.Item>
 								</Col>
 								<Col span={24}>
-									<Form.Item name='soLuongMuonToiDa' label='Hạn ngạch mượn' rules={[...rules.required]}>
-										<InputNumber style={{ width: '100%' }} placeholder='Nhập số hạn ngạch mượn' />
+									<Form.Item
+										name='soLuongMuonToiDa'
+										label={intl.formatMessage({ id: 'sachtailieu.muontra.cauhinh.hanngachmuon' })}
+										rules={[...rules.required]}
+									>
+										<InputNumber
+											style={{ width: '100%' }}
+											placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.cauhinh.nhapsohanngach' })}
+										/>
 									</Form.Item>
 								</Col>
 							</Row>
@@ -56,26 +67,41 @@ const CauHinhThoiHanMuonTra = (props: { visible: boolean; setVisible: (val: bool
 						<Col span={24} md={12}>
 							<Row gutter={[12, 0]}>
 								<Col span={24}>
-									<Divider>Cán bộ/Giảng viên</Divider>
+									<Divider>{intl.formatMessage({ id: 'sachtailieu.canBo.title' })}</Divider>
 								</Col>
 								<Col span={24}>
 									<Form.Item
 										name='thoiHanMuonTraSachCanBo'
-										label='Thời hạn mượn trả sách mặc định'
+										label={intl.formatMessage({ id: 'sachtailieu.muontra.cauhinh.thoihanmuontra' })}
 										rules={[...rules.required]}
 									>
-										<InputNumber style={{ width: '100%' }} placeholder='Nhập hạn mượn trả sách' addonAfter='Ngày' />
+										<InputNumber
+											style={{ width: '100%' }}
+											placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.cauhinh.nhapthoihan' })}
+											addonAfter='Ngày'
+										/>
 									</Form.Item>
 								</Col>
 								<Col span={24}>
-									<Form.Item name='soLuongMuonToiDaCanBo' label='Hạn ngạch mượn' rules={[...rules.required]}>
-										<InputNumber style={{ width: '100%' }} placeholder='Nhập số hạn ngạch mượn' />
+									<Form.Item
+										name='soLuongMuonToiDaCanBo'
+										label={intl.formatMessage({ id: 'sachtailieu.muontra.cauhinh.hanngachmuon' })}
+										rules={[...rules.required]}
+									>
+										<InputNumber
+											style={{ width: '100%' }}
+											placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.cauhinh.nhapsohanngach' })}
+										/>
 									</Form.Item>
 								</Col>
 							</Row>
 						</Col>
 						<Col span={24}>
-							<Form.Item name='idDonViThuVien' label='Đơn vị nhận thông báo' rules={[...rules.required]}>
+							<Form.Item
+								name='idDonViThuVien'
+								label={intl.formatMessage({ id: 'sachtailieu.muontra.cauhinh.donvinhanthongbao' })}
+								rules={[...rules.required]}
+							>
 								<SelectDonVi />
 							</Form.Item>
 						</Col>

@@ -27,22 +27,39 @@ const FormThuVien = (props: any) => {
 				.catch((er) => console.log(er));
 	};
 	return (
-		<Card title={`${edit ? 'Chỉnh sửa' : isView ? 'Chi tiết' : 'Thêm mới'} ${title?.toLowerCase()}`}>
+		<Card
+			title={`${edit ? intl.formatMessage({ id: 'danhmuc.thuvien.form.title.chinhsua' }) : isView ? intl.formatMessage({ id: 'danhmuc.thuvien.form.title.chitiet' }) : intl.formatMessage({ id: 'danhmuc.thuvien.form.title.themmoi' })} ${title?.toLowerCase()}`}
+		>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
 				<Row gutter={[12, 0]} style={{ marginBottom: 12 }}>
 					<Col xs={24}>
-						<Form.Item name='tenVietTat' label='Tên thư viện (viết tắt)' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên thư viện viết tắt' />
+						<Form.Item
+							name='tenVietTat'
+							label={intl.formatMessage({ id: 'danhmuc.thuvien.form.label.tenviettat' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.thuvien.form.placeholder.tenviettat' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='ten' label='Tên thư viện (đầy đủ)' rules={[...rules.required, ...rules.text]}>
-							<Input placeholder='Nhập tên thư viện đầy đủ' />
+						<Form.Item
+							name='ten'
+							label={intl.formatMessage({ id: 'danhmuc.thuvien.form.label.ten' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input placeholder={intl.formatMessage({ id: 'danhmuc.thuvien.form.placeholder.ten' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
-						<Form.Item name='diaChi' label='Địa chỉ' rules={[...rules.required, ...rules.text]}>
-							<Input.TextArea rows={3} placeholder='Nhập địa chỉ' />
+						<Form.Item
+							name='diaChi'
+							label={intl.formatMessage({ id: 'danhmuc.thuvien.form.label.diachi' })}
+							rules={[...rules.required, ...rules.text]}
+						>
+							<Input.TextArea
+								rows={3}
+								placeholder={intl.formatMessage({ id: 'danhmuc.thuvien.form.placeholder.diachi' })}
+							/>
 						</Form.Item>
 					</Col>
 				</Row>

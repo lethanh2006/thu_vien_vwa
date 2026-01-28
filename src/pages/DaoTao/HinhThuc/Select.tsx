@@ -1,7 +1,7 @@
 import { initHinhThuc } from '@/utils/constants';
 import { Select } from 'antd';
 import React, { useEffect } from 'react';
-import { useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
 
 /**
  * Secect Căn cứ pháp lý để cho vào FormItem
@@ -20,8 +20,11 @@ const SelectHinhThuc = (props: {
 }) => {
 	const { value, onChange, multiple, allowClear, placeholder, style, selectMa, hasDefault, disabled, hideAll } = props;
 	const { danhSach, getAllModel, loading, record, setRecord } = useModel('daotao.hinhthucdaotao');
+	const intl = useIntl();
 	const dataHienThi =
-		hasDefault || hideAll ? danhSach : [{ _id: null, ten: 'Tất cả hình thức đào tạo', ma: null }, ...danhSach];
+		hasDefault || hideAll
+			? danhSach
+			: [{ _id: null, ten: intl.formatMessage({ id: 'daotao.hinhthuc.all' }), ma: null }, ...danhSach];
 
 	useEffect(() => {
 		if (!danhSach.length)
@@ -46,7 +49,7 @@ const SelectHinhThuc = (props: {
 			}))}
 			showSearch
 			optionFilterProp='label'
-			placeholder={placeholder ?? 'Chọn hình thức đào tạo'}
+			placeholder={placeholder ?? intl.formatMessage({ id: 'daotao.hinhthuc.placeholder' })}
 			style={{ width: '100%', ...style }}
 			showArrow
 		/>
