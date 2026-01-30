@@ -82,6 +82,8 @@ const SoLuongTopVaoRaThuVien = (props: { dateRange?: any; isDashBoard?: boolean 
 				) : null
 			}
 			variant='borderless'
+			styles={{ body: { padding: 8 } }}
+			size='small'
 		>
 			<TableStaticData
 				loading={loadingTop}

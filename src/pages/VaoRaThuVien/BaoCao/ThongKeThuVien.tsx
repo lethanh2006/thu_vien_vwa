@@ -52,8 +52,10 @@ const ThongKeThuVien = () => {
 							<Card
 								title={intl.formatMessage({ id: 'vaorathuvien.card.title.soLuongVaoRaThuVien' })}
 								variant='borderless'
+								styles={{ body: { padding: 0 } }}
+								size='small'
 							>
-								<div style={{ marginBottom: 12 }}>
+								<div style={{ padding: '12px 0px 12px 0px' }}>
 									<Segmented
 										value={activeKey}
 										onChange={(value) => setActiveKey(value.toString())}
