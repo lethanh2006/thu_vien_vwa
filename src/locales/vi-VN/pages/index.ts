@@ -12,4 +12,9 @@ export default {
 	...vaorathuvien,
 	...luananluanvankhoaluan,
 	...daotao,
+
+	'pages.trangchu.title': 'PHÂN HỆ THƯ VIỆN',
+	'pages.trangchu.subtitle': 'HỆ THỐNG PHẦN MỀM CHỈ ĐẠO, ĐIỀU HÀNH',
+	'pages.gioithieu.title': 'GIỚI THIỆU',
+	'pages.gioithieu.subtitle': 'HỆ THỐNG PHẦN MỀM CHỈ ĐẠO, ĐIỀU HÀNH',
 };

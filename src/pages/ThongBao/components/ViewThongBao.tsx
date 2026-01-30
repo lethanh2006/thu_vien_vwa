@@ -25,7 +25,9 @@ const ViewThongBao = (props: { record?: ThongBao.IRecord; afterViewDetail?: () =
 			[EModuleKey.QLKH]: APP_CONFIG_URL_QLKH,
 			[EModuleKey.KT]: APP_CONFIG_URL_KHAO_THI,
 			[EModuleKey.CSVC]: APP_CONFIG_URL_CSVC,
-			[EModuleKey.VBCC]: '',
+			[EModuleKey.VBCC]: APP_CONFIG_URL_VBCC,
+			[EModuleKey.THU_VIEN]: APP_CONFIG_URL_THU_VIEN,
+			[EModuleKey.QLND]: APP_CONFIG_URL_QLND,
 		};
 
 		const sourceType = mapModuleKey[record?.metadata?.sourceType as ESourceTypeNotification];
