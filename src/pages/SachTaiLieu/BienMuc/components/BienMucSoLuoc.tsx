@@ -33,7 +33,7 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 							<Col xs={24} md={6}>
 								<Form.Item name='urlScanBia' label=''>
 									<UploadFile
-										isPortraitAvatar
+										isLandscapeAvatar
 										buttonDescription={intl.formatMessage({ id: 'sachtailieu.bienmuc.themAnhBia' })}
 									/>
 								</Form.Item>

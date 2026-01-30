@@ -1,6 +1,6 @@
 declare module DonViSo {
 	export interface IRecord {
-		_id: string;
+		id: string;
 		ten: string;
 		parentId: string;
 		vanBanGioiThieu: string;

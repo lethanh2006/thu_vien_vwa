@@ -153,7 +153,7 @@
 		],
 	},
 
-	//AN PHAM DINH KY
+	// AN PHAM DINH KY
 	// {
 	// 	name: 'AnPhamDinhKy',
 	// 	path: 'an-pham-dinh-ky',

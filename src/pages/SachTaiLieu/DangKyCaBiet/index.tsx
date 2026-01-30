@@ -7,6 +7,7 @@ import {
 	colorTrangThaiDangKyCaBiet,
 	ETrangThaiDangKyCaBiet,
 	nameTrangThaiDangKyCaBiet,
+	nameTrangThaiDangKyCaBietV2,
 } from '@/services/SachTaiLieu/constant';
 import dayjs from '@/utils/dayjs';
 import { inputFormat } from '@/utils/utils';
@@ -88,7 +89,11 @@ const DangKyCaBietPage = () => {
 			dataIndex: 'trangThai',
 			align: 'center',
 			width: 90,
-			render: (val, rec) => <Tag color={colorTrangThaiDangKyCaBiet[val as ETrangThaiDangKyCaBiet]}>{val}</Tag>,
+			render: (val, rec) => (
+				<Tag color={colorTrangThaiDangKyCaBiet[val as ETrangThaiDangKyCaBiet]}>
+					{nameTrangThaiDangKyCaBietV2[val as ETrangThaiDangKyCaBiet]}
+				</Tag>
+			),
 			fixed: 'right',
 			onCell,
 			// hide: trangThai === ETrangThaiDangKyCaBiet.THANH_LY,

@@ -12,7 +12,7 @@ const InforNguoiMuon = (props: { isSinhVien: boolean }) => {
 
 	return (
 		<Row gutter={16}>
-			<Col xs={24} sm={6} md={4} style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+			<Col xs={24} sm={6} md={4}>
 				<Avatar
 					size={128}
 					src={isSinhVien ? recSinhVien?.anhDaiDienUrl : recCanBo?.urlAnhDaiDien}

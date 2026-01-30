@@ -29,7 +29,7 @@ const FormAnPhamDinhKy = () => {
 
 	const fullName = initialState?.currentUser?.family_name
 		? `${initialState?.currentUser.family_name} ${initialState?.currentUser?.given_name ?? ''}`
-		: initialState?.currentUser?.name ?? (initialState?.currentUser?.preferred_username || '');
+		: (initialState?.currentUser?.name ?? (initialState?.currentUser?.preferred_username || ''));
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -72,7 +72,7 @@ const FormAnPhamDinhKy = () => {
 								<Row gutter={[12, 0]}>
 									<Col xs={24} md={6}>
 										<Form.Item name='anhBiaUrl' label=''>
-											<UploadFile isPortraitAvatar buttonDescription='Thêm ảnh bìa' />
+											<UploadFile isLandscapeAvatar buttonDescription='Thêm ảnh bìa' />
 										</Form.Item>
 									</Col>
 									<Col xs={24} md={18}>

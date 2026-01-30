@@ -135,7 +135,7 @@ const ModalXepGia = () => {
 								label={intl.formatMessage({ id: 'sachtailieu.anpham.soDangKyTongQuat' })}
 								// rules={[...rules.required]}
 							>
-								<SelectDotNhapSach />
+								<SelectDotNhapSach allowClear />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>

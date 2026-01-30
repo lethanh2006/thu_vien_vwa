@@ -10,21 +10,23 @@ import type { PhieuMuonTra } from '@/services/SachTaiLieu/PhieuMuonTra/typing';
 import dayjs from '@/utils/dayjs';
 import { resetFieldsForm } from '@/utils/utils';
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PrinterOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Form, Input, message, Modal, Popconfirm, Row, Segmented, Space, Spin } from 'antd';
+import { Button, Card, Col, Form, Input, message, Modal, Popconfirm, Row, Segmented, Space, Spin, Tabs } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { useIntl, useModel } from 'umi';
 import ChiTietAnPham from '../../AnPham/components/ChiTiet';
+import FormGhiTraSach from '../GhiTraSach/components/Form';
 import InforNguoiMuon from '../GhiTraSach/components/Infor';
 import StatNguoiDungAnPham from '../GhiTraSach/components/Stat';
 import ModalNguoiMuon from '../NguoiMuon';
+import '../style.less';
 import ConfirmMuonQuaHan from './ConfirmQuaHan';
 import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
 import TitlePrintMuonTra from './TitlePrintMuonTra';
 
 const FormMuonTraSach = (props: any) => {
-	const { getData } = props;
+	const { getData, hideCard } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { visibleForm, setVisibleForm, formSubmiting, edit, postPhieuMuonTraSachModel, record } = useModel(
@@ -51,6 +53,7 @@ const FormMuonTraSach = (props: any) => {
 	const isCanBo = vaiTro === EVaiTroMuonTra.CANBO;
 	const setBorrowerInfo = isSinhVien ? setRecSinhVien : setRecCanBo;
 	const [visibleTimTen, setVisibleTimTen] = useState<boolean>(false);
+	const [tabActive, setTabActive] = useState<string>('1');
 
 	const componentRef = useRef(null);
 	const soTheInputRef = useRef<any>(null);
@@ -75,29 +78,37 @@ const FormMuonTraSach = (props: any) => {
 	);
 
 	useEffect(() => {
+		form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
+		setTimeout(() => {
+			if (soTheInputRef.current) {
+				soTheInputRef.current.focus();
+			}
+		}, 100);
+	}, []);
+
+	useEffect(() => {
 		if (!visibleForm) {
-			resetFieldsForm(form);
+			resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
+			setDanhSach([]);
 			setRecSinhVien(undefined);
 			setRecCanBo(undefined);
-			setDanhSach([]);
-		} else {
-			form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
-
-			setTimeout(() => {
-				if (soTheInputRef.current) {
-					soTheInputRef.current.focus();
-				}
-			}, 100);
 		}
+
+		form.setFieldsValue({ vaiTro: EVaiTroMuonTra.SINHVIEN });
+		setTimeout(() => {
+			if (soTheInputRef.current) {
+				soTheInputRef.current.focus();
+			}
+		}, 100);
 	}, [record?._id, visibleForm]);
 
 	const onFinish = async (values: PhieuMuonTra.IRecord) => {
-		if (!recSinhVien?.ssoId && isSinhVien) {
+		if (isSinhVien && !recSinhVien?.ssoId) {
 			message.error('Không tồn tại thông tin sinh viên!');
 			return;
 		}
 
-		if (!recCanBo?.ssoId && isCanBo) {
+		if (isCanBo && !recCanBo?.ssoId) {
 			message.error('Không tồn tại thông tin cán bộ!');
 			return;
 		}
@@ -107,24 +118,29 @@ const FormMuonTraSach = (props: any) => {
 			return;
 		}
 
-		const data = {
-			danhSachAnPhamMuonTra: (danhSach as any)?.map((item: any) => ({
-				anPhamId: item?.anPhamId,
-				soDangKyCaBiet: item?.soDangKyCaBiet,
-				thoiGianMuon: item?.thoiGianMuon,
-				expired: item?.expired,
-				ghiChu: item?.ghiChu,
-			})),
+		const nguoiMuon = isSinhVien ? recSinhVien : recCanBo;
 
-			hoTenNguoiMuon: isSinhVien ? recSinhVien?.ten : [recCanBo?.hoDem, recCanBo?.ten]?.filter(Boolean).join(' '),
+		const hoTenNguoiMuon = isSinhVien ? recSinhVien?.ten : [recCanBo?.hoDem, recCanBo?.ten].filter(Boolean).join(' ');
+
+		const danhSachAnPhamMuonTra = danhSach.map((item: any) => ({
+			anPhamId: item?.anPhamId,
+			soDangKyCaBiet: item?.soDangKyCaBiet,
+			thoiGianMuon: item?.thoiGianMuon,
+			expired: item?.expired,
+			ghiChu: item?.ghiChu,
+		}));
+
+		const data = {
+			danhSachAnPhamMuonTra,
+
+			hoTenNguoiMuon,
 			maDinhDanhNguoiMuon: isSinhVien ? recSinhVien?.ma : recCanBo?.maCanBo,
-			ssoIdNguoiMuon: isSinhVien ? recSinhVien?.ssoId : recCanBo?.ssoId,
-			ngaySinh: isSinhVien ? recSinhVien?.ngaySinh : recCanBo?.ngaySinh,
+			ssoIdNguoiMuon: nguoiMuon?.ssoId,
+			ngaySinh: nguoiMuon?.ngaySinh,
 			trangThaiDuyet: ETrangThaiDuyetMuonSach.DA_DUYET,
 
 			vaiTro: values?.vaiTro,
 
-			//Sinh Viên
 			maNganhNguoiMuon: recSinhVien?.maNganh ?? '',
 			tenNganhNguoiMuon: recSinhVien?.nganh?.ten ?? '',
 			maKhoaSinhVienNguoiMuon: recSinhVien?.maKhoaSinhVien ?? '',
@@ -133,22 +149,28 @@ const FormMuonTraSach = (props: any) => {
 			tenKhoaNguoiMuon: recSinhVien?.khoaNganh?.ten ?? '',
 			tenLopHanhChinh: recSinhVien?.tenLopHanhChinhVirtual ?? '',
 
-			//Cán bộ, giảng viên
 			maDonViNguoiMuon: recCanBo?.maDonVi ?? '',
 			tenDonViNguoiMuon: recCanBo?.donViChinh?.ten ?? '',
 		};
 
-		postPhieuMuonTraSachModel(data as any, () => {
+		try {
+			await postPhieuMuonTraSachModel(data as any);
+
+			resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
+			setDanhSach([]);
+			setRecSinhVien(undefined);
+			setRecCanBo(undefined);
+			setTimeout(() => {
+				if (soTheInputRef.current) {
+					soTheInputRef.current.focus();
+				}
+			}, 100);
+
 			thongKeMuonTraSachModel();
 			getData();
-		})
-			.then(() => {
-				resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
-				setRecSinhVien(undefined);
-				setRecCanBo(undefined);
-				setDanhSach([]);
-			})
-			.catch((err) => console.log(err));
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	const handleDeleteItem = (sodkcb: string) => {
@@ -185,7 +207,7 @@ const FormMuonTraSach = (props: any) => {
 		},
 		{
 			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.nhande' }),
-			width: 350,
+			width: 250,
 			render: (val, rec) => (
 				<ExpandText>
 					<ButtonExtend
@@ -207,14 +229,14 @@ const FormMuonTraSach = (props: any) => {
 			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.nhaxuatban' }),
 			align: 'center',
 			render: (val, rec) => rec?.anPham?.nhaXuatBan,
-			width: 120,
+			width: 140,
 			filterType: 'string',
 		},
 		{
 			title: intl.formatMessage({ id: 'sachtailieu.muontra.column.namxuatban' }),
 			align: 'center',
 			render: (val, rec) => rec?.anPham?.namXuatBan,
-			width: 120,
+			width: 90,
 			filterType: 'string',
 		},
 		{
@@ -335,9 +357,9 @@ const FormMuonTraSach = (props: any) => {
 		form.resetFields(['dkcb']);
 
 		// Giữ focus ở input đăng ký cá biệt sau khi thêm
-		if (dkcbInputRef.current) {
-			dkcbInputRef.current.focus();
-		}
+		requestAnimationFrame(() => {
+			dkcbInputRef.current?.focus();
+		});
 	};
 
 	const handleLuuSinhVien = async () => {
@@ -375,143 +397,143 @@ const FormMuonTraSach = (props: any) => {
 		}
 	};
 
-	return (
-		<Card
-			title={`${intl.formatMessage({ id: edit ? 'global.button.chinhsua' : 'global.button.themmoi' })} ${intl.formatMessage({ id: 'sachtailieu.muontra.form.title' })}`}
-		>
-			<Form onFinish={onFinish} form={form} layout='vertical'>
-				<Row gutter={[12, 0]}>
-					<Col span={24} md={6}>
-						<Row gutter={[12, 0]}>
-							<Col span={24}>
-								<Form.Item name='vaiTro'>
-									<Segmented
-										options={Object.values(EVaiTroMuonTra)?.map((item) => ({
-											value: item,
-											label: intl.formatMessage({
-												id: item === EVaiTroMuonTra.SINHVIEN ? 'sachtailieu.sinhVien.title' : 'sachtailieu.canBo.title',
-											}),
-										}))}
-										onChange={() => {
-											form.resetFields(['soThe']);
-											// Focus lại vào input mã định danh khi thay đổi vai trò
-											setTimeout(() => {
-												if (soTheInputRef.current) {
-													soTheInputRef.current.focus();
-												}
-											}, 100);
-										}}
-									/>
-								</Form.Item>
-							</Col>
-							<Col span={24}>
-								<Form.Item
-									name='soThe'
-									label={intl.formatMessage({
-										id: isSinhVien
-											? 'sachtailieu.muontra.form.label.masinhvien'
-											: 'sachtailieu.muontra.form.label.macanbo',
-									})}
-									extra={
-										<a type='link' onClick={() => setVisibleTimTen(true)}>
-											{intl.formatMessage({ id: 'sachtailieu.muontra.form.extra.timkiemtheoten' })}
-										</a>
-									}
-								>
-									<Input
-										ref={soTheInputRef}
-										placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.form.placeholder.nhapmadinhdanh' })}
-										allowClear
-										onPressEnter={(e) => {
-											e.preventDefault();
-											handleLuuSinhVien();
-										}}
-										onChange={(e) => {
-											if (e.target.value === '') {
-												setBorrowerInfo(undefined);
-												setDanhSach([]);
+	const content = (
+		<>
+			{tabActive === '1' ? (
+				<Form onFinish={onFinish} form={form} layout='vertical'>
+					<div className='borrow-form-body'>
+						<Row gutter={[12, 0]} wrap>
+							<Col span={24} md={5}>
+								<Row gutter={[12, 0]}>
+									<Col span={24}>
+										<Form.Item name='vaiTro'>
+											<Segmented
+												options={Object.values(EVaiTroMuonTra)?.map((item) => ({
+													value: item,
+													label: item,
+												}))}
+												onChange={() => {
+													form.resetFields(['soThe']);
+													// Focus lại vào input mã định danh khi thay đổi vai trò
+													setTimeout(() => {
+														if (soTheInputRef.current) {
+															soTheInputRef.current.focus();
+														}
+													}, 100);
+												}}
+											/>
+										</Form.Item>
+									</Col>
+									<Col span={24}>
+										<Form.Item
+											name='soThe'
+											label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}
+											extra={
+												<a type='link' onClick={() => setVisibleTimTen(true)}>
+													{intl.formatMessage({ id: 'sachtailieu.muontra.form.extra.timkiemtheoten' })}
+												</a>
 											}
-										}}
-									/>
-								</Form.Item>
-							</Col>
-							<Col span={24}>
-								<Form.Item
-									name='dkcb'
-									label={intl.formatMessage({ id: 'sachtailieu.muontra.form.label.dangkycabiet' })}
-									extra={
-										<Space>
-											<a type='link' onClick={handleLuuDKCB}>
-												{intl.formatMessage({ id: 'sachtailieu.muontra.form.extra.them' })}
-											</a>{' '}
-											{/* |{' '}
+										>
+											<Input
+												ref={soTheInputRef}
+												placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.form.placeholder.nhapmadinhdanh' })}
+												allowClear
+												onPressEnter={(e) => {
+													e.preventDefault();
+													handleLuuSinhVien();
+												}}
+												onChange={(e) => {
+													if (e.target.value === '') {
+														setBorrowerInfo(undefined);
+														setDanhSach([]);
+													}
+												}}
+											/>
+										</Form.Item>
+									</Col>
+									<Col span={24}>
+										<Form.Item
+											name='dkcb'
+											label={intl.formatMessage({ id: 'sachtailieu.muontra.form.label.dangkycabiet' })}
+											extra={
+												<Space>
+													<a type='link' onClick={handleLuuDKCB}>
+														{intl.formatMessage({ id: 'sachtailieu.muontra.form.extra.them' })}
+													</a>{' '}
+													{/* |{' '}
 											<a type='link' onClick={() => setVisibleTimKiem(true)}>
 												Tìm
 											</a> */}
-										</Space>
-									}
-								>
-									<Input
-										ref={dkcbInputRef}
-										placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.form.placeholder.nhapdkcb' })}
-										onPressEnter={(e) => {
-											e.preventDefault();
-											handleLuuDKCB();
-										}}
-										allowClear
-									/>
-								</Form.Item>
+												</Space>
+											}
+										>
+											<Input
+												ref={dkcbInputRef}
+												placeholder={intl.formatMessage({ id: 'sachtailieu.muontra.form.placeholder.nhapdkcb' })}
+												onPressEnter={(e) => {
+													e.preventDefault();
+													handleLuuDKCB();
+												}}
+												allowClear
+											/>
+										</Form.Item>
+									</Col>
+								</Row>
+							</Col>
+
+							<Col span={24} md={19}>
+								<Row gutter={[12, 12]}>
+									<Col span={24}>
+										<Spin spinning={loading}>
+											<InforNguoiMuon isSinhVien={isSinhVien} />
+										</Spin>
+									</Col>
+
+									<Col xs={24}>
+										<StatNguoiDungAnPham isSinhVien={isSinhVien} />
+									</Col>
+
+									<Col span={24}>
+										<TableStaticData
+											loading={loadDKCB}
+											columns={columns}
+											data={danhSach ?? []}
+											size='small'
+											addStt
+											hasTotal
+											otherButtons={[
+												<div className='fw500'>
+													{intl.formatMessage({ id: 'sachtailieu.muontra.danhsach.ghimuon' })}
+												</div>,
+											]}
+										/>
+									</Col>
+								</Row>
 							</Col>
 						</Row>
-					</Col>
+					</div>
 
-					<Col span={24} md={18}>
-						<Row gutter={[12, 0]}>
-							<Col span={24}>
-								<Spin spinning={loading}>
-									<InforNguoiMuon isSinhVien={isSinhVien} />
-								</Spin>
-							</Col>
+					<div className='form-footerthuivien'>
+						{isOverLimit ? (
+							<Button type='primary' onClick={() => setVisibleQuaHan(true)}>
+								{intl.formatMessage({ id: 'sachtailieu.muontra.button.ghimuon' })}
+							</Button>
+						) : (
+							<Button loading={formSubmiting} onClick={() => form.submit()} type='primary'>
+								{intl.formatMessage({ id: 'sachtailieu.muontra.button.ghimuon' })}
+							</Button>
+						)}
 
-							<Col xs={24}>
-								<StatNguoiDungAnPham isSinhVien={isSinhVien} />
-							</Col>
-							<Col span={24}>
-								<div className='fw500' style={{ marginTop: 12 }}>
-									{intl.formatMessage({ id: 'sachtailieu.muontra.danhsach.ghimuon' })}
-								</div>
+						<ButtonExtend icon={<PrinterOutlined />} tooltip='Phiếu' onClick={() => handlePrintPhieu()}>
+							{intl.formatMessage({ id: 'sachtailieu.muontra.button.phieu' })}
+						</ButtonExtend>
 
-								<TableStaticData
-									loading={loadDKCB}
-									columns={columns}
-									data={danhSach ?? []}
-									size='small'
-									addStt
-									hasTotal
-								/>
-							</Col>
-						</Row>
-					</Col>
-				</Row>
-
-				<div className='form-footer'>
-					{isOverLimit ? (
-						<Button type='primary' onClick={() => setVisibleQuaHan(true)}>
-							{intl.formatMessage({ id: 'sachtailieu.muontra.button.ghimuon' })}
-						</Button>
-					) : (
-						<Button loading={formSubmiting} onClick={() => form.submit()} type='primary'>
-							{intl.formatMessage({ id: 'sachtailieu.muontra.button.ghimuon' })}
-						</Button>
-					)}
-
-					<ButtonExtend icon={<PrinterOutlined />} tooltip='Phiếu' onClick={() => handlePrintPhieu()}>
-						{intl.formatMessage({ id: 'sachtailieu.muontra.button.phieu' })}
-					</ButtonExtend>
-
-					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
-				</div>
-			</Form>
+						<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+					</div>
+				</Form>
+			) : (
+				<FormGhiTraSach hideCard />
+			)}
 
 			<PrintTemplate
 				ref={componentRef}
@@ -564,6 +586,33 @@ const FormMuonTraSach = (props: any) => {
 			>
 				<ChiTietAnPham />
 			</Modal>
+		</>
+	);
+
+	return hideCard ? (
+		content
+	) : (
+		<Card
+			title={`${intl.formatMessage({ id: edit ? 'global.button.chinhsua' : 'global.button.themmoi' })} ${intl.formatMessage({ id: 'sachtailieu.muontra.form.title' })}`}
+		>
+			<Tabs
+				onChange={(tab) => {
+					setTabActive(tab);
+					resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
+
+					setTimeout(() => {
+						if (soTheInputRef.current) {
+							soTheInputRef.current.focus();
+						}
+					}, 100);
+				}}
+				activeKey={tabActive}
+				style={{ marginTop: -23 }}
+			>
+				<Tabs.TabPane tab='Ghi mượn' key='1' />
+				<Tabs.TabPane tab='Ghi trả' key='2' />
+			</Tabs>
+			{content}
 		</Card>
 	);
 };

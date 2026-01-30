@@ -80,7 +80,7 @@ const ModalExportAnPham = (props: {
 
 		setLoadingExport(true);
 		exportThongKeTheMuon({
-			condition: { quaHan: value.quaHan, vaiTro },
+			condition: { quaHan: value.quaHan, vaiTro, trangThai },
 			filters: filter?.filter(Boolean),
 		})
 			.then((res) => {

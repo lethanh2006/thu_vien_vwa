@@ -25,14 +25,34 @@ const RenderHanTra = (props: { rec: MuonSach.IRecord }) => {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='red'>{intl.formatMessage({ id: 'sachtailieu.muontra.tag.datramuon' }, { 0: soNgayQuaHan })}</Tag>
+					<Tag
+						color='red'
+						style={{
+							maxWidth: 120,
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							textAlign: 'center',
+						}}
+					>
+						{intl.formatMessage({ id: 'sachtailieu.muontra.tag.datramuon' }, { 0: soNgayQuaHan })}{' '}
+					</Tag>
 				</div>
 			);
 		} else {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='green'>{intl.formatMessage({ id: 'sachtailieu.muontra.tag.datradunghan' })}</Tag>
+					<Tag
+						color='green'
+						style={{
+							maxWidth: 120,
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							textAlign: 'center',
+						}}
+					>
+						{intl.formatMessage({ id: 'sachtailieu.muontra.tag.datradunghan' })}
+					</Tag>
 				</div>
 			);
 		}
@@ -44,21 +64,51 @@ const RenderHanTra = (props: { rec: MuonSach.IRecord }) => {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='red'>{intl.formatMessage({ id: 'sachtailieu.muontra.tag.quahan' }, { 0: soNgayQuaHan })}</Tag>
+					<Tag
+						color='red'
+						style={{
+							maxWidth: 120,
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							textAlign: 'center',
+						}}
+					>
+						{intl.formatMessage({ id: 'sachtailieu.muontra.tag.quahan' }, { 0: soNgayQuaHan })}
+					</Tag>
 				</div>
 			);
 		} else if (soNgayConLai <= 7) {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='orange'>{intl.formatMessage({ id: 'sachtailieu.muontra.tag.sapdenhan' })}</Tag>
+					<Tag
+						color='orange'
+						style={{
+							maxWidth: 120,
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							textAlign: 'center',
+						}}
+					>
+						{intl.formatMessage({ id: 'sachtailieu.muontra.tag.sapdenhan' })}
+					</Tag>
 				</div>
 			);
 		} else {
 			return (
 				<div>
 					{expiredText}
-					<Tag color='green'>{intl.formatMessage({ id: 'sachtailieu.muontra.tag.conngay' }, { 0: soNgayConLai })}</Tag>
+					<Tag
+						color='green'
+						style={{
+							maxWidth: 120,
+							whiteSpace: 'normal',
+							wordBreak: 'break-word',
+							textAlign: 'center',
+						}}
+					>
+						{intl.formatMessage({ id: 'sachtailieu.muontra.tag.conngay' }, { 0: soNgayConLai })}
+					</Tag>
 				</div>
 			);
 		}

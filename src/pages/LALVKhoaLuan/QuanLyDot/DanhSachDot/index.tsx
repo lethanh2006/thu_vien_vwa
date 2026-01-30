@@ -73,6 +73,12 @@ const DanhSachDot = () => {
 				return (
 					<>
 						<ButtonExtend
+							title={intl.formatMessage({ id: 'global.button.chitiet' })}
+							type='link'
+							icon={<EyeOutlined />}
+							onClick={() => handleView(rec)}
+						/>
+						<ButtonExtend
 							title={intl.formatMessage({ id: 'luananluanvankhoaluan.button.xemChiTiet' })}
 							type='link'
 							icon={<EyeOutlined />}

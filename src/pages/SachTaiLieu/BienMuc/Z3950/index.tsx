@@ -235,7 +235,7 @@ const Z3950Page = (props: { getData: () => void }) => {
 						<Form.Item
 							name='max_records'
 							label={intl.formatMessage({ id: 'sachtailieu.anpham.soLuongBanGhi' })}
-							rules={[...rules.required, ...rules.number(undefined, 0)]}
+							rules={[...rules.required, ...rules.number(1000, 0)]}
 						>
 							<InputNumber
 								style={{ width: '100%' }}
