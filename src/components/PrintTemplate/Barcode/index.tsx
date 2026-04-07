@@ -21,7 +21,7 @@ const PrintBarcode = React.forwardRef<HTMLDivElement, PrintBarcodeProps>(({ list
 							>
 								TV - HVCNBCVT
 							</div>
-							<Barcode value={item} height={35} fontSize={16} width={2} font='Calibri' fontOptions='bold' />
+							<Barcode value={item} height={35} fontSize={16} width={1.8} font='Calibri' fontOptions='bold' />
 						</div>
 					))}
 			</div>
