@@ -1,4 +1,4 @@
-import { Descriptions, theme } from 'antd';
+import { Descriptions, Image, theme } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 import { useModel } from 'umi';
 
@@ -27,6 +27,14 @@ const ChiTietBienMuc = () => {
 				whiteSpace: 'pre-wrap',
 			}}
 		>
+			<Descriptions.Item label='Ảnh'>
+				{record?.urlScanBia ? (
+					<Image src={record.urlScanBia} alt='Ảnh' width={120} style={{ objectFit: 'cover' }} />
+				) : (
+					'--'
+				)}
+			</Descriptions.Item>
+
 			<Descriptions.Item label='Sổ đăng ký tổng quát'>{record?.dotNhapSach?.ten ?? '--'}</Descriptions.Item>
 			<Descriptions.Item label='Cán bộ biên mục'>{record?.canBoBienMuc ?? '--'}</Descriptions.Item>
 

@@ -30,7 +30,7 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 						<Row gutter={[12, 0]}>
 							<Col xs={24} md={6}>
 								<Form.Item name='urlScanBia' label=''>
-									<UploadFile isPortraitAvatar buttonDescription='Thêm ảnh bìa' />
+									<UploadFile isLandscapeAvatar buttonDescription='Thêm ảnh bìa' />
 								</Form.Item>
 							</Col>
 							<Col xs={24} md={18}>

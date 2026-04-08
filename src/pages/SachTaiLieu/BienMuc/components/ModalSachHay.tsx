@@ -44,7 +44,7 @@ const ModalSachHay = (props: { visible: boolean; setVisible: (val: boolean) => v
 				<Row gutter={[16, 16]}>
 					<Col xs={24} md={6}>
 						<Form.Item name='urlScanBia' label=''>
-							<UploadFile isPortraitAvatar buttonDescription='Thêm ảnh bìa' />
+							<UploadFile isLandscapeAvatar buttonDescription='Thêm ảnh bìa' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={18}>
