@@ -1,6 +1,7 @@
 import PrintBarcode from '@/components/PrintTemplate/Barcode';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { exportNhanMaGay } from '@/services/SachTaiLieu/AnPham';
+import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { ReloadOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Form, Input, Modal, Radio, Row, Space } from 'antd';
@@ -38,6 +39,8 @@ const InMaVachPage = () => {
 		const endNum = parseInt(matchEnd[2], 10);
 		const padding = Math.max(matchStart[2].length, matchEnd[2].length);
 
+		if (endNum < startNum) return [];
+
 		return Array.from(
 			{ length: endNum - startNum + 1 },
 			(_, i) => prefix + (startNum + i).toString().padStart(padding, '0'),
@@ -60,24 +63,41 @@ const InMaVachPage = () => {
 		return [];
 	}, [kieuIn, tuMaTaiLieu, denMaTaiLieu, tudkcb, dendkcb, madkcb]);
 
-	const handleExport = () => {
-		setLoadingExport(true);
+	const handlePrint = async () => {
+		try {
+			await form.validateFields();
 
-		if (listBarcodes.length === 0) {
-			return Promise.reject('Không có mã vạch để in');
-		} else {
-			return exportNhanMaGay(
+			if (listBarcodes.length === 0) {
+				throw new Error('Không có mã vạch để in');
+			}
+
+			handlePrintBarcord?.();
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleExport = async () => {
+		try {
+			await form.validateFields();
+
+			if (listBarcodes.length === 0) {
+				throw new Error('Không có mã vạch để in');
+			}
+
+			setLoadingExport(true);
+
+			const res = await exportNhanMaGay(
 				kieuIn === 'maTaiLieu'
 					? { danhSachMaTaiLieu: listBarcodes, danhSachSoDangKyCaBiet: [] }
 					: { danhSachSoDangKyCaBiet: listBarcodes, danhSachMaTaiLieu: [] },
-			)
-				.then((res) => {
-					fileDownload(res.data, 'Danh sách nhãn mã gáy.docx');
-				})
-				.catch((error) => console.error('Export failed:', error))
-				.finally(() => {
-					setLoadingExport(false);
-				});
+			);
+
+			fileDownload(res.data, 'Danh sách nhãn mã gáy.docx');
+		} catch (error) {
+			console.error('Export failed:', error);
+		} finally {
+			setLoadingExport(false);
 		}
 	};
 
@@ -103,6 +123,7 @@ const InMaVachPage = () => {
 									<Form.Item
 										name='tuMaTaiLieu'
 										label='Từ mã tài liệu'
+										rules={[...rules.required]}
 										extra={
 											<a
 												onClick={() => {
@@ -121,10 +142,11 @@ const InMaVachPage = () => {
 									<Form.Item
 										name='denMaTaiLieu'
 										label='Đến mã tài liệu'
+										rules={[...rules.required]}
 										extra={
 											<a
 												onClick={() => {
-													setField(denMaTaiLieu);
+													setField('denMaTaiLieu');
 													setVisibleTimKiem(true);
 												}}
 											>
@@ -152,6 +174,7 @@ const InMaVachPage = () => {
 												Tìm kiếm
 											</a>
 										}
+										rules={[...rules.required]}
 									>
 										<Input placeholder='Nhập đăng ký cá biệt' />
 									</Form.Item>
@@ -170,6 +193,7 @@ const InMaVachPage = () => {
 												Tìm kiếm
 											</a>
 										}
+										rules={[...rules.required]}
 									>
 										<Input placeholder='Nhập đăng ký cá biệt' />
 									</Form.Item>
@@ -179,9 +203,10 @@ const InMaVachPage = () => {
 							<Form.Item
 								name='madkcb'
 								label='In theo các đăng ký cá biệt nhập dưới đây'
+								rules={[...rules.required]}
 								extra='Lưu ý các phần tử cách nhau bằng dấu phẩy (,)'
 							>
-								<Input.TextArea rows={3} placeholder='Nhập thông tin' />
+								<Input.TextArea rows={3} placeholder='VD: DK001, DK002' />
 							</Form.Item>
 						)}
 					</Col>
@@ -190,16 +215,16 @@ const InMaVachPage = () => {
 				<Space style={{ marginTop: 8 }}>
 					<Button
 						icon={<ReloadOutlined />}
-						onClick={() => {
+						onClick={() =>
 							resetFieldsForm(form, {
-								kieuIn: kieuIn,
-							});
-						}}
+								kieuIn,
+							})
+						}
 					>
 						Làm mới
 					</Button>
 
-					<ButtonExtend type='primary' onClick={() => handlePrintBarcord()}>
+					<ButtonExtend type='primary' onClick={handlePrint}>
 						In Barcode
 					</ButtonExtend>
 
@@ -209,18 +234,14 @@ const InMaVachPage = () => {
 				</Space>
 			</Form>
 
-			<PrintBarcode ref={componentRef} listBarcodes={listBarcodes?.map((item) => item)} />
+			<PrintBarcode ref={componentRef} listBarcodes={listBarcodes} />
 
 			<Modal
 				title={`Thông tin ${kieuIn === 'maTaiLieu' ? 'mã tài liệu' : 'đăng ký cá biệt'}`}
 				open={visibleTimKiem}
 				onCancel={() => setVisibleTimKiem(false)}
 				width={1000}
-				footer={
-					<div className='form-footer'>
-						<Button onClick={() => setVisibleTimKiem(false)}>Đóng</Button>
-					</div>
-				}
+				footer={<Button onClick={() => setVisibleTimKiem(false)}>Đóng</Button>}
 				destroyOnClose
 			>
 				<TimKiemInMaVach field={field} form={form} setVisibleTimKiem={setVisibleTimKiem} />
