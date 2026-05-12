@@ -1,4 +1,5 @@
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import { getDateTimeFormat } from '@/utils/formatDate';
 import rules from '@/utils/rules';
 import { CloseOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import { Card, Checkbox, Col, Form, Input, InputNumber, Row, Select, Space } from 'antd';
@@ -13,7 +14,8 @@ import { type RowFilterProps, type TDataOption } from '../typing';
 const FilterItem = (props: RowFilterProps) => {
 	const intl = useIntl();
 	const { name, onRemove, allowGrouping = true, level = 0, formOwner, parentPath, ...restProps } = props;
-	const { finalColumns: columns } = useTableContext();
+	const { finalColumns, columns: originalColumns } = useTableContext();
+	const columns = originalColumns || finalColumns;
 	const formInstance = Form.useFormInstance();
 	const { fieldsFiltered } = useFilterFields(columns, formOwner);
 	const [operators, setOperators] = useState<EOperatorType[]>([]);
@@ -72,11 +74,16 @@ const FilterItem = (props: RowFilterProps) => {
 		const isReadOnly = currentFilter.readOnly;
 		switch (filterType) {
 			case 'string':
-				return <Input placeholder={intl.formatMessage({ id: 'global.table.customfilter.label.giatri' })} disabled={isReadOnly} />;
+				return (
+					<Input
+						placeholder={intl.formatMessage({ id: 'global.table.customfilter.label.giatri' })}
+						disabled={isReadOnly}
+					/>
+				);
 			case 'date':
 				return <MyDatePicker disabled={isReadOnly} />;
 			case 'datetime':
-				return <MyDatePicker format='DD/MM/YYYY HH:mm' showTime disabled={isReadOnly} />;
+				return <MyDatePicker format={getDateTimeFormat()} showTime disabled={isReadOnly} />;
 			case 'number':
 				return (
 					<InputNumber
@@ -121,7 +128,9 @@ const FilterItem = (props: RowFilterProps) => {
 								label={
 									<Space>
 										<Form.Item valuePropName='checked' initialValue={true} name={[...namePath, 'active']} noStyle>
-											<Checkbox disabled={currentFilter.readOnly}>{intl.formatMessage({ id: 'global.table.customfilter.label.thuoctinh' })}</Checkbox>
+											<Checkbox disabled={currentFilter.readOnly}>
+												{intl.formatMessage({ id: 'global.table.customfilter.label.thuoctinh' })}
+											</Checkbox>
 										</Form.Item>
 									</Space>
 								}
@@ -178,14 +187,14 @@ const FilterItem = (props: RowFilterProps) => {
 						</Col>
 
 						{!!currentFilter.operator &&
-							currentFilter.operator !== EOperatorType.NULL &&
-							currentFilter.operator !== EOperatorType.NOT_NULL ? (
+						currentFilter.operator !== EOperatorType.NULL &&
+						currentFilter.operator !== EOperatorType.NOT_NULL ? (
 							<>
 								<Col
 									span={24}
 									md={
 										currentFilter.operator === EOperatorType.BETWEEN ||
-											currentFilter.operator === EOperatorType.NOT_BETWEEN
+										currentFilter.operator === EOperatorType.NOT_BETWEEN
 											? 12
 											: 24
 									}
@@ -193,7 +202,7 @@ const FilterItem = (props: RowFilterProps) => {
 									<Form.Item
 										name={
 											currentFilter.operator === EOperatorType.INCLUDE ||
-												currentFilter.operator === EOperatorType.NOT_INCLUDE
+											currentFilter.operator === EOperatorType.NOT_INCLUDE
 												? [...namePath, 'values']
 												: [...namePath, 'values', 0]
 										}
@@ -206,7 +215,7 @@ const FilterItem = (props: RowFilterProps) => {
 								</Col>
 
 								{currentFilter.operator === EOperatorType.BETWEEN ||
-									currentFilter.operator === EOperatorType.NOT_BETWEEN ? (
+								currentFilter.operator === EOperatorType.NOT_BETWEEN ? (
 									<Col span={24} md={12}>
 										<Form.Item
 											name={[...namePath, 'values', 1]}
