@@ -335,7 +335,7 @@ export const TableBaseContent = (props: TableBaseProps) => {
 							? intl.formatMessage({ id: 'global.table.index.import.titleTemplate' }, { title: title as any })
 							: undefined
 					}
-					extendData={params}
+					extendData={props.importParam ?? params}
 				/>
 			) : null}
 
@@ -348,7 +348,8 @@ export const TableBaseContent = (props: TableBaseProps) => {
 						{ id: 'global.table.index.export.fileName' },
 						{ title: (title ?? intl.formatMessage({ id: 'global.table.index.export.defaultTitle' })) as any },
 					)}
-					condition={params}
+					otherQuery={props.exportParam ?? params}
+					filters={filters}
 				/>
 			) : null}
 		</>
