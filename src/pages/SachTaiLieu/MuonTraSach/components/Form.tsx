@@ -20,6 +20,7 @@ import InforNguoiMuon from '../GhiTraSach/components/Infor';
 import StatNguoiDungAnPham from '../GhiTraSach/components/Stat';
 import ModalNguoiMuon from '../NguoiMuon';
 import '../style.less';
+import { getMaSinhVienFromCardText } from '../utils';
 import ConfirmMuonQuaHan from './ConfirmQuaHan';
 import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
@@ -363,11 +364,17 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	const handleLuuSinhVien = async () => {
+		const maDinhDanh = isSinhVien ? getMaSinhVienFromCardText(soThe) : soThe?.trim();
+
+		if (maDinhDanh && maDinhDanh !== soThe) {
+			form.setFieldsValue({ soThe: maDinhDanh });
+		}
+
 		const filter = [
 			{
 				active: true,
 				field: isSinhVien ? 'ma' : 'maCanBo',
-				values: [soThe],
+				values: [maDinhDanh],
 				operator: EOperatorType.CONTAIN,
 			},
 		];
@@ -443,7 +450,16 @@ const FormMuonTraSach = (props: any) => {
 													handleLuuSinhVien();
 												}}
 												onChange={(e) => {
-													if (e.target.value === '') {
+													const maSinhVien = isSinhVien
+														? getMaSinhVienFromCardText(e.target.value, { requireNextLabel: true })
+														: e.target.value;
+
+													if (isSinhVien && maSinhVien !== e.target.value) {
+														form.setFieldsValue({ soThe: maSinhVien });
+														return;
+													}
+
+													if (maSinhVien === '') {
 														setBorrowerInfo(undefined);
 														setDanhSach([]);
 													}

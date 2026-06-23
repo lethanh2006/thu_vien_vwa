@@ -21,6 +21,7 @@ import FormMuonTraSach from '../../components/Form';
 import GhiTraAnPham from '../../components/GhiTraSach';
 import RenderHanTra from '../../components/RenderHanTra';
 import '../../style.less';
+import { getMaSinhVienFromCardText } from '../../utils';
 import InforNguoiMuon from './Infor';
 import StatNguoiDungAnPham from './Stat';
 
@@ -60,11 +61,17 @@ const FormGhiTraSach = (props: any) => {
 
 	const getBorrower = async () => {
 		try {
+			const maDinhDanh = isSinhVien ? getMaSinhVienFromCardText(soThe) : soThe?.trim();
+
+			if (maDinhDanh && maDinhDanh !== soThe) {
+				form.setFieldsValue({ soThe: maDinhDanh });
+			}
+
 			const filter = [
 				{
 					active: true,
 					field: isSinhVien ? 'ma' : 'maCanBo',
-					values: [soThe],
+					values: [maDinhDanh],
 					operator: EOperatorType.CONTAIN,
 				},
 			];
@@ -342,7 +349,16 @@ const FormGhiTraSach = (props: any) => {
 												onPressEnter={() => getBorrower()}
 												allowClear
 												onChange={(e) => {
-													if (e.target.value === '') {
+													const maSinhVien = isSinhVien
+														? getMaSinhVienFromCardText(e.target.value, { requireNextLabel: true })
+														: e.target.value;
+
+													if (isSinhVien && maSinhVien !== e.target.value) {
+														form.setFieldsValue({ soThe: maSinhVien });
+														return;
+													}
+
+													if (maSinhVien === '') {
 														setBorrowerInfo(undefined);
 														setDanhSach([]);
 													}
