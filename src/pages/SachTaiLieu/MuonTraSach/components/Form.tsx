@@ -47,6 +47,7 @@ const FormMuonTraSach = (props: any) => {
 	const { visibleForm: visibleAnPham, setVisibleForm: setVisibleAnPham } = useModel('sachtailieu.anpham.anpham');
 	const [visibleTimKiem, setVisibleTimKiem] = useState<boolean>(false);
 	const [visibleQuaHan, setVisibleQuaHan] = useState<boolean>(false);
+	const [parsingSoThe, setParsingSoThe] = useState(false);
 	const dkcb: string = Form.useWatch('dkcb', form);
 	const soThe: string = Form.useWatch('soThe', form);
 	const vaiTro: EVaiTroMuonTra = Form.useWatch('vaiTro', form);
@@ -59,6 +60,7 @@ const FormMuonTraSach = (props: any) => {
 	const componentRef = useRef(null);
 	const soTheInputRef = useRef<any>(null);
 	const dkcbInputRef = useRef<any>(null);
+	const parseSoTheTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const handlePrintPhieu = useReactToPrint({ contentRef: componentRef });
 
@@ -86,6 +88,15 @@ const FormMuonTraSach = (props: any) => {
 			}
 		}, 100);
 	}, []);
+
+	useEffect(
+		() => () => {
+			if (parseSoTheTimeoutRef.current) {
+				clearTimeout(parseSoTheTimeoutRef.current);
+			}
+		},
+		[],
+	);
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -364,9 +375,13 @@ const FormMuonTraSach = (props: any) => {
 	};
 
 	const handleLuuSinhVien = async () => {
+		if (parseSoTheTimeoutRef.current) {
+			clearTimeout(parseSoTheTimeoutRef.current);
+		}
+		setParsingSoThe(false);
 		const maDinhDanh = isSinhVien ? getMaSinhVienFromCardText(soThe) : soThe?.trim();
 
-		if (maDinhDanh && maDinhDanh !== soThe) {
+		if (maDinhDanh !== soThe) {
 			form.setFieldsValue({ soThe: maDinhDanh });
 		}
 
@@ -420,6 +435,10 @@ const FormMuonTraSach = (props: any) => {
 													label: item,
 												}))}
 												onChange={() => {
+													if (parseSoTheTimeoutRef.current) {
+														clearTimeout(parseSoTheTimeoutRef.current);
+													}
+													setParsingSoThe(false);
 													form.resetFields(['soThe']);
 													// Focus lại vào input mã định danh khi thay đổi vai trò
 													setTimeout(() => {
@@ -433,7 +452,6 @@ const FormMuonTraSach = (props: any) => {
 									</Col>
 									<Col span={24}>
 										<Form.Item
-											name='soThe'
 											label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}
 											extra={
 												<a type='link' onClick={() => setVisibleTimTen(true)}>
@@ -441,30 +459,52 @@ const FormMuonTraSach = (props: any) => {
 												</a>
 											}
 										>
-											<Input
-												ref={soTheInputRef}
-												placeholder='Nhập mã định danh'
-												allowClear
-												onPressEnter={(e) => {
-													e.preventDefault();
-													handleLuuSinhVien();
-												}}
-												onChange={(e) => {
-													const maSinhVien = isSinhVien
-														? getMaSinhVienFromCardText(e.target.value, { requireNextLabel: true })
-														: e.target.value;
+											<div className='qr-input-wrapper'>
+												<Form.Item name='soThe' noStyle>
+													<Input
+														ref={soTheInputRef}
+														placeholder='Nhập mã định danh'
+														allowClear
+														onPressEnter={(e) => {
+															e.preventDefault();
+															handleLuuSinhVien();
+														}}
+														onChange={(e) => {
+															if (e.target.value === '') {
+																setParsingSoThe(false);
+																setBorrowerInfo(undefined);
+																setDanhSach([]);
+															}
 
-													if (isSinhVien && maSinhVien !== e.target.value) {
-														form.setFieldsValue({ soThe: maSinhVien });
-														return;
-													}
+															if (parseSoTheTimeoutRef.current) {
+																clearTimeout(parseSoTheTimeoutRef.current);
+															}
 
-													if (maSinhVien === '') {
-														setBorrowerInfo(undefined);
-														setDanhSach([]);
-													}
-												}}
-											/>
+															if (isSinhVien) {
+																setParsingSoThe(/^\s*M/i.test(e.target.value));
+																parseSoTheTimeoutRef.current = setTimeout(() => {
+																	const currentValue = form.getFieldValue('soThe');
+																	const maSinhVien = getMaSinhVienFromCardText(currentValue, {
+																		requireNextLabel: true,
+																	});
+
+																	if (maSinhVien !== currentValue) {
+																		form.setFieldsValue({ soThe: maSinhVien });
+																	}
+
+																	setParsingSoThe(false);
+																}, 300);
+															}
+														}}
+													/>
+												</Form.Item>
+												{parsingSoThe && (
+													<div className='qr-input-loading' aria-live='polite'>
+														<Spin size='small' />
+														<span>Hệ thống đang xử lý...</span>
+													</div>
+												)}
+											</div>
 										</Form.Item>
 									</Col>
 									<Col span={24}>

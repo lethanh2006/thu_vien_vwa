@@ -48,6 +48,7 @@ const FormGhiTraSach = (props: any) => {
 	const [danhSach, setDanhSach] = useState<MuonSach.IRecord[]>([]);
 	const [visibleGhiTra, setVisibleGhiTra] = useState(false);
 	const [tabActive, setTabActive] = useState<string>('1');
+	const [parsingSoThe, setParsingSoThe] = useState(false);
 
 	const dkcb = Form.useWatch('dkcb', form);
 	const soThe = Form.useWatch('soThe', form);
@@ -58,12 +59,17 @@ const FormGhiTraSach = (props: any) => {
 
 	const soTheInputRef = useRef<any>(null);
 	const dkcbInputRef = useRef<any>(null);
+	const parseSoTheTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const getBorrower = async () => {
 		try {
+			if (parseSoTheTimeoutRef.current) {
+				clearTimeout(parseSoTheTimeoutRef.current);
+			}
+			setParsingSoThe(false);
 			const maDinhDanh = isSinhVien ? getMaSinhVienFromCardText(soThe) : soThe?.trim();
 
-			if (maDinhDanh && maDinhDanh !== soThe) {
+			if (maDinhDanh !== soThe) {
 				form.setFieldsValue({ soThe: maDinhDanh });
 			}
 
@@ -303,6 +309,15 @@ const FormGhiTraSach = (props: any) => {
 		}, 100);
 	}, []);
 
+	useEffect(
+		() => () => {
+			if (parseSoTheTimeoutRef.current) {
+				clearTimeout(parseSoTheTimeoutRef.current);
+			}
+		},
+		[],
+	);
+
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form, { vaiTro: EVaiTroMuonTra.SINHVIEN });
@@ -334,6 +349,10 @@ const FormGhiTraSach = (props: any) => {
 													label: item,
 												}))}
 												onChange={() => {
+													if (parseSoTheTimeoutRef.current) {
+														clearTimeout(parseSoTheTimeoutRef.current);
+													}
+													setParsingSoThe(false);
 													form.resetFields(['soThe']);
 													setTimeout(() => soTheInputRef.current?.focus(), 100);
 												}}
@@ -342,28 +361,50 @@ const FormGhiTraSach = (props: any) => {
 									</Col>
 
 									<Col span={24}>
-										<Form.Item name='soThe' label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}>
-											<Input
-												ref={soTheInputRef}
-												placeholder='Nhập mã định danh'
-												onPressEnter={() => getBorrower()}
-												allowClear
-												onChange={(e) => {
-													const maSinhVien = isSinhVien
-														? getMaSinhVienFromCardText(e.target.value, { requireNextLabel: true })
-														: e.target.value;
+										<Form.Item label={isSinhVien ? 'Mã sinh viên' : 'Mã cán bộ'}>
+											<div className='qr-input-wrapper'>
+												<Form.Item name='soThe' noStyle>
+													<Input
+														ref={soTheInputRef}
+														placeholder='Nhập mã định danh'
+														onPressEnter={() => getBorrower()}
+														allowClear
+														onChange={(e) => {
+															if (e.target.value === '') {
+																setParsingSoThe(false);
+																setBorrowerInfo(undefined);
+																setDanhSach([]);
+															}
 
-													if (isSinhVien && maSinhVien !== e.target.value) {
-														form.setFieldsValue({ soThe: maSinhVien });
-														return;
-													}
+															if (parseSoTheTimeoutRef.current) {
+																clearTimeout(parseSoTheTimeoutRef.current);
+															}
 
-													if (maSinhVien === '') {
-														setBorrowerInfo(undefined);
-														setDanhSach([]);
-													}
-												}}
-											/>
+															if (isSinhVien) {
+																setParsingSoThe(/^\s*M/i.test(e.target.value));
+																parseSoTheTimeoutRef.current = setTimeout(() => {
+																	const currentValue = form.getFieldValue('soThe');
+																	const maSinhVien = getMaSinhVienFromCardText(currentValue, {
+																		requireNextLabel: true,
+																	});
+
+																	if (maSinhVien !== currentValue) {
+																		form.setFieldsValue({ soThe: maSinhVien });
+																	}
+
+																	setParsingSoThe(false);
+																}, 300);
+															}
+														}}
+													/>
+												</Form.Item>
+												{parsingSoThe && (
+													<div className='qr-input-loading' aria-live='polite'>
+														<Spin size='small' />
+														<span>Hệ thống đang xử lý...</span>
+													</div>
+												)}
+											</div>
 										</Form.Item>
 									</Col>
 
