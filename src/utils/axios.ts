@@ -4,6 +4,7 @@ import { notification } from 'antd';
 import axios1 from 'axios';
 // import { history } from 'umi';
 import qs from 'qs';
+import { getIntl, getLocale } from 'umi';
 import { excludedPaths } from './constants';
 import data from './data';
 
@@ -31,6 +32,18 @@ import data from './data';
 //   });
 //   failedQueue = [];
 // };
+
+/** Chuẩn hóa locale (vi-VN, en-US, …) thành giá trị Accept-Language ở BE. */
+const getAcceptLanguage = (): 'en' | 'vi' => (getLocale().startsWith('vi') ? 'vi' : 'en');
+
+// Hàm trợ giúp để xử lý message từ i18n
+const getMessage = (id: string, values?: Record<string, string | number>): string => {
+	try {
+		return getIntl()?.formatMessage({ id }, values) || id;
+	} catch {
+		return id;
+	}
+};
 
 const axios = axios1.create({
 	/**
@@ -72,21 +85,26 @@ axios.interceptors.request.use(
 		// }
 
 		const isExcluded = excludedPaths.some((path) => config.url?.startsWith(path));
-		// if (!isExcluded && !config.url?.includes('wp-json')) {
-		// 	const hasHeader = Object.prototype.hasOwnProperty.call(config.headers, 'x-data-partition-code');
 
-		// 	if (hasHeader) {
-		// 		const value = config.headers['x-data-partition-code'];
-		// 		if (value === null || value === undefined) {
-		// 			delete config.headers['x-data-partition-code'];
-		// 		}
-		// 	} else {
-		// 		const partitionCode = localStorage.getItem('partitionCode');
-		// 		if (partitionCode) {
-		// 			config.headers['x-data-partition-code'] = partitionCode;
-		// 		}
-		// 	}
-		// }
+		if (config.headers && !config.headers.get('Accept-Language')) {
+			config.headers.set('Accept-Language', getAcceptLanguage());
+		}
+
+		if (!isExcluded && !config.url?.includes('wp-json')) {
+			const hasHeader = Object.prototype.hasOwnProperty.call(config.headers, 'x-data-partition-code');
+
+			// 	if (hasHeader) {
+			// 		const value = config.headers['x-data-partition-code'];
+			// 		if (value === null || value === undefined) {
+			// 			delete config.headers['x-data-partition-code'];
+			// 		}
+			// 	} else {
+			// 		const partitionCode = localStorage.getItem('partitionCode');
+			// 		if (partitionCode) {
+			// 			config.headers['x-data-partition-code'] = partitionCode;
+			// 		}
+			// 	}
+		}
 		return config;
 	},
 	(error) => Promise.reject(error),
@@ -122,7 +140,7 @@ axios.interceptors.response.use(
 			switch (error?.response?.status) {
 				case 400:
 					notification.error({
-						message: 'Dữ liệu chưa đúng (004)',
+						message: getMessage('error.400.title', { code: '004' }),
 						description: descriptionError,
 						key: 'error400',
 					});
@@ -130,12 +148,13 @@ axios.interceptors.response.use(
 
 				case 401:
 					// Nếu có access token (có thể access token hết hạn) thì mới cảnh báo
-					if (originalRequest?.headers?.Authorization)
+					if (originalRequest?.headers?.Authorization) {
 						notification.error({
-							message: 'Phiên đăng nhập đã thay đổi (104)',
-							description: 'Vui lòng tải lại trang (F5) để cập nhật. Chú ý các dữ liệu chưa lưu sẽ bị mất!',
+							message: getMessage('error.401.title', { code: '104' }),
+							description: getMessage('error.401.description'),
 							key: 'error401',
 						});
+					}
 					if (originalRequest._retry) break;
 					break;
 				// return routeLogin('Unauthorize');
@@ -193,7 +212,7 @@ axios.interceptors.response.use(
 				case 403:
 				case 405:
 					notification.error({
-						message: 'Thao tác không được phép (304)',
+						message: getMessage('error.403.title', { code: '304' }),
 						description: descriptionError,
 						key: 'error403',
 					});
@@ -201,7 +220,7 @@ axios.interceptors.response.use(
 
 				case 404:
 					notification.error({
-						message: 'Không tìm thấy (040)',
+						message: getMessage('error.404.title', { code: '040' }),
 						description: descriptionError,
 						key: 'error404',
 					});
@@ -209,7 +228,7 @@ axios.interceptors.response.use(
 
 				case 409:
 					notification.error({
-						message: 'Dữ liệu chưa đúng (904)',
+						message: getMessage('error.409.title', { code: '904' }),
 						description: descriptionError,
 						key: 'error409',
 					});
@@ -218,25 +237,25 @@ axios.interceptors.response.use(
 				case 500:
 				case 502:
 					notification.warning({
-						message: 'Máy chủ gặp lỗi (005)',
+						message: getMessage('error.500.title', { code: '005' }),
 						// description: descriptionError,
-						description: 'Có lỗi xảy ra. Vui lòng thử lại sau!',
+						description: getMessage('error.500.description'),
 						key: 'error500',
 					});
 					break;
 
 				case 504:
 					notification.info({
-						message: 'Quá thời gian phản hồi (405)',
-						description: 'Hệ thống đang tiếp tục xử lý, kết quả xử lý sẽ được cập nhật sau!',
+						message: getMessage('error.504.title', { code: '405' }),
+						description: getMessage('error.504.description'),
 						key: 'error504',
 					});
 					break;
 
 				default:
 					notification.warning({
-						message: 'Lỗi xảy ra',
-						description: 'Có lỗi xảy ra. Vui lòng thử lại sau!',
+						message: getMessage('error.default.title'),
+						description: getMessage('error.default.description'),
 						key: 'global_error',
 					});
 					break;
