@@ -374,14 +374,19 @@ const FormMuonTraSach = (props: any) => {
 		});
 	};
 
-	const handleLuuSinhVien = async () => {
+	const handleLuuSinhVien = async (soTheValue?: string) => {
 		if (parseSoTheTimeoutRef.current) {
 			clearTimeout(parseSoTheTimeoutRef.current);
 		}
 		setParsingSoThe(false);
-		const maDinhDanh = isSinhVien ? getMaSinhVienFromCardText(soThe) : soThe?.trim();
+		const currentSoThe = soTheValue ?? soThe;
+		const maDinhDanh = isSinhVien ? getMaSinhVienFromCardText(currentSoThe) : currentSoThe?.trim();
 
-		if (maDinhDanh !== soThe) {
+		if (!maDinhDanh?.trim()) {
+			return;
+		}
+
+		if (maDinhDanh !== currentSoThe) {
 			form.setFieldsValue({ soThe: maDinhDanh });
 		}
 
@@ -493,6 +498,9 @@ const FormMuonTraSach = (props: any) => {
 																	}
 
 																	setParsingSoThe(false);
+																	if (maSinhVien?.trim()) {
+																		handleLuuSinhVien(maSinhVien);
+																	}
 																}, 300);
 															}
 														}}

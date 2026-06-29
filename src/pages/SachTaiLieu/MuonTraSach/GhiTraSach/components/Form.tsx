@@ -61,15 +61,20 @@ const FormGhiTraSach = (props: any) => {
 	const dkcbInputRef = useRef<any>(null);
 	const parseSoTheTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-	const getBorrower = async () => {
+	const getBorrower = async (soTheValue?: string) => {
 		try {
 			if (parseSoTheTimeoutRef.current) {
 				clearTimeout(parseSoTheTimeoutRef.current);
 			}
 			setParsingSoThe(false);
-			const maDinhDanh = isSinhVien ? getMaSinhVienFromCardText(soThe) : soThe?.trim();
+			const currentSoThe = soTheValue ?? soThe;
+			const maDinhDanh = isSinhVien ? getMaSinhVienFromCardText(currentSoThe) : currentSoThe?.trim();
 
-			if (maDinhDanh !== soThe) {
+			if (!maDinhDanh?.trim()) {
+				return;
+			}
+
+			if (maDinhDanh !== currentSoThe) {
 				form.setFieldsValue({ soThe: maDinhDanh });
 			}
 
@@ -393,6 +398,9 @@ const FormGhiTraSach = (props: any) => {
 																	}
 
 																	setParsingSoThe(false);
+																	if (maSinhVien?.trim()) {
+																		getBorrower(maSinhVien);
+																	}
 																}, 300);
 															}
 														}}
