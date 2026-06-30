@@ -61,6 +61,7 @@ const FormMuonTraSach = (props: any) => {
 	const soTheInputRef = useRef<any>(null);
 	const dkcbInputRef = useRef<any>(null);
 	const parseSoTheTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const autoLuuDKCBTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const handlePrintPhieu = useReactToPrint({ contentRef: componentRef });
 
@@ -93,6 +94,10 @@ const FormMuonTraSach = (props: any) => {
 		() => () => {
 			if (parseSoTheTimeoutRef.current) {
 				clearTimeout(parseSoTheTimeoutRef.current);
+			}
+
+			if (autoLuuDKCBTimeoutRef.current) {
+				clearTimeout(autoLuuDKCBTimeoutRef.current);
 			}
 		},
 		[],
@@ -299,8 +304,14 @@ const FormMuonTraSach = (props: any) => {
 
 	const columnsPrint = columns.filter((col) => col.title !== 'Thao tác');
 
-	const handleLuuDKCB = async () => {
-		if (!dkcb) {
+	const handleLuuDKCB = async (dkcbValue?: string) => {
+		if (autoLuuDKCBTimeoutRef.current) {
+			clearTimeout(autoLuuDKCBTimeoutRef.current);
+		}
+
+		const currentDKCB = (dkcbValue ?? form.getFieldValue('dkcb') ?? dkcb)?.trim();
+
+		if (!currentDKCB) {
 			message.error('Vui lòng nhập đăng ký cá biệt trước khi thêm!');
 			return;
 		}
@@ -309,7 +320,7 @@ const FormMuonTraSach = (props: any) => {
 			{
 				active: true,
 				field: 'soDangKyCaBiet',
-				values: [dkcb],
+				values: [currentDKCB],
 				operator: EOperatorType.CONTAIN,
 			},
 			// {
@@ -328,7 +339,7 @@ const FormMuonTraSach = (props: any) => {
 			return;
 		}
 
-		const dkcbNormalized = dkcb.toLocaleUpperCase().trim();
+		const dkcbNormalized = currentDKCB.toLocaleUpperCase().trim();
 
 		let itemChon = anPhamData.find((i) => i?.soDangKyCaBiet?.toLocaleUpperCase().trim() === dkcbNormalized);
 
@@ -422,6 +433,20 @@ const FormMuonTraSach = (props: any) => {
 		if (dkcbInputRef.current) {
 			dkcbInputRef.current.focus();
 		}
+	};
+
+	const handleDKCBChange = (value: string) => {
+		if (autoLuuDKCBTimeoutRef.current) {
+			clearTimeout(autoLuuDKCBTimeoutRef.current);
+		}
+
+		if (!value?.trim()) {
+			return;
+		}
+
+		autoLuuDKCBTimeoutRef.current = setTimeout(() => {
+			handleLuuDKCB(value);
+		}, 300);
 	};
 
 	const content = (
@@ -521,7 +546,7 @@ const FormMuonTraSach = (props: any) => {
 											label='Đăng ký cá biệt'
 											extra={
 												<Space>
-													<a type='link' onClick={handleLuuDKCB}>
+													<a type='link' onClick={() => handleLuuDKCB()}>
 														Thêm
 													</a>{' '}
 													{/* |{' '}
@@ -538,6 +563,7 @@ const FormMuonTraSach = (props: any) => {
 													e.preventDefault();
 													handleLuuDKCB();
 												}}
+												onChange={(e) => handleDKCBChange(e.target.value)}
 												allowClear
 											/>
 										</Form.Item>

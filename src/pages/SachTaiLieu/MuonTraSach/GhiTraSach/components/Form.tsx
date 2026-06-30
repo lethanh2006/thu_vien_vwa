@@ -60,6 +60,7 @@ const FormGhiTraSach = (props: any) => {
 	const soTheInputRef = useRef<any>(null);
 	const dkcbInputRef = useRef<any>(null);
 	const parseSoTheTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const autoLuuDKCBTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const getBorrower = async (soTheValue?: string) => {
 		try {
@@ -133,8 +134,14 @@ const FormGhiTraSach = (props: any) => {
 		}
 	};
 
-	const handleLuuDKCB = async () => {
-		if (!dkcb) {
+	const handleLuuDKCB = async (dkcbValue?: string) => {
+		if (autoLuuDKCBTimeoutRef.current) {
+			clearTimeout(autoLuuDKCBTimeoutRef.current);
+		}
+
+		const currentDKCB = (dkcbValue ?? form.getFieldValue('dkcb') ?? dkcb)?.trim();
+
+		if (!currentDKCB) {
 			message.error('Vui lòng nhập đăng ký cá biệt trước khi thêm!');
 			return;
 		}
@@ -143,7 +150,7 @@ const FormGhiTraSach = (props: any) => {
 			{
 				active: true,
 				field: 'soDangKyCaBiet',
-				values: [dkcb],
+				values: [currentDKCB],
 				operator: EOperatorType.INCLUDE,
 			},
 			{
@@ -180,6 +187,20 @@ const FormGhiTraSach = (props: any) => {
 		setRecord(anPhamData[0]);
 		setVisibleGhiTra(true);
 		dkcbInputRef.current?.focus();
+	};
+
+	const handleDKCBChange = (value: string) => {
+		if (autoLuuDKCBTimeoutRef.current) {
+			clearTimeout(autoLuuDKCBTimeoutRef.current);
+		}
+
+		if (!value?.trim()) {
+			return;
+		}
+
+		autoLuuDKCBTimeoutRef.current = setTimeout(() => {
+			handleLuuDKCB(value);
+		}, 300);
 	};
 
 	const handleGhiTra = async () => {
@@ -319,6 +340,10 @@ const FormGhiTraSach = (props: any) => {
 			if (parseSoTheTimeoutRef.current) {
 				clearTimeout(parseSoTheTimeoutRef.current);
 			}
+
+			if (autoLuuDKCBTimeoutRef.current) {
+				clearTimeout(autoLuuDKCBTimeoutRef.current);
+			}
 		},
 		[],
 	);
@@ -421,12 +446,16 @@ const FormGhiTraSach = (props: any) => {
 											<Input
 												ref={dkcbInputRef}
 												placeholder='Nhập đăng ký cá biệt'
-												onPressEnter={handleLuuDKCB}
+												onPressEnter={(e) => {
+													e.preventDefault();
+													handleLuuDKCB();
+												}}
+												onChange={(e) => handleDKCBChange(e.target.value)}
 												allowClear
 											/>
 										</Form.Item>
 										<Space>
-											<a onClick={handleLuuDKCB}>Ghi trả</a>
+											<a onClick={() => handleLuuDKCB()}>Ghi trả</a>
 										</Space>
 									</Col>
 								</Row>
