@@ -21,7 +21,7 @@ import FormMuonTraSach from '../../components/Form';
 import GhiTraAnPham from '../../components/GhiTraSach';
 import RenderHanTra from '../../components/RenderHanTra';
 import '../../style.less';
-import { getMaSinhVienFromCardText } from '../../utils';
+import { getMaSinhVienFromCardText, isAutoSubmitMaSinhVien } from '../../utils';
 import InforNguoiMuon from './Infor';
 import StatNguoiDungAnPham from './Stat';
 
@@ -128,6 +128,10 @@ const FormGhiTraSach = (props: any) => {
 			);
 
 			setDanhSach(res || []);
+
+			requestAnimationFrame(() => {
+				dkcbInputRef.current?.focus();
+			});
 		} catch (err) {
 			console.error(err);
 			message.error('Có lỗi xảy ra khi lấy thông tin người mượn!');
@@ -423,7 +427,7 @@ const FormGhiTraSach = (props: any) => {
 																	}
 
 																	setParsingSoThe(false);
-																	if (maSinhVien?.trim()) {
+																	if (isAutoSubmitMaSinhVien(maSinhVien)) {
 																		getBorrower(maSinhVien);
 																	}
 																}, 300);

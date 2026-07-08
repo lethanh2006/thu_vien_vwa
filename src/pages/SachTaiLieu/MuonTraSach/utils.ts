@@ -2,6 +2,8 @@ type TParseStudentCardOptions = {
 	requireNextLabel?: boolean;
 };
 
+export const AUTO_SUBMIT_MA_SINH_VIEN_LENGTHS = [10, 13];
+
 export const getMaSinhVienFromCardText = (value?: string, options?: TParseStudentCardOptions) => {
 	const rawValue = value?.trim() ?? '';
 	const normalizedValue = rawValue.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -18,4 +20,10 @@ export const getMaSinhVienFromCardText = (value?: string, options?: TParseStuden
 	const studentCodePattern = new RegExp(`${studentCodeLabel.source}\\s*([A-Z0-9]+)`, 'i');
 
 	return normalizedValue.match(studentCodePattern)?.[1] ?? rawValue;
+};
+
+export const isAutoSubmitMaSinhVien = (value?: string) => {
+	const maSinhVien = value?.trim();
+
+	return !!maSinhVien && AUTO_SUBMIT_MA_SINH_VIEN_LENGTHS.includes(maSinhVien.length);
 };

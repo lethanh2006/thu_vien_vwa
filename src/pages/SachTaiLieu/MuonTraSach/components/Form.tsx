@@ -20,7 +20,7 @@ import InforNguoiMuon from '../GhiTraSach/components/Infor';
 import StatNguoiDungAnPham from '../GhiTraSach/components/Stat';
 import ModalNguoiMuon from '../NguoiMuon';
 import '../style.less';
-import { getMaSinhVienFromCardText } from '../utils';
+import { getMaSinhVienFromCardText, isAutoSubmitMaSinhVien } from '../utils';
 import ConfirmMuonQuaHan from './ConfirmQuaHan';
 import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
@@ -523,7 +523,7 @@ const FormMuonTraSach = (props: any) => {
 																	}
 
 																	setParsingSoThe(false);
-																	if (maSinhVien?.trim()) {
+																	if (isAutoSubmitMaSinhVien(maSinhVien)) {
 																		handleLuuSinhVien(maSinhVien);
 																	}
 																}, 300);
