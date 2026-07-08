@@ -16,8 +16,8 @@ const DanhSachDKCB = () => {
 
 	const getData = () => {
 		if (recAnPham?._id) {
-			if (trangThai === 'ALL') getModel({ anPhamId: recAnPham?._id });
-			else getModel({ anPhamId: recAnPham?._id, trangThai: trangThai as any });
+			if (trangThai === 'ALL') getModel({ anPhamId: recAnPham?._id }, undefined, { soDangKyCaBiet: 1 });
+			else getModel({ anPhamId: recAnPham?._id, trangThai: trangThai as any }, undefined, { soDangKyCaBiet: 1 });
 		}
 	};
 
@@ -38,6 +38,7 @@ const DanhSachDKCB = () => {
 			dataIndex: 'soDangKyCaBiet',
 			align: 'center',
 			width: 120,
+			sortable: true,
 			filterType: 'string',
 		},
 		{
