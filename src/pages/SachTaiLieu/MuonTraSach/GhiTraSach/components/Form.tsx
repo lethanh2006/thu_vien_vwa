@@ -21,7 +21,7 @@ import FormMuonTraSach from '../../components/Form';
 import GhiTraAnPham from '../../components/GhiTraSach';
 import RenderHanTra from '../../components/RenderHanTra';
 import '../../style.less';
-import { getMaSinhVienFromCardText, isAutoSubmitMaSinhVien } from '../../utils';
+import { getMaSinhVienFromCardText, isAutoSubmitDangKyCaBiet, isAutoSubmitMaSinhVien } from '../../utils';
 import InforNguoiMuon from './Infor';
 import StatNguoiDungAnPham from './Stat';
 
@@ -199,6 +199,10 @@ const FormGhiTraSach = (props: any) => {
 		}
 
 		if (!value?.trim()) {
+			return;
+		}
+
+		if (!isAutoSubmitDangKyCaBiet(value)) {
 			return;
 		}
 
@@ -452,7 +456,9 @@ const FormGhiTraSach = (props: any) => {
 												placeholder='Nhập đăng ký cá biệt'
 												onPressEnter={(e) => {
 													e.preventDefault();
-													handleLuuDKCB();
+													if (isAutoSubmitDangKyCaBiet(form.getFieldValue('dkcb'))) {
+														handleLuuDKCB();
+													}
 												}}
 												onChange={(e) => handleDKCBChange(e.target.value)}
 												allowClear

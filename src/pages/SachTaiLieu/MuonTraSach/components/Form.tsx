@@ -20,7 +20,7 @@ import InforNguoiMuon from '../GhiTraSach/components/Infor';
 import StatNguoiDungAnPham from '../GhiTraSach/components/Stat';
 import ModalNguoiMuon from '../NguoiMuon';
 import '../style.less';
-import { getMaSinhVienFromCardText, isAutoSubmitMaSinhVien } from '../utils';
+import { getMaSinhVienFromCardText, isAutoSubmitDangKyCaBiet, isAutoSubmitMaSinhVien } from '../utils';
 import ConfirmMuonQuaHan from './ConfirmQuaHan';
 import FormMuonTra from './FormMuonTra';
 import ModalTimKiem from './ModalTimKiem';
@@ -444,6 +444,10 @@ const FormMuonTraSach = (props: any) => {
 			return;
 		}
 
+		if (!isAutoSubmitDangKyCaBiet(value)) {
+			return;
+		}
+
 		autoLuuDKCBTimeoutRef.current = setTimeout(() => {
 			handleLuuDKCB(value);
 		}, 300);
@@ -561,7 +565,9 @@ const FormMuonTraSach = (props: any) => {
 												placeholder='Nhập đăng ký cá biệt'
 												onPressEnter={(e) => {
 													e.preventDefault();
-													handleLuuDKCB();
+													if (isAutoSubmitDangKyCaBiet(form.getFieldValue('dkcb'))) {
+														handleLuuDKCB();
+													}
 												}}
 												onChange={(e) => handleDKCBChange(e.target.value)}
 												allowClear

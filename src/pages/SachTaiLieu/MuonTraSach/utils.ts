@@ -3,6 +3,7 @@ type TParseStudentCardOptions = {
 };
 
 export const AUTO_SUBMIT_MA_SINH_VIEN_LENGTHS = [10, 13];
+export const AUTO_SUBMIT_DANG_KY_CA_BIET_LENGTH = 8;
 
 export const getMaSinhVienFromCardText = (value?: string, options?: TParseStudentCardOptions) => {
 	const rawValue = value?.trim() ?? '';
@@ -26,4 +27,10 @@ export const isAutoSubmitMaSinhVien = (value?: string) => {
 	const maSinhVien = value?.trim();
 
 	return !!maSinhVien && AUTO_SUBMIT_MA_SINH_VIEN_LENGTHS.includes(maSinhVien.length);
+};
+
+export const isAutoSubmitDangKyCaBiet = (value?: string) => {
+	const maDangKyCaBiet = value?.trim();
+
+	return maDangKyCaBiet?.length === AUTO_SUBMIT_DANG_KY_CA_BIET_LENGTH;
 };
