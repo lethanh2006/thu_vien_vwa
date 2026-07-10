@@ -456,9 +456,7 @@ const FormGhiTraSach = (props: any) => {
 												placeholder='Nhập đăng ký cá biệt'
 												onPressEnter={(e) => {
 													e.preventDefault();
-													if (isAutoSubmitDangKyCaBiet(form.getFieldValue('dkcb'))) {
-														handleLuuDKCB();
-													}
+													handleLuuDKCB();
 												}}
 												onChange={(e) => handleDKCBChange(e.target.value)}
 												allowClear
