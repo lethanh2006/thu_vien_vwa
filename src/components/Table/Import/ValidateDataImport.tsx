@@ -53,7 +53,9 @@ const ValidateDataImport = (props: {
 
 	const validateData = async () => {
 		if (postValidateModel)
-			postValidateModel(dataImport)
+			postValidateModel(dataImport, {
+				messageText: intl.formatMessage({ id: 'global.message.validated' }),
+			})
 				.then((res: TImportResponse) => {
 					setErrorCount(res.validate?.filter((item) => !!item.rowErrors?.length).length);
 					setIsError(res.error);
@@ -68,7 +70,9 @@ const ValidateDataImport = (props: {
 	}, []);
 
 	const onExecute = () => {
-		postExecuteImpotModel(dataImport)
+		postExecuteImpotModel(dataImport, {
+			messageText: intl.formatMessage({ id: 'global.message.imported' }),
+		})
 			.then((res: TImportResponse) => {
 				setStep(1);
 				setErrorCount(res.validate?.filter((item) => !!item.rowErrors?.length).length);
@@ -80,7 +84,11 @@ const ValidateDataImport = (props: {
 	};
 
 	const transformDataToExcelFormat = () => {
-		const headers = ['TT hàng', ...importHeaders.map((h) => h.label), 'Thông tin lỗi'];
+		const headers = [
+			intl.formatMessage({ id: 'global.table.import.validate.excel.thutuhang' }),
+			...importHeaders.map((h) => h.label),
+			intl.formatMessage({ id: 'global.table.import.validate.excel.thongtinloi' }),
+		];
 
 		const dataRows = importResponses.map((item) => {
 			const { row, rowErrors = [] }: { row: Record<string, any>; rowErrors?: string[] } = item;
@@ -145,13 +153,21 @@ const ValidateDataImport = (props: {
 						>
 							<CheckCircleOutlined style={{ fontSize: 24 }} />
 							<span className='fw500' style={{ fontSize: 18 }}>
-								Tất cả dữ liệu {importResponses.length} hàng đã được {step === 0 ? 'kiểm tra hợp lệ' : 'lưu thành công'}
+								{intl.formatMessage(
+									{ id: 'global.table.import.result' },
+									{
+										count: importResponses.length,
+										status: intl.formatMessage({
+											id: step === 0 ? 'global.table.import.status.validated' : 'global.table.import.status.saved',
+										}),
+									},
+								)}
 							</span>
 						</Space>
 					</Col>
 				) : (
 					<Col span={24}>
-						<div className='text-error'>Có lỗi xảy ra!</div>
+						<div className='text-error'>{intl.formatMessage({ id: 'global.table.import.validate.error' })}</div>
 					</Col>
 				)
 			) : (
@@ -163,7 +179,15 @@ const ValidateDataImport = (props: {
 			{importResponses.length ? (
 				<Col span={24}>
 					<Collapse defaultActiveKey={errorCount ? 1 : undefined}>
-						<Collapse.Panel key={0} header={`Thành công (${importResponses.length - (errorCount ?? 0)})`}>
+						<Collapse.Panel
+							key={0}
+							header={intl.formatMessage(
+								{ id: 'global.table.import.validate.thanhcong' },
+								{
+									count: importResponses.length - (errorCount ?? 0),
+								},
+							)}
+						>
 							<TableStaticData
 								columns={columns}
 								data={importResponses.filter((item) => !item?.rowErrors?.length)}
@@ -172,13 +196,21 @@ const ValidateDataImport = (props: {
 								hasTotal
 							/>
 						</Collapse.Panel>
-						<Collapse.Panel key={1} header={`Thất bại (${errorCount ?? 0})`}>
+						<Collapse.Panel
+							key={1}
+							header={intl.formatMessage(
+								{ id: 'global.table.import.validate.thatbai' },
+								{
+									count: errorCount,
+								},
+							)}
+						>
 							<TableStaticData
 								columns={[
 									...columns,
 									{
 										dataIndex: 'rowErrors',
-										title: 'Thông tin lỗi',
+										title: intl.formatMessage({ id: 'global.table.import.validate.excel.thongtinloi' }),
 										width: 350,
 										render: (val) => val?.join(', '),
 									},
@@ -204,12 +236,12 @@ const ValidateDataImport = (props: {
 							title={
 								errorCount ? (
 									<>
-										Tồn tại dữ liệu không hợp lệ
+										{intl.formatMessage({ id: 'global.table.import.validate.popconfirm' })}
 										<br />
-										Vẫn xác nhận Lưu dữ liệu?
+										{intl.formatMessage({ id: 'global.table.import.validate.popconfirm1' })}
 									</>
 								) : (
-									'Xác nhận lưu dữ liệu vào hệ thống?'
+									intl.formatMessage({ id: 'global.table.import.validate.popconfirm2' })
 								)
 							}
 							onConfirm={onExecute}

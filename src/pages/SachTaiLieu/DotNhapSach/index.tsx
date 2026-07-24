@@ -117,7 +117,6 @@ const DotNhapSachPage = () => {
 		>
 			<Space style={{ marginBottom: 12 }}>
 				<SelectHocKy
-					isSetRecord
 					condition={{ active: true }}
 					style={{ width: 250 }}
 					value={recHocKy?.ma}

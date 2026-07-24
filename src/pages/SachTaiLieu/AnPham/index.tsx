@@ -354,7 +354,6 @@ const CardAnPham = () => {
 				otherButtons={[
 					<SelectDotNhapSach
 						key={'1'}
-						isSetRecord
 						style={{ width: 250 }}
 						value={recDot?._id}
 						onChange={(val) => setRecDot(danhSachDot?.find((item) => item?._id === val))}

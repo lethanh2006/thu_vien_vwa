@@ -1,6 +1,6 @@
 import TableBase from '@/components/Table';
 import { type IColumn } from '@/components/Table/typing';
-import dayjs from '@/utils/dayjs';
+import { formatDateTime } from '@/utils/formatDate';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Button, Popconfirm, Tooltip } from 'antd';
 import { useModel } from 'umi';
@@ -17,13 +17,17 @@ const ChucVuPage = () => {
 			filterType: 'select',
 			filterData: ['M01', 'M02', 'M03'],
 			sortable: true,
+			resizable: true,
 		},
 		{
 			title: 'Tên chức vụ',
 			dataIndex: 'ten',
 			width: 250,
+			minWidth: 150,
+			maxWidth: 600,
 			filterType: 'string',
 			sortable: true,
+			resizable: true,
 		},
 		{
 			title: 'Ngày tạo',
@@ -32,7 +36,8 @@ const ChucVuPage = () => {
 			width: 120,
 			filterType: 'datetime',
 			sortable: true,
-			render: (val) => dayjs(val).format('HH:mm DD/MM/YYYY'),
+			render: (val) => formatDateTime(val),
+			resizable: true,
 		},
 		{
 			title: 'Thao tác',

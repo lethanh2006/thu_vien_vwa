@@ -11,7 +11,6 @@ import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu
 import {
 	DeleteOutlined,
 	EditOutlined,
-	EyeOutlined,
 	MenuOutlined,
 	PlusCircleOutlined,
 	StarOutlined,
@@ -266,7 +265,6 @@ const BienMucSachTaiLieuPage = () => {
 		<Card title={intl.formatMessage({ id: 'sachtailieu.bienmuc.title' })}>
 			<div style={{ marginBottom: 12 }}>
 				<SelectDotNhapSach
-					isSetRecord
 					style={{ width: 250 }}
 					value={recDot?._id}
 					onChange={(val) => setRecDot(danhSachDot?.find((item) => item?._id === val))}

@@ -1,13 +1,13 @@
 import dayjs from '@/utils/dayjs';
+import { getDateFormat } from '@/utils/formatDate';
 import { DatePicker } from 'antd';
 import type { RangePickerProps } from 'antd/es/date-picker';
-import locale from 'antd/es/date-picker/locale/vi_VN';
 import type { Dayjs } from 'dayjs';
 
 const MyDateRangePicker = (
 	props: Omit<RangePickerProps, 'onChange'> & {
 		/**
-		 * Format hiển thị, mặc định: DD/MM/YYYY
+		 * Format hiển thị, mặc định: Theo locale (DD/MM/YYYY hoặc MM/DD/YYYY)
 		 */
 		format?: string;
 		showTime?:
@@ -34,7 +34,7 @@ const MyDateRangePicker = (
 		onChange?: (arg: [string, string] | null) => any;
 	},
 ) => {
-	const format = props?.format ?? 'DD/MM/YYYY';
+	const format = props?.format ?? getDateFormat();
 	const { saveFormat, disabledDate, showTime, allowClear = false, disabled } = props;
 
 	const handleChange = (value: [Dayjs, Dayjs] | null) => {
@@ -58,7 +58,6 @@ const MyDateRangePicker = (
 			style={{ width: '100%' }}
 			{...props}
 			format={format}
-			locale={locale}
 			value={objMoment}
 			onChange={handleChange as any}
 			disabledDate={disabledDate}
