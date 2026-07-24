@@ -1,11 +1,24 @@
+import PreviewFile from '@/components/PreviewFile';
+import ModalExpandable from '@/components/Table/ModalExpandable';
 import { colorTrangThaiNopThuVien, type ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
 import dayjs from '@/utils/dayjs';
-import { Card, Descriptions, Tag } from 'antd';
+import { Button, Card, Descriptions, Tag } from 'antd';
+import { useState } from 'react';
 import { useModel } from 'umi';
 
 const ChiTietThuVien = (props: any) => {
 	const { title } = props;
 	const { record } = useModel('quanlythuvien.danhsachdot');
+	const [previewFile, setPreviewFile] = useState<{ file?: string; title?: string }>({});
+
+	const renderPreviewFile = (file?: string, title?: string) =>
+		file ? (
+			<Button type='link' onClick={() => setPreviewFile({ file, title })}>
+				Xem tài liệu
+			</Button>
+		) : (
+			'--'
+		);
 
 	return (
 		<Card title={`Chi tiết ${title?.toLowerCase()}`}>
@@ -40,33 +53,28 @@ const ChiTietThuVien = (props: any) => {
 				<Descriptions.Item label='Chuyên ngành'>{record?.nganh?.ten ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Mã chuyên ngành'>{record?.maNganh ?? '--'}</Descriptions.Item>
 				<Descriptions.Item label='Tài liệu toàn bộ đề tài'>
-					{record?.urlTaiLieu ? (
-						<a href={record?.urlTaiLieu} rel='noreferrer' target='_blank'>
-							Xem tài liệu
-						</a>
-					) : (
-						'--'
-					)}
+					{renderPreviewFile(record?.urlTaiLieu, 'Tài liệu toàn bộ đề tài')}
 				</Descriptions.Item>
 				<Descriptions.Item label='Tài liệu tóm tắt đề tài'>
-					{record?.urlTomTat ? (
-						<a href={record?.urlTomTat} rel='noreferrer' target='_blank'>
-							Xem tài liệu
-						</a>
-					) : (
-						'--'
-					)}
+					{renderPreviewFile(record?.urlTomTat, 'Tài liệu tóm tắt đề tài')}
 				</Descriptions.Item>
 				<Descriptions.Item label='Tài liệu minh chứng đề tài'>
-					{record?.urlTaiLieuMinhChung ? (
-						<a href={record?.urlTaiLieuMinhChung} rel='noreferrer' target='_blank'>
-							Xem tài liệu
-						</a>
-					) : (
-						'--'
-					)}
+					{renderPreviewFile(record?.urlTaiLieuMinhChung, 'Tài liệu minh chứng đề tài')}
 				</Descriptions.Item>
 			</Descriptions>
+			<ModalExpandable
+				title={previewFile.title ?? 'Xem trước tập tin'}
+				width={1200}
+				open={!!previewFile.file}
+				footer={null}
+				onCancel={() => setPreviewFile({})}
+			>
+				{previewFile.file ? <PreviewFile file={previewFile.file} /> : null}
+
+				<div className='form-footer'>
+					<Button onClick={() => setPreviewFile({})}>Đóng</Button>
+				</div>
+			</ModalExpandable>
 		</Card>
 	);
 };

@@ -88,16 +88,18 @@ const BienMucSachTaiLieuPage = () => {
 		},
 		{
 			title: 'Tác giả',
-			dataIndex: 'tacGia',
+			dataIndex: 'tacGiaConverse',
 			width: 150,
 			filterType: 'string',
+			render: (val, rec) => val ?? rec?.nhanDe,
 			onCell,
 		},
 		{
 			title: 'Nhan đề',
-			dataIndex: 'nhanDe',
+			dataIndex: 'nhanDeConverse',
 			width: 150,
 			filterType: 'string',
+			render: (val, rec) => val ?? rec?.tacGia,
 			onCell,
 		},
 		{

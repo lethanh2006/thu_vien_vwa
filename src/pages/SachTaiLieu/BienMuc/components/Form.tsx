@@ -1,9 +1,14 @@
+import ExpandText from '@/components/ExpandText';
+import { EOperatorType } from '@/components/Table/constant';
+import ModalExpandable from '@/components/Table/ModalExpandable';
+import TableStaticData from '@/components/Table/TableStaticData';
+import { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
-import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
+import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Form } from 'antd';
-import { useEffect } from 'react';
+import { Button, Form, message, Tag } from 'antd';
+import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import BienMucSoLuoc from './BienMucSoLuoc';
 
@@ -21,15 +26,20 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		setEdit,
 		visibleForm,
 		setFormSubmiting,
+		getAllModel: getAllAnPham,
+		loading,
 	} = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
 	const { record: recDot } = useModel('sachtailieu.anpham.dotnhapsach');
 	const { initialState } = useModel('@@initialState');
 	const { afterAddNew, getData } = props;
+	const [checkingDuplicate, setCheckingDuplicate] = useState<boolean>(false);
+	const [visibleDuplicate, setVisibleDuplicate] = useState<boolean>(false);
+	const [duplicateData, setDuplicateData] = useState<AnPham.IRecord[]>([]);
 
 	const fullName = initialState?.currentUser?.family_name
 		? `${initialState?.currentUser.family_name} ${initialState?.currentUser?.given_name ?? ''}`
-		: initialState?.currentUser?.name ?? (initialState?.currentUser?.preferred_username || '');
+		: (initialState?.currentUser?.name ?? (initialState?.currentUser?.preferred_username || ''));
 
 	useEffect(() => {
 		if (!visibleForm) {
@@ -102,16 +112,118 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				.catch((er) => console.log(er));
 	};
 
+	const handleCheckDuplicate = async () => {
+		try {
+			const { tacGia, nhanDe } = form.getFieldsValue(['tacGia', 'nhanDe']);
+
+			const tacGiaValue = tacGia?.trim();
+			const nhanDeValue = nhanDe?.trim();
+
+			if (!tacGiaValue && !nhanDeValue) {
+				message.warning('Vui lòng nhập tác giả hoặc nhan đề để kiểm tra');
+				return;
+			}
+
+			setCheckingDuplicate(true);
+
+			const filters = [
+				tacGiaValue && {
+					active: true,
+					field: 'tacGiaConverse',
+					values: [tacGiaValue],
+					operator: EOperatorType.INCLUDE,
+				},
+				nhanDeValue && {
+					active: true,
+					field: 'nhanDeConverse',
+					values: [nhanDeValue],
+					operator: EOperatorType.INCLUDE,
+				},
+			].filter(Boolean);
+
+			const data = await getAllAnPham(undefined, undefined, undefined, filters, undefined, false);
+
+			setDuplicateData(data);
+
+			if (data.length) {
+				message.warning(`Phát hiện ${data.length} ấn phẩm có dữ liệu trùng hoặc gần giống`);
+				setVisibleDuplicate(true);
+			} else {
+				message.success('Chưa phát hiện ấn phẩm trùng hoặc gần giống');
+			}
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setCheckingDuplicate(false);
+		}
+	};
+
+	const columns: IColumn<AnPham.IRecord>[] = [
+		{
+			title: 'Mã tài liệu',
+			dataIndex: 'maTaiLieu',
+			width: 150,
+			filterType: 'string',
+		},
+		{
+			title: 'Nhan đề',
+			dataIndex: 'nhanDeConverse',
+			width: 180,
+			render: (val, rec) => <ExpandText>{val ?? rec?.nhanDe}</ExpandText>,
+			filterType: 'string',
+		},
+		{
+			title: 'Tác giả',
+			dataIndex: 'tacGiaConverse',
+			width: 150,
+			render: (val, rec) => val ?? rec?.tacGia,
+			filterType: 'string',
+		},
+		{
+			title: 'Trạng thái',
+			dataIndex: 'trangThai',
+			align: 'center',
+			width: 120,
+			render: (val, rec) => (
+				<Tag
+					style={{ whiteSpace: 'normal', wordWrap: 'break-word', textAlign: 'center' }}
+					color={colorTrangThaiBienMuc[val as ETrangThaiBienMuc]}
+				>
+					{val}
+				</Tag>
+			),
+			filterType: 'select',
+			filterData: Object.values(ETrangThaiBienMuc),
+			fixed: 'right',
+		},
+	];
+
 	return (
-		<Form onFinish={onFinish} form={form} layout='vertical'>
-			<BienMucSoLuoc form={form} />
-			<div className='form-footer'>
-				<Button loading={formSubmiting} htmlType='submit' type='primary'>
-					{!edit ? 'Biên mục' : `${intl.formatMessage({ id: 'global.button.luulai' })}`}
-				</Button>
-				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
-			</div>
-		</Form>
+		<>
+			<Form onFinish={onFinish} form={form} layout='vertical'>
+				<BienMucSoLuoc form={form} />
+				<div className='form-footer'>
+					<Button loading={checkingDuplicate} onClick={handleCheckDuplicate}>
+						Kiểm tra trùng
+					</Button>
+					<Button loading={formSubmiting} htmlType='submit' type='primary'>
+						{!edit ? 'Biên mục' : `${intl.formatMessage({ id: 'global.button.luulai' })}`}
+					</Button>
+					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>
+				</div>
+			</Form>
+			<ModalExpandable
+				title='Cảnh báo dữ liệu trùng hoặc gần giống'
+				open={visibleDuplicate}
+				onCancel={() => setVisibleDuplicate(false)}
+				footer={
+					<Button onClick={() => setVisibleDuplicate(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
+				}
+				width={900}
+			>
+				<TableStaticData columns={columns} data={duplicateData ?? []} loading={loading} size='small' hasTotal addStt />
+			</ModalExpandable>
+		</>
 	);
 };
 

@@ -56,10 +56,16 @@ const CardAnPham = () => {
 	const [visibleXoa, setVisibleXoa] = useState<boolean>(false);
 
 	const getData = () => {
-		getModel({
-			dotNhapSachId: recDot?._id,
-			trangThai: ETrangThaiBienMuc.DA_BIEN_MUC,
-		});
+		getModel(
+			{
+				dotNhapSachId: recDot?._id,
+				trangThai: ETrangThaiBienMuc.DA_BIEN_MUC,
+			},
+			undefined,
+			{
+				updatedAt: -1,
+			},
+		);
 	};
 
 	const onCell = (rec: AnPham.IRecord) => ({
@@ -94,7 +100,7 @@ const CardAnPham = () => {
 			align: 'center',
 			render: (url: string, rec) => (
 				<Avatar
-					src={url ?? '/logo.png'}
+					src={url || '/logo.png'}
 					alt={rec?.nhanDe}
 					shape='square'
 					style={{ width: 40, height: 40, objectFit: 'cover' }}
@@ -140,16 +146,17 @@ const CardAnPham = () => {
 		},
 		{
 			title: 'Nhan đề',
-			dataIndex: 'nhanDe',
+			dataIndex: 'nhanDeConverse',
 			width: 180,
-			render: (val, rec) => <ExpandText>{val}</ExpandText>,
+			render: (val, rec) => <ExpandText>{val ?? rec?.nhanDe}</ExpandText>,
 			filterType: 'string',
 			onCell,
 		},
 		{
 			title: 'Tác giả',
-			dataIndex: 'tacGia',
+			dataIndex: 'tacGiaConverse',
 			width: 150,
+			render: (val, rec) => val ?? rec?.tacGia,
 			filterType: 'string',
 			onCell,
 		},

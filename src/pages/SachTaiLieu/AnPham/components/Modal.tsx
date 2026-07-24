@@ -12,7 +12,9 @@ import ChiTietAnPham from './ChiTiet';
 
 const ModalAnPham = () => {
 	const intl = useIntl();
-	const { record: recAnPham, setVisibleForm } = useModel('sachtailieu.anpham.anpham');
+	const { record: recAnPham, setVisibleForm, setIsView, setEdit } = useModel('sachtailieu.anpham.anpham');
+	const { setVisibleForm: setVsXepGia } = useModel('sachtailieu.anpham.xepgia');
+
 	const { getAllModel, loading } = useModel('sachtailieu.anpham.thongtinanpham');
 	const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1200px)' });
 
@@ -57,6 +59,25 @@ const ModalAnPham = () => {
 			</Tabs>
 
 			<div className='form-footer'>
+				<Button
+					type='primary'
+					onClick={() => {
+						setIsView(false);
+						setEdit(true);
+					}}
+				>
+					Biên mục
+				</Button>
+
+				<Button
+					onClick={() => {
+						setVisibleForm(false);
+						setVsXepGia(true);
+					}}
+				>
+					Xếp giá
+				</Button>
+
 				<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.dong' })}</Button>
 			</div>
 		</Card>

@@ -1,7 +1,9 @@
 import ExpandText from '@/components/ExpandText';
 import MyDateRangePicker from '@/components/MyDatePicker/RangePicker';
+import PreviewFile from '@/components/PreviewFile';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import ModalExpandable from '@/components/Table/ModalExpandable';
 import { EOperatorType } from '@/components/Table/constant';
 import type { IColumn } from '@/components/Table/typing';
 
@@ -52,6 +54,7 @@ const QuanLyThuVienPage = () => {
 
 	const [datePicker, setDatePicker] = useState<any>();
 	const luanAnValue = useRef(settingThuVien?.luanAn);
+	const [previewFile, setPreviewFile] = useState<{ file?: string; title?: string }>({});
 
 	useEffect(() => {
 		getSettingThuVienModel();
@@ -109,6 +112,13 @@ const QuanLyThuVienPage = () => {
 		).then((res) => fileDownload(res.data, getFilenameHeader(res)));
 	};
 
+	const renderPreviewFile = (file?: string, title?: string) =>
+		file ? (
+			<Button type='link' onClick={() => setPreviewFile({ file, title })}>
+				Xem tài liệu
+			</Button>
+		) : null;
+
 	const columns: IColumn<QuanLyThuVien.IQuanLyDanhSachNop>[] = [
 		{
 			title: 'Số lưu chiểu',
@@ -158,36 +168,21 @@ const QuanLyThuVienPage = () => {
 			dataIndex: 'urlTaiLieu',
 			align: 'center',
 			width: 150,
-			render: (val, rec) =>
-				val && (
-					<a href={val} target='_blank' rel='noreferrer'>
-						Xem tài liệu
-					</a>
-				),
+			render: (val) => renderPreviewFile(val, 'Tài liệu toàn bộ đề tài'),
 		},
 		{
 			title: 'Tài liệu tóm tắt đề tài',
 			dataIndex: 'urlTomTat',
 			align: 'center',
 			width: 150,
-			render: (val, rec) =>
-				val && (
-					<a href={val} target='_blank' rel='noreferrer'>
-						Xem tài liệu
-					</a>
-				),
+			render: (val) => renderPreviewFile(val, 'Tài liệu tóm tắt đề tài'),
 		},
 		{
 			title: 'Tài liệu minh chứng đề tài',
 			dataIndex: 'urlTaiLieuMinhChung',
 			align: 'center',
 			width: 150,
-			render: (val, rec) =>
-				val && (
-					<a href={val} target='_blank' rel='noreferrer'>
-						Xem tài liệu
-					</a>
-				),
+			render: (val) => renderPreviewFile(val, 'Tài liệu minh chứng đề tài'),
 		},
 		{
 			title: 'Thời gian nộp',
@@ -363,7 +358,7 @@ const QuanLyThuVienPage = () => {
 							loai === ELoaiDotQuanLyThuvien.LUAN_AN
 								? 'LA-'
 								: loai === ELoaiDotQuanLyThuvien.LUAN_VAN
-									? 'LV-'
+									? 'ĐA-'
 									: 'KL-DA-'
 						}
 						value={
@@ -406,6 +401,19 @@ const QuanLyThuVienPage = () => {
 				// 	]
 				// }
 			/>
+			<ModalExpandable
+				title={previewFile.title ?? 'Xem trước tập tin'}
+				width={1200}
+				open={!!previewFile.file}
+				footer={null}
+				onCancel={() => setPreviewFile({})}
+			>
+				{previewFile.file ? <PreviewFile file={previewFile.file} /> : null}
+
+				<div className='form-footer'>
+					<Button onClick={() => setPreviewFile({})}>Đóng</Button>
+				</div>
+			</ModalExpandable>
 		</Card>
 	);
 };

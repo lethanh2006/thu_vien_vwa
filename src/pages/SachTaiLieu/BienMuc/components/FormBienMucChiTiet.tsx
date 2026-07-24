@@ -24,19 +24,31 @@ const FormBienMucChiTiet = (props: any) => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			const danhSachTags = danhSach.map((dsItem) => dsItem.tagCode);
+			const khaiBaoMauBienMucMap = new Map((mauBienMuc?.thongTinKhaiBao || []).map((item) => [item.tag, item]));
+			const danhSachTags = new Set(danhSach.map((dsItem) => dsItem.tagCode));
 
-			const khaiBaoMauBienMuc = (mauBienMuc?.thongTinKhaiBao || []).filter((item) => !danhSachTags.includes(item.tag));
+			const khaiBaoMauBienMuc = (mauBienMuc?.thongTinKhaiBao || []).filter((item) => !danhSachTags.has(item.tag));
 
 			const mergedData = [
 				...(danhSach ?? []).map((item) => ({
 					...item,
 					ten: item.tag?.noiDung,
-					thuocTinhAnPham: item?.thuocTinhAnPham?.map((tp) => ({
-						...tp,
-						value: tp.value ?? null,
-						ten: item?.tag?.thuocTinh?.find((i) => i?.code === tp?.code)?.tieuDe,
-					})),
+					thuocTinhAnPham: khaiBaoMauBienMucMap.get(item.tagCode ?? '')?.thuocTinhDuLieu?.length
+						? khaiBaoMauBienMucMap.get(item.tagCode ?? '')?.thuocTinhDuLieu?.map((tp, index) => {
+								const thuocTinhAnPham = item?.thuocTinhAnPham?.find((i) => i?.code === tp?.code);
+
+								return {
+									...tp,
+									value: thuocTinhAnPham?.value ?? (index === 0 ? (item.value ?? null) : null),
+									ten: tp.ten,
+								};
+							})
+						: item?.thuocTinhAnPham?.map((tp) => ({
+								...tp,
+								value: tp.value ?? null,
+								ten: item?.tag?.thuocTinh?.find((i) => i?.code === tp?.code)?.tieuDe,
+							})),
+					value: khaiBaoMauBienMucMap.get(item.tagCode ?? '')?.thuocTinhDuLieu?.length ? undefined : item.value,
 				})),
 				...(khaiBaoMauBienMuc ?? []).map((item) => ({
 					_id: null,
@@ -52,7 +64,7 @@ const FormBienMucChiTiet = (props: any) => {
 
 			form.setFieldsValue({ danhSachBienMucChiTiet: _.orderBy(mergedData, 'tagCode') });
 		}
-	}, [visibleForm, record?._id, record?.mauBienMucId]);
+	}, [visibleForm, record?._id, record?.mauBienMucId, danhSach, mauBienMuc?.thongTinKhaiBao]);
 
 	const onFinish = async (values: any) => {
 		const data = {
