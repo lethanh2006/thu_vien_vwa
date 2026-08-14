@@ -120,7 +120,7 @@ const DanhSachDot = () => {
 				buttons={{
 					create: isNgoaiThoiGian ? false : true,
 					import: isNgoaiThoiGian ? false : true,
-					export: isNgoaiThoiGian ? false : true,
+					export: true,
 				}}
 			/>
 		</>
