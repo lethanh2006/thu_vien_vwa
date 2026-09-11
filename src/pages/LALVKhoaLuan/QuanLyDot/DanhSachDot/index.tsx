@@ -1,12 +1,14 @@
 import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import ModalExport from '@/components/Table/Export';
 import type { IColumn } from '@/components/Table/typing';
 import { colorTrangThaiNopThuVien, ETrangThaiNopThuVien } from '@/services/QuanLyThuVien/constants';
 import type { QuanLyThuVien } from '@/services/QuanLyThuVien/typing';
 import dayjs from '@/utils/dayjs';
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, ExportOutlined, EyeOutlined } from '@ant-design/icons';
 import { Alert, Popconfirm, Tag } from 'antd';
+import { useState } from 'react';
 import { useModel } from 'umi';
 import ChiTietDanhSach from './components/ChiTiet';
 import FormDanhSachNop from './components/Form';
@@ -15,6 +17,7 @@ const DanhSachDot = () => {
 	const { record: recDot } = useModel('quanlythuvien.quanlydot');
 	const { getModel, page, limit, handleEdit, handleView, isView, deleteModel } = useModel('quanlythuvien.danhsachdot');
 	const isNgoaiThoiGian = dayjs(recDot?.thoiGianKetThuc).isBefore(dayjs());
+	const [visibleExport, setVisibleExport] = useState(false);
 
 	const getData = () => {
 		getModel({ idDot: recDot?._id });
@@ -120,8 +123,27 @@ const DanhSachDot = () => {
 				buttons={{
 					create: isNgoaiThoiGian ? false : true,
 					import: isNgoaiThoiGian ? false : true,
-					export: true,
+					export: false,
 				}}
+				otherButtons={[
+					<ButtonExtend
+						key='export'
+						icon={<ExportOutlined />}
+						notHideText
+						onClick={() => setVisibleExport(true)}
+						tooltip='Xuất dữ liệu'
+					>
+						Xuất dữ liệu
+					</ButtonExtend>,
+				]}
+			/>
+
+			<ModalExport
+				visible={visibleExport}
+				onCancel={() => setVisibleExport(false)}
+				modelName='quanlythuvien.danhsachdot'
+				fileName='Danh sách nộp.xlsx'
+				condition={{ idDot: recDot?._id }}
 			/>
 		</>
 	);
