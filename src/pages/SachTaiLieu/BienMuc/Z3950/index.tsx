@@ -10,6 +10,7 @@ import { Button, Col, Empty, Form, Input, InputNumber, Modal, Row, Select } from
 import { useEffect } from 'react';
 import { useModel } from 'umi';
 import SelectMayChu from '../../../DanhMuc/ThuVienQuocTe/components/Select';
+import { readBriefTitle } from '../utils/cataloging';
 import ModalBienMucZ3950 from './components/Modal';
 
 const { Option } = Select;
@@ -77,8 +78,6 @@ const Z3950Page = (props: { getData: () => void }) => {
 			soThuTuCuaTap: z390Data.data_fields
 				?.find((item) => item?.tag === '245')
 				?.subfields?.find((item) => item?.code === 'n')?.value,
-			phuDe: z390Data.data_fields?.find((item) => item?.tag === '245')?.subfields?.find((item) => item?.code === 'b')
-				?.value,
 			thongTinTrachNhiem: z390Data.data_fields
 				?.find((item) => item?.tag === '245')
 				?.subfields?.find((item) => item?.code === 'c')?.value,
@@ -122,6 +121,9 @@ const Z3950Page = (props: { getData: () => void }) => {
 				return thongTin;
 			});
 		}
+		const briefTitle = readBriefTitle(anPhamRecord.danhSachThongTin);
+		anPhamRecord.nhanDeSongSong = briefTitle.nhanDeSongSong;
+		anPhamRecord.phuDe = briefTitle.phuDe;
 
 		return anPhamRecord as AnPham.IRecord;
 	};

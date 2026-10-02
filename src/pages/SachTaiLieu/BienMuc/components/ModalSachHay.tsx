@@ -27,7 +27,11 @@ const ModalSachHay = (props: { visible: boolean; setVisible: (val: boolean) => v
 		const urlScanBia = await buildUpLoadFile(values, 'urlScanBia').finally(() => setFormSubmiting(false));
 		values.urlScanBia = urlScanBia ?? '';
 
-		putBienMucSoLuocModel(record?._id ?? '', { ...record, ...values, isSachHay: true }, getData)
+		putBienMucSoLuocModel(
+			record?._id ?? '',
+			{ moTa: values.moTa ?? '', urlScanBia: values.urlScanBia, isSachHay: true },
+			getData,
+		)
 			.then((rec) => setVisible(false))
 			.catch((er) => console.log(er));
 	};

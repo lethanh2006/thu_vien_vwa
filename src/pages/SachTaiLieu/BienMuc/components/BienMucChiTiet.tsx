@@ -6,6 +6,7 @@ import SelectHocPhan from '@/pages/DaoTao/HocPhan/Select';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { Col, Form, type FormInstance, Input, Row, Select, Space, Table } from 'antd';
 import _ from 'lodash';
+import { sortSubfieldsForDisplay } from '../utils/cataloging';
 
 const BienMucChiTiet = (props: { form: FormInstance }) => {
 	const { form } = props;
@@ -53,7 +54,7 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 			width: 80,
 			render: (val: any, field: any) => (
 				<Form.Item name={[field.name, 'ind1']} noStyle>
-					<Input placeholder='Nhập chỉ mục 1' />
+					<Input autoComplete='off' placeholder='Nhập chỉ mục 1' />
 				</Form.Item>
 			),
 		},
@@ -64,7 +65,7 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 			width: 80,
 			render: (val: any, field: any) => (
 				<Form.Item name={[field.name, 'ind2']} noStyle>
-					<Input placeholder='Nhập chỉ mục 2' />
+					<Input autoComplete='off' placeholder='Nhập chỉ mục 2' />
 				</Form.Item>
 			),
 		},
@@ -79,16 +80,14 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 				if (currentTagData?.thuocTinhAnPham?.length) {
 					const isMultiple = currentTagData.thuocTinhAnPham.length > 1;
 
-					const sortedSubFields = _.orderBy(currentTagData.thuocTinhAnPham, 'code');
+					const sortedSubFields = sortSubfieldsForDisplay(currentTagData.thuocTinhAnPham);
 
 					return (
 						<Row gutter={[12, 0]} style={{ width: '100%' }}>
 							{sortedSubFields.map((item: any, i: number) => {
 								const fieldCode = `${currentTagData.tagCode}${item?.code}`;
 
-								const originalIndex = currentTagData.thuocTinhAnPham.findIndex(
-									(subField: any) => subField.code === item.code,
-								);
+								const originalIndex = item.originalIndex;
 
 								return (
 									<Col
@@ -135,10 +134,10 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 												}
 
 												if (fieldCode === '913$b') {
-													return <Input placeholder='Tên học phần (tự động)' disabled />;
+													return <Input autoComplete='off' placeholder='Tên học phần (tự động)' disabled />;
 												}
 
-												return <Input placeholder={`Nhập ${item.ten || ''}`} />;
+												return <Input autoComplete='off' placeholder={`Nhập ${item.ten || ''}`} />;
 											})()}
 										</Form.Item>
 									</Col>
@@ -163,7 +162,7 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 						) : tagCode === '927' ? (
 							<SelectDangTaiLieu selectMa />
 						) : (
-							<Input placeholder='Nhập thông tin' />
+							<Input autoComplete='off' placeholder='Nhập thông tin' />
 						)}
 					</Form.Item>
 				);

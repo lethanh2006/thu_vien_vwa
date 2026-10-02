@@ -1,4 +1,4 @@
-import { Modal, Steps } from 'antd';
+import { Alert, Button, Modal, Steps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import FormZ3950 from './Form';
@@ -8,7 +8,14 @@ const ModalBienMucZ3950 = (props: any) => {
 	const { getData } = props;
 	const intl = useIntl();
 	const { visibleZ3950, setVisibleZ3950, record } = useModel('sachtailieu.anpham.anpham');
+	const { getAllModel, loading, catalogLoadError } = useModel('sachtailieu.anpham.thongtinanpham');
 	const [currentStep, setCurrentStep] = useState(0);
+
+	useEffect(() => {
+		if (visibleZ3950 && record?._id) {
+			getAllModel(undefined, undefined, { anPhamId: record._id }).catch(() => undefined);
+		}
+	}, [visibleZ3950, record?._id]);
 
 	useEffect(() => {
 		setCurrentStep(0);
@@ -26,6 +33,22 @@ const ModalBienMucZ3950 = (props: any) => {
 			onCancel={() => setVisibleZ3950(false)}
 			footer={null}
 		>
+			{record?._id && catalogLoadError ? (
+				<Alert
+					type='error'
+					showIcon
+					message={catalogLoadError}
+					style={{ marginBottom: 18 }}
+					action={
+						<Button
+							loading={loading}
+							onClick={() => getAllModel(undefined, undefined, { anPhamId: record._id }).catch(() => undefined)}
+						>
+							Thử tải lại
+						</Button>
+					}
+				/>
+			) : null}
 			<Steps
 				current={currentStep}
 				style={{ marginBottom: 18, paddingTop: 0 }}

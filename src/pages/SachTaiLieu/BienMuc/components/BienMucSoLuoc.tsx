@@ -10,8 +10,8 @@ import SelectDotNhapSach from '@/pages/SachTaiLieu/DotNhapSach/components/Select
 import rules from '@/utils/rules';
 import { Alert, Checkbox, Col, Form, type FormInstance, Input, Row, Select } from 'antd';
 
-const BienMucSoLuoc = (props: { form: FormInstance }) => {
-	const { form } = props;
+const BienMucSoLuoc = (props: { form: FormInstance; ambiguousTitle?: boolean; detailedTitleRequired?: boolean }) => {
+	const { form, ambiguousTitle, detailedTitleRequired } = props;
 	const isSachHay: boolean = Form.useWatch('isSachHay', form);
 
 	return (
@@ -42,7 +42,7 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 									</Col>
 									<Col xs={24} md={12}>
 										<Form.Item name='canBoBienMuc' label='Cán bộ biên mục [911]'>
-											<Input placeholder='Nhập tên cán bộ' />
+											<Input autoComplete='off' placeholder='Nhập tên cán bộ' />
 										</Form.Item>
 									</Col>
 									<Col xs={24} md={12}>
@@ -98,62 +98,85 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 				<Row gutter={[12, 0]}>
 					<Col xs={24} md={12}>
 						<Form.Item name='ISBN' label='ISBN [020$a]'>
-							<Input placeholder='Nhập ISBN' />
+							<Input autoComplete='off' placeholder='Nhập ISBN' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='ISSN' label='ISSN [022$a]'>
-							<Input placeholder='Nhập ISSN' />
+							<Input autoComplete='off' placeholder='Nhập ISSN' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item name='tacGia' label='Tác giả [100$a]' rules={[...rules.required]}>
-							<Input placeholder='Nhập tác giả' />
+						<Form.Item name='tacGia' label='Tác giả [100$a]'>
+							<Input autoComplete='off' placeholder='Nhập tác giả' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='nhanDe' label='Nhan đề chính [245$a]' rules={[...rules.required]}>
-							<Input placeholder='Nhập nhan đề chính' />
+							<Input autoComplete='off' placeholder='Nhập nhan đề chính' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='soThuTuCuaTap' label='Số thứ tự của tập [245$n]'>
-							<Input placeholder='Nhập số thứ tự của tập' />
+							<Input autoComplete='off' placeholder='Nhập số thứ tự của tập' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='tenTap' label='Tên tập [245$p]'>
-							<Input placeholder='Nhập tên tập' />
+							<Input autoComplete='off' placeholder='Nhập tên tập' />
+						</Form.Item>
+					</Col>
+					<Col xs={24} md={12}>
+						<Form.Item
+							name='nhanDeSongSong'
+							label='Nhan đề song song [245$b]'
+							extra={
+								ambiguousTitle
+									? 'Dữ liệu hiện có chưa phân biệt nhan đề song song và phụ đề; giá trị được đặt tại ô này.'
+									: undefined
+							}
+						>
+							<Input autoComplete='off' placeholder='Nhập nhan đề song song' disabled={detailedTitleRequired} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='phuDe' label='Phụ đề [245$b]'>
-							<Input placeholder='Nhập phụ đề' />
+							<Input autoComplete='off' placeholder='Nhập phụ đề' disabled={detailedTitleRequired} />
 						</Form.Item>
 					</Col>
+					{detailedTitleRequired && (
+						<Col span={24}>
+							<Alert
+								type='warning'
+								showIcon
+								style={{ marginBottom: 12 }}
+								message='Ấn phẩm có nhiều thông tin nhan đề. Hãy chỉnh sửa ở bước Biên mục chi tiết để giữ đầy đủ dữ liệu.'
+							/>
+						</Col>
+					)}
 					<Col xs={24} md={12}>
 						<Form.Item name='thongTinTrachNhiem' label='Thông tin trách nhiệm [245$c]'>
-							<Input placeholder='Nhập thông tin trách nhiệm' />
+							<Input autoComplete='off' placeholder='Nhập thông tin trách nhiệm' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={8}>
 						<Form.Item name='lanXuatBan' label='Lần xuất bản [250$a]'>
-							<Input placeholder='Nhập lần xuất bản' />
+							<Input autoComplete='off' placeholder='Nhập lần xuất bản' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={8}>
 						<Form.Item name='noiXuatBan' label='Nơi xuất bản [260$a]'>
-							<Input placeholder='Nhập nơi xuất bản' />
+							<Input autoComplete='off' placeholder='Nhập nơi xuất bản' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={8}>
 						<Form.Item name='namXuatBan' label='Năm xuất bản [260$c]'>
-							<Input placeholder='Nhập năm xuất bản' />
+							<Input autoComplete='off' placeholder='Nhập năm xuất bản' />
 						</Form.Item>
 					</Col>
 					<Col xs={24}>
 						<Form.Item name='nhaXuatBan' label='Nhà xuất bản [260$b]'>
-							<Input placeholder='Nhập nhà xuất bản' />
+							<Input autoComplete='off' placeholder='Nhập nhà xuất bản' />
 						</Form.Item>
 					</Col>
 				</Row>
@@ -163,27 +186,27 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 				<Row gutter={[12, 0]}>
 					<Col xs={24} md={12}>
 						<Form.Item name='soTrang' label='Số trang [300$a]'>
-							<Input placeholder='Nhập số trang' />
+							<Input autoComplete='off' placeholder='Nhập số trang' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='dacDiemVatLy' label='Đặc điểm vật lý [300$b]'>
-							<Input placeholder='Nhập đặc điểm vật lý' />
+							<Input autoComplete='off' placeholder='Nhập đặc điểm vật lý' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='khuonKho' label='Khuôn khổ [300$c]'>
-							<Input placeholder='Nhập khuôn khổ' />
+							<Input autoComplete='off' placeholder='Nhập khuôn khổ' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='tuLieuDiKem' label='Tư liệu đi kèm [300$e]'>
-							<Input placeholder='Nhập tư liệu đi kèm' />
+							<Input autoComplete='off' placeholder='Nhập tư liệu đi kèm' />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='chiSoPhanLoai' label='Chi số phân loại [082$a]'>
-							<Input placeholder='Nhập chi số phân loại' />
+							<Input autoComplete='off' placeholder='Nhập chi số phân loại' />
 						</Form.Item>
 					</Col>
 				</Row>

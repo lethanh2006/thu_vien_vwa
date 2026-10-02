@@ -6,15 +6,16 @@ import { IColumn } from '@/components/Table/typing';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
-import { resetFieldsForm } from '@/utils/utils';
 import { Button, Form, message, Tag } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIntl, useModel } from 'umi';
+import { prepareBriefTitlePayload, readBriefTitle } from '../utils/cataloging';
 import BienMucSoLuoc from './BienMucSoLuoc';
 
 const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; getData: () => void }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
+	const initializedRecordKey = useRef<string | null>(null);
 	const {
 		record,
 		setVisibleForm,
@@ -29,13 +30,23 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		getAllModel: getAllAnPham,
 		loading,
 	} = useModel('sachtailieu.anpham.anpham');
-	const { getAllModel, danhSach } = useModel('sachtailieu.anpham.thongtinanpham');
+	const {
+		getAllModel,
+		danhSach,
+		loading: loadingCatalog,
+		loadedAnPhamId,
+	} = useModel('sachtailieu.anpham.thongtinanpham');
+	const catalogReady = !record?._id || (!loadingCatalog && loadedAnPhamId === record._id);
 	const { record: recDot } = useModel('sachtailieu.anpham.dotnhapsach');
 	const { initialState } = useModel('@@initialState');
 	const { afterAddNew, getData } = props;
 	const [checkingDuplicate, setCheckingDuplicate] = useState<boolean>(false);
 	const [visibleDuplicate, setVisibleDuplicate] = useState<boolean>(false);
 	const [duplicateData, setDuplicateData] = useState<AnPham.IRecord[]>([]);
+	const currentCatalogRows = record?._id
+		? danhSach.filter((item) => !item.anPhamId || item.anPhamId === record._id)
+		: [];
+	const briefTitle = readBriefTitle(currentCatalogRows);
 
 	const fullName = initialState?.currentUser?.family_name
 		? `${initialState?.currentUser.family_name} ${initialState?.currentUser?.given_name ?? ''}`
@@ -43,8 +54,16 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 
 	useEffect(() => {
 		if (!visibleForm) {
-			resetFieldsForm(form);
-		} else if (record?._id) {
+			form.resetFields();
+			initializedRecordKey.current = null;
+			return;
+		}
+		const recordKey = record?._id ?? 'new';
+		if (initializedRecordKey.current !== recordKey) {
+			form.resetFields();
+			initializedRecordKey.current = recordKey;
+		}
+		if (record?._id) {
 			const fieldMapping = {
 				ISBN: { tagCode: '020', subCode: '$a' },
 				ISSN: { tagCode: '022', subCode: '$a' },
@@ -52,8 +71,6 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				nhanDe: { tagCode: '245', subCode: '$a' },
 				soThuTuCuaTap: { tagCode: '245', subCode: '$n' },
 				tenTap: { tagCode: '245', subCode: '$p' },
-				nhanDeSongSong: { tagCode: '245', subCode: '$b' },
-				phuDe: { tagCode: '245', subCode: '$b' },
 				thongTinTrachNhiem: { tagCode: '245', subCode: '$c' },
 				lanXuatBan: { tagCode: '250', subCode: '$a' },
 				noiXuatBan: { tagCode: '260', subCode: '$a' },
@@ -69,17 +86,17 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 
 			const formValues: Record<string, any> = {};
 			Object.entries(fieldMapping).forEach(([fieldName, { tagCode, subCode }]) => {
-				const tag = danhSach?.find((item) => item?.tagCode === tagCode);
+				const tag = currentCatalogRows.find((item) => item?.tagCode === tagCode);
 				const value = tag?.thuocTinhAnPham?.find((i) => i.code === subCode)?.value;
 
-				if (value) {
-					formValues[fieldName] = value;
-				}
+				formValues[fieldName] = value ?? record[fieldName as keyof AnPham.IRecord] ?? '';
 			});
 
 			form.setFieldsValue({
 				...record,
 				...formValues,
+				nhanDeSongSong: briefTitle.nhanDeSongSong,
+				phuDe: briefTitle.phuDe,
 			});
 		}
 
@@ -89,25 +106,36 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				canBoBienMuc: fullName,
 			});
 		}
-	}, [record?._id, visibleForm]);
+	}, [record?._id, visibleForm, danhSach]);
 
 	const getDataThen = (rec: AnPham.IRecord) => {
 		setRecord({ ...record, ...rec });
 		setEdit(true);
 		if (afterAddNew) afterAddNew(rec);
-		getAllModel(undefined, undefined, { anPhamId: rec?._id });
+		getAllModel(undefined, undefined, { anPhamId: rec?._id }).catch(() => undefined);
 	};
 
 	const onFinish = async (values: AnPham.IRecord) => {
+		if (!catalogReady) {
+			message.warning('Hãy tải lại dữ liệu biên mục trước khi lưu ấn phẩm.');
+			return;
+		}
+		if (briefTitle.requiresDetailedCataloging) {
+			message.warning('Hãy lưu ấn phẩm ở bước Biên mục chi tiết để giữ đầy đủ thông tin nhan đề.');
+			return;
+		}
 		setFormSubmiting(true);
 		const urlScanBia = await buildUpLoadFile(values, 'urlScanBia').finally(() => setFormSubmiting(false));
 		values.urlScanBia = urlScanBia ?? '';
 		if (edit) {
-			putBienMucSoLuocModel(record?._id ?? '', values, getData)
+			putBienMucSoLuocModel(record?._id ?? '', prepareBriefTitlePayload(values), getData)
 				.then((rec) => getDataThen(rec))
 				.catch((er) => console.log(er));
 		} else
-			postBienMucSoLuocModel({ ...values, trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC }, getData)
+			postBienMucSoLuocModel(
+				{ ...prepareBriefTitlePayload(values), trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC },
+				getData,
+			)
 				.then((rec) => getDataThen(rec))
 				.catch((er) => console.log(er));
 	};
@@ -200,13 +228,17 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 
 	return (
 		<>
-			<Form onFinish={onFinish} form={form} layout='vertical'>
-				<BienMucSoLuoc form={form} />
+			<Form onFinish={onFinish} form={form} layout='vertical' autoComplete='off'>
+				<BienMucSoLuoc
+					form={form}
+					ambiguousTitle={briefTitle.ambiguousSingleValue}
+					detailedTitleRequired={briefTitle.requiresDetailedCataloging}
+				/>
 				<div className='form-footer'>
 					<Button loading={checkingDuplicate} onClick={handleCheckDuplicate}>
 						Kiểm tra trùng
 					</Button>
-					<Button loading={formSubmiting} htmlType='submit' type='primary'>
+					<Button loading={formSubmiting} disabled={!catalogReady} htmlType='submit' type='primary'>
 						{!edit ? 'Biên mục' : `${intl.formatMessage({ id: 'global.button.luulai' })}`}
 					</Button>
 					<Button onClick={() => setVisibleForm(false)}>{intl.formatMessage({ id: 'global.button.huy' })}</Button>

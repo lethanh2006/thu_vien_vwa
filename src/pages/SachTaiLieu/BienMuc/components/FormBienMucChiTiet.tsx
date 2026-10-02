@@ -1,10 +1,10 @@
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
 import { resetFieldsForm } from '@/utils/utils';
-import { Button, Form, Spin } from 'antd';
-import _ from 'lodash';
+import { Button, Form, message, Spin } from 'antd';
 import { useEffect, useState } from 'react';
-import { history, useIntl, useModel } from 'umi';
+import { useIntl, useModel } from 'umi';
+import { buildDetailedCatalogRows, serializeDetailedCatalogRows } from '../utils/cataloging';
 import BienMucChiTiet from './BienMucChiTiet';
 
 const FormBienMucChiTiet = (props: any) => {
@@ -14,97 +14,59 @@ const FormBienMucChiTiet = (props: any) => {
 	const { record, setVisibleForm, putBienMucChiTietModel, formSubmiting, visibleForm } =
 		useModel('sachtailieu.anpham.anpham');
 	const { danhSach: dsMauBienMuc } = useModel('danhmuc.maubienmuc');
-	const { danhSach, loading } = useModel('sachtailieu.anpham.thongtinanpham');
+	const { danhSach, loading, loadedAnPhamId } = useModel('sachtailieu.anpham.thongtinanpham');
+	const catalogReady = !!record?._id && !loading && loadedAnPhamId === record._id;
 
 	const [actionType, setActionType] = useState<ETrangThaiBienMuc>(ETrangThaiBienMuc.CHO_BIEN_MUC);
 
 	const mauBienMuc = dsMauBienMuc?.find((item) => item?._id === record?.mauBienMucId);
 
 	useEffect(() => {
+		setActionType(record?.trangThai ?? ETrangThaiBienMuc.CHO_BIEN_MUC);
+	}, [visibleForm, record?._id]);
+
+	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			const khaiBaoMauBienMucMap = new Map((mauBienMuc?.thongTinKhaiBao || []).map((item) => [item.tag, item]));
-			const danhSachTags = new Set(danhSach.map((dsItem) => dsItem.tagCode));
-
-			const khaiBaoMauBienMuc = (mauBienMuc?.thongTinKhaiBao || []).filter((item) => !danhSachTags.has(item.tag));
-
-			const mergedData = [
-				...(danhSach ?? []).map((item) => ({
-					...item,
-					ten: item.tag?.noiDung,
-					thuocTinhAnPham: khaiBaoMauBienMucMap.get(item.tagCode ?? '')?.thuocTinhDuLieu?.length
-						? khaiBaoMauBienMucMap.get(item.tagCode ?? '')?.thuocTinhDuLieu?.map((tp, index) => {
-								const thuocTinhAnPham = item?.thuocTinhAnPham?.find((i) => i?.code === tp?.code);
-
-								return {
-									...tp,
-									value: thuocTinhAnPham?.value ?? (index === 0 ? (item.value ?? null) : null),
-									ten: tp.ten,
-								};
-							})
-						: item?.thuocTinhAnPham?.map((tp) => ({
-								...tp,
-								value: tp.value ?? null,
-								ten: item?.tag?.thuocTinh?.find((i) => i?.code === tp?.code)?.tieuDe,
-							})),
-					value: khaiBaoMauBienMucMap.get(item.tagCode ?? '')?.thuocTinhDuLieu?.length ? undefined : item.value,
-				})),
-				...(khaiBaoMauBienMuc ?? []).map((item) => ({
-					_id: null,
-					tagCode: item.tag,
-					ten: item.ten,
-					thuocTinhAnPham: (item?.thuocTinhDuLieu || []).map((tp) => ({
-						...tp,
-						value: null,
-						ten: tp.ten,
-					})),
-				})),
-			];
-
-			form.setFieldsValue({ danhSachBienMucChiTiet: _.orderBy(mergedData, 'tagCode') });
+			const currentRows = danhSach.filter((item) => !item.anPhamId || item.anPhamId === record._id);
+			form.setFieldsValue({
+				danhSachBienMucChiTiet: buildDetailedCatalogRows(currentRows, mauBienMuc?.thongTinKhaiBao),
+			});
 		}
 	}, [visibleForm, record?._id, record?.mauBienMucId, danhSach, mauBienMuc?.thongTinKhaiBao]);
 
 	const onFinish = async (values: any) => {
+		if (!catalogReady) {
+			message.warning('Hãy tải lại dữ liệu biên mục trước khi lưu ấn phẩm.');
+			return;
+		}
 		const data = {
-			danhSachBienMucChiTiet: values.danhSachBienMucChiTiet.map((item: any) => ({
-				_id: item._id,
-				ind1: item.ind1,
-				ind2: item.ind2,
-				tagCode: item.tagCode,
-				value: item.value,
-				thuocTinhAnPham: (item.thuocTinhAnPham || []).map((thuocTinh: any) => ({
-					code: thuocTinh.code,
-					value: thuocTinh.value ?? '',
-				})),
-			})),
+			danhSachBienMucChiTiet: serializeDetailedCatalogRows(values.danhSachBienMucChiTiet),
 			trangThai: actionType,
 		};
 
 		putBienMucChiTietModel(record?._id ?? '', data, getData)
 			.then(() => {
 				setVisibleForm(false);
-				if (actionType === ETrangThaiBienMuc.DA_BIEN_MUC) {
-					history.push('/bien-muc/an-pham');
-				}
 			})
 			.catch((er) => console.log(er));
 	};
 
 	return (
 		<Spin spinning={loading}>
-			<Form onFinish={onFinish} form={form} layout='vertical'>
+			<Form onFinish={onFinish} form={form} layout='vertical' autoComplete='off'>
 				<BienMucChiTiet form={form} />
 
 				<div className='form-footer'>
 					{isBienMuc === true && (
 						<ButtonExtend
-							tooltip='Nếu lưu lại ấn phẩm sẽ ở vẫn trạng thái chờ biên mục chi tiết'
+							tooltip='Lưu thay đổi và giữ trạng thái biên mục hiện tại'
 							loading={formSubmiting}
+							disabled={!catalogReady}
 							type='primary'
 							onClick={() => {
-								setActionType(ETrangThaiBienMuc.CHO_BIEN_MUC);
+								setActionType(record?.trangThai ?? ETrangThaiBienMuc.CHO_BIEN_MUC);
 								form.submit();
 							}}
 						>
@@ -115,6 +77,7 @@ const FormBienMucChiTiet = (props: any) => {
 					<ButtonExtend
 						tooltip='Nếu hoàn thành ấn phẩm sẽ chuyển trạng thái đã biên mục chi tiết'
 						loading={formSubmiting}
+						disabled={!catalogReady}
 						type='primary'
 						onClick={() => {
 							setActionType(ETrangThaiBienMuc.DA_BIEN_MUC);
