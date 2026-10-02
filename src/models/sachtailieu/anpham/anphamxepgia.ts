@@ -1,6 +1,7 @@
 import useInitModel from '@/hooks/useInitModel';
 import { thanhLyDangKyCaBiet, thongKeDangKyCaBiet } from '@/services/SachTaiLieu/AnPham';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import { xoaDangKyCaBiet, xoaNhieuDangKyCaBiet } from '@/services/SachTaiLieu/DangKyCaBiet';
 import { message } from 'antd';
 import { useState } from 'react';
 
@@ -9,6 +10,11 @@ export default () => {
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [thongKeDKCB, setThongKeDKCB] = useState<AnPham.IThongKeAnPhamXepGia>();
 	const { formSubmiting, setFormSubmiting } = objInit;
+
+	const xoaDangKyCaBietModel = async (idOrIds: string | string[]): Promise<any> => {
+		const res = await (Array.isArray(idOrIds) ? xoaNhieuDangKyCaBiet(idOrIds) : xoaDangKyCaBiet(idOrIds));
+		return res.data?.data;
+	};
 
 	const thongKeDangKyCaBietModel = async (condition?: any, filters?: any[]): Promise<any> => {
 		setLoadingThongKe(true);
@@ -53,5 +59,6 @@ export default () => {
 		thongKeDKCB,
 		thongKeDangKyCaBietModel,
 		thanhLyDangKyCaBietModel,
+		xoaDangKyCaBietModel,
 	};
 };

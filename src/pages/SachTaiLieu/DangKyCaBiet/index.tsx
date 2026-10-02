@@ -16,8 +16,11 @@ import { Card, Tabs, Tag } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
+import { DKCBActionAlert, DKCBDeleteSelected, DKCBRowActions } from './components/Actions';
 import FormDangKyCaBiet from './components/Form';
+import ManualAddDKCB from './components/ManualAdd';
 import StatDanhSachDKCB from './components/Stat';
+import useDKCBActions from './components/useDKCBActions';
 
 const DangKyCaBietPage = () => {
 	const { getSettingModel, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
@@ -31,9 +34,9 @@ const DangKyCaBietPage = () => {
 	}, []);
 
 	const getData = () => {
-		if (trangThai === 'ALL') getModel();
-		else getModel({ trangThai: trangThai as any });
+		return getModel(trangThai === 'ALL' ? undefined : { trangThai: trangThai as any });
 	};
+	const actions = useDKCBActions({ scope: trangThai, getData });
 
 	const onCell = (rec: AnPham.IAnPhamXepGia) => ({
 		onClick: () => {
@@ -80,7 +83,7 @@ const DangKyCaBietPage = () => {
 			title: 'Đơn giá',
 			width: 120,
 			align: 'right',
-			render: (val, rec) => `${inputFormat(rec?.thongTinXepGia?.donGia ?? 0)} VNĐ`,
+			render: (_, rec) => (rec.thongTinXepGia?.donGia == null ? null : `${inputFormat(rec.thongTinXepGia.donGia)} VNĐ`),
 			onCell,
 		},
 		{
@@ -95,52 +98,26 @@ const DangKyCaBietPage = () => {
 			),
 			fixed: 'right',
 			onCell,
-			// hide: trangThai === ETrangThaiDangKyCaBiet.THANH_LY,
 		},
 		{
 			title: 'Thao tác',
 			align: 'center',
-			width: 90,
+			width: 140,
 			fixed: 'right',
 			render: (val, rec) => (
-				<ButtonExtend
-					tooltip='Lịch sử đăng ký'
-					onClick={() => {
-						setRecord(rec);
-						setVisibleModal(true);
-					}}
-					type='link'
-					icon={<HistoryOutlined />}
-				/>
+				<>
+					<ButtonExtend
+						tooltip='Lịch sử đăng ký'
+						onClick={() => {
+							setRecord(rec);
+							setVisibleModal(true);
+						}}
+						type='link'
+						icon={<HistoryOutlined />}
+					/>
+					<DKCBRowActions record={rec} {...actions} />
+				</>
 			),
-			// trangThai === ETrangThaiDangKyCaBiet.THANH_LY ? (
-			// 	<>
-			// 		{/* <Popconfirm
-			// 			onConfirm={() => thanhLyDangKyCaBietModel({ _id: rec?._id, thanhLy: true }, getData)}
-			// 			title='Xác nhận thanh lý đăng ký cá biệt này?'
-			// 			placement='topRight'
-			// 		>
-			// 			<ButtonExtend tooltip='Thanh lý' type='link' icon={<ShoppingCartOutlined />} />
-			// 		</Popconfirm> */}
-			// 		<ButtonExtend
-			// 			tooltip='Lịch sử đăng ký'
-			// 			onClick={() => {
-			// 				setRecord(rec);
-			// 				setVisibleModal(true);
-			// 			}}
-			// 			type='link'
-			// 			icon={<HistoryOutlined />}
-			// 		/>
-			// 	</>
-			// ) : (
-			// 	<Popconfirm
-			// 		onConfirm={() => thanhLyDangKyCaBietModel({ _id: rec?._id, thanhLy: false }, getData)}
-			// 		title='Xác nhận tái sử dụng đăng ký cá biệt này?'
-			// 		placement='topRight'
-			// 	>
-			// 		<ButtonExtend tooltip='Tái sử dụng' type='link' icon={<SyncOutlined />} />
-			// 	</Popconfirm>
-			// ),
 		},
 	];
 
@@ -154,6 +131,7 @@ const DangKyCaBietPage = () => {
 					<Tabs.TabPane key={tab} tab={nameTrangThaiDangKyCaBiet[tab]} />
 				))}
 			</Tabs>
+			<DKCBActionAlert error={actions.actionError} />
 
 			<TableBase
 				getData={getData}
@@ -161,6 +139,13 @@ const DangKyCaBietPage = () => {
 				dependencies={[page, limit, trangThai]}
 				modelName='sachtailieu.anpham.anphamxepgia'
 				buttons={{ create: false }}
+				rowSelection
+				deleteMany={false}
+				detailRow={{ getCheckboxProps: () => ({ disabled: actions.busy }) }}
+				otherButtons={[
+					<ManualAddDKCB key='create-dkcb' disabled={actions.busy} onCreated={actions.refresh} />,
+					<DKCBDeleteSelected key='delete-dkcb' {...actions} />,
+				]}
 				hideCard
 				Form={FormDangKyCaBiet}
 				formProps={{ getData }}

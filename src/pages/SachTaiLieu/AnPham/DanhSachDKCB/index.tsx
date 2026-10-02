@@ -7,19 +7,27 @@ import { inputFormat } from '@/utils/utils';
 import { Tabs } from 'antd';
 import { useState } from 'react';
 import { useModel } from 'umi';
+import { DKCBActionAlert, DKCBDeleteSelected, DKCBRowActions } from '../../DangKyCaBiet/components/Actions';
+import ManualAddDKCB from '../../DangKyCaBiet/components/ManualAdd';
 import StatDanhSachDKCB from '../../DangKyCaBiet/components/Stat';
+import useDKCBActions from '../../DangKyCaBiet/components/useDKCBActions';
 
-const DanhSachDKCB = () => {
+const DanhSachDKCB = ({ onChanged }: { onChanged?: () => unknown }) => {
 	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
 	const { getModel, page, limit } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [trangThai, setTrangThai] = useState<string>('ALL');
 
 	const getData = () => {
 		if (recAnPham?._id) {
-			if (trangThai === 'ALL') getModel({ anPhamId: recAnPham?._id }, undefined, { soDangKyCaBiet: 1 });
-			else getModel({ anPhamId: recAnPham?._id, trangThai: trangThai as any }, undefined, { soDangKyCaBiet: 1 });
+			return getModel(
+				{ anPhamId: recAnPham._id, ...(trangThai === 'ALL' ? {} : { trangThai: trangThai as any }) },
+				undefined,
+				{ soDangKyCaBiet: 1 },
+			);
 		}
+		return undefined;
 	};
+	const actions = useDKCBActions({ anPhamId: recAnPham?._id, scope: trangThai, getData, onChanged });
 
 	const columns: IColumn<AnPham.IAnPhamXepGia>[] = [
 		{
@@ -45,13 +53,21 @@ const DanhSachDKCB = () => {
 			title: 'Đơn giá',
 			width: 120,
 			align: 'right',
-			render: (val, rec) => `${inputFormat(rec?.thongTinXepGia?.donGia ?? 0)} VNĐ`,
+			render: (_, rec) => (rec.thongTinXepGia?.donGia == null ? null : `${inputFormat(rec.thongTinXepGia.donGia)} VNĐ`),
+		},
+		{
+			title: 'Thao tác',
+			width: 100,
+			align: 'center',
+			fixed: 'right',
+			render: (_, record) => <DKCBRowActions record={record} {...actions} />,
 		},
 	];
 
 	return (
 		<>
 			<StatDanhSachDKCB
+				key={recAnPham?._id}
 				condition={{
 					anPhamId: recAnPham?._id,
 				}}
@@ -63,6 +79,7 @@ const DanhSachDKCB = () => {
 					<Tabs.TabPane key={tab} tab={nameTrangThaiDangKyCaBiet[tab]} />
 				))}
 			</Tabs>
+			<DKCBActionAlert error={actions.actionError} />
 
 			<TableBase
 				getData={getData}
@@ -70,6 +87,18 @@ const DanhSachDKCB = () => {
 				dependencies={[page, limit, recAnPham?._id, trangThai]}
 				modelName='sachtailieu.anpham.anphamxepgia'
 				buttons={{ create: false }}
+				rowSelection
+				deleteMany={false}
+				detailRow={{ getCheckboxProps: () => ({ disabled: actions.busy }) }}
+				otherButtons={[
+					<ManualAddDKCB
+						key='create-dkcb'
+						anPham={recAnPham}
+						disabled={actions.busy || !recAnPham?._id}
+						onCreated={actions.refresh}
+					/>,
+					<DKCBDeleteSelected key='delete-dkcb' {...actions} />,
+				]}
 				hideCard
 			/>
 		</>
