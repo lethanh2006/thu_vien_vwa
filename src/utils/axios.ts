@@ -3,10 +3,10 @@ import '@ant-design/v5-patch-for-react-19';
 import { notification } from 'antd';
 import axios1 from 'axios';
 // import { history } from 'umi';
-import qs from 'qs';
 import { getIntl, getLocale } from 'umi';
 import { excludedPaths } from './constants';
 import data from './data';
+import { serializeQuery } from './serializeQuery';
 
 // function routeLogin(errorCode: string) {
 //   // notification.warning({
@@ -54,21 +54,7 @@ const axios = axios1.create({
 	 * Từ Axios v1.0+,
 	 * họ bỏ cách serialize cũ và ủy thác toàn bộ cho URLSearchParams, theo chuẩn của trình duyệt – nhưng điều này không hỗ trợ lồng mảng hoặc object phức tạp, dẫn tới sort=%5Bobject%20Object%5D.
 	 */
-	paramsSerializer: (params) => {
-		const cleanedParams: Record<string, any> = {};
-		Object.entries(params || {}).forEach(([key, value]) => {
-			if (value === undefined) return;
-
-			// Stringify objects and array values which may contain nested objects
-			cleanedParams[key] = Array.isArray(value)
-				? value.map((item) => (item !== null && typeof item === 'object' ? JSON.stringify(item) : item))
-				: typeof value === 'object'
-					? JSON.stringify(value)
-					: value;
-		});
-
-		return qs.stringify(cleanedParams, { encode: false, arrayFormat: 'brackets' });
-	},
+	paramsSerializer: serializeQuery,
 });
 
 // Add a request interceptor
