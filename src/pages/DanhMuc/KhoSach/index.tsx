@@ -4,8 +4,8 @@ import { type IColumn } from '@/components/Table/typing';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Popconfirm } from 'antd';
 import { useIntl, useModel } from 'umi';
-import Form from './components/Form';
 import SelectPhongDoc from '../PhongDoc/components/Select';
+import Form from './components/Form';
 
 const KhoSachPage = () => {
 	const intl = useIntl();
@@ -34,9 +34,9 @@ const KhoSachPage = () => {
 			filterCustomSelect: <SelectPhongDoc multiple selectMa />,
 		},
 		{
-			title: 'Số ĐKCB cuối',
+			title: 'Số bản đã xếp giá',
 			dataIndex: 'soLuongAnPhamDaXepGia',
-			width: 80,
+			width: 130,
 			filterType: 'number',
 			sortable: true,
 		},

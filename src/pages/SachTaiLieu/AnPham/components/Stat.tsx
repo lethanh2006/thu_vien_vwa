@@ -4,13 +4,21 @@ import { Card, Col, Row, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 
-const StatAnPham = () => {
+const StatAnPham = ({ refreshKey = 0 }: { refreshKey?: number }) => {
 	const { getThongKeAnPhamModel, loadingThongKe } = useModel('sachtailieu.anpham.anpham');
 	const [recThongKe, setRecThongKe] = useState<AnPham.IThongKeAnPham>();
 
 	useEffect(() => {
-		getThongKeAnPhamModel().then((res) => setRecThongKe(res));
-	}, []);
+		let cancelled = false;
+		getThongKeAnPhamModel()
+			.then((res) => {
+				if (!cancelled) setRecThongKe(res);
+			})
+			.catch(() => undefined);
+		return () => {
+			cancelled = true;
+		};
+	}, [refreshKey]);
 
 	return (
 		<Spin spinning={loadingThongKe}>

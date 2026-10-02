@@ -1,5 +1,7 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import useDkcbPreview from '@/hooks/useDkcbPreview';
+import useRefreshLibraryInventory from '@/hooks/useRefreshLibraryInventory';
 import SelectGiaSach from '@/pages/DanhMuc/GiaSach/components/Select';
 import SelectKhoSach from '@/pages/DanhMuc/KhoSach/components/Select';
 import SelectKieuTuLieu from '@/pages/DanhMuc/KieuTuLieu/components/Select';
@@ -8,6 +10,7 @@ import SelectThuVien from '@/pages/DanhMuc/ThuVien/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
+import { LoadingOutlined } from '@ant-design/icons';
 import {
 	Button,
 	Card,
@@ -28,7 +31,7 @@ import { useIntl, useModel } from 'umi';
 import SelectDotNhapSach from '../../DotNhapSach/components/Select';
 import LichSuXepGia from '../LichSuXepGia';
 
-const ModalXepGia = () => {
+const ModalXepGia = ({ onChanged }: { onChanged?: () => unknown }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record } = useModel('sachtailieu.anpham.anpham');
@@ -42,16 +45,18 @@ const ModalXepGia = () => {
 		loadingThongKe,
 		datathongKeXepGia,
 	} = useModel('sachtailieu.anpham.xepgia');
-	const { danhSach: danhSachKhoSach } = useModel('danhmuc.khosach');
 	const maKhoSach: string = Form.useWatch('maKhoSach', form);
-	const [actionType, setActionType] = useState<string>();
+	const [actionType, setActionType] = useState<'luu_lai' | 'xep_gia'>('luu_lai');
 	const [tabActive, setTabActive] = useState<string>('1');
+	const dkcbPreview = useDkcbPreview(maKhoSach, visibleForm && tabActive === '1');
+	const refreshRelatedData = useRefreshLibraryInventory(onChanged);
 
 	useEffect(() => {
 		if (!visibleForm) {
 			resetFieldsForm(form);
+			setActionType('luu_lai');
 		} else if (record?._id) {
-			thongKeXepGiaModel({ anPhamId: record?._id });
+			void thongKeXepGiaModel({ anPhamId: record?._id }).catch(() => undefined);
 			form.setFieldsValue({
 				dotNhapSachId: record?.dotNhapSachId,
 			});
@@ -62,12 +67,12 @@ const ModalXepGia = () => {
 		postModel(
 			{
 				...values,
-				daXepGia: actionType === 'luu_lai' ? false : true,
+				daXepGia: actionType === 'xep_gia',
 				anPhamId: record?._id,
 				dotNhapSachId: record?.dotNhapSachId,
 			},
 			() => {
-				thongKeXepGiaModel({ anPhamId: record?._id });
+				void refreshRelatedData(record?._id);
 				resetFieldsForm(form);
 				setTabActive('2');
 			},
@@ -170,20 +175,7 @@ const ModalXepGia = () => {
 						</Col>
 						<Col xs={24} md={12}>
 							<Form.Item name='maKhoSach' label='Kho' rules={[...rules.required]}>
-								<SelectKhoSach
-									selectMa
-									onChange={(val) => {
-										form.resetFields(['giaSachId']);
-
-										const index = danhSachKhoSach?.find((item) => item?.ma === val);
-										form.setFieldsValue({
-											soDangKyCaBiet: `${index?.ma}/${String((index?.soLuongAnPhamDaXepGia ?? 0) + 1).padStart(
-												5,
-												'0',
-											)}`,
-										});
-									}}
-								/>
+								<SelectKhoSach selectMa onChange={() => form.resetFields(['giaSachId'])} />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
@@ -192,16 +184,32 @@ const ModalXepGia = () => {
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='soDangKyCaBiet' label='Đăng ký cá biệt' rules={[...rules.required]}>
+							<Form.Item
+								label='ĐKCB dự kiến tiếp theo'
+								extra={
+									dkcbPreview.failed
+										? 'Chưa lấy được số dự kiến. Hệ thống vẫn tự cấp số khi xếp giá.'
+										: 'Hệ thống tự cấp số khi xếp giá; số thực tế có thể thay đổi nếu có người khác cùng thao tác.'
+								}
+							>
 								<Input
-									placeholder='Đăng ký cá biệt'
-									// disabled
+									value={dkcbPreview.value ?? ''}
+									placeholder={dkcbPreview.loading ? 'Đang lấy số ĐKCB...' : 'Chọn kho để xem số dự kiến'}
+									readOnly
+									suffix={dkcbPreview.loading ? <LoadingOutlined /> : undefined}
 								/>
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item name='soLuong' label='Số lượng' rules={[...rules.required]}>
-								<InputNumber style={{ width: '100%' }} placeholder='Nhập lượng' />
+							<Form.Item
+								name='soLuong'
+								label='Số lượng'
+								rules={[
+									...rules.required,
+									{ type: 'integer', min: 1, max: 5000, message: 'Số lượng phải là số nguyên từ 1 đến 5000' },
+								]}
+							>
+								<InputNumber min={1} max={5000} step={1} style={{ width: '100%' }} placeholder='Nhập số lượng' />
 							</Form.Item>
 						</Col>
 
@@ -228,7 +236,7 @@ const ModalXepGia = () => {
 								setActionType('xep_gia');
 								form.submit();
 							}}
-							title='Xác nhận xếp giá, lưu ý khi hoàn thành sẽ không được chỉnh sửa lại giá?'
+							title='Xác nhận xếp giá và cấp số ĐKCB? Sau khi xếp giá, muốn thay đổi số lượng phải thêm hoặc xóa từng bản ĐKCB.'
 							placement='topRight'
 						>
 							<ButtonExtend loading={formSubmiting} type='primary'>
@@ -239,7 +247,7 @@ const ModalXepGia = () => {
 					</div>
 				</Form>
 			) : (
-				<LichSuXepGia />
+				<LichSuXepGia onChanged={onChanged} />
 			)}
 		</Modal>
 	);

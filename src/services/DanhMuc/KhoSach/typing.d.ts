@@ -6,6 +6,7 @@ declare module KhoSach {
 		maPhongDoc: string;
 		phongDoc: PhongDoc.IRecord;
 		soLuongAnPhamDaXepGia: number;
+		dkcbLastSeq?: number;
 		createdAt?: string;
 		updatedAt?: string;
 	}

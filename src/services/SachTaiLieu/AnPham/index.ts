@@ -17,6 +17,17 @@ export async function thongKeXepGia(params?: { condition?: any; filters?: any[] 
 	return axios.get(`${ip3}/xep-gia/thong-ke`, { params });
 }
 
+export type TDkcbPreview = {
+	soDangKyCaBietCuoi: string;
+	soDangKyCaBietTiepTheo: string;
+};
+
+export async function getDkcbPreview(maKhoSach: string) {
+	return axios.get<{ data: TDkcbPreview }>(
+		`${ip3}/an-pham-xep-gia/soDangKyCaBietCuoi/${encodeURIComponent(maKhoSach)}`,
+	);
+}
+
 export async function bienMucSoLuoc(payLoad: any) {
 	return axios.post(`${ip3}/an-pham/bien-muc-so-luoc`, payLoad);
 }

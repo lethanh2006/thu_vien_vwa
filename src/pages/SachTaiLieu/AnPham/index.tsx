@@ -1,70 +1,49 @@
-import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
-import SelectCapThuMuc from '@/pages/DanhMuc/CapThuMuc/components/Select';
-import SelectDangTaiLieu from '@/pages/DanhMuc/DangTaiLieu/components/Select';
-import SelectKieuBanGhi from '@/pages/DanhMuc/KieuBanGhi/components/Select';
-import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
-import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import { thongKeMauSoDKCB } from '@/services/SachTaiLieu/AnPham';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
-import {
-	DeleteOutlined,
-	DollarOutlined,
-	EditOutlined,
-	ExportOutlined,
-	FilePdfOutlined,
-	MenuOutlined,
-	StarOutlined,
-	StarTwoTone,
-	StopOutlined,
-} from '@ant-design/icons';
-import { Avatar, Button, Card, Popconfirm, Popover, Select, Tag, Tooltip } from 'antd';
+import { DollarOutlined, ExportOutlined, StarOutlined, StarTwoTone } from '@ant-design/icons';
+import { Avatar, Card, Select, Tag, Tooltip } from 'antd';
 import fileDownload from 'js-file-download';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import news from '../../../assets/new6.gif';
-import ModalAnPhamSo from '../BienMuc/components/AnPhamSo';
-import ConfirmXoaAnPham from '../BienMuc/components/ConfirmXoa';
-import ModalBienMucTaiLieu from '../BienMuc/components/Modal';
-import ModalSachHay from '../BienMuc/components/ModalSachHay';
 import SelectDotNhapSach from '../DotNhapSach/components/Select';
+import { DkcbDetailsModal, DkcbSummary } from './components/DkcbSummary';
 import ModalAnPham from './components/Modal';
+import { publicationMetadataColumns } from './components/PublicationColumns';
+import PublicationTitle from './components/PublicationTitle';
 import StatAnPham from './components/Stat';
 import ModalXepGia from './components/XepGia';
+import { PUBLICATION_POPULATION } from './utils/bibliography';
 
 const CardAnPham = () => {
 	const intl = useIntl();
 	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('sachtailieu.anpham.dotnhapsach');
-	const {
-		getModel,
-		page,
-		limit,
-		handleView,
-		setRecord,
-		deleteAnPhamSoModel,
-		isView,
-		handleEdit,
-		putBienMucSoLuocModel,
-	} = useModel('sachtailieu.anpham.anpham');
+	const { getModel, page, limit, handleView, setRecord } = useModel('sachtailieu.anpham.anpham');
 	const { setVisibleForm } = useModel('sachtailieu.anpham.xepgia');
 	const [loading, setLoading] = useState<boolean>(false);
-	const [visibleSachHay, setVisibleSachHay] = useState<boolean>(false);
-	const [visibleAnPhanSo, setVisibleAnPhamSo] = useState<boolean>(false);
-	const [visibleXoa, setVisibleXoa] = useState<boolean>(false);
+	const [inventoryRevision, setInventoryRevision] = useState(0);
+
+	const [dkcbRecord, setDkcbRecord] = useState<AnPham.IRecord>();
 
 	const getData = () => {
-		getModel(
+		return getModel(
 			{
 				dotNhapSachId: recDot?._id,
 				trangThai: ETrangThaiBienMuc.DA_BIEN_MUC,
+				online: false,
 			},
 			undefined,
 			{
 				updatedAt: -1,
 			},
+			undefined,
+			undefined,
+			undefined,
+			{ population: PUBLICATION_POPULATION },
 		);
 	};
 
@@ -75,8 +54,9 @@ const CardAnPham = () => {
 		},
 	});
 
-	const handleSachHay = (rec: AnPham.IRecord, isSachHay: boolean) => {
-		putBienMucSoLuocModel(rec?._id ?? '', { ...rec, isSachHay }, getData);
+	const handleInventoryChanged = () => {
+		setInventoryRevision((value) => value + 1);
+		return getData();
 	};
 
 	const handleExport = () => {
@@ -147,8 +127,8 @@ const CardAnPham = () => {
 		{
 			title: 'Nhan đề',
 			dataIndex: 'nhanDeConverse',
-			width: 180,
-			render: (val, rec) => <ExpandText>{val ?? rec?.nhanDe}</ExpandText>,
+			width: 260,
+			render: (_, rec) => <PublicationTitle record={rec} />,
 			filterType: 'string',
 			onCell,
 		},
@@ -193,50 +173,21 @@ const CardAnPham = () => {
 			onCell,
 		},
 		{
-			title: 'Kiểu bản ghi',
-			dataIndex: 'maKieuBanGhi',
-			width: 150,
-			render: (val, rec) => rec?.kieuBanGhi?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectKieuBanGhi multiple />,
-			onCell,
+			title: 'Đăng ký cá biệt',
+			key: 'dkcb',
+			width: 220,
+			enableGlobalSearch: false,
+			render: (_, rec) => (
+				<DkcbSummary
+					record={rec}
+					onClick={() => {
+						setRecord(rec);
+						setDkcbRecord(rec);
+					}}
+				/>
+			),
 		},
-		{
-			title: 'Dạng tài liệu',
-			dataIndex: 'maDangTaiLieu',
-			width: 150,
-			render: (val, rec) => rec?.dangTaiLieu?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectDangTaiLieu multiple selectMa />,
-			onCell,
-		},
-		{
-			title: 'Cấp thư mục',
-			dataIndex: 'maCapThuMuc',
-			width: 150,
-			render: (val, rec) => rec?.capThuMuc?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectCapThuMuc multiple />,
-			onCell,
-		},
-		{
-			title: 'Vật mang tin',
-			dataIndex: 'maVatMangTin',
-			width: 150,
-			render: (val, rec) => rec?.vatMangTin?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectVatMangTin multiple />,
-			onCell,
-		},
-		{
-			title: 'Mẫu biên mục',
-			dataIndex: 'mauBienMucId',
-			width: 150,
-			render: (val, rec) => rec?.mauBienMuc?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectMauBienMuc multiple />,
-			onCell,
-		},
+		...publicationMetadataColumns(),
 		{
 			title: 'Độ mật',
 			align: 'center',
@@ -268,84 +219,23 @@ const CardAnPham = () => {
 			align: 'center',
 			width: 90,
 			fixed: 'right',
-			render: (val, rec) => (
-				<>
-					<ButtonExtend tooltip='Chỉnh sửa' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
-					<Popover
-						placement='topRight'
-						content={
-							<>
-								<ButtonExtend
-									tooltip='Ấn phẩm số'
-									type='link'
-									icon={<FilePdfOutlined />}
-									onClick={() => {
-										setRecord(rec);
-										setVisibleAnPhamSo(true);
-									}}
-								/>
-								{rec?.online ? (
-									<Popconfirm
-										onConfirm={() => deleteAnPhamSoModel(rec?._id, getData)}
-										title='Xác nhận xóa ấn phẩm số khỏi dspace?'
-										placement='topRight'
-									>
-										<ButtonExtend tooltip='Xóa phẩm số' type='link' icon={<StopOutlined />} />
-									</Popconfirm>
-								) : null}
-								{!rec?.isSachHay ? (
-									<ButtonExtend
-										tooltip='Sách hay'
-										type='link'
-										className='text-success'
-										icon={<StarOutlined />}
-										onClick={() => {
-											setRecord(rec);
-											setVisibleSachHay(true);
-										}}
-									/>
-								) : (
-									<Popconfirm
-										onConfirm={() => handleSachHay(rec, false)}
-										title='Xác nhận đây bỏ sách hay này?'
-										placement='topRight'
-									>
-										<ButtonExtend tooltip='Bỏ sách hay' type='link' danger icon={<StarTwoTone />} />
-									</Popconfirm>
-								)}
-								{/* <ButtonExtend tooltip='Chi tiết' onClick={() => handleView(rec)} type='link' icon={<EyeOutlined />} /> */}
-								<ButtonExtend
-									tooltip='Xếp giá'
-									onClick={() => {
-										setRecord(rec);
-										setVisibleForm(true);
-									}}
-									type='link'
-									icon={<DollarOutlined />}
-								/>
-								<ButtonExtend
-									onClick={() => {
-										setRecord(rec);
-										setVisibleXoa(true);
-									}}
-									tooltip='Xóa'
-									danger
-									type='link'
-									icon={<DeleteOutlined />}
-								/>
-							</>
-						}
-					>
-						<Button type='link' icon={<MenuOutlined />} />
-					</Popover>
-				</>
+			render: (_, rec) => (
+				<ButtonExtend
+					tooltip='Xếp giá'
+					onClick={() => {
+						setRecord(rec);
+						setVisibleForm(true);
+					}}
+					type='link'
+					icon={<DollarOutlined />}
+				/>
 			),
 		},
 	];
 
 	return (
 		<Card title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}>
-			<StatAnPham />
+			<StatAnPham refreshKey={inventoryRevision} />
 
 			<TableBase
 				getData={getData}
@@ -353,8 +243,8 @@ const CardAnPham = () => {
 				dependencies={[page, limit, recDot?._id]}
 				modelName='sachtailieu.anpham.anpham'
 				title={intl.formatMessage({ id: 'sachtailieu.anpham.title' })}
-				Form={isView ? ModalAnPham : ModalBienMucTaiLieu}
-				formProps={{ getData, isBienMuc: false }}
+				Form={ModalAnPham}
+				formProps={{ getData: handleInventoryChanged, isBienMuc: false }}
 				widthDrawer={1200}
 				buttons={{ create: false }}
 				hideCard
@@ -378,13 +268,12 @@ const CardAnPham = () => {
 				]}
 			/>
 
-			<ModalXepGia />
-
-			<ModalSachHay visible={visibleSachHay} setVisible={setVisibleSachHay} getData={getData} />
-
-			<ModalAnPhamSo visible={visibleAnPhanSo} setVisible={setVisibleAnPhamSo} getData={getData} />
-
-			<ConfirmXoaAnPham visible={visibleXoa} setVisible={setVisibleXoa} getData={getData} />
+			<ModalXepGia onChanged={handleInventoryChanged} />
+			<DkcbDetailsModal
+				record={dkcbRecord}
+				onClose={() => setDkcbRecord(undefined)}
+				onChanged={handleInventoryChanged}
+			/>
 		</Card>
 	);
 };

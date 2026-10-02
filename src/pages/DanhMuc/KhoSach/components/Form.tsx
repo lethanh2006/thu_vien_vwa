@@ -13,12 +13,13 @@ const FormKhoSach = (props: any) => {
 
 	useEffect(() => {
 		if (!visibleForm) resetFieldsForm(form);
-		else if (record?._id) form.setFieldsValue(record);
-	}, [record?._id, visibleForm]);
+		else if (edit && record?._id) form.setFieldsValue(record);
+		else resetFieldsForm(form, { soLuongAnPhamDaXepGia: 0 });
+	}, [edit, record?._id, visibleForm]);
 
 	const onFinish = async (values: KhoSach.IRecord) => {
 		if (edit) {
-			putModel(record?._id ?? '', values)
+			putModel(record?._id ?? '', { ma: values.ma, ten: values.ten, maPhongDoc: values.maPhongDoc })
 				.then()
 				.catch((er) => console.log(er));
 		} else {
@@ -48,8 +49,22 @@ const FormKhoSach = (props: any) => {
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item label='Số đăng ký cá biệt cuối' name='soLuongAnPhamDaXepGia' rules={[...rules.required]}>
-							<InputNumber style={{ width: '100%' }} placeholder='Nhập số đăng ký cá biệt cuối' />
+						<Form.Item
+							label={edit ? 'Số bản đã xếp giá' : 'Số thứ tự ĐKCB đã sử dụng'}
+							name='soLuongAnPhamDaXepGia'
+							initialValue={0}
+							rules={
+								edit
+									? []
+									: [...rules.required, { type: 'integer', min: 0, message: 'Số thứ tự phải là số nguyên không âm' }]
+							}
+							extra={
+								edit
+									? 'Số liệu do hệ thống cập nhật khi thêm hoặc xóa bản ĐKCB.'
+									: 'Nhập 0 để bắt đầu từ 00001. Ví dụ đã dùng đến số 500 thì nhập 500, hệ thống sẽ cấp tiếp từ 00501.'
+							}
+						>
+							<InputNumber disabled={edit} min={0} step={1} style={{ width: '100%' }} placeholder='Nhập số thứ tự' />
 						</Form.Item>
 					</Col>
 				</Row>

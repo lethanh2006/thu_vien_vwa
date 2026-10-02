@@ -1,5 +1,6 @@
 import MyDatePicker from '@/components/MyDatePicker';
 import ButtonExtend from '@/components/Table/ButtonExtend';
+import useDkcbPreview from '@/hooks/useDkcbPreview';
 import SelectGiaSach from '@/pages/DanhMuc/GiaSach/components/Select';
 import SelectKhoSach from '@/pages/DanhMuc/KhoSach/components/Select';
 import SelectKieuTuLieu from '@/pages/DanhMuc/KieuTuLieu/components/Select';
@@ -9,44 +10,45 @@ import SelectDotNhapSach from '@/pages/SachTaiLieu/DotNhapSach/components/Select
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
+import { LoadingOutlined } from '@ant-design/icons';
 import { Alert, Button, Col, Divider, Form, Input, InputNumber, Popconfirm, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
 
-const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => {
-	const { onCancel, onOk } = props;
+const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void; visible?: boolean }) => {
+	const { onCancel, onOk, visible } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { formSubmiting, putModel, record, visibleForm } = useModel('sachtailieu.anpham.xepgia');
-	const { danhSach: danhSachKieuTuLieu } = useModel('danhmuc.kieutulieu');
 	const maKhoSach: string = Form.useWatch('maKhoSach', form);
-	const [actionType, setActionType] = useState<string>();
+	const [actionType, setActionType] = useState<'luu_lai' | 'xep_gia'>('luu_lai');
+	const isVisible = visible ?? visibleForm;
+	const dkcbPreview = useDkcbPreview(maKhoSach, isVisible && !record?.daXepGia);
 
 	useEffect(() => {
-		if (!visibleForm) {
+		if (!isVisible) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			const index = danhSachKieuTuLieu?.find((item) => item?.ma === record?.maKieuTuLieu);
-			form.setFieldsValue({
-				...record,
-				soDangKyCaBiet: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
-			});
+			resetFieldsForm(form);
+			form.setFieldsValue(record);
+			setActionType('luu_lai');
 		}
-	}, [visibleForm, record?._id]);
+	}, [isVisible, record?._id]);
 
 	const onFinish = async (values: AnPham.IXepGia) => {
 		if (record?._id) {
-			putModel(
-				record?._id,
-				{
-					...values,
-					daXepGia: actionType === 'luu_lai' ? false : true,
-				},
-				onOk,
-				undefined,
-				false,
-				'Lưu thành công',
-			)
+			const payload: Partial<AnPham.IXepGia> = {
+				...values,
+				daXepGia: record.daXepGia || actionType === 'xep_gia',
+			};
+			if (record.daXepGia) {
+				delete payload.anPhamId;
+				delete payload.maKhoSach;
+				delete payload.soLuong;
+			} else {
+				payload.anPhamId = record.anPhamId;
+			}
+			putModel(record?._id, payload, onOk, undefined, false, 'Lưu thành công')
 				.then()
 				.catch((er) => console.log(er));
 		}
@@ -74,6 +76,11 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 					) : (
 						'Ấn phẩm đang xếp giá'
 					)
+				}
+				description={
+					record?.daXepGia
+						? 'Có thể sửa đơn giá và ghi chú. Muốn thay đổi số lượng, hãy thêm hoặc xóa từng bản ĐKCB.'
+						: undefined
 				}
 			/>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
@@ -126,16 +133,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 					</Col>
 					<Col xs={24} md={12}>
 						<Form.Item name='maKhoSach' label='Kho' rules={[...rules.required]}>
-							<SelectKhoSach
-								selectMa
-								onChange={(val) => {
-									const index = danhSachKieuTuLieu?.find((item) => item?.ma === val);
-									form.setFieldsValue({
-										soDangKyCaBiet: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(5, '0')}`,
-									});
-									form.resetFields(['giaSachId']);
-								}}
-							/>
+							<SelectKhoSach selectMa disabled={record?.daXepGia} onChange={() => form.resetFields(['giaSachId'])} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
@@ -143,14 +141,46 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 							<SelectGiaSach condition={{ maKhoSach: maKhoSach }} />
 						</Form.Item>
 					</Col>
+					{!record?.daXepGia && (
+						<Col xs={24} md={12}>
+							<Form.Item
+								label='ĐKCB dự kiến tiếp theo'
+								extra={
+									dkcbPreview.failed
+										? 'Chưa lấy được số dự kiến. Hệ thống vẫn tự cấp số khi xếp giá.'
+										: 'Hệ thống tự cấp số khi xếp giá; số thực tế có thể thay đổi nếu có người khác cùng thao tác.'
+								}
+							>
+								<Input
+									value={dkcbPreview.value ?? ''}
+									placeholder={dkcbPreview.loading ? 'Đang lấy số ĐKCB...' : 'Chọn kho để xem số dự kiến'}
+									readOnly
+									suffix={dkcbPreview.loading ? <LoadingOutlined /> : undefined}
+								/>
+							</Form.Item>
+						</Col>
+					)}
 					<Col xs={24} md={12}>
-						<Form.Item name='soDangKyCaBiet' label='Đăng ký cá biệt' rules={[...rules.required]}>
-							<Input placeholder='Đăng ký cá biệt' disabled />
-						</Form.Item>
-					</Col>
-					<Col xs={24} md={12}>
-						<Form.Item name='soLuong' label='Số lượng' rules={[...rules.required]}>
-							<InputNumber style={{ width: '100%' }} placeholder='Nhập lượng' />
+						<Form.Item
+							name='soLuong'
+							label='Số lượng'
+							rules={
+								record?.daXepGia
+									? []
+									: [
+											...rules.required,
+											{ type: 'integer', min: 1, max: 5000, message: 'Số lượng phải là số nguyên từ 1 đến 5000' },
+										]
+							}
+						>
+							<InputNumber
+								disabled={record?.daXepGia}
+								min={1}
+								max={5000}
+								step={1}
+								style={{ width: '100%' }}
+								placeholder='Nhập số lượng'
+							/>
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
@@ -162,7 +192,6 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 
 				<div className='form-footer'>
 					<ButtonExtend
-						disabled={record?.daXepGia}
 						loading={formSubmiting}
 						type='primary'
 						onClick={() => {
@@ -177,7 +206,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 							setActionType('xep_gia');
 							form.submit();
 						}}
-						title='Xác nhận xếp giá, lưu ý khi hoàn thành sẽ không được chỉnh sửa lại giá?'
+						title='Xác nhận xếp giá và cấp số ĐKCB? Sau khi xếp giá, muốn thay đổi số lượng phải thêm hoặc xóa từng bản ĐKCB.'
 						placement='topRight'
 					>
 						<ButtonExtend disabled={record?.daXepGia} loading={formSubmiting} type='primary'>

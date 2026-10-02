@@ -2,6 +2,7 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
+import useRefreshLibraryInventory from '@/hooks/useRefreshLibraryInventory';
 import SelectGiaSach from '@/pages/DanhMuc/GiaSach/components/Select';
 import SelectKhoSach from '@/pages/DanhMuc/KhoSach/components/Select';
 import SelectKieuTuLieu from '@/pages/DanhMuc/KieuTuLieu/components/Select';
@@ -17,15 +18,15 @@ import { useModel } from 'umi';
 import ChiTietXepGia from '../../XepGia/components/ChiTiet';
 import FormLichSuXepGia from './components/Form';
 
-const LichSuXepGia = () => {
+const LichSuXepGia = ({ onChanged }: { onChanged?: () => unknown }) => {
 	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
-	const { getModel, page, limit, putModel, setRecord, deleteModel, thongKeXepGiaModel } =
-		useModel('sachtailieu.anpham.xepgia');
+	const { getModel, page, limit, putModel, setRecord, deleteModel } = useModel('sachtailieu.anpham.xepgia');
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
+	const refreshRelatedData = useRefreshLibraryInventory(onChanged);
 
 	const getData = () => {
-		if (recAnPham?._id) getModel({ anPhamId: recAnPham?._id });
+		return recAnPham?._id ? getModel({ anPhamId: recAnPham._id }).catch(() => undefined) : undefined;
 	};
 
 	const handleXepGia = (rec: AnPham.IXepGia) => {
@@ -34,7 +35,7 @@ const LichSuXepGia = () => {
 			{ ...rec, daXepGia: true },
 			() => {
 				getData();
-				thongKeXepGiaModel({ anPhamId: recAnPham?._id });
+				void refreshRelatedData(recAnPham?._id);
 			},
 			undefined,
 			false,
@@ -197,14 +198,16 @@ const LichSuXepGia = () => {
 							/>
 							<Popconfirm
 								onConfirm={() =>
-									deleteModel(rec._id, getData).then(() => {
-										thongKeXepGiaModel({ anPhamId: recAnPham?._id });
-									})
+									deleteModel(rec._id, getData)
+										.then(() => {
+											void refreshRelatedData(recAnPham?._id);
+										})
+										.catch(() => undefined)
 								}
-								title='Bạn có chắc chắn muốn xóa thông tin này?'
+								title='Xóa dòng xếp giá này và tất cả bản ĐKCB thuộc dòng? Bản đã có lịch sử mượn sẽ không được xóa.'
 								placement='topRight'
 							>
-								<ButtonExtend disabled={rec?.daXepGia} tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
+								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
 							</Popconfirm>
 						</>
 					}
@@ -234,10 +237,11 @@ const LichSuXepGia = () => {
 				footer={null}
 			>
 				<FormLichSuXepGia
+					visible={visibleModal}
 					onCancel={() => setVisibleModal(false)}
 					onOk={() => {
 						getData();
-						thongKeXepGiaModel({ anPhamId: recAnPham?._id });
+						void refreshRelatedData(recAnPham?._id);
 						setVisibleModal(false);
 					}}
 				/>

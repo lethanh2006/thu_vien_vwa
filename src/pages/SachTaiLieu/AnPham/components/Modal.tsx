@@ -10,16 +10,16 @@ import DanhSachDKCB from '../DanhSachDKCB';
 import LichSuXepGia from '../LichSuXepGia';
 import ChiTietAnPham from './ChiTiet';
 
-const ModalAnPham = () => {
+const ModalAnPham = ({ getData: onChanged }: { getData?: () => unknown }) => {
 	const intl = useIntl();
-	const { record: recAnPham, setVisibleForm, setIsView, setEdit } = useModel('sachtailieu.anpham.anpham');
+	const { record: recAnPham, setVisibleForm } = useModel('sachtailieu.anpham.anpham');
 	const { setVisibleForm: setVsXepGia } = useModel('sachtailieu.anpham.xepgia');
 
 	const { getAllModel, loading } = useModel('sachtailieu.anpham.thongtinanpham');
 	const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1200px)' });
 
 	const getData = () => {
-		if (recAnPham?._id) getAllModel(undefined, undefined, { anPhamId: recAnPham?._id });
+		if (recAnPham?._id) getAllModel(undefined, undefined, { anPhamId: recAnPham?._id }).catch(() => undefined);
 	};
 
 	useEffect(() => {
@@ -28,7 +28,7 @@ const ModalAnPham = () => {
 
 	return (
 		<Card title='Chi tiết ấn phẩm' loading={loading}>
-			<Tabs tabPosition={isTabletOrMobile ? 'top' : 'left'}>
+			<Tabs destroyInactiveTabPane tabPosition={isTabletOrMobile ? 'top' : 'left'}>
 				<Tabs.TabPane tab='Thông tin chung' key='1'>
 					<ChiTietBienMuc />
 				</Tabs.TabPane>
@@ -36,7 +36,7 @@ const ModalAnPham = () => {
 					<ChiTietAnPham />
 				</Tabs.TabPane>
 				<Tabs.TabPane tab='Danh sách đăng ký cá biệt' key='3'>
-					<DanhSachDKCB />
+					<DanhSachDKCB onChanged={onChanged} />
 				</Tabs.TabPane>
 				{recAnPham?.online ? (
 					<Tabs.TabPane tab='File ấn phẩm số' key='4'>
@@ -54,21 +54,11 @@ const ModalAnPham = () => {
 				) : null}
 
 				<Tabs.TabPane tab='Lịch sử xếp giá' key='7'>
-					<LichSuXepGia />
+					<LichSuXepGia onChanged={onChanged} />
 				</Tabs.TabPane>
 			</Tabs>
 
 			<div className='form-footer'>
-				<Button
-					type='primary'
-					onClick={() => {
-						setIsView(false);
-						setEdit(true);
-					}}
-				>
-					Biên mục
-				</Button>
-
 				<Button
 					onClick={() => {
 						setVisibleForm(false);

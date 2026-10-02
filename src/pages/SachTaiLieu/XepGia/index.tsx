@@ -2,6 +2,7 @@ import ExpandText from '@/components/ExpandText';
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
+import useRefreshLibraryInventory from '@/hooks/useRefreshLibraryInventory';
 import SelectGiaSach from '@/pages/DanhMuc/GiaSach/components/Select';
 import SelectKhoSach from '@/pages/DanhMuc/KhoSach/components/Select';
 import SelectKieuTuLieu from '@/pages/DanhMuc/KieuTuLieu/components/Select';
@@ -20,12 +21,13 @@ import ChiTietXepGia from './components/ChiTiet';
 
 const XepGiaPage = () => {
 	const { record: recDot, danhSach: danhSachDot, setRecord: setRecDot } = useModel('sachtailieu.anpham.dotnhapsach');
-	const { getModel, page, limit, handleEdit, setRecord, visibleForm, setVisibleForm, deleteModel } =
+	const { getModel, page, limit, record, handleEdit, setRecord, visibleForm, setVisibleForm, deleteModel } =
 		useModel('sachtailieu.anpham.xepgia');
 	const [visibleChiTiet, setVisibleChiTiet] = useState<boolean>(false);
+	const refreshRelatedData = useRefreshLibraryInventory();
 
 	const getData = () => {
-		getModel({ dotNhapSachId: recDot?._id });
+		return getModel({ dotNhapSachId: recDot?._id }).catch(() => undefined);
 	};
 
 	const onCell = (rec: AnPham.IXepGia) => ({
@@ -164,8 +166,12 @@ const XepGiaPage = () => {
 							/>
 							<ButtonExtend tooltip='Xếp giá' onClick={() => handleEdit(rec)} type='link' icon={<EditOutlined />} />
 							<Popconfirm
-								onConfirm={() => deleteModel(rec._id, getData)}
-								title='Bạn có chắc chắn muốn xóa thông tin này?'
+								onConfirm={() =>
+									deleteModel(rec._id, getData)
+										.then(() => refreshRelatedData(rec.anPhamId))
+										.catch(() => undefined)
+								}
+								title='Xóa dòng xếp giá này và tất cả bản ĐKCB thuộc dòng? Bản đã có lịch sử mượn sẽ không được xóa.'
 								placement='topRight'
 							>
 								<ButtonExtend tooltip='Xóa' danger type='link' icon={<DeleteOutlined />} />
@@ -213,6 +219,7 @@ const XepGiaPage = () => {
 					onCancel={() => setVisibleForm(false)}
 					onOk={() => {
 						getData();
+						void refreshRelatedData(record?.anPhamId);
 						setVisibleForm(false);
 					}}
 				/>
