@@ -20,11 +20,11 @@ import { DKCBActionAlert, DKCBDeleteSelected, DKCBRowActions } from './component
 import FormDangKyCaBiet from './components/Form';
 import ManualAddDKCB from './components/ManualAdd';
 import StatDanhSachDKCB from './components/Stat';
-import useDKCBActions from './components/useDKCBActions';
+import useDKCBActions, { type DKCBRefreshOptions } from './components/useDKCBActions';
 
 const DangKyCaBietPage = () => {
 	const { getSettingModel, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
-	const { getModel, page, limit, record, setRecord } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { getModel, refreshModel, page, limit, record, setRecord } = useModel('sachtailieu.anpham.anphamxepgia');
 
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
 	const [trangThai, setTrangThai] = useState<string>('ALL');
@@ -33,8 +33,9 @@ const DangKyCaBietPage = () => {
 		if (!settingMuonTra) getSettingModel();
 	}, []);
 
-	const getData = () => {
-		return getModel(trangThai === 'ALL' ? undefined : { trangThai: trangThai as any });
+	const getData = (options?: DKCBRefreshOptions) => {
+		const load = options?.background ? refreshModel : getModel;
+		return load(trangThai === 'ALL' ? undefined : { trangThai: trangThai as any });
 	};
 	const actions = useDKCBActions({ scope: trangThai, getData });
 
@@ -141,7 +142,9 @@ const DangKyCaBietPage = () => {
 				buttons={{ create: false }}
 				rowSelection
 				deleteMany={false}
-				detailRow={{ getCheckboxProps: () => ({ disabled: actions.busy }) }}
+				detailRow={{
+					getCheckboxProps: (rec: AnPham.IAnPhamXepGia) => ({ disabled: actions.pendingIds.includes(rec._id) }),
+				}}
 				otherButtons={[
 					<ManualAddDKCB key='create-dkcb' disabled={actions.busy} onCreated={actions.refresh} />,
 					<DKCBDeleteSelected key='delete-dkcb' {...actions} />,

@@ -10,16 +10,17 @@ import { useModel } from 'umi';
 import { DKCBActionAlert, DKCBDeleteSelected, DKCBRowActions } from '../../DangKyCaBiet/components/Actions';
 import ManualAddDKCB from '../../DangKyCaBiet/components/ManualAdd';
 import StatDanhSachDKCB from '../../DangKyCaBiet/components/Stat';
-import useDKCBActions from '../../DangKyCaBiet/components/useDKCBActions';
+import useDKCBActions, { type DKCBRefreshOptions } from '../../DangKyCaBiet/components/useDKCBActions';
 
 const DanhSachDKCB = ({ onChanged }: { onChanged?: () => unknown }) => {
 	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
-	const { getModel, page, limit } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { getModel, refreshModel, page, limit } = useModel('sachtailieu.anpham.anphamxepgia');
 	const [trangThai, setTrangThai] = useState<string>('ALL');
 
-	const getData = () => {
+	const getData = (options?: DKCBRefreshOptions) => {
 		if (recAnPham?._id) {
-			return getModel(
+			const load = options?.background ? refreshModel : getModel;
+			return load(
 				{ anPhamId: recAnPham._id, ...(trangThai === 'ALL' ? {} : { trangThai: trangThai as any }) },
 				undefined,
 				{ soDangKyCaBiet: 1 },
@@ -89,7 +90,9 @@ const DanhSachDKCB = ({ onChanged }: { onChanged?: () => unknown }) => {
 				buttons={{ create: false }}
 				rowSelection
 				deleteMany={false}
-				detailRow={{ getCheckboxProps: () => ({ disabled: actions.busy }) }}
+				detailRow={{
+					getCheckboxProps: (rec: AnPham.IAnPhamXepGia) => ({ disabled: actions.pendingIds.includes(rec._id) }),
+				}}
 				otherButtons={[
 					<ManualAddDKCB
 						key='create-dkcb'

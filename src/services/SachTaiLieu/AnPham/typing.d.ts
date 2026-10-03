@@ -1,6 +1,6 @@
 import type { GiaSach } from '@/services/DanhMuc/GiaSach/typing';
-import type { ETrangThaiBienMuc, ETrangThaiDangKyCaBiet } from '../constant';
 import type { HocKy } from '@/services/DaoTao/HocKy/typing';
+import type { ETrangThaiBienMuc, ETrangThaiDangKyCaBiet } from '../constant';
 
 declare module AnPham {
 	export interface IDotNhapSach {
@@ -127,10 +127,14 @@ declare module AnPham {
 		value: string;
 	};
 
+	/** /an-pham/thong-ke: chỉ thống kê các ấn phẩm đã biên mục chi tiết. */
 	export interface IThongKeAnPham {
 		_id: string;
+		/** Số dòng/trường thông tin MARC của các ấn phẩm đã biên mục chi tiết. */
 		tongAnPham: number;
+		/** Số bản đang mượn, gồm quá hạn, thuộc các ấn phẩm đã biên mục chi tiết. */
 		tongAnPhamDangThueMuon: number;
+		/** Số ấn phẩm (tựa sách) đã biên mục chi tiết; không phải số ĐKCB. */
 		tongSoAnPham: number;
 	}
 
@@ -175,9 +179,14 @@ declare module AnPham {
 		soDangKyCaBietCuoi?: string;
 	}
 
+	/** /an-pham-xep-gia/thong-ke: thống kê các bản đăng ký cá biệt. */
 	export interface IThongKeAnPhamXepGia {
+		/** Tổng số ĐKCB trong sổ, gồm cả các bản đã thanh lý. */
 		tongSoAnPham: number;
+		/** Số ĐKCB đang cho mượn, gồm cả các bản quá hạn. */
 		tongSoAnPhamDangThueMuon: number;
+		/** Số bản quá hạn trong số ĐKCB đang cho mượn. */
+		tongSoAnPhamQuaHan?: number;
 	}
 
 	export interface IThongKeXepGia {

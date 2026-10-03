@@ -99,7 +99,7 @@ const ModalXepGia = ({ onChanged }: { onChanged?: () => unknown }) => {
 							<span className='num' style={{ color: 'blue' }}>
 								{datathongKeXepGia?.chuaXepGia ?? '--'}
 							</span>
-							<span>Đang xếp giá</span>
+							<span>Số dòng chưa xếp giá</span>
 						</Card>
 					</Col>
 					<Col span={12} md={12}>
@@ -107,7 +107,7 @@ const ModalXepGia = ({ onChanged }: { onChanged?: () => unknown }) => {
 							<span className='num' style={{ color: 'green' }}>
 								{datathongKeXepGia?.daXepGia ?? '--'}
 							</span>
-							<span>Đã xếp giá</span>
+							<span>Số dòng đã xếp giá</span>
 						</Card>
 					</Col>
 				</Row>
