@@ -1,6 +1,5 @@
 import axios from '@/utils/axios';
-import { ipSlink } from '@/utils/ip';
-import { ipLaLvKl } from './apiBase';
+import { ipDaoTao, ipSlink } from '@/utils/ip';
 
 export async function postRaVaoThuVien(payload: any) {
 	return axios.post(`${ipSlink}/ql-thu-vien/chuyen-vien`, payload);
@@ -76,19 +75,19 @@ export async function postCauHinhThuVien(payload: any) {
 }
 
 export async function getSettingThuVien() {
-	return axios.get(`${ipLaLvKl}/quan-ly-la-lv-kl/setting`);
+	return axios.get(`${ipDaoTao}/quan-ly-la-lv-kl/setting`);
 }
 
 export async function postSettingThuVien(payLoad: any) {
-	return axios.post(`${ipLaLvKl}/quan-ly-la-lv-kl/setting`, payLoad);
+	return axios.post(`${ipDaoTao}/quan-ly-la-lv-kl/setting`, payLoad);
 }
 
 export async function changeTrangThaiLuanAn(id: string, payLoad: any) {
-	return axios.put(`${ipLaLvKl}/quan-ly-la-lv-kl/${id}/status`, payLoad);
+	return axios.put(`${ipDaoTao}/quan-ly-la-lv-kl/${id}/status`, payLoad);
 }
 
 export async function exportThuVien(id: string, type: 'khoa-luan-do-an' | 'luan-an' | 'luan-van') {
-	return axios.get(`${ipLaLvKl}/quan-ly-la-lv-kl/export/${type}/${id}`, {
+	return axios.get(`${ipDaoTao}/quan-ly-la-lv-kl/export/${type}/${id}`, {
 		responseType: 'arraybuffer',
 	});
 }

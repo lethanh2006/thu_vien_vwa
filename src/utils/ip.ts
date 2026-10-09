@@ -3,8 +3,7 @@ import { AppModules, EModuleKey } from '@/services/base/constant';
 const ipRoot = APP_CONFIG_IP_ROOT; // ip dev
 
 // Ip Chính => Mặc định dùng trong các useInitModel
-const libraryApiOverride = typeof APP_CONFIG_IP_THU_VIEN === 'string' ? APP_CONFIG_IP_THU_VIEN.trim() : '';
-const ip3 = libraryApiOverride ? libraryApiOverride.replace(/\/+$/, '') : ipRoot + 'thu-vien';
+const ip3 = ipRoot + 'thu-vien'; // ip dev
 
 // Ip khác
 const ipNotif = ipRoot + 'notification'; // ip dev
@@ -29,14 +28,15 @@ const sentryDSN = APP_CONFIG_SENTRY_DSN;
 const oneSignalClient = APP_CONFIG_ONE_SIGNAL_ID;
 
 export {
-	currentRole,
+	replaceRole,
 	ip3,
 	ipCore,
-	ipDaoTao,
-	ipNhanSu,
 	ipNotif,
 	ipSlink,
+	ipDaoTao,
+	ipNhanSu,
 	ipZ39050,
+	currentRole,
 	keycloakAuthEndpoint,
 	keycloakAuthority,
 	keycloakClientID,
@@ -44,7 +44,6 @@ export {
 	keycloakUserInfoEndpoint,
 	oneSignalClient,
 	oneSignalRole,
-	replaceRole,
 	resourceServerClientId,
 	sentryDSN,
 };
