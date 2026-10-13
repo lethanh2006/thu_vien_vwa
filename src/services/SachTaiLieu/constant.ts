@@ -68,6 +68,38 @@ export const colorTrangThaiDangKyCaBiet: Record<ETrangThaiDangKyCaBiet, string> 
 /** Số lượng tối đa của một dòng xếp giá (BE chặn quá số này) */
 export const SO_LUONG_XEP_GIA_TOI_DA = 5000;
 
+/** Các trường BE bắt buộc khi sửa biên mục sơ lược (PUT /an-pham/:id/bien-muc-so-luoc) */
+export const TRUONG_BAT_BUOC_BIEN_MUC_SO_LUOC = [
+	'canBoBienMuc',
+	'nhanDe',
+	'maKieuBanGhi',
+	'maCapThuMuc',
+	'maDangTaiLieu',
+	'maVatMangTin',
+	'doMat',
+	'mauBienMucId',
+	'maNgonNgu',
+] as const;
+
+/** Tag MARC dùng để hiển thị thông tin ấn phẩm */
+export enum ETagMarc {
+	PHAN_LOAI_DDC = '082',
+	KY_HIEU_XEP_GIA = '090',
+	NHAN_DE = '245',
+	XUAT_BAN = '260',
+	CHU_DE = '650',
+	TU_KHOA = '653',
+}
+
+/** Mã trường con MARC */
+export enum ETruongConMarc {
+	A = '$a',
+	B = '$b',
+	C = '$c',
+	N = '$n',
+	P = '$p',
+}
+
 export enum EVaiTroMuonTra {
 	SINHVIEN = 'Sinh viên',
 	CANBO = 'Cán bộ/ Giảng viên',

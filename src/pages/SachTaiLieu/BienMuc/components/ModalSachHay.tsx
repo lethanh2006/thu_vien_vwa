@@ -1,10 +1,12 @@
 import TinyEditor from '@/components/TinyEditor';
 import UploadFile from '@/components/Upload/UploadFile';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import { TRUONG_BAT_BUOC_BIEN_MUC_SO_LUOC } from '@/services/SachTaiLieu/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Col, Form, Modal, Row } from 'antd';
+import _ from 'lodash';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
 
@@ -27,7 +29,17 @@ const ModalSachHay = (props: { visible: boolean; setVisible: (val: boolean) => v
 		const urlScanBia = await buildUpLoadFile(values, 'urlScanBia').finally(() => setFormSubmiting(false));
 		values.urlScanBia = urlScanBia ?? '';
 
-		putBienMucSoLuocModel(record?._id ?? '', { ...record, ...values, isSachHay: true }, getData)
+		// Chỉ gửi các trường BE bắt buộc và ô cần đổi: gửi cả record thì ô rỗng bị BE coi là xóa trường MARC tương ứng
+		putBienMucSoLuocModel(
+			record?._id ?? '',
+			{
+				..._.pick(record, TRUONG_BAT_BUOC_BIEN_MUC_SO_LUOC),
+				moTa: values.moTa,
+				urlScanBia: values.urlScanBia,
+				isSachHay: true,
+			},
+			getData,
+		)
 			.then((rec) => setVisible(false))
 			.catch((er) => console.log(er));
 	};

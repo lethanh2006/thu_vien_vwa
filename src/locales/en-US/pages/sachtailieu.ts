@@ -223,7 +223,7 @@ export default {
 	'sachtailieu.label.noDataBienMuc': 'No cataloging field data',
 	'sachtailieu.label.noSave':
 		'To avoid data loss during cataloging, do not close the form or reload the page before completing detailed cataloging!',
-	'sachtailieu.label.neuLuuLai': 'If saved, the publication will remain in "pending detailed cataloging" status',
+	'sachtailieu.label.neuLuuLai': 'Save changes and keep the current cataloging status of the publication',
 	'sachtailieu.label.neuHoanThanh':
 		'If completed, the publication will switch to "detailed cataloging completed" status',
 	'sachtailieu.confirm.xepGia':
@@ -477,4 +477,8 @@ export default {
 		'The quantity and warehouse of a shelved entry cannot be changed. To change the quantity, add or delete individual accession numbers',
 	'sachtailieu.confirm.xoaXepGia':
 		'Delete this shelving entry and its accession numbers? Copies with borrowing history cannot be deleted',
+
+	// BienMuc
+	'sachtailieu.bienmuc.nhanDeSongSong': 'Parallel title [245$b]',
+	'sachtailieu.bienmuc.nhapNhanDeSongSong': 'Enter parallel title',
 };

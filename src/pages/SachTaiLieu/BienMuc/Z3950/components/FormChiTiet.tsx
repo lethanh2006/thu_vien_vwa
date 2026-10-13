@@ -5,7 +5,7 @@ import { Button, Form, Spin } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
-import BienMucChiTiet from '../../components/BienMucChiTiet';
+import BienMucChiTiet, { boSungTruongConTheoMau } from '../../components/BienMucChiTiet';
 
 const FormBienMucChiTietZ3950 = (props: any) => {
 	const { getData } = props;
@@ -47,15 +47,15 @@ const FormBienMucChiTietZ3950 = (props: any) => {
 
 			const mergedData = [
 				// 1. dsThongTinAnPham (ưu tiên cao nhất)
-				...(dsThongTinAnPham?.map((item) => ({
-					...item,
-					ten: item.tag?.noiDung,
-					thuocTinhAnPham: item.thuocTinhAnPham?.map((tp) => ({
-						...tp,
-						value: tp.value ?? null,
-						ten: item.tag?.thuocTinh?.find((i) => i.code === tp.code)?.tieuDe,
-					})),
-				})) || []),
+				...(dsThongTinAnPham?.map((item) => {
+					const truongConDaLuu = (item.thuocTinhAnPham ?? []).map((truongCon) => ({
+						...truongCon,
+						value: truongCon.value ?? null,
+						ten: item.tag?.thuocTinh?.find((thuocTinh) => thuocTinh.code === truongCon.code)?.tieuDe,
+					}));
+					const khaiBao = mauBienMuc?.thongTinKhaiBao?.find((khaiBaoTag) => khaiBaoTag.tag === item.tagCode);
+					return { ...item, ten: item.tag?.noiDung, thuocTinhAnPham: boSungTruongConTheoMau(truongConDaLuu, khaiBao) };
+				}) || []),
 
 				// 2. Xử lý mauBienMuc.thongTinKhaiBao kết hợp với record.danhSachThongTin
 				...(mauBienMuc?.thongTinKhaiBao
@@ -154,7 +154,7 @@ const FormBienMucChiTietZ3950 = (props: any) => {
 
 	return (
 		<Spin spinning={loadingThongTin || loadingTruongBienMuc}>
-			<Form onFinish={onFinish} form={form} layout='vertical'>
+			<Form onFinish={onFinish} form={form} layout='vertical' autoComplete='off'>
 				<BienMucChiTiet form={form} />
 
 				<div className='form-footer'>

@@ -1,10 +1,11 @@
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
-import { ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
+import { ETagMarc, ETrangThaiBienMuc, ETruongConMarc } from '@/services/SachTaiLieu/constant';
 import { buildUpLoadFile } from '@/services/uploadFile';
 import { resetFieldsForm } from '@/utils/utils';
 import { Button, Form } from 'antd';
 import { useEffect } from 'react';
 import { useIntl, useModel } from 'umi';
+import { getGiaTriMarc } from '../../AnPham/utils';
 import BienMucSoLuoc from './BienMucSoLuoc';
 
 const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => void; getData: () => void }) => {
@@ -42,8 +43,6 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				nhanDe: { tagCode: '245', subCode: '$a' },
 				soThuTuCuaTap: { tagCode: '245', subCode: '$n' },
 				tenTap: { tagCode: '245', subCode: '$p' },
-				nhanDeSongSong: { tagCode: '245', subCode: '$b' },
-				phuDe: { tagCode: '245', subCode: '$b' },
 				thongTinTrachNhiem: { tagCode: '245', subCode: '$c' },
 				lanXuatBan: { tagCode: '250', subCode: '$a' },
 				noiXuatBan: { tagCode: '260', subCode: '$a' },
@@ -67,9 +66,14 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 				}
 			});
 
+			// Nhan đề song song và phụ đề cùng ghi vào 245$b: $b thứ nhất là nhan đề song song, $b thứ hai là phụ đề
+			const [nhanDeSongSong, phuDe] = getGiaTriMarc(danhSach, ETagMarc.NHAN_DE, ETruongConMarc.B);
+
 			form.setFieldsValue({
 				...record,
 				...formValues,
+				nhanDeSongSong,
+				phuDe,
 			});
 		}
 
@@ -92,6 +96,9 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 		setFormSubmiting(true);
 		const urlScanBia = await buildUpLoadFile(values, 'urlScanBia').finally(() => setFormSubmiting(false));
 		values.urlScanBia = urlScanBia ?? '';
+		// BE ghi cả hai ô vào 245$b nên phải gửi đủ hai ô, ô trống gửi chuỗi rỗng
+		values.nhanDeSongSong = values.nhanDeSongSong ?? '';
+		values.phuDe = values.phuDe ?? '';
 		if (edit) {
 			putBienMucSoLuocModel(record?._id ?? '', values, getData)
 				.then((rec) => getDataThen(rec))
@@ -103,7 +110,7 @@ const FormBienMucSachTaiLieu = (props: { afterAddNew: (rec: AnPham.IRecord) => v
 	};
 
 	return (
-		<Form onFinish={onFinish} form={form} layout='vertical'>
+		<Form onFinish={onFinish} form={form} layout='vertical' autoComplete='off'>
 			<BienMucSoLuoc form={form} />
 			<div className='form-footer'>
 				<Button loading={formSubmiting} htmlType='submit' type='primary'>

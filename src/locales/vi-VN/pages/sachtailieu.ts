@@ -239,7 +239,7 @@ export default {
 	'sachtailieu.label.noDataBienMuc': 'Không có dữ liệu trường biên mục',
 	'sachtailieu.label.noSave':
 		'Để tránh mất dữ liệu khi biên mục, lưu ý không tắt form hoặc tải lại trang trong khi chưa hoàn thành biên mục chi tiết!',
-	'sachtailieu.label.neuLuuLai': 'Nếu lưu lại ấn phẩm sẽ ở vẫn trạng thái chờ biên mục chi tiết',
+	'sachtailieu.label.neuLuuLai': 'Lưu thay đổi và giữ nguyên trạng thái biên mục hiện tại của ấn phẩm',
 	'sachtailieu.label.neuHoanThanh': 'Nếu hoàn thành ấn phẩm sẽ chuyển trạng thái đã biên mục chi tiết',
 
 	'sachtailieu.confirm.xepGia':
@@ -527,4 +527,8 @@ export default {
 	'sachtailieu.anpham.xepgia.moTaDaXepGia':
 		'Không đổi được số lượng, kho của dòng đã xếp giá. Muốn thay đổi số lượng, hãy thêm hoặc xóa từng ĐKCB',
 	'sachtailieu.confirm.xoaXepGia': 'Xóa dòng xếp giá và các ĐKCB của dòng? Không xóa được nếu có bản đã từng mượn',
+
+	// BienMuc
+	'sachtailieu.bienmuc.nhanDeSongSong': 'Nhan đề song song [245$b]',
+	'sachtailieu.bienmuc.nhapNhanDeSongSong': 'Nhập nhan đề song song',
 };

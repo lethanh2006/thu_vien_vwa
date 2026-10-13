@@ -149,11 +149,7 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
-						<Form.Item
-							name='tacGia'
-							label={intl.formatMessage({ id: 'sachtailieu.bienmuc.tacGia' })}
-							rules={[...rules.required]}
-						>
+						<Form.Item name='tacGia' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.tacGia' })}>
 							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapTacGia' })} />
 						</Form.Item>
 					</Col>
@@ -174,6 +170,11 @@ const BienMucSoLuoc = (props: { form: FormInstance }) => {
 					<Col xs={24} md={12}>
 						<Form.Item name='tenTap' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.tenTap' })}>
 							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapTenTap' })} />
+						</Form.Item>
+					</Col>
+					<Col xs={24} md={12}>
+						<Form.Item name='nhanDeSongSong' label={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhanDeSongSong' })}>
+							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.bienmuc.nhapNhanDeSongSong' })} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>

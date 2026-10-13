@@ -8,6 +8,19 @@ import { Col, Form, type FormInstance, Input, Row, Select, Space, Table } from '
 import _ from 'lodash';
 import { useIntl } from 'umi';
 
+/** Thêm các trường con mẫu biên mục đã khai báo mà dòng MARC đã lưu chưa có (VD: 245$b, 700$e, 650$y, 650$z) */
+export const boSungTruongConTheoMau = <T extends { code?: string }>(
+	thuocTinhAnPham: T[],
+	khaiBao?: MauBienMuc.IThongTinKhaiBao,
+) => {
+	// Dòng chỉ có giá trị (không có trường con) thì giữ nguyên
+	if (!thuocTinhAnPham.length) return thuocTinhAnPham;
+	const truongConThieu = (khaiBao?.thuocTinhDuLieu ?? [])
+		.filter((truongConMau) => !thuocTinhAnPham.some((truongCon) => truongCon.code === truongConMau.code))
+		.map((truongConMau) => ({ ...truongConMau, value: null }));
+	return [...thuocTinhAnPham, ...truongConThieu];
+};
+
 const BienMucChiTiet = (props: { form: FormInstance }) => {
 	const intl = useIntl();
 	const { form } = props;
@@ -80,16 +93,16 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 				if (currentTagData?.thuocTinhAnPham?.length) {
 					const isMultiple = currentTagData.thuocTinhAnPham.length > 1;
 
-					const sortedSubFields = _.orderBy(currentTagData.thuocTinhAnPham, 'code');
+					// Giữ vị trí gốc để các trường con lặp lại (VD: hai $b của 245) gắn đúng ô dữ liệu
+					const danhSachTruongCon = currentTagData.thuocTinhAnPham.map(
+						(truongCon: { code?: string }, viTriGoc: number) => ({ ...truongCon, viTriGoc }),
+					);
+					const sortedSubFields = _.orderBy(danhSachTruongCon, 'code');
 
 					return (
 						<Row gutter={[12, 0]} style={{ width: '100%' }}>
 							{sortedSubFields.map((item: any, i: number) => {
 								const fieldCode = `${currentTagData.tagCode}${item?.code}`;
-
-								const originalIndex = currentTagData.thuocTinhAnPham.findIndex(
-									(subField: any) => subField.code === item.code,
-								);
 
 								return (
 									<Col
@@ -99,7 +112,7 @@ const BienMucChiTiet = (props: { form: FormInstance }) => {
 									>
 										<Form.Item
 											label={`${item.ten ?? ''} [${item.code}]`}
-											name={[field.name, 'thuocTinhAnPham', originalIndex, 'value']}
+											name={[field.name, 'thuocTinhAnPham', item.viTriGoc, 'value']}
 											labelCol={{ span: 24 }}
 											wrapperCol={{ span: 24 }}
 											style={{ marginBottom: 8 }}

@@ -5,7 +5,7 @@ import { Button, Form, Spin } from 'antd';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
-import BienMucChiTiet from './BienMucChiTiet';
+import BienMucChiTiet, { boSungTruongConTheoMau } from './BienMucChiTiet';
 
 const FormBienMucChiTiet = (props: any) => {
 	const { getData, isBienMuc } = props;
@@ -29,15 +29,15 @@ const FormBienMucChiTiet = (props: any) => {
 			const khaiBaoMauBienMuc = (mauBienMuc?.thongTinKhaiBao || []).filter((item) => !danhSachTags.includes(item.tag));
 
 			const mergedData = [
-				...(danhSach ?? []).map((item) => ({
-					...item,
-					ten: item.tag?.noiDung,
-					thuocTinhAnPham: item?.thuocTinhAnPham?.map((tp) => ({
-						...tp,
-						value: tp.value ?? null,
-						ten: item?.tag?.thuocTinh?.find((i) => i?.code === tp?.code)?.tieuDe,
-					})),
-				})),
+				...(danhSach ?? []).map((item) => {
+					const truongConDaLuu = (item?.thuocTinhAnPham ?? []).map((truongCon) => ({
+						...truongCon,
+						value: truongCon.value ?? null,
+						ten: item?.tag?.thuocTinh?.find((thuocTinh) => thuocTinh?.code === truongCon.code)?.tieuDe,
+					}));
+					const khaiBao = mauBienMuc?.thongTinKhaiBao?.find((khaiBaoTag) => khaiBaoTag.tag === item.tagCode);
+					return { ...item, ten: item.tag?.noiDung, thuocTinhAnPham: boSungTruongConTheoMau(truongConDaLuu, khaiBao) };
+				}),
 				...(khaiBaoMauBienMuc ?? []).map((item) => ({
 					_id: null,
 					tagCode: item.tag,
@@ -82,7 +82,7 @@ const FormBienMucChiTiet = (props: any) => {
 
 	return (
 		<Spin spinning={loading}>
-			<Form onFinish={onFinish} form={form} layout='vertical'>
+			<Form onFinish={onFinish} form={form} layout='vertical' autoComplete='off'>
 				<BienMucChiTiet form={form} />
 
 				<div className='form-footer'>
@@ -92,7 +92,8 @@ const FormBienMucChiTiet = (props: any) => {
 							loading={formSubmiting}
 							type='primary'
 							onClick={() => {
-								setActionType(ETrangThaiBienMuc.CHO_BIEN_MUC);
+								// Ấn phẩm đã biên mục chi tiết vẫn sửa được ở Biên mục, lưu lại không đưa về chờ biên mục
+								setActionType(record?.trangThai ?? ETrangThaiBienMuc.CHO_BIEN_MUC);
 								form.submit();
 							}}
 						>

@@ -54,6 +54,9 @@ const FormZ3950 = (props: { afterAddNew: (rec: AnPham.IRecord) => void; getData:
 		setFormSubmiting(true);
 		const urlScanBia = await buildUpLoadFile(values, 'urlScanBia').finally(() => setFormSubmiting(false));
 		values.urlScanBia = urlScanBia ?? '';
+		// BE ghi cả hai ô vào 245$b nên phải gửi đủ hai ô, ô trống gửi chuỗi rỗng
+		values.nhanDeSongSong = values.nhanDeSongSong ?? '';
+		values.phuDe = values.phuDe ?? '';
 		if (edit) {
 			putBienMucSoLuocModel(record?._id ?? '', values, getData)
 				.then((rec) => getDataThen(rec))
@@ -65,7 +68,7 @@ const FormZ3950 = (props: { afterAddNew: (rec: AnPham.IRecord) => void; getData:
 	};
 
 	return (
-		<Form onFinish={onFinish} form={form} layout='vertical'>
+		<Form onFinish={onFinish} form={form} layout='vertical' autoComplete='off'>
 			<BienMucSoLuoc form={form} />
 			<div className='form-footer'>
 				<Button loading={formSubmiting} htmlType='submit' type='primary'>
