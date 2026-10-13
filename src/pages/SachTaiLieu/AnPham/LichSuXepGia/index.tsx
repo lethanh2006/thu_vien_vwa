@@ -17,7 +17,7 @@ import { useIntl, useModel } from 'umi';
 import ChiTietXepGia from '../../XepGia/components/ChiTiet';
 import FormLichSuXepGia from './components/Form';
 
-const LichSuXepGia = () => {
+const LichSuXepGia = (props: { getDataAnPham?: () => void }) => {
 	const intl = useIntl();
 	const { record: recAnPham } = useModel('sachtailieu.anpham.anpham');
 	const { getModel, page, limit, putModel, setRecord, deleteModel, thongKeXepGiaModel } =
@@ -36,6 +36,7 @@ const LichSuXepGia = () => {
 			() => {
 				getData();
 				thongKeXepGiaModel({ anPhamId: recAnPham?._id });
+				props.getDataAnPham?.();
 			},
 			undefined,
 			false,
@@ -205,13 +206,13 @@ const LichSuXepGia = () => {
 								onConfirm={() =>
 									deleteModel(rec._id, getData).then(() => {
 										thongKeXepGiaModel({ anPhamId: recAnPham?._id });
+										props.getDataAnPham?.();
 									})
 								}
-								title={intl.formatMessage({ id: 'sachtailieu.confirm.xoa' })}
+								title={intl.formatMessage({ id: 'sachtailieu.confirm.xoaXepGia' })}
 								placement='topRight'
 							>
 								<ButtonExtend
-									disabled={rec?.daXepGia}
 									tooltip={intl.formatMessage({ id: 'global.button.xoa' })}
 									danger
 									type='link'
@@ -246,10 +247,12 @@ const LichSuXepGia = () => {
 				footer={null}
 			>
 				<FormLichSuXepGia
+					visible={visibleModal}
 					onCancel={() => setVisibleModal(false)}
 					onOk={() => {
 						getData();
 						thongKeXepGiaModel({ anPhamId: recAnPham?._id });
+						props.getDataAnPham?.();
 						setVisibleModal(false);
 					}}
 				/>

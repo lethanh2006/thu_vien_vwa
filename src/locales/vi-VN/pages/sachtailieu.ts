@@ -242,7 +242,8 @@ export default {
 	'sachtailieu.label.neuLuuLai': 'Nếu lưu lại ấn phẩm sẽ ở vẫn trạng thái chờ biên mục chi tiết',
 	'sachtailieu.label.neuHoanThanh': 'Nếu hoàn thành ấn phẩm sẽ chuyển trạng thái đã biên mục chi tiết',
 
-	'sachtailieu.confirm.xepGia': 'Xác nhận xếp giá, lưu ý khi hoàn thành sẽ không được chỉnh sửa lại giá?',
+	'sachtailieu.confirm.xepGia':
+		'Xác nhận xếp giá và cấp số ĐKCB? Sau khi xếp giá, muốn thay đổi số lượng phải thêm hoặc xóa từng ĐKCB',
 	'sachtailieu.confirm.apDungXepGia': 'Xác nhận áp dụng xếp giá vào ấn phẩm này?',
 	'sachtailieu.confirm.xoa': 'Bạn có chắc chắn muốn xóa thông tin này?',
 	'sachtailieu.muontra.form.label.masinhvien': 'Mã sinh viên',
@@ -518,4 +519,12 @@ export default {
 	'sachtailieu.modaltimkiem.empty': 'Không có thông tin ấn phẩm',
 	'sachtailieu.modaltimkiem.message.error': 'Ấn phẩm đã tồn tại trong danh sách!',
 	'sachtailieu.modaltimkiem.message.ghichu': 'Mượn vượt quá hạn ngạch cho phép',
+
+	// XepGia
+	'sachtailieu.anpham.dkcbDuKien': 'Số ĐKCB dự kiến tiếp theo',
+	'sachtailieu.anpham.moTaDKCBDuKien':
+		'Hệ thống tự cấp số khi xếp giá, số thực tế có thể khác nếu có người khác cùng thao tác',
+	'sachtailieu.anpham.xepgia.moTaDaXepGia':
+		'Không đổi được số lượng, kho của dòng đã xếp giá. Muốn thay đổi số lượng, hãy thêm hoặc xóa từng ĐKCB',
+	'sachtailieu.confirm.xoaXepGia': 'Xóa dòng xếp giá và các ĐKCB của dòng? Không xóa được nếu có bản đã từng mượn',
 };

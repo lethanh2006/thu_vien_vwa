@@ -226,7 +226,8 @@ export default {
 	'sachtailieu.label.neuLuuLai': 'If saved, the publication will remain in "pending detailed cataloging" status',
 	'sachtailieu.label.neuHoanThanh':
 		'If completed, the publication will switch to "detailed cataloging completed" status',
-	'sachtailieu.confirm.xepGia': 'Confirm shelving? Note that once completed, the shelf cannot be edited.',
+	'sachtailieu.confirm.xepGia':
+		'Confirm shelving and assign accession numbers? After shelving, add or delete individual accession numbers to change the quantity',
 	'sachtailieu.confirm.apDungXepGia': 'Confirm applying shelving to this publication?',
 	'sachtailieu.confirm.xoa': 'Are you sure you want to delete this information?',
 	'sachtailieu.muontra.form.label.masinhvien': 'Student ID',
@@ -467,4 +468,13 @@ export default {
 	'sachtailieu.modaltimkiem.empty': 'No publication info',
 	'sachtailieu.modaltimkiem.message.error': 'Publication already exists in the list!',
 	'sachtailieu.modaltimkiem.message.ghichu': 'Borrowing limit exceeded',
+
+	// XepGia
+	'sachtailieu.anpham.dkcbDuKien': 'Next expected accession number',
+	'sachtailieu.anpham.moTaDKCBDuKien':
+		'The system assigns numbers when shelving; the actual number may differ if another user acts at the same time',
+	'sachtailieu.anpham.xepgia.moTaDaXepGia':
+		'The quantity and warehouse of a shelved entry cannot be changed. To change the quantity, add or delete individual accession numbers',
+	'sachtailieu.confirm.xoaXepGia':
+		'Delete this shelving entry and its accession numbers? Copies with borrowing history cannot be deleted',
 };

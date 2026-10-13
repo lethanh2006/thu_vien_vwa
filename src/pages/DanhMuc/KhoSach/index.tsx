@@ -34,9 +34,9 @@ const KhoSachPage = () => {
 			filterCustomSelect: <SelectPhongDoc multiple selectMa />,
 		},
 		{
-			title: intl.formatMessage({ id: 'danhmuc.khosach.table.column.sodkcbcuoi' }),
+			title: intl.formatMessage({ id: 'danhmuc.khosach.table.column.sobandaxepgia' }),
 			dataIndex: 'soLuongAnPhamDaXepGia',
-			width: 80,
+			width: 130,
 			filterType: 'number',
 			sortable: true,
 		},

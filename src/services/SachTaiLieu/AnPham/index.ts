@@ -17,6 +17,10 @@ export async function thongKeXepGia(params?: { condition?: any; filters?: any[] 
 	return axios.get(`${ip3}/xep-gia/thong-ke`, { params });
 }
 
+export async function getSoDangKyCaBietCuoi(maKhoSach: string) {
+	return axios.get(`${ip3}/an-pham-xep-gia/soDangKyCaBietCuoi/${maKhoSach}`);
+}
+
 export async function bienMucSoLuoc(payLoad: any) {
 	return axios.post(`${ip3}/an-pham/bien-muc-so-luoc`, payLoad);
 }

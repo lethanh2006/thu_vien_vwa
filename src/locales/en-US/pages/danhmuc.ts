@@ -244,7 +244,6 @@ export default {
 	'danhmuc.khosach.table.column.makho': 'Repository code',
 	'danhmuc.khosach.table.column.tenkho': 'Repository name',
 	'danhmuc.khosach.table.column.phongdoc': 'Reading room',
-	'danhmuc.khosach.table.column.sodkcbcuoi': 'Last accession number',
 	'danhmuc.khosach.table.column.thaoTac': 'Action',
 	'danhmuc.khosach.table.tooltip.chinhsua': 'Edit',
 	'danhmuc.khosach.table.tooltip.xoa': 'Delete',
@@ -364,4 +363,11 @@ export default {
 	'danhmuc.capthumuc.table.tooltip.chinhsua': 'Edit',
 	'danhmuc.capthumuc.table.tooltip.xoa': 'Delete',
 	'danhmuc.capthumuc.table.popconfirm.xoa': 'Are you sure you want to delete this information?',
+
+	// KhoSach
+	'danhmuc.khosach.form.label.sobandaxepgia': 'Shelved copies',
+	'danhmuc.khosach.form.extra.sobandaxepgia': 'Updated automatically when copies are shelved, added or deleted',
+	'danhmuc.khosach.form.extra.sodangkycabietcuoi':
+		'Last accession sequence already used by this warehouse, enter 0 if none. E.g. enter 500 to continue from 00501',
+	'danhmuc.khosach.table.column.sobandaxepgia': 'Shelved copies',
 };

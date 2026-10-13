@@ -65,16 +65,30 @@ const FormKhoSach = (props: any) => {
 						</Form.Item>
 					</Col>
 					<Col span={24}>
-						<Form.Item
-							label={intl.formatMessage({ id: 'danhmuc.khosach.form.label.sodangkycabietcuoi' })}
-							name='soLuongAnPhamDaXepGia'
-							rules={[...rules.required]}
-						>
-							<InputNumber
-								style={{ width: '100%' }}
-								placeholder={intl.formatMessage({ id: 'danhmuc.khosach.form.placeholder.nhapsodangkycabietcuoi' })}
-							/>
-						</Form.Item>
+						{/* Sửa kho: số bản đã xếp giá do hệ thống cập nhật, chỉ xem. Tạo kho: BE không chặn số âm nên giới hạn tại ô nhập */}
+						{edit ? (
+							<Form.Item
+								label={intl.formatMessage({ id: 'danhmuc.khosach.form.label.sobandaxepgia' })}
+								extra={intl.formatMessage({ id: 'danhmuc.khosach.form.extra.sobandaxepgia' })}
+								name='soLuongAnPhamDaXepGia'
+							>
+								<InputNumber disabled style={{ width: '100%' }} />
+							</Form.Item>
+						) : (
+							<Form.Item
+								label={intl.formatMessage({ id: 'danhmuc.khosach.form.label.sodangkycabietcuoi' })}
+								extra={intl.formatMessage({ id: 'danhmuc.khosach.form.extra.sodangkycabietcuoi' })}
+								name='soLuongAnPhamDaXepGia'
+								rules={[...rules.required]}
+							>
+								<InputNumber
+									min={0}
+									precision={0}
+									style={{ width: '100%' }}
+									placeholder={intl.formatMessage({ id: 'danhmuc.khosach.form.placeholder.nhapsodangkycabietcuoi' })}
+								/>
+							</Form.Item>
+						)}
 					</Col>
 				</Row>
 

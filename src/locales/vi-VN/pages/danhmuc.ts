@@ -263,7 +263,6 @@ export default {
 	'danhmuc.khosach.table.column.makho': 'Mã kho',
 	'danhmuc.khosach.table.column.tenkho': 'Tên kho',
 	'danhmuc.khosach.table.column.phongdoc': 'Phòng đọc',
-	'danhmuc.khosach.table.column.sodkcbcuoi': 'Số ĐKCB cuối',
 	'danhmuc.khosach.table.column.thaoTac': 'Thao tác',
 	'danhmuc.khosach.table.tooltip.chinhsua': 'Chỉnh sửa',
 	'danhmuc.khosach.table.tooltip.xoa': 'Xóa',
@@ -389,4 +388,11 @@ export default {
 	'danhmuc.capthumuc.table.tooltip.chinhsua': 'Chỉnh sửa',
 	'danhmuc.capthumuc.table.tooltip.xoa': 'Xóa',
 	'danhmuc.capthumuc.table.popconfirm.xoa': 'Bạn có chắc chắn muốn xóa thông tin này?',
+
+	// KhoSach
+	'danhmuc.khosach.form.label.sobandaxepgia': 'Số bản đã xếp giá',
+	'danhmuc.khosach.form.extra.sobandaxepgia': 'Hệ thống tự cập nhật khi xếp giá, thêm hoặc xóa ĐKCB',
+	'danhmuc.khosach.form.extra.sodangkycabietcuoi':
+		'Số thứ tự ĐKCB cuối kho đã dùng, nhập 0 nếu chưa dùng. Ví dụ nhập 500 thì hệ thống cấp tiếp từ 00501',
+	'danhmuc.khosach.table.column.sobandaxepgia': 'Số bản đã xếp giá',
 };

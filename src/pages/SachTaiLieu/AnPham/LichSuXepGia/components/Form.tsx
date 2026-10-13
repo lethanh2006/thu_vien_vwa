@@ -7,41 +7,38 @@ import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import SelectThuVien from '@/pages/DanhMuc/ThuVien/components/Select';
 import SelectDotNhapSach from '@/pages/SachTaiLieu/DotNhapSach/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import { SO_LUONG_XEP_GIA_TOI_DA } from '@/services/SachTaiLieu/constant';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import { Alert, Button, Col, Divider, Form, Input, InputNumber, Popconfirm, Row } from 'antd';
 import { useEffect, useState } from 'react';
 import { history, useIntl, useModel } from 'umi';
+import FormItemDKCBTiepTheo from '../../components/FormItemDKCBTiepTheo';
 
-const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => {
+/** `visible`: trạng thái modal chứa form, mặc định theo `visibleForm` của model */
+const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void; visible?: boolean }) => {
 	const { onCancel, onOk } = props;
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { formSubmiting, putModel, record, visibleForm } = useModel('sachtailieu.anpham.xepgia');
-	const { danhSach: danhSachKieuTuLieu } = useModel('danhmuc.kieutulieu');
 	const maKhoSach: string = Form.useWatch('maKhoSach', form);
-	const [actionType, setActionType] = useState<string>();
+	const [xacNhanXepGia, setXacNhanXepGia] = useState<boolean>(false);
+	const visible = props.visible ?? visibleForm;
 
 	useEffect(() => {
-		if (!visibleForm) {
+		if (!visible) {
 			resetFieldsForm(form);
 		} else if (record?._id) {
-			const index = danhSachKieuTuLieu?.find((item) => item?.ma === record?.maKieuTuLieu);
-			form.setFieldsValue({
-				...record,
-				soDangKyCaBiet: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(6, '0')}`,
-			});
+			form.setFieldsValue(record);
 		}
-	}, [visibleForm, record?._id]);
+	}, [visible, record?._id]);
 
 	const onFinish = async (values: AnPham.IXepGia) => {
 		if (record?._id) {
 			putModel(
 				record?._id,
-				{
-					...values,
-					daXepGia: actionType === 'luu_lai' ? false : true,
-				},
+				// Dòng đã xếp giá thì giữ trạng thái đã xếp giá
+				{ ...values, daXepGia: record.daXepGia || xacNhanXepGia },
 				onOk,
 				undefined,
 				false,
@@ -74,6 +71,9 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 					) : (
 						intl.formatMessage({ id: 'sachtailieu.anpham.xepgia.dangXepGia' })
 					)
+				}
+				description={
+					record?.daXepGia ? intl.formatMessage({ id: 'sachtailieu.anpham.xepgia.moTaDaXepGia' }) : undefined
 				}
 			/>
 			<Form onFinish={onFinish} form={form} layout='vertical'>
@@ -146,16 +146,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 							label={intl.formatMessage({ id: 'sachtailieu.anpham.kho' })}
 							rules={[...rules.required]}
 						>
-							<SelectKhoSach
-								selectMa
-								onChange={(val) => {
-									const index = danhSachKieuTuLieu?.find((item) => item?.ma === val);
-									form.setFieldsValue({
-										soDangKyCaBiet: `${index?.ma}/${String((index?.soTuLieu ?? 0) + 1).padStart(5, '0')}`,
-									});
-									form.resetFields(['giaSachId']);
-								}}
-							/>
+							<SelectKhoSach selectMa disabled={record?.daXepGia} onChange={() => form.resetFields(['giaSachId'])} />
 						</Form.Item>
 					</Col>
 					<Col xs={24} md={12}>
@@ -163,22 +154,19 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 							<SelectGiaSach condition={{ maKhoSach: maKhoSach }} />
 						</Form.Item>
 					</Col>
-					<Col xs={24} md={12}>
-						<Form.Item
-							name='soDangKyCaBiet'
-							label={intl.formatMessage({ id: 'sachtailieu.anpham.dangKyCaBiet' })}
-							rules={[...rules.required]}
-						>
-							<Input placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.nhapDangKyCaBiet' })} disabled />
-						</Form.Item>
-					</Col>
+					{!record?.daXepGia && (
+						<Col xs={24} md={12}>
+							<FormItemDKCBTiepTheo maKhoSach={maKhoSach} />
+						</Col>
+					)}
 					<Col xs={24} md={12}>
 						<Form.Item
 							name='soLuong'
 							label={intl.formatMessage({ id: 'sachtailieu.anpham.soLuong' })}
-							rules={[...rules.required]}
+							rules={record?.daXepGia ? [] : [...rules.required, ...rules.number(SO_LUONG_XEP_GIA_TOI_DA, 1, false)]}
 						>
 							<InputNumber
+								disabled={record?.daXepGia}
 								style={{ width: '100%' }}
 								placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.nhapSoLuong' })}
 							/>
@@ -193,11 +181,10 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 
 				<div className='form-footer'>
 					<ButtonExtend
-						disabled={record?.daXepGia}
 						loading={formSubmiting}
 						type='primary'
 						onClick={() => {
-							setActionType('luu_lai');
+							setXacNhanXepGia(false);
 							form.submit();
 						}}
 					>
@@ -205,7 +192,7 @@ const FormLichSuXepGia = (props: { onCancel: () => void; onOk: () => void }) => 
 					</ButtonExtend>
 					<Popconfirm
 						onConfirm={() => {
-							setActionType('xep_gia');
+							setXacNhanXepGia(true);
 							form.submit();
 						}}
 						title={intl.formatMessage({ id: 'sachtailieu.confirm.xepGia' })}

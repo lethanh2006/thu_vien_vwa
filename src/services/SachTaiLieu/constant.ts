@@ -65,6 +65,9 @@ export const colorTrangThaiDangKyCaBiet: Record<ETrangThaiDangKyCaBiet, string> 
 	// [ETrangThaiDangKyCaBiet.THANH_LY]: 'orange',
 };
 
+/** Số lượng tối đa của một dòng xếp giá (BE chặn quá số này) */
+export const SO_LUONG_XEP_GIA_TOI_DA = 5000;
+
 export enum EVaiTroMuonTra {
 	SINHVIEN = 'Sinh viên',
 	CANBO = 'Cán bộ/ Giảng viên',

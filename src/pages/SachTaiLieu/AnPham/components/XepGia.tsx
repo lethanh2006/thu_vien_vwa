@@ -6,6 +6,7 @@ import SelectKieuTuLieu from '@/pages/DanhMuc/KieuTuLieu/components/Select';
 import SelectNguonBoSung from '@/pages/DanhMuc/NguonBoSung/components/Select';
 import SelectThuVien from '@/pages/DanhMuc/ThuVien/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import { SO_LUONG_XEP_GIA_TOI_DA } from '@/services/SachTaiLieu/constant';
 import rules from '@/utils/rules';
 import { resetFieldsForm } from '@/utils/utils';
 import {
@@ -27,8 +28,9 @@ import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import SelectDotNhapSach from '../../DotNhapSach/components/Select';
 import LichSuXepGia from '../LichSuXepGia';
+import FormItemDKCBTiepTheo from './FormItemDKCBTiepTheo';
 
-const ModalXepGia = () => {
+const ModalXepGia = (props: { getDataAnPham?: () => void }) => {
 	const intl = useIntl();
 	const [form] = Form.useForm();
 	const { record } = useModel('sachtailieu.anpham.anpham');
@@ -42,9 +44,8 @@ const ModalXepGia = () => {
 		loadingThongKe,
 		datathongKeXepGia,
 	} = useModel('sachtailieu.anpham.xepgia');
-	const { danhSach: danhSachKhoSach } = useModel('danhmuc.khosach');
 	const maKhoSach: string = Form.useWatch('maKhoSach', form);
-	const [actionType, setActionType] = useState<string>();
+	const [xacNhanXepGia, setXacNhanXepGia] = useState<boolean>(false);
 	const [tabActive, setTabActive] = useState<string>('1');
 
 	useEffect(() => {
@@ -62,12 +63,13 @@ const ModalXepGia = () => {
 		postModel(
 			{
 				...values,
-				daXepGia: actionType === 'luu_lai' ? false : true,
+				daXepGia: xacNhanXepGia,
 				anPhamId: record?._id,
 				dotNhapSachId: record?.dotNhapSachId,
 			},
 			() => {
 				thongKeXepGiaModel({ anPhamId: record?._id });
+				props.getDataAnPham?.();
 				resetFieldsForm(form);
 				setTabActive('2');
 			},
@@ -194,20 +196,7 @@ const ModalXepGia = () => {
 								label={intl.formatMessage({ id: 'sachtailieu.anpham.kho' })}
 								rules={[...rules.required]}
 							>
-								<SelectKhoSach
-									selectMa
-									onChange={(val) => {
-										form.resetFields(['giaSachId']);
-
-										const index = danhSachKhoSach?.find((item) => item?.ma === val);
-										form.setFieldsValue({
-											soDangKyCaBiet: `${index?.ma}/${String((index?.soLuongAnPhamDaXepGia ?? 0) + 1).padStart(
-												5,
-												'0',
-											)}`,
-										});
-									}}
-								/>
+								<SelectKhoSach selectMa onChange={() => form.resetFields(['giaSachId'])} />
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
@@ -216,19 +205,13 @@ const ModalXepGia = () => {
 							</Form.Item>
 						</Col>
 						<Col xs={24} md={12}>
-							<Form.Item
-								name='soDangKyCaBiet'
-								label={intl.formatMessage({ id: 'sachtailieu.anpham.dangKyCaBiet' })}
-								rules={[...rules.required]}
-							>
-								<Input placeholder={intl.formatMessage({ id: 'sachtailieu.anpham.dangKyCaBiet' })} disabled />
-							</Form.Item>
+							<FormItemDKCBTiepTheo maKhoSach={maKhoSach} />
 						</Col>
 						<Col xs={24} md={12}>
 							<Form.Item
 								name='soLuong'
 								label={intl.formatMessage({ id: 'sachtailieu.anpham.soLuong' })}
-								rules={[...rules.required]}
+								rules={[...rules.required, ...rules.number(SO_LUONG_XEP_GIA_TOI_DA, 1, false)]}
 							>
 								<InputNumber
 									style={{ width: '100%' }}
@@ -249,7 +232,7 @@ const ModalXepGia = () => {
 							loading={formSubmiting}
 							type='primary'
 							onClick={() => {
-								setActionType('luu_lai');
+								setXacNhanXepGia(false);
 								form.submit();
 							}}
 						>
@@ -257,7 +240,7 @@ const ModalXepGia = () => {
 						</ButtonExtend>
 						<Popconfirm
 							onConfirm={() => {
-								setActionType('xep_gia');
+								setXacNhanXepGia(true);
 								form.submit();
 							}}
 							title={intl.formatMessage({ id: 'sachtailieu.confirm.xepGia' })}
@@ -271,7 +254,7 @@ const ModalXepGia = () => {
 					</div>
 				</Form>
 			) : (
-				<LichSuXepGia />
+				<LichSuXepGia getDataAnPham={props.getDataAnPham} />
 			)}
 		</Modal>
 	);
