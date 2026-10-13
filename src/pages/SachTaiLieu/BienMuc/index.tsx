@@ -1,26 +1,31 @@
 import TableBase from '@/components/Table';
 import ButtonExtend from '@/components/Table/ButtonExtend';
 import { type IColumn } from '@/components/Table/typing';
-import SelectCapThuMuc from '@/pages/DanhMuc/CapThuMuc/components/Select';
-import SelectDangTaiLieu from '@/pages/DanhMuc/DangTaiLieu/components/Select';
-import SelectKieuBanGhi from '@/pages/DanhMuc/KieuBanGhi/components/Select';
-import SelectMauBienMuc from '@/pages/DanhMuc/MauBienMuc/components/Select';
-import SelectVatMangTin from '@/pages/DanhMuc/VatMangTin/components/Select';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
-import { colorTrangThaiBienMuc, ETrangThaiBienMuc } from '@/services/SachTaiLieu/constant';
+import {
+	colorTrangThaiBienMuc,
+	ETrangThaiBienMuc,
+	TRUONG_BAT_BUOC_BIEN_MUC_SO_LUOC,
+} from '@/services/SachTaiLieu/constant';
 import {
 	DeleteOutlined,
 	EditOutlined,
+	FilePdfOutlined,
 	MenuOutlined,
 	PlusCircleOutlined,
 	StarOutlined,
 	StarTwoTone,
+	StopOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, Card, Popconfirm, Popover, Select, Tag, Tooltip } from 'antd';
+import { Avatar, Button, Card, Modal, Popconfirm, Popover, Select, Tag, Tooltip } from 'antd';
+import _ from 'lodash';
 import { useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import news from '../../../assets/new6.gif';
+import useColumnsThongTinAnPham, { NhanDeAnPham, populationAnPham } from '../AnPham/components/ColumnsThongTinAnPham';
+import DanhSachDKCB from '../AnPham/DanhSachDKCB';
 import SelectDotNhapSach from '../DotNhapSach/components/Select';
+import ModalAnPhamSo from './components/AnPhamSo';
 import ModalBienMucTaiLieu from './components/Modal';
 import ModalSachHay from './components/ModalSachHay';
 import Z3950Page from './Z3950';
@@ -34,6 +39,7 @@ const BienMucSachTaiLieuPage = () => {
 		limit,
 		handleEdit,
 		handleView,
+		record,
 		setRecord,
 		setEdit,
 		setIsView,
@@ -41,13 +47,16 @@ const BienMucSachTaiLieuPage = () => {
 		putBienMucSoLuocModel,
 		setVisibleTimKiemZ3950,
 		deleteModel,
+		deleteAnPhamSoModel,
 	} = useModel('sachtailieu.anpham.anpham');
 	const [visibleSachHay, setVisibleSachHay] = useState<boolean>(false);
+	const [visibleAnPhamSo, setVisibleAnPhamSo] = useState<boolean>(false);
+	const [visibleDKCB, setVisibleDKCB] = useState<boolean>(false);
 
+	// Biên mục quản lý toàn bộ ấn phẩm (chờ và đã biên mục), Xếp giá chỉ làm việc xếp giá
 	const getData = () => {
-		getModel({
-			dotNhapSachId: recDot?._id,
-			trangThai: ETrangThaiBienMuc.CHO_BIEN_MUC,
+		getModel({ dotNhapSachId: recDot?._id }, undefined, undefined, undefined, undefined, undefined, {
+			population: populationAnPham,
 		});
 	};
 
@@ -58,9 +67,15 @@ const BienMucSachTaiLieuPage = () => {
 		},
 	});
 
+	// Chỉ gửi các trường BE bắt buộc và ô cần đổi: gửi cả record thì ô rỗng bị BE coi là xóa trường MARC tương ứng
 	const handleSachHay = (rec: AnPham.IRecord, isSachHay: boolean) => {
-		putBienMucSoLuocModel(rec?._id ?? '', { ...rec, isSachHay }, getData);
+		putBienMucSoLuocModel(rec?._id ?? '', { ..._.pick(rec, TRUONG_BAT_BUOC_BIEN_MUC_SO_LUOC), isSachHay }, getData);
 	};
+
+	const columnsThongTinAnPham = useColumnsThongTinAnPham((rec) => {
+		setRecord(rec);
+		setVisibleDKCB(true);
+	});
 
 	const columns: IColumn<AnPham.IRecord>[] = [
 		{
@@ -96,7 +111,8 @@ const BienMucSachTaiLieuPage = () => {
 		{
 			title: intl.formatMessage({ id: 'sachtailieu.anpham.nhanDe' }),
 			dataIndex: 'nhanDe',
-			width: 150,
+			width: 260,
+			render: (val, rec) => <NhanDeAnPham record={rec} />,
 			filterType: 'string',
 			onCell,
 		},
@@ -132,51 +148,7 @@ const BienMucSachTaiLieuPage = () => {
 			),
 			onCell,
 		},
-		{
-			title: intl.formatMessage({ id: 'sachtailieu.anpham.kieuBanGhi' }),
-			dataIndex: 'maKieuBanGhi',
-			width: 150,
-			render: (val, rec) => rec?.kieuBanGhi?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectKieuBanGhi multiple selectMa />,
-			onCell,
-		},
-		{
-			title: intl.formatMessage({ id: 'sachtailieu.anpham.dangTaiLieu' }),
-			dataIndex: 'maDangTaiLieu',
-			width: 150,
-			render: (val, rec) => rec?.dangTaiLieu?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectDangTaiLieu multiple selectMa />,
-			onCell,
-		},
-		{
-			title: intl.formatMessage({ id: 'sachtailieu.anpham.capThuMuc' }),
-			dataIndex: 'maCapThuMuc',
-			width: 150,
-			render: (val, rec) => rec?.capThuMuc?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectCapThuMuc multiple selectMa />,
-			onCell,
-		},
-		{
-			title: intl.formatMessage({ id: 'sachtailieu.anpham.vatMangTin' }),
-			dataIndex: 'maVatMangTin',
-			width: 150,
-			render: (val, rec) => rec?.vatMangTin?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectVatMangTin multiple selectMa />,
-			onCell,
-		},
-		{
-			title: intl.formatMessage({ id: 'sachtailieu.anpham.mauBienMuc' }),
-			dataIndex: 'mauBienMucId',
-			width: 150,
-			render: (val, rec) => rec?.mauBienMuc?.ten,
-			filterType: 'customselect',
-			filterCustomSelect: <SelectMauBienMuc multiple />,
-			onCell,
-		},
+		...columnsThongTinAnPham,
 		{
 			title: intl.formatMessage({ id: 'sachtailieu.anpham.doMat' }),
 			align: 'center',
@@ -221,6 +193,28 @@ const BienMucSachTaiLieuPage = () => {
 						placement='topRight'
 						content={
 							<>
+								<ButtonExtend
+									tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.anPhamSo' })}
+									type='link'
+									icon={<FilePdfOutlined />}
+									onClick={() => {
+										setRecord(rec);
+										setVisibleAnPhamSo(true);
+									}}
+								/>
+								{rec?.online ? (
+									<Popconfirm
+										onConfirm={() => deleteAnPhamSoModel(rec?._id, getData)}
+										title={intl.formatMessage({ id: 'sachtailieu.confirm.xoaAnPhamSo' })}
+										placement='topRight'
+									>
+										<ButtonExtend
+											tooltip={intl.formatMessage({ id: 'sachtailieu.button.xoaAnPhamSo' })}
+											type='link'
+											icon={<StopOutlined />}
+										/>
+									</Popconfirm>
+								) : null}
 								{!rec?.isSachHay ? (
 									<ButtonExtend
 										tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.sachHay' })}
@@ -235,11 +229,11 @@ const BienMucSachTaiLieuPage = () => {
 								) : (
 									<Popconfirm
 										onConfirm={() => handleSachHay(rec, false)}
-										title={intl.formatMessage({ id: 'sachtailieu.anpham.boSachHay' })}
+										title={intl.formatMessage({ id: 'sachtailieu.confirm.boSachHay' })}
 										placement='topRight'
 									>
 										<ButtonExtend
-											tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.boSachHay' })}
+											tooltip={intl.formatMessage({ id: 'sachtailieu.button.boSachHay' })}
 											type='link'
 											danger
 											icon={<StarTwoTone />}
@@ -323,7 +317,20 @@ const BienMucSachTaiLieuPage = () => {
 
 			<ModalSachHay visible={visibleSachHay} setVisible={setVisibleSachHay} getData={getData} />
 
+			<ModalAnPhamSo visible={visibleAnPhamSo} setVisible={setVisibleAnPhamSo} getData={getData} />
+
 			<Z3950Page getData={getData} />
+
+			<Modal
+				title={`${intl.formatMessage({ id: 'sachtailieu.anpham.danhSachDangKyCaBiet' })} - ${record?.nhanDe ?? ''}`}
+				open={visibleDKCB}
+				onCancel={() => setVisibleDKCB(false)}
+				footer={null}
+				width={1100}
+				destroyOnClose
+			>
+				<DanhSachDKCB getDataAnPham={getData} />
+			</Modal>
 		</Card>
 	);
 };

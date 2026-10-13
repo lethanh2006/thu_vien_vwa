@@ -57,7 +57,6 @@ export default {
 	'sachtailieu.dotnhapsach.chonDot': 'Chọn đợt nhập sách',
 	'sachtailieu.dotnhapsach.tongHopThongTinChung': 'Tổng hợp thông tin chung',
 
-	'sachtailieu.anpham.xacNhan': 'Xác nhận ấn phẩm',
 	'sachtailieu.anpham.danhSachLichSu': 'Danh sách lịch sử mượn trả sách người mượn',
 	'sachtailieu.anpham.soLuongChoXuLy': 'SL chờ xử lý',
 	'sachtailieu.anpham.soLuongDangThueMuon': 'SL đang thuê mượn',
@@ -261,9 +260,7 @@ export default {
 	'sachtailieu.modal.timkiem': 'Tìm kiếm',
 	'sachtailieu.card.danhsachbandoc': 'Danh sách bạn đọc',
 	'sachtailieu.confirm.xoaAnPhamSo': 'Xác nhận xóa ấn phẩm số khỏi dspace?',
-	'sachtailieu.confirm.xoaDongThoiTaiLieu': 'Xác nhận xóa đồng thời tài liệu trên DSpace?',
 	'sachtailieu.confirm.boSachHay': 'Xác nhận bỏ sách hay này?',
-	'sachtailieu.confirm.xoaAnPhamSo2': 'Xác nhận xóa ấn phẩm số?',
 
 	'sachtailieu.button.xepGia': 'Xếp giá',
 	'sachtailieu.button.xemChiTiet': 'Xem chi tiết',
@@ -547,4 +544,12 @@ export default {
 	'sachtailieu.dkcb.xacNhanThanhLy': 'Thanh lý ĐKCB {soDangKyCaBiet}?',
 	'sachtailieu.dkcb.moTaThanhLy': 'Bản sẽ ngừng lưu thông và vẫn giữ lịch sử mượn trả',
 	'sachtailieu.dkcb.thanhLy': 'Thanh lý',
+
+	// AnPham
+	'sachtailieu.anpham.noiXuatBan': 'Nơi xuất bản',
+	'sachtailieu.anpham.kyHieuPhanLoai': 'Ký hiệu phân loại',
+	'sachtailieu.anpham.tuKhoa': 'Từ khóa',
+	'sachtailieu.anpham.giaTien': 'Giá tiền',
+	'sachtailieu.anpham.soBanKhac': ' (+{soLuong} bản)',
+	'sachtailieu.anpham.chuaCoDKCB': 'Chưa có ĐKCB',
 };

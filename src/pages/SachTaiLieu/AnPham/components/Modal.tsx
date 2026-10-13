@@ -10,7 +10,7 @@ import DanhSachDKCB from '../DanhSachDKCB';
 import LichSuXepGia from '../LichSuXepGia';
 import ChiTietAnPham from './ChiTiet';
 
-const ModalAnPham = () => {
+const ModalAnPham = (props: { getData?: () => void }) => {
 	const intl = useIntl();
 	const { record: recAnPham, setVisibleForm } = useModel('sachtailieu.anpham.anpham');
 	const { getAllModel, loading } = useModel('sachtailieu.anpham.thongtinanpham');
@@ -26,7 +26,7 @@ const ModalAnPham = () => {
 
 	return (
 		<Card title={intl.formatMessage({ id: 'sachtailieu.anpham.chiTiet' })} loading={loading}>
-			<Tabs tabPosition={isTabletOrMobile ? 'top' : 'left'}>
+			<Tabs destroyInactiveTabPane tabPosition={isTabletOrMobile ? 'top' : 'left'}>
 				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.thongTinChung' })} key='1'>
 					<ChiTietBienMuc />
 				</Tabs.TabPane>
@@ -34,7 +34,7 @@ const ModalAnPham = () => {
 					<ChiTietAnPham />
 				</Tabs.TabPane>
 				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.danhSachDangKyCaBiet' })} key='3'>
-					<DanhSachDKCB />
+					<DanhSachDKCB getDataAnPham={props.getData} />
 				</Tabs.TabPane>
 				{recAnPham?.online ? (
 					<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.fileAnPhamSo' })} key='4'>
@@ -52,7 +52,7 @@ const ModalAnPham = () => {
 				) : null}
 
 				<Tabs.TabPane tab={intl.formatMessage({ id: 'sachtailieu.anpham.lichSuXepGia' })} key='7'>
-					<LichSuXepGia />
+					<LichSuXepGia getDataAnPham={props.getData} />
 				</Tabs.TabPane>
 			</Tabs>
 

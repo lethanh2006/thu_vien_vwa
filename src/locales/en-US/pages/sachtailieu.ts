@@ -46,7 +46,6 @@ export default {
 	'sachtailieu.dotnhapsach.thoiGianCanThongKe': 'Statistics period',
 	'sachtailieu.dotnhapsach.chonDot': 'Select book entry batch',
 	'sachtailieu.dotnhapsach.tongHopThongTinChung': 'General information summary',
-	'sachtailieu.anpham.xacNhan': 'Confirm publication',
 	'sachtailieu.anpham.danhSachLichSu': 'Patron circulation history list',
 	'sachtailieu.anpham.soLuongChoXuLy': 'Pending count',
 	'sachtailieu.anpham.soLuongDangThueMuon': 'Borrowed count',
@@ -245,9 +244,7 @@ export default {
 	'sachtailieu.modal.timkiem': 'Search',
 	'sachtailieu.card.danhsachbandoc': 'Patron List',
 	'sachtailieu.confirm.xoaAnPhamSo': 'Confirm deleting digital publication from DSpace?',
-	'sachtailieu.confirm.xoaDongThoiTaiLieu': 'Confirm simultaneously deleting document on DSpace?',
 	'sachtailieu.confirm.boSachHay': 'Confirm removing this featured book?',
-	'sachtailieu.confirm.xoaAnPhamSo2': 'Confirm deleting digital publication?',
 	'sachtailieu.button.xepGia': 'Shelving',
 	'sachtailieu.button.xemChiTiet': 'View Details',
 	'sachtailieu.button.apDung': 'Apply',
@@ -500,4 +497,12 @@ export default {
 	'sachtailieu.dkcb.xacNhanThanhLy': 'Liquidate accession number {soDangKyCaBiet}?',
 	'sachtailieu.dkcb.moTaThanhLy': 'The copy leaves circulation and keeps its borrowing history',
 	'sachtailieu.dkcb.thanhLy': 'Liquidate',
+
+	// AnPham
+	'sachtailieu.anpham.noiXuatBan': 'Place of publication',
+	'sachtailieu.anpham.kyHieuPhanLoai': 'Classification number',
+	'sachtailieu.anpham.tuKhoa': 'Keywords',
+	'sachtailieu.anpham.giaTien': 'Price',
+	'sachtailieu.anpham.soBanKhac': ' (+{soLuong} copies)',
+	'sachtailieu.anpham.chuaCoDKCB': 'No accession numbers',
 };
