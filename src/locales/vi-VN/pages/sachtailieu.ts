@@ -531,4 +531,20 @@ export default {
 	// BienMuc
 	'sachtailieu.bienmuc.nhanDeSongSong': 'Nhan đề song song [245$b]',
 	'sachtailieu.bienmuc.nhapNhanDeSongSong': 'Nhập nhan đề song song',
+
+	// DangKyCaBiet
+	'sachtailieu.dkcb.themTayDKCB': 'Thêm tay ĐKCB',
+	'sachtailieu.dkcb.themTayDangKyCaBiet': 'Thêm tay đăng ký cá biệt',
+	'sachtailieu.dkcb.dongXepGia': 'Dòng xếp giá',
+	'sachtailieu.dkcb.moTaDongXepGia': 'Không bắt buộc. Chọn dòng xếp giá của ấn phẩm để gắn ĐKCB',
+	'sachtailieu.dkcb.chonDongXepGia': 'Chọn dòng xếp giá',
+	'sachtailieu.dkcb.soBan': '{soLuong} bản',
+	'sachtailieu.dkcb.moTaSoDKCB':
+		'Dạng MÃ KHO/SỐ THỨ TỰ, số thứ tự tối thiểu 5 chữ số, không thừa số 0 đứng đầu. Ví dụ: KHO1/00001',
+	'sachtailieu.dkcb.xacNhanXoa': 'Xóa ĐKCB {soDangKyCaBiet}?',
+	'sachtailieu.dkcb.moTaXoa': 'Chỉ xóa được bản chưa từng mượn. Số đã xóa không được tự động cấp lại',
+	'sachtailieu.dkcb.moTaXoaNhieu': 'Nếu có bản đã từng mượn thì toàn bộ ĐKCB đã chọn được giữ nguyên',
+	'sachtailieu.dkcb.xacNhanThanhLy': 'Thanh lý ĐKCB {soDangKyCaBiet}?',
+	'sachtailieu.dkcb.moTaThanhLy': 'Bản sẽ ngừng lưu thông và vẫn giữ lịch sử mượn trả',
+	'sachtailieu.dkcb.thanhLy': 'Thanh lý',
 };

@@ -44,25 +44,25 @@ export const colorTrangThaiBienMuc: Record<ETrangThaiBienMuc, string> = {
 export enum ETrangThaiDangKyCaBiet {
 	RANH = 'Rảnh',
 	BAN = 'Bận',
-	// THANH_LY = 'Đã Thanh lý',
+	THANH_LY = 'Đã Thanh lý',
 }
 
 export const nameTrangThaiDangKyCaBietV2: Record<ETrangThaiDangKyCaBiet, string> = {
 	[ETrangThaiDangKyCaBiet.RANH]: 'Rảnh',
 	[ETrangThaiDangKyCaBiet.BAN]: 'Đang mượn',
-	// [ETrangThaiDangKyCaBiet.THANH_LY]: 'Đã thanh lý',
+	[ETrangThaiDangKyCaBiet.THANH_LY]: 'Đã thanh lý',
 };
 
 export const nameTrangThaiDangKyCaBiet: Record<ETrangThaiDangKyCaBiet, string> = {
 	[ETrangThaiDangKyCaBiet.RANH]: 'ĐKCB khả dụng',
 	[ETrangThaiDangKyCaBiet.BAN]: 'ĐKCB cho mượn',
-	// [ETrangThaiDangKyCaBiet.THANH_LY]: 'Đã thanh lý',
+	[ETrangThaiDangKyCaBiet.THANH_LY]: 'Đã thanh lý',
 };
 
 export const colorTrangThaiDangKyCaBiet: Record<ETrangThaiDangKyCaBiet, string> = {
 	[ETrangThaiDangKyCaBiet.RANH]: 'green',
 	[ETrangThaiDangKyCaBiet.BAN]: 'red',
-	// [ETrangThaiDangKyCaBiet.THANH_LY]: 'orange',
+	[ETrangThaiDangKyCaBiet.THANH_LY]: 'orange',
 };
 
 /** Số lượng tối đa của một dòng xếp giá (BE chặn quá số này) */

@@ -481,4 +481,23 @@ export default {
 	// BienMuc
 	'sachtailieu.bienmuc.nhanDeSongSong': 'Parallel title [245$b]',
 	'sachtailieu.bienmuc.nhapNhanDeSongSong': 'Enter parallel title',
+
+	// DangKyCaBiet
+	'sachtailieu.dkcb.themTayDKCB': 'Add accession number',
+	'sachtailieu.dkcb.themTayDangKyCaBiet': 'Add accession number manually',
+	'sachtailieu.dkcb.dongXepGia': 'Shelving entry',
+	'sachtailieu.dkcb.moTaDongXepGia':
+		'Optional. Select a shelving entry of the publication to link the accession number',
+	'sachtailieu.dkcb.chonDongXepGia': 'Select shelving entry',
+	'sachtailieu.dkcb.soBan': '{soLuong} copies',
+	'sachtailieu.dkcb.moTaSoDKCB':
+		'Format WAREHOUSE CODE/SEQUENCE, at least 5 digits without extra leading zeros. Example: KHO1/00001',
+	'sachtailieu.dkcb.xacNhanXoa': 'Delete accession number {soDangKyCaBiet}?',
+	'sachtailieu.dkcb.moTaXoa':
+		'Only copies never borrowed can be deleted. Deleted numbers are not reissued automatically',
+	'sachtailieu.dkcb.moTaXoaNhieu':
+		'If any selected copy has borrowing history, none of the selected numbers is deleted',
+	'sachtailieu.dkcb.xacNhanThanhLy': 'Liquidate accession number {soDangKyCaBiet}?',
+	'sachtailieu.dkcb.moTaThanhLy': 'The copy leaves circulation and keeps its borrowing history',
+	'sachtailieu.dkcb.thanhLy': 'Liquidate',
 };

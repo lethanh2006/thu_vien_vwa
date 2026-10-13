@@ -40,7 +40,7 @@ export default () => {
 					page: 1,
 					limit: 20,
 					condition,
-					filters: [{ active: true, field: 'ten', values: [keyword], operator: EOperatorType.CONTAIN }],
+					filters: [{ active: true, field: 'nhanDe', values: [keyword], operator: EOperatorType.CONTAIN }],
 				},
 			];
 			const responses = await Promise.allSettled(payloads.map((payload) => getService(payload, 'page')));

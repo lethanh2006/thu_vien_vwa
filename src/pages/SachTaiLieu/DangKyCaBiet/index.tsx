@@ -11,20 +11,26 @@ import {
 } from '@/services/SachTaiLieu/constant';
 import dayjs from '@/utils/dayjs';
 import { inputFormat } from '@/utils/utils';
-import { HistoryOutlined } from '@ant-design/icons';
+import { HistoryOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Card, Tabs, Tag } from 'antd';
+import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useIntl, useModel } from 'umi';
 import LichSuThueMuonPage from '../MuonTraSach/LichSu';
 import FormDangKyCaBiet from './components/Form';
+import ModalThemDKCB from './components/ModalThemDKCB';
 import StatDanhSachDKCB from './components/Stat';
+import ThaoTacDKCB, { XoaNhieuDKCB } from './components/ThaoTac';
 
 const DangKyCaBietPage = () => {
 	const intl = useIntl();
 	const { getSettingModel, settingMuonTra } = useModel('sachtailieu.muontra.muontra');
-	const { getModel, page, limit, record, setRecord } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { getModel, page, limit, record, setRecord, thongKeDangKyCaBietModel } = useModel(
+		'sachtailieu.anpham.anphamxepgia',
+	);
 
 	const [visibleModal, setVisibleModal] = useState<boolean>(false);
+	const [visibleThemDKCB, setVisibleThemDKCB] = useState<boolean>(false);
 	const [trangThai, setTrangThai] = useState<string>('ALL');
 
 	useEffect(() => {
@@ -35,6 +41,8 @@ const DangKyCaBietPage = () => {
 		if (trangThai === 'ALL') getModel();
 		else getModel({ trangThai: trangThai as any });
 	};
+
+	const getThongKe = () => thongKeDangKyCaBietModel();
 
 	const onCell = (rec: AnPham.IAnPhamXepGia) => ({
 		onClick: () => {
@@ -81,7 +89,11 @@ const DangKyCaBietPage = () => {
 			title: intl.formatMessage({ id: 'sachtailieu.dkcb.donGia' }),
 			width: 120,
 			align: 'right',
-			render: (val, rec) => `${inputFormat(rec?.thongTinXepGia?.donGia ?? 0)} VNĐ`,
+			// Chưa có đơn giá (ĐKCB thêm tay không gắn dòng xếp giá, dòng xếp giá chưa nhập giá) thì để trống
+			render: (val, rec) => {
+				const donGia = rec?.thongTinXepGia?.donGia;
+				return _.isNil(donGia) ? null : `${inputFormat(donGia)} VNĐ`;
+			},
 			onCell,
 		},
 		{
@@ -96,52 +108,26 @@ const DangKyCaBietPage = () => {
 			),
 			fixed: 'right',
 			onCell,
-			// hide: trangThai === ETrangThaiDangKyCaBiet.THANH_LY,
 		},
 		{
 			title: intl.formatMessage({ id: 'sachtailieu.table.thaoTac' }),
 			align: 'center',
-			width: 90,
+			width: 130,
 			fixed: 'right',
 			render: (val, rec) => (
-				<ButtonExtend
-					tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.lichSuDangKy' })}
-					onClick={() => {
-						setRecord(rec);
-						setVisibleModal(true);
-					}}
-					type='link'
-					icon={<HistoryOutlined />}
-				/>
+				<>
+					<ButtonExtend
+						tooltip={intl.formatMessage({ id: 'sachtailieu.anpham.lichSuDangKy' })}
+						onClick={() => {
+							setRecord(rec);
+							setVisibleModal(true);
+						}}
+						type='link'
+						icon={<HistoryOutlined />}
+					/>
+					<ThaoTacDKCB record={rec} getData={getData} getThongKe={getThongKe} />
+				</>
 			),
-			// trangThai === ETrangThaiDangKyCaBiet.THANH_LY ? (
-			// 	<>
-			// 		{/* <Popconfirm
-			// 			onConfirm={() => thanhLyDangKyCaBietModel({ _id: rec?._id, thanhLy: true }, getData)}
-			// 			title='Xác nhận thanh lý đăng ký cá biệt này?'
-			// 			placement='topRight'
-			// 		>
-			// 			<ButtonExtend tooltip='Thanh lý' type='link' icon={<ShoppingCartOutlined />} />
-			// 		</Popconfirm> */}
-			// 		<ButtonExtend
-			// 			tooltip='Lịch sử đăng ký'
-			// 			onClick={() => {
-			// 				setRecord(rec);
-			// 				setVisibleModal(true);
-			// 			}}
-			// 			type='link'
-			// 			icon={<HistoryOutlined />}
-			// 		/>
-			// 	</>
-			// ) : (
-			// 	<Popconfirm
-			// 		onConfirm={() => thanhLyDangKyCaBietModel({ _id: rec?._id, thanhLy: false }, getData)}
-			// 		title='Xác nhận tái sử dụng đăng ký cá biệt này?'
-			// 		placement='topRight'
-			// 	>
-			// 		<ButtonExtend tooltip='Tái sử dụng' type='link' icon={<SyncOutlined />} />
-			// 	</Popconfirm>
-			// ),
 		},
 	];
 
@@ -162,6 +148,19 @@ const DangKyCaBietPage = () => {
 				dependencies={[page, limit, trangThai]}
 				modelName='sachtailieu.anpham.anphamxepgia'
 				buttons={{ create: false }}
+				rowSelection
+				otherButtons={[
+					<ButtonExtend
+						key={'1'}
+						onClick={() => setVisibleThemDKCB(true)}
+						icon={<PlusCircleOutlined />}
+						notHideText
+						tooltip={intl.formatMessage({ id: 'sachtailieu.dkcb.themTayDKCB' })}
+					>
+						{intl.formatMessage({ id: 'sachtailieu.dkcb.themTayDKCB' })}
+					</ButtonExtend>,
+					<XoaNhieuDKCB key={'2'} getData={getData} getThongKe={getThongKe} />,
+				]}
 				hideCard
 				Form={FormDangKyCaBiet}
 				formProps={{ getData }}
@@ -174,6 +173,13 @@ const DangKyCaBietPage = () => {
 				setVisible={setVisibleModal}
 				width={1100}
 				condition={{ soDangKyCaBiet: record?.soDangKyCaBiet }}
+			/>
+
+			<ModalThemDKCB
+				visible={visibleThemDKCB}
+				setVisible={setVisibleThemDKCB}
+				getData={getData}
+				getThongKe={getThongKe}
 			/>
 		</Card>
 	);

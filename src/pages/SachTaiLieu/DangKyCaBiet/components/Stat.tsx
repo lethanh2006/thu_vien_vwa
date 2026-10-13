@@ -7,7 +7,9 @@ import { useIntl, useModel } from 'umi';
 const StatDanhSachDKCB = (props: { condition?: Partial<AnPham.IAnPhamXepGia> }) => {
 	const intl = useIntl();
 	const { condition } = props;
-	const { thongKeDangKyCaBietModel, loadingThongKe, thongKeDKCB } = useModel('sachtailieu.anpham.anphamxepgia');
+	const { thongKeDangKyCaBietModel, loadingThongKe, thongKeDKCB, soDKCBRanh } = useModel(
+		'sachtailieu.anpham.anphamxepgia',
+	);
 
 	useEffect(() => {
 		thongKeDangKyCaBietModel(condition);
@@ -35,7 +37,7 @@ const StatDanhSachDKCB = (props: { condition?: Partial<AnPham.IAnPhamXepGia> }) 
 				<Col span={24} md={8}>
 					<Card className='card-stat-small'>
 						<span className='num' style={{ color: 'green' }}>
-							{inputFormat((thongKeDKCB?.tongSoAnPham ?? 0) - (thongKeDKCB?.tongSoAnPhamDangThueMuon ?? 0))}
+							{inputFormat(soDKCBRanh ?? 0)}
 						</span>
 						<span>{intl.formatMessage({ id: 'sachtailieu.anpham.soDKCBKhaDung' })}</span>
 					</Card>

@@ -1,6 +1,7 @@
 import useInitModel from '@/hooks/useInitModel';
 import { thanhLyDangKyCaBiet, thongKeDangKyCaBiet } from '@/services/SachTaiLieu/AnPham';
 import type { AnPham } from '@/services/SachTaiLieu/AnPham/typing';
+import { ETrangThaiDangKyCaBiet } from '@/services/SachTaiLieu/constant';
 import { message } from 'antd';
 import { useState } from 'react';
 
@@ -8,14 +9,19 @@ export default () => {
 	const objInit = useInitModel<AnPham.IAnPhamXepGia>('an-pham-xep-gia');
 	const [loadingThongKe, setLoadingThongKe] = useState<boolean>(false);
 	const [thongKeDKCB, setThongKeDKCB] = useState<AnPham.IThongKeAnPhamXepGia>();
-	const { formSubmiting, setFormSubmiting } = objInit;
+	const [soDKCBRanh, setSoDKCBRanh] = useState<number>();
+	const { formSubmiting, setFormSubmiting, getService } = objInit;
 
 	const thongKeDangKyCaBietModel = async (condition?: any, filters?: any[]): Promise<any> => {
 		setLoadingThongKe(true);
 		try {
-			const res = await thongKeDangKyCaBiet({ condition, filters });
-			setThongKeDKCB(res.data?.data);
-			return res.data?.data;
+			const [resThongKe, resDKCBRanh] = await Promise.all([
+				thongKeDangKyCaBiet({ condition, filters }),
+				getService({ page: 1, limit: 1, condition: { ...condition, trangThai: ETrangThaiDangKyCaBiet.RANH } }, 'page'),
+			]);
+			setThongKeDKCB(resThongKe.data?.data);
+			setSoDKCBRanh(resDKCBRanh.data?.data?.total);
+			return resThongKe.data?.data;
 		} catch (err) {
 			return Promise.reject(err);
 		} finally {
@@ -51,6 +57,7 @@ export default () => {
 		...objInit,
 		loadingThongKe,
 		thongKeDKCB,
+		soDKCBRanh,
 		thongKeDangKyCaBietModel,
 		thanhLyDangKyCaBietModel,
 	};
